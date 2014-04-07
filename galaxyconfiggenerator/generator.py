@@ -155,7 +155,7 @@ def create_requirements(doc, tool, model):
     pass
 
 def create_command(doc, tool, model):
-    command = model.name + ' '
+    command = get_tool_executable_path(model) + ' '
     for param in extract_parameters(model):
         # for boolean types, we only need the placeholder
         if param.type is not bool:
@@ -168,6 +168,35 @@ def create_command(doc, tool, model):
     command_text_node = doc.createTextNode(command.strip())
     command_node.appendChild(command_text_node)
     tool.appendChild(command_node)
+    
+
+def get_tool_executable_path(model):
+    # rules to build the galaxy executable path:
+    # if executablePath is null and executableName is null, then the name of the tool will be used
+    # if executablePath is null and executableName is not null, then executableName will be used
+    # if executablePath is not null and executableName is null, then executablePaht and the name of the tool will be used
+    # if executablePath is not null and executableName is not null, then both will be used
+    command = None
+    # first, check if the model has executablePath / executableName defined
+    executablePath = model.opt_attribs.get("executablePath", None)
+    executableName = model.opt_attribs.get("executableName", None)
+    # fix the executablePath to make sure that there is a '/' in the end
+    if executablePath is not None:
+        executablePath = executablePath.strip()
+        if not executablePath.endswith('/'):
+            executablePath += '/'
+        
+    if executablePath is None:
+        if executableName is None:
+            command = model.name
+        else:
+            command = executableName
+    else: 
+        if executableName is None:
+            command = executablePath + model.name
+        else:
+            command = executablePath + executableName
+    return command
     
 def get_galaxy_parameter_name(param_name):
     return "param_%s" % param_name
@@ -193,6 +222,9 @@ def create_param_node(doc, param):
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type '%(type)' for parameter '%(name)'" % {"type":param.type, "name":param.name})
+    # galaxy handles ITEMLIST from CTDs as strings
+    if param.is_list:
+        param_type = 'text'
     param_node.setAttribute("type", param_type)
 
     if param.type is _InFile:
@@ -222,8 +254,19 @@ def create_param_node(doc, param):
             if param.type is not int and param.type is not float:
                 raise InvalidModelException("Expected either 'int' or 'float' in the numeric range restriction for parameter [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)})
             # extract the min and max values and add them as attributes
-            param_node.setAttribute("min", str(param.restrictions.n_min))
-            param_node.setAttribute("max", str(param.restrictions.n_max))       
+            # validate the provided min and max values
+            if param.restrictions.n_min is not None:
+                try:
+                    float(param.restrictions.n_min)
+                    param_node.setAttribute("min", str(param.restrictions.n_min))
+                except:
+                    raise InvalidModelException("A numeric value is required for the 'min' attribute for parameter [%(name)s]. Provided value [%(value)s] is invalid." % {"name":param.name, "value":param.restrictions.n_min})
+            if param.restrictions.n_max is not None:
+                try:
+                    float(param.restrictions.n_max)
+                    param_node.setAttribute("max", str(param.restrictions.n_max))
+                except:
+                    raise InvalidModelException("A numeric value is required for the 'max' attribute for parameter [%(name)s]. Provided value [%(value)s] is invalid." % {"name":param.name, "value":param.restrictions.n_max})                               
         elif type(param.restrictions) is _FileFormat:
             param_node.setAttribute("format", ",".join(param.restrictions.formats))                     
         else:
