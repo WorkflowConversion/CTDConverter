@@ -256,25 +256,17 @@ def create_param_node(doc, param):
             # extract the min and max values and add them as attributes
             # validate the provided min and max values
             if param.restrictions.n_min is not None:
-                try:
-                    float(param.restrictions.n_min)
-                    param_node.setAttribute("min", str(param.restrictions.n_min))
-                except:
-                    raise InvalidModelException("A numeric value is required for the 'min' attribute for parameter [%(name)s]. Provided value [%(value)s] is invalid." % {"name":param.name, "value":param.restrictions.n_min})
+                param_node.setAttribute("min", str(param.restrictions.n_min))
             if param.restrictions.n_max is not None:
-                try:
-                    float(param.restrictions.n_max)
-                    param_node.setAttribute("max", str(param.restrictions.n_max))
-                except:
-                    raise InvalidModelException("A numeric value is required for the 'max' attribute for parameter [%(name)s]. Provided value [%(value)s] is invalid." % {"name":param.name, "value":param.restrictions.n_max})                               
+                param_node.setAttribute("max", str(param.restrictions.n_max))
         elif type(param.restrictions) is _FileFormat:
             param_node.setAttribute("format", ",".join(param.restrictions.formats))                     
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]" % {"type":type(param.restrictions), "name":param.name}) 
     
-    if param.type is str:
+    if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
-        param_node.setAttribute("size", "15")
+        param_node.setAttribute("size", "20")
     
     
     # check for default value
