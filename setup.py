@@ -8,6 +8,6 @@ setup(
     license='',
     author='Luis de la Garza',
     author_email='',
-    py_modules=['galaxyconfiggenerator/generator.py'],
+    py_modules=['galaxyconfiggenerator/generator'],
     description='A module to convert CTDs to Galaxy tool wrappers.'
 )
