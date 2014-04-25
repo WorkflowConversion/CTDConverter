@@ -1,10 +1,10 @@
-#!/usr/local/bin/python2.7
 # encoding: utf-8
 '''
 @author:     delagarza
 
 '''
 
+import string
 import sys
 import os
 import traceback
@@ -14,6 +14,7 @@ from argparse import RawDescriptionHelpFormatter
 from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError
 
 from xml.dom.minidom import Document
+from string import strip
 
 __all__ = []
 __version__ = 0.1
@@ -224,7 +225,11 @@ def create_param_node(doc, param):
         raise ModelError("Unrecognized parameter type '%(type)' for parameter '%(name)'" % {"type":param.type, "name":param.name})
     # galaxy handles ITEMLIST from CTDs as strings
     if param.is_list:
-        param_type = 'text'
+        param_type = "text"
+        
+    if is_boolean_parameter(param):
+        param_type = "boolean"
+        
     param_node.setAttribute("type", param_type)
 
     if param.type is _InFile:
@@ -241,8 +246,10 @@ def create_param_node(doc, param):
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None:
-        # it could be either _Choices or _NumericRange
-        if type(param.restrictions) is _Choices:
+        # it could be either _Choices or _NumericRange, with special case for boolean types
+        if param_type == "boolean":
+            create_boolean_parameter(param, param_node)            
+        elif type(param.restrictions) is _Choices:
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
                 option_node = doc.createElement("option")
@@ -271,9 +278,59 @@ def create_param_node(doc, param):
     
     # check for default value
     if param.default is not None:
-        param_node.setAttribute("value", str(param.default))
+        if type(param.default) is list:
+            # we ASSUME that a list of parameters looks like:
+            # $ tool -ignore He Ar Xe
+            # meaning, that, for example, Helium, Argon and Xenon will be ignored            
+            param_node.setAttribute("value", ' '.join(param.default))        
+        elif param_type != "boolean":
+            # boolean parameters handle default values by using the "checked" attribute
+            # there isn't much we can do... just stringify the value
+            param_node.setAttribute("value", str(param.default))
     
     return param_node
+
+# determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
+def is_boolean_parameter(param):
+    is_choices = False
+    if type(param.restrictions) is _Choices:
+        # for a true boolean experience, we need 2 values
+        # and also that those two values are either yes/no or true/false
+        if len(param.restrictions.choices) == 2:
+            choices = get_lowercase_list(param.restrictions.choices)
+            if ('yes' in choices and 'no' in choices) or ('true' in choices and 'false' in choices):
+                is_choices = True
+    return is_choices
+
+def get_lowercase_list(some_list):
+    lowercase_list = map(str, some_list)
+    lowercase_list = map(string.lower, lowercase_list)
+    lowercase_list = map(strip, lowercase_list)
+    return lowercase_list
+
+# creates a galaxy boolean parameter type
+# this method assumes that param has restrictions, and that only two restictions are present (either yes/no or true/false)
+def create_boolean_parameter(param, param_node):
+    # first, determine the 'truevalue' and the 'falsevalue'
+    truevalue = None
+    falsevalue = None
+    choices = get_lowercase_list(param.restrictions.choices)
+    if "yes" in choices:
+        truevalue = "yes"
+        falsevalue = "no"        
+    else:
+        truevalue = "true"
+        falsevalue = "false"    
+    param_node.setAttribute("truevalue", truevalue)
+    param_node.setAttribute("falsevalue", falsevalue)
+    
+    # set the checked attribute    
+    if param.default is not None:
+        checked_value = "false"
+        default = strip(string.lower(param.default))
+        if default == "yes" or default == "true":
+            checked_value = "true"
+        param_node.setAttribute("checked", checked_value)
 
 def create_outputs(doc, tool, model):
     outputs_node = doc.createElement("outputs")
