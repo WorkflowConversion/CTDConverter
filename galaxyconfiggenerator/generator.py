@@ -33,6 +33,12 @@ class CLIError(Exception):
         return self.msg
     def __unicode__(self):
         return self.msg
+    
+class ExitCode:
+    def __init__(self, code_range="", level="", description=""):
+        self.range = code_range
+        self.level = level
+        self.description = description    
 
 def main(argv=None): # IGNORE:C0111
     '''Command line options.'''
@@ -78,7 +84,7 @@ def main(argv=None): # IGNORE:C0111
 
     try:
         # Setup argument parser
-        parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter, add_help=True)
+        parser = ArgumentParser(prog="GalaxyConfigGenerator", description=program_license, formatter_class=RawDescriptionHelpFormatter, add_help=True)
         parser.add_argument("-i", "--input-file", dest="input_file", help="provide a single input CTD file to convert", required=True)
         parser.add_argument("-o", "--output-file", dest="output_file", help="provide a single output Galaxy wrapper file", required=True)
         parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line", help="adds content to the command line", default="", required=False)
@@ -87,10 +93,13 @@ def main(argv=None): # IGNORE:C0111
                                  "validated against emptiness or being equal to 'None'", required=False)
         parser.add_argument("-q", "--quote-parameters", dest="quote_parameters", action="store_true", default=False,
                             help="if true, each parameter in the generated command line will be quoted", required=False)
-        parser.add_argument("-b", "--blacklisted-parameters", dest="blacklisted_parameters", default="",
-                             help="comma separated list of parameters that will be ignored and won't appear on the galaxy stub", required=False)
-        parser.add_argument("-p", "--package-requirements", dest="package_requirements", default="", 
-                            help="comma separated list of required galaxy packages", required=False)
+        parser.add_argument("-b", "--blacklisted-parameter", dest="blacklisted_parameters", default=[], nargs="+", action="append",
+                             help="list of parameters that will be ignored and won't appear on the galaxy stub", required=False)
+        parser.add_argument("-p", "--package-requirement", dest="package_requirements", default=[], nargs="+", action="append", 
+                            help="list of required galaxy packages", required=False)
+        parser.add_argument("-x", "--exit-code", dest="exit_codes", default=[], nargs="+", action="append",
+                            help="list of <stdio> galaxy exit codes, in the following format: range=<range>,level=<level>,description=<description>,\n" +
+                                 "example: --exit-codes \"range=3:4,level=fatal,description=Out of memory\"")
         # verbosity will be added later on, will not waste time on this now
         # parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -104,14 +113,15 @@ def main(argv=None): # IGNORE:C0111
         
         #if verbose > 0:
         #    print("Verbose mode on")
-        convert(
-                input_file, 
+        convert(input_file, 
                 output_file, 
                 add_to_command_line=args.add_to_command_line, 
                 whitespace_validation=args.whitespace_validation,
                 quote_parameters=args.quote_parameters,
-                blacklisted_parameters=map(strip, args.blacklisted_parameters.split(",")),
-                package_requirements=map(strip, args.package_requirements.split(",")))
+                # remember that blacklisted_parameters, package_requirements and exit_codes are lists of lists of strings
+                blacklisted_parameters=[item for sublist in args.blacklisted_parameters for item in sublist],
+                package_requirements=[item for sublist in args.package_requirements for item in sublist],
+                exit_codes=convert_exit_codes([item for sublist in args.exit_codes for item in sublist]))
         return 0
 
     except KeyboardInterrupt:
@@ -134,6 +144,20 @@ def main(argv=None): # IGNORE:C0111
         traceback.print_exc()
         return 2
     
+def convert_exit_codes(exit_codes_raw):
+    # input is in the format:
+    # range=3:4,level=fatal,description=Out of memory
+    exit_codes = []
+    for exit_code_raw in exit_codes_raw:
+        exit_code = ExitCode()
+        for key_value in exit_code_raw.split(","):
+            # each key_value contains something like range=3 or description=whatever
+            # so we can split again by using "="
+            key_value_split = key_value.split("=")
+            setattr(exit_code, key_value_split[0], key_value_split[1].strip())
+        exit_codes.append(exit_code)
+    return exit_codes
+    
 def convert(input_file, output_file, **kwargs):
     # first, generate a model
     print("Parsing CTD from [%s]" % input_file)
@@ -145,8 +169,9 @@ def convert(input_file, output_file, **kwargs):
     create_description(doc, tool, model)
     create_requirements(doc, tool, model, kwargs["package_requirements"])
     create_command(doc, tool, model, **kwargs)
-    create_inputs(doc, tool, model, **kwargs)
-    create_outputs(doc, tool, model, **kwargs)
+    create_inputs(doc, tool, model, kwargs["blacklisted_parameters"])
+    create_outputs(doc, tool, model, kwargs["blacklisted_parameters"])
+    create_exit_codes(doc, tool, model, kwargs["exit_codes"])
     create_help(doc, tool, model)
     
     # finally, serialize the tool
@@ -245,11 +270,11 @@ def get_tool_executable_path(model):
 def get_galaxy_parameter_name(param_name):
     return "param_%s" % param_name
     
-def create_inputs(doc, tool, model, **kwargs):
+def create_inputs(doc, tool, model, blacklisted_parameters):
     inputs_node = doc.createElement("inputs")
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
-        if param.name in kwargs["blacklisted_parameters"]:
+        if param.name in blacklisted_parameters:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is not _OutFile:
@@ -378,10 +403,10 @@ def create_boolean_parameter(param, param_node):
             checked_value = "true"
         param_node.setAttribute("checked", checked_value)
 
-def create_outputs(doc, tool, model, **kwargs):
+def create_outputs(doc, tool, model, blacklisted_parameters):
     outputs_node = doc.createElement("outputs")
     for param in extract_parameters(model):
-        if param.name in kwargs["blacklisted_parameters"]:
+        if param.name in blacklisted_parameters:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is _OutFile:
@@ -404,20 +429,32 @@ def create_data_node(doc, param):
         
     return data_node
 
+def create_exit_codes(doc, tool, model, exit_codes):
+    if len(exit_codes) > 0:
+        stdio_node = doc.createElement("stdio")        
+        for exit_code in exit_codes:
+            exit_code_node = doc.createElement("exit_code")
+            exit_code_node.setAttribute("range", exit_code.range)
+            exit_code_node.setAttribute("level", exit_code.level)
+            exit_code_node.setAttribute("description", exit_code.description)
+            stdio_node.appendChild(exit_code_node)
+        tool.appendChild(stdio_node)
+        
 def create_help(doc, tool, model):
     manual = None
     doc_url = None
     if 'manual' in model.opt_attribs.keys(): 
-        model.opt_attribs["manual"]
+        manual = model.opt_attribs["manual"]
     if 'docurl' in model.opt_attribs.keys():
-        model.opt_attribs["docurl"]
+        doc_url = model.opt_attribs["docurl"]
     help_text = "No help available"
     if manual is not None:
         help_text = manual
     if doc_url is not None:
-        help_text = ("" if manual is None else manual) + " For more information, visit %s" % doc_url
+        help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
         
     help_node = doc.createElement("help")
+    # TODO: do we need CDATA Section here?
     help_node.appendChild(doc.createTextNode(help_text))
     tool.appendChild(help_node)
     
