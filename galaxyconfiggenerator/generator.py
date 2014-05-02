@@ -81,6 +81,16 @@ def main(argv=None): # IGNORE:C0111
         parser = ArgumentParser(description=program_license, formatter_class=RawDescriptionHelpFormatter, add_help=True)
         parser.add_argument("-i", "--input-file", dest="input_file", help="provide a single input CTD file to convert", required=True)
         parser.add_argument("-o", "--output-file", dest="output_file", help="provide a single output Galaxy wrapper file", required=True)
+        parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line", help="adds content to the command line", default="", required=False)
+        parser.add_argument("-w", "--whitespace-validation", dest="whitespace_validation", action="store_true", default=False,
+                            help="if true, each parameter in the generated command line will be "+ 
+                                 "validated against emptiness or being equal to 'None'", required=False)
+        parser.add_argument("-q", "--quote-parameters", dest="quote_parameters", action="store_true", default=False,
+                            help="if true, each parameter in the generated command line will be quoted", required=False)
+        parser.add_argument("-b", "--blacklisted-parameters", dest="blacklisted_parameters", default="",
+                             help="comma separated list of parameters that will be ignored and won't appear on the galaxy stub", required=False)
+        parser.add_argument("-p", "--package-requirements", dest="package_requirements", default="", 
+                            help="comma separated list of required galaxy packages", required=False)
         # verbosity will be added later on, will not waste time on this now
         # parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -94,7 +104,14 @@ def main(argv=None): # IGNORE:C0111
         
         #if verbose > 0:
         #    print("Verbose mode on")
-        convert(input_file, output_file)
+        convert(
+                input_file, 
+                output_file, 
+                add_to_command_line=args.add_to_command_line, 
+                whitespace_validation=args.whitespace_validation,
+                quote_parameters=args.quote_parameters,
+                blacklisted_parameters=map(strip, args.blacklisted_parameters.split(",")),
+                package_requirements=map(strip, args.package_requirements.split(",")))
         return 0
 
     except KeyboardInterrupt:
@@ -117,7 +134,7 @@ def main(argv=None): # IGNORE:C0111
         traceback.print_exc()
         return 2
     
-def convert(input_file, output_file):
+def convert(input_file, output_file, **kwargs):
     # first, generate a model
     print("Parsing CTD from [%s]" % input_file)
     model = CTDModel(from_file=input_file)
@@ -126,10 +143,10 @@ def convert(input_file, output_file):
     tool = create_tool(doc, model)
     doc.appendChild(tool)
     create_description(doc, tool, model)
-    create_requirements(doc, tool, model)
-    create_command(doc, tool, model)
-    create_inputs(doc, tool, model)
-    create_outputs(doc, tool, model)
+    create_requirements(doc, tool, model, kwargs["package_requirements"])
+    create_command(doc, tool, model, **kwargs)
+    create_inputs(doc, tool, model, **kwargs)
+    create_outputs(doc, tool, model, **kwargs)
     create_help(doc, tool, model)
     
     # finally, serialize the tool
@@ -151,22 +168,48 @@ def create_description(doc, tool, model):
         description_node.appendChild(description)
         tool.appendChild(description_node)
 
-def create_requirements(doc, tool, model):
-    #TODO: how to pass requirements? command line? included in CTD? 
-    pass
+def create_requirements(doc, tool, model, package_requirements):
+    if len(package_requirements) > 0:
+        requirements_node = doc.createElement("requirements")
+        for package_requirement in package_requirements:
+            requirement_node = doc.createElement("requirement")
+            requirement_node.setAttribute("type", "package")
+            requirement_text_node = doc.createTextNode(package_requirement)
+            requirement_node.appendChild(requirement_text_node)
+            requirements_node.appendChild(requirement_node) 
+        tool.appendChild(requirements_node)
 
-def create_command(doc, tool, model):
+def create_command(doc, tool, model, **kwargs):
     command = get_tool_executable_path(model) + ' '
+    command += '\n' + kwargs["add_to_command_line"] + ' '
+    whitespace_validation = kwargs["whitespace_validation"]
+    quote_parameters = kwargs["quote_parameters"]
+    
     for param in extract_parameters(model):
+        if param.name in kwargs["blacklisted_parameters"]:
+            # let's not use an extra level of indentation and use NOP
+            continue
+        galaxy_parameter_name = get_galaxy_parameter_name(param.name)
+        # if whitespace_validation has been set, we need to generate, for each parameter:
+        # #if str( $t ) != ''  and str( $t ) != 'None' :
+        # -t "$t"
+        # #end if
+        if whitespace_validation:
+            command += "\n#if str($%(param_name)s) != '' and str($%(param_name)s) != 'None :\n    "  % {"param_name":galaxy_parameter_name}           
         # for boolean types, we only need the placeholder
         if param.type is not bool:
             # add the parameter name
             command += '-' + param.name + ' '
         # we need to add the placeholder
-        command += "$" + get_galaxy_parameter_name(param.name) + ' '
+        actual_parameter = "$" + galaxy_parameter_name
+        if quote_parameters:
+            actual_parameter = '"' + actual_parameter + '"'
+        command += actual_parameter + ' '
+        if whitespace_validation:
+            command += "\n#end if"
             
     command_node = doc.createElement("command")
-    command_text_node = doc.createTextNode(command.strip())
+    command_text_node = doc.createCDATASection(command.strip())
     command_node.appendChild(command_text_node)
     tool.appendChild(command_node)
     
@@ -202,10 +245,13 @@ def get_tool_executable_path(model):
 def get_galaxy_parameter_name(param_name):
     return "param_%s" % param_name
     
-def create_inputs(doc, tool, model):
+def create_inputs(doc, tool, model, **kwargs):
     inputs_node = doc.createElement("inputs")
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
+        if param.name in kwargs["blacklisted_parameters"]:
+            # let's not use an extra level of indentation and use NOP
+            continue
         if param.type is not _OutFile:
             inputs_node.appendChild(create_param_node(doc, param))
     tool.appendChild(inputs_node)
@@ -332,9 +378,12 @@ def create_boolean_parameter(param, param_node):
             checked_value = "true"
         param_node.setAttribute("checked", checked_value)
 
-def create_outputs(doc, tool, model):
+def create_outputs(doc, tool, model, **kwargs):
     outputs_node = doc.createElement("outputs")
     for param in extract_parameters(model):
+        if param.name in kwargs["blacklisted_parameters"]:
+            # let's not use an extra level of indentation and use NOP
+            continue
         if param.type is _OutFile:
             outputs_node.appendChild(create_data_node(doc, param))
     tool.appendChild(outputs_node) 
