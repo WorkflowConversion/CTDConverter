@@ -358,8 +358,32 @@ def create_param_node(doc, param):
             # boolean parameters handle default values by using the "checked" attribute
             # there isn't much we can do... just stringify the value
             param_node.setAttribute("value", str(param.default))
+    else:
+        if param.type is int or param.type is float:
+            # galaxy requires "value" to be included for int/float
+            # since no default was included, we need to figure out one in a clever way... but let the user know
+            # that we are "thinking" for him/her
+            warning("Generating default value for parameter [%s]. Galaxy requires the attribute 'value' to be set for integer/floats."\
+                    "You might want to edit the CTD file and provide a suitable default value." % param.name)
+            # check if there's a min/max and try to use them
+            default_value = None
+            if type(param.restrictions) is _NumericRange:
+                default_value = param.restrictions.n_min
+                if default_value is None:
+                    default_value = param.restrictions.n_max
+                if default_value is None:
+                    # no min/max provided... just use 0 and see what happens
+                    default_value = 0                    
+            else:
+                # should never be here, since we have validated this anyway... this code is here just for documentation purposes
+                # however, better safe than sorry! (it could be that the code changes and then we have an ugly scenario)
+                raise InvalidModelException("Expected either a numeric range for parameter [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)})
+            param_node.setAttribute("value", str(default_value))
     
     return param_node
+
+def warning(text):
+    sys.stderr.write("WARNING: " + text + '\n')
 
 # determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
