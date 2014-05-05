@@ -220,7 +220,7 @@ def create_command(doc, tool, model, **kwargs):
         # -t "$t"
         # #end if
         if whitespace_validation:
-            command += "\n#if str($%(param_name)s) != '' and str($%(param_name)s) != 'None :\n    "  % {"param_name":galaxy_parameter_name}           
+            command += "\n#if str($%(param_name)s) != '' and str($%(param_name)s) != None :\n    "  % {"param_name":galaxy_parameter_name}           
         # for boolean types, we only need the placeholder
         if param.type is not bool:
             # add the parameter name
