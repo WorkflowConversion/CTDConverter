@@ -70,7 +70,7 @@ def main(argv=None): # IGNORE:C0111
     $ python generator.py -i input.ctd -o output.xml
     
     Parse all found CTD files (files with .ctd and .xml extension) in a given folder and output converted Galaxy wrappers in a given folder:
-    $ python generator.py --input-directory /home/johndoe/ctds --output-directory /home/johndoe/galaxywrappers
+    $ python generator.py -input-directory /home/johndoe/*.ctd -o /home/johndoe/galaxywrappers
     '''
     program_license = '''%(shortdesc)s
     Copyright 2014, Luis de la Garza
@@ -106,7 +106,7 @@ def main(argv=None): # IGNORE:C0111
                                  "validated against emptiness or being equal to 'None'", required=False)
         parser.add_argument("-q", "--quote-parameters", dest="quote_parameters", action="store_true", default=False,
                             help="if true, each parameter in the generated command line will be quoted", required=False)
-        parser.add_argument("-b", "--blacklisted-parameter", dest="blacklisted_parameters", default=[], nargs="+", action="append",
+        parser.add_argument("-b", "--blacklist", dest="blacklisted_parameters", default=[], nargs="+", action="append",
                              help="list of parameters that will be ignored and won't appear on the galaxy stub", required=False)
         parser.add_argument("-p", "--package-requirement", dest="package_requirements", default=[], nargs="+", action="append", 
                             help="list of required galaxy packages", required=False)
