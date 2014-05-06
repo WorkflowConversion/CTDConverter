@@ -115,12 +115,12 @@ Will generate, for each of the parameters located in the given input CTD, a simi
 
     <command>TOOL_NAME 
         #if str( $param_one_value ) != ''  and str( $param_one_value ) != None :
-          -param-one "$param_one_value"
+          -param-one $param_one_value
         #end if
     </command>
 
-Quote parameters
-----------------
+Quoting parameters
+------------------
 * Purpose: Passing strings containing whitespace might be problematic for some tools to handle. You can use this parameter to quote parameters and avoid problems.
 * Short/long version: `-q` / `--quote-parameters`
 * Required: no.
@@ -190,8 +190,8 @@ Will produce the following `<stdio>` section in the generated `tool_conf.xml` fi
         <exit_code range="6:" level="warning" description="Non-fatal error"/>
     </stdio>
 
-Providing path for the location of the ToolConfig files
--------------------------------------------------------
+Providing a path for the location of the ToolConfig files
+---------------------------------------------------------
 * Purpose: The `tool_conf.xml` file contains references to files which in turn contain Galaxy *ToolConfig* files. Using this parameter, you can provide information about the location of your tools.
 * Short/long version: `-g` / `--galaxy-tool-path`
 * Required: no.
