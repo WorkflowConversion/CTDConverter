@@ -217,7 +217,7 @@ def convert(input_files, output_dest, **kwargs):
                 if not output_file.endswith('/'):
                     output_file += "/"
                 output_file += get_filename(input_file) + ".xml"
-            doc.writexml(open(output_file, 'w'), indent="    ", addindent="    ", newl='\n')
+            doc.writexml(open(output_file, 'w'), indent="    ", addindent="    ", newl='\n', encoding="UTF-8")
             # let's use model to hold the name of the outputfile
             parsed_models.append([model, get_filename(output_file)])
             print("Generated Galaxy wrapper in [%s]\n" % output_file)
@@ -262,7 +262,7 @@ def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path):
         toolbox_node.appendChild(section_node)
 
     doc.appendChild(toolbox_node)
-    doc.writexml(open(tool_conf_dest, 'w'), indent="    ", addindent="    ", newl='\n')
+    doc.writexml(open(tool_conf_dest, 'w'), indent="    ", addindent="    ", newl='\n', encoding="UTF-8")
     print("Generated Galaxy tool_conf.xml in [%s]\n" % tool_conf_dest)
     
 # taken from
