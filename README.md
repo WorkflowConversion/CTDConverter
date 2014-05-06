@@ -26,8 +26,8 @@ Converting several CTDs found in a folder
 
     $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs
     
-Generating a tool_conf.xml file
-----------------------------------
+Generating a tool_conf.xml file 
+--------------------------------
 
     $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs -t /data/generated-galaxy-stubs/tool_conf.xml
 
@@ -163,9 +163,9 @@ Providing package requirements
 
 Example:
 
-    $ python generator.py ... -p apache-tools java-galaxy -t /data/my_tool_conf.xml
+    $ python generator.py ... -p apache-tools java-galaxy
     
-Will generate the following requirement section in the generated `/data/my_tool_conf.xml`:
+Will generate the following requirement section in the generated `/data/tool_conf.xml`:
 
     <requirements>
         <requirement type="package">apache-tools</requirement>
@@ -177,15 +177,13 @@ Providing exit code ranges
 * Purpose: Galaxy reads the exit code of an invoked tool and can be configured to classify exit code ranges. This parameter allows you to include this information in a generated `tool_conf.xml`.
 * Short/long version: `-x` / `--exit-code`
 * Required: no.
-* Taken values: A list of Galaxy exit code elements given in the following format
-
-    range=<range>,level=<level>,description=<description>
+* Taken values: A list of Galaxy exit code elements given in the following format `range=<range>,level=<level>,description=<description>`
 
 Example:
 
-    $ python generator.py ... -t /data/my_tool_conf.xml -x "range=1:5,level=fatal,description=I/O Error" -x "range=6:,level=warning,description=Non-fatal error"
+    $ python generator.py ... -x "range=1:5,level=fatal,description=I/O Error" -x "range=6:,level=warning,description=Non-fatal error"
     
-Will produce the following `<stdio>` section in the generated `my_tool_conf.xml` file:
+Will produce the following `<stdio>` section in the generated `tool_conf.xml` file:
 
     <stdio>
         <exit_code range="1:5" level="fatal" description="I/O Error"/>
@@ -201,8 +199,8 @@ Providing path for the location of the ToolConfig files
 
 Example:
 
-    $ python generator.py ... -t /data/my_tool_conf.xml -g my_tools_folder
+    $ python generator.py ... -g my_tools_folder
     
-Will generate `<tool>` elements in the generated `my_tool_conf.xml` as follows:
+Will generate `<tool>` elements in the generated `tool_conf.xml` as follows:
 
     <tool file="my_tools_folder/some_tool.xml" />
