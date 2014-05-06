@@ -52,8 +52,8 @@ The following uses of the parameter will pass a single value `bar`:
     -f bar
     --foo bar
     
-Input file
-----------
+Input file(s)
+-------------
 * Purpose: Provide input CTD file(s) to convert.
 * Short/long version: `-i` / `--input`
 * Required: yes.
