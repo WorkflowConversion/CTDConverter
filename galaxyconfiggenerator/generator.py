@@ -8,6 +8,7 @@ import string
 import sys
 import os
 import traceback
+import ntpath
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
@@ -29,6 +30,15 @@ class CLIError(Exception):
     def __init__(self, msg):
         super(CLIError).__init__(type(self))
         self.msg = "E: %s" % msg
+    def __str__(self):
+        return self.msg
+    def __unicode__(self):
+        return self.msg
+    
+class ApplicationException(Exception):
+    def __init__(self, msg):
+        super(ApplicationException).__init__(type(self))
+        self.msg = msg
     def __str__(self):
         return self.msg
     def __unicode__(self):
@@ -85,8 +95,11 @@ def main(argv=None): # IGNORE:C0111
     try:
         # Setup argument parser
         parser = ArgumentParser(prog="GalaxyConfigGenerator", description=program_license, formatter_class=RawDescriptionHelpFormatter, add_help=True)
-        parser.add_argument("-i", "--input-file", dest="input_file", help="provide a single input CTD file to convert", required=True)
-        parser.add_argument("-o", "--output-file", dest="output_file", help="provide a single output Galaxy wrapper file", required=True)
+        parser.add_argument("-i", "--input", dest="input_files", required=True, nargs="+", action="append",
+                            help="list of CTD files to convert.")
+        parser.add_argument("-o", "--output-destination", dest="output_dest", required=True, 
+                            help="if multiple input files are given, then a folder in which all generated XMLs will generated is expected;"\
+                            "if a single input file is given, then a destination file is expected.")
         parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line", help="adds content to the command line", default="", required=False)
         parser.add_argument("-w", "--whitespace-validation", dest="whitespace_validation", action="store_true", default=False,
                             help="if true, each parameter in the generated command line will be "+ 
@@ -100,6 +113,10 @@ def main(argv=None): # IGNORE:C0111
         parser.add_argument("-x", "--exit-code", dest="exit_codes", default=[], nargs="+", action="append",
                             help="list of <stdio> galaxy exit codes, in the following format: range=<range>,level=<level>,description=<description>,\n" +
                                  "example: --exit-codes \"range=3:4,level=fatal,description=Out of memory\"")
+        parser.add_argument("-t", "--tool-conf-destination", dest="tool_conf_dest", default=None, required=False,
+                            help="specify the destination file of a generated tool_conf.xml for all given input files; each category will be written in its own section.")
+        parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
+                            help="the path that will be prepended to the file names when generating tool_conf.xml")
         # verbosity will be added later on, will not waste time on this now
         # parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -107,42 +124,57 @@ def main(argv=None): # IGNORE:C0111
         # Process arguments
         args = parser.parse_args()
         
-        # collect arguments
-        input_file = args.input_file
-        output_file = args.output_file
+        # validate and prepare the passed arguments
+        validate_and_prepare_args(args)
         
         #if verbose > 0:
         #    print("Verbose mode on")
-        convert(input_file, 
-                output_file, 
+        convert(args.input_files, 
+                args.output_dest, 
                 add_to_command_line=args.add_to_command_line, 
                 whitespace_validation=args.whitespace_validation,
                 quote_parameters=args.quote_parameters,
                 # remember that blacklisted_parameters, package_requirements and exit_codes are lists of lists of strings
-                blacklisted_parameters=[item for sublist in args.blacklisted_parameters for item in sublist],
-                package_requirements=[item for sublist in args.package_requirements for item in sublist],
-                exit_codes=convert_exit_codes([item for sublist in args.exit_codes for item in sublist]))
+                blacklisted_parameters=args.blacklisted_parameters,
+                package_requirements=args.package_requirements,
+                exit_codes=args.exit_codes,
+                galaxy_tool_path=args.galaxy_tool_path,
+                tool_conf_dest=args.tool_conf_dest)
         return 0
 
     except KeyboardInterrupt:
         ### handle keyboard interrupt ###
         return 0
-    except IOError, e:
-        indent = len(program_name) * " "
-        sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "Could not access input file [%(input)s] or output file [%(output)s]\n" % {"input":input_file, "output":output_file})
-        sys.stderr.write(indent + "For help use --help\n")
-        # #define EX_NOINPUT      66      /* cannot open input */
-        return 66
+    except ApplicationException, e:
+        sys.stderr.write("GalaxyConfigGenerator could not complete the requested operation.\n")
+        sys.stderr.write("Reason: " + e.msg)
+        return 1
     except ModelError, e:
         indent = len(program_name) * " "
         sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "There seems to be a problem with your input CTD [%s], please make sure that it is a valid CTD.\n" % input_file)
+        sys.stderr.write(indent + "There seems to be a problem with one your input CTD.\n")
         sys.stderr.write(indent + "For help use --help\n")
         return 1
     except Exception, e:
         traceback.print_exc()
         return 2
+    
+def validate_and_prepare_args(args):
+    # first, we convert all list of lists to flat lists
+    args.input_files = [item for sublist in args.input_files for item in sublist]
+    args.blacklisted_parameters=[item for sublist in args.blacklisted_parameters for item in sublist]
+    args.package_requirements=[item for sublist in args.package_requirements for item in sublist]
+    args.exit_codes=convert_exit_codes([item for sublist in args.exit_codes for item in sublist])
+    
+    # if input is a single file, we expect output to be a file (and not a dir that already exists)
+    if len(args.input_files) == 1:
+        if os.path.isdir(args.output_dest):
+            raise ApplicationException("If a single input file is provided, output (%s) is expected to be a file and not a folder." % args.output_dest)
+        
+    # if input is a list of files, we expect output to be a folder
+    if len(args.input_files) > 1:
+        if not os.path.isdir(args.output_dest):
+            raise ApplicationException("If several input files are provided, output (%s) is expected to be an existing directory." % args.output_dest)
     
 def convert_exit_codes(exit_codes_raw):
     # input is in the format:
@@ -158,25 +190,86 @@ def convert_exit_codes(exit_codes_raw):
         exit_codes.append(exit_code)
     return exit_codes
     
-def convert(input_file, output_file, **kwargs):
+def convert(input_files, output_dest, **kwargs):
     # first, generate a model
-    print("Parsing CTD from [%s]" % input_file)
-    model = CTDModel(from_file=input_file)
+    is_converting_multiple_ctds = len(input_files) > 1
+    parsed_models = []
+    try:
+        for input_file in input_files:
+            print("Parsing CTD from [%s]" % input_file)
+            model = CTDModel(from_file=input_file)
+        
+            doc = Document()
+            tool = create_tool(doc, model)
+            doc.appendChild(tool)
+            create_description(doc, tool, model)
+            create_requirements(doc, tool, model, kwargs["package_requirements"])
+            create_command(doc, tool, model, **kwargs)
+            create_inputs(doc, tool, model, kwargs["blacklisted_parameters"])
+            create_outputs(doc, tool, model, kwargs["blacklisted_parameters"])
+            create_exit_codes(doc, tool, model, kwargs["exit_codes"])
+            create_help(doc, tool, model)
+            
+            # finally, serialize the tool
+            output_file = output_dest
+            # if multiple inputs are being converted, then we need to generate a different output_file for each input
+            if is_converting_multiple_ctds:
+                if not output_file.endswith('/'):
+                    output_file += "/"
+                output_file += get_filename(input_file) + ".xml"
+            doc.writexml(open(output_file, 'w'), indent="    ", addindent="    ", newl='\n')
+            # let's use model to hold the name of the outputfile
+            parsed_models.append([model, get_filename(output_file)])
+            print("Generated Galaxy wrapper in [%s]\n" % output_file)
+        # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
+        if kwargs["tool_conf_dest"] is not None:
+            generate_tool_conf(parsed_models, kwargs["tool_conf_dest"], kwargs["galaxy_tool_path"])
+                
+    except IOError, e:
+        raise ApplicationException("One of the provided input files or the destination file could not be accessed. Detailed information: " + str(e) + "\n")
     
+def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path):
+    # for each category, we keep a list of models corresponding to it
+    categories_to_tools = dict()
+    for model in parsed_models:
+        if "category" in model[0].opt_attribs:
+            category = model[0].opt_attribs["category"]
+            if category is not None and len(strip(category)) > 0:
+                category = strip(category)
+                if category not in categories_to_tools:
+                    categories_to_tools[category] = []
+                categories_to_tools[category].append(model[1])
+                
+    # at this point, we should have a map for all categories->tools
     doc = Document()
-    tool = create_tool(doc, model)
-    doc.appendChild(tool)
-    create_description(doc, tool, model)
-    create_requirements(doc, tool, model, kwargs["package_requirements"])
-    create_command(doc, tool, model, **kwargs)
-    create_inputs(doc, tool, model, kwargs["blacklisted_parameters"])
-    create_outputs(doc, tool, model, kwargs["blacklisted_parameters"])
-    create_exit_codes(doc, tool, model, kwargs["exit_codes"])
-    create_help(doc, tool, model)
+    toolbox_node = doc.createElement("toolbox")
     
-    # finally, serialize the tool
-    doc.writexml(open(output_file, 'w'), indent="    ", addindent="    ", newl='\n')
-    print("Generated Galaxy wrapper in [%s]\n" % output_file)    
+    if galaxy_tool_path is not None and not galaxy_tool_path.strip().endswith("/"):
+        galaxy_tool_path = galaxy_tool_path.strip() + "/"
+    if galaxy_tool_path is None:
+        galaxy_tool_path = ""
+    
+    for category, filenames in categories_to_tools.iteritems():
+        section_node = doc.createElement("section")
+        section_node.setAttribute("id", "section-id-" + "".join(category.split()))
+        section_node.setAttribute("name", category)
+    
+        for filename in filenames:
+            tool_node = doc.createElement("tool")
+            tool_node.setAttribute("file", galaxy_tool_path + filename)
+            toolbox_node.appendChild(section_node)
+            section_node.appendChild(tool_node)
+        toolbox_node.appendChild(section_node)
+
+    doc.appendChild(toolbox_node)
+    doc.writexml(open(tool_conf_dest, 'w'), indent="    ", addindent="    ", newl='\n')
+    print("Generated Galaxy tool_conf.xml in [%s]\n" % tool_conf_dest)
+    
+# taken from
+# http://stackoverflow.com/questions/8384737/python-extract-file-name-from-path-no-matter-what-the-os-path-format
+def get_filename(path):
+    head, tail = ntpath.split(path)
+    return tail or ntpath.basename(head)            
     
 def create_tool(doc, model):
     tool = doc.createElement("tool")
@@ -353,7 +446,7 @@ def create_param_node(doc, param):
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
             # meaning, that, for example, Helium, Argon and Xenon will be ignored            
-            param_node.setAttribute("value", ' '.join(param.default))        
+            param_node.setAttribute("value", ' '.join(map(str, param.default)))
         elif param_type != "boolean":
             # boolean parameters handle default values by using the "checked" attribute
             # there isn't much we can do... just stringify the value
@@ -363,21 +456,26 @@ def create_param_node(doc, param):
             # galaxy requires "value" to be included for int/float
             # since no default was included, we need to figure out one in a clever way... but let the user know
             # that we are "thinking" for him/her
-            warning("Generating default value for parameter [%s]. Galaxy requires the attribute 'value' to be set for integer/floats."\
-                    "You might want to edit the CTD file and provide a suitable default value." % param.name)
+            warning("Generating default value for parameter [%s]. Galaxy requires the attribute 'value' to be set for integer/floats. "\
+                    "Edit the CTD file and provide a suitable default value." % param.name)
             # check if there's a min/max and try to use them
             default_value = None
-            if type(param.restrictions) is _NumericRange:
-                default_value = param.restrictions.n_min
-                if default_value is None:
-                    default_value = param.restrictions.n_max
-                if default_value is None:
-                    # no min/max provided... just use 0 and see what happens
-                    default_value = 0                    
+            if param.restrictions is not None:
+                if type(param.restrictions) is _NumericRange:
+                    default_value = param.restrictions.n_min
+                    if default_value is None:
+                        default_value = param.restrictions.n_max
+                    if default_value is None:
+                        # no min/max provided... just use 0 and see what happens
+                        default_value = 0                    
+                else:
+                    # should never be here, since we have validated this anyway... this code is here just for documentation purposes
+                    # however, better safe than sorry! (it could be that the code changes and then we have an ugly scenario)
+                    raise InvalidModelException("Expected either a numeric range for parameter [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)})
             else:
-                # should never be here, since we have validated this anyway... this code is here just for documentation purposes
-                # however, better safe than sorry! (it could be that the code changes and then we have an ugly scenario)
-                raise InvalidModelException("Expected either a numeric range for parameter [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)})
+                # no restrictions and no default value provided...
+                # make up something
+                default_value = 0
             param_node.setAttribute("value", str(default_value))
     
     return param_node
