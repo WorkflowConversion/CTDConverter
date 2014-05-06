@@ -161,6 +161,25 @@ Providing a default category
 * Short/long version: `-d` / `--default-category`
 * Required: no.
 * Taken values: The value for the default category to use for input CTDs lacking a category.
+* Example:
+
+Imagine that you have a folder full of CTDs. Some of them don't have the optional attribute `category` and the rest belong to the `Data Processing` category. The following invocation:
+
+    $ python generator.py ... -d Other
+    
+will generate, for each of the categories, a different section. Additionally, for CTDs lacking a category, they will be sorted under the given category, `Other`, as shown:
+
+    <section id="category-id-dataprocessing" name="Data Processing">
+        <tool file="some_path/tool_one.xml" />
+        <tool file="some_path/tool_two.xml" />
+        ...
+    </section>
+    
+    <section id="category-id-other" name="Other">
+        <tool file="some_path/tool_three.xml" />
+        <tool file="some_path/tool_four.xml" />
+        ...
+    </section>
 
 Providing package requirements
 ------------------------------
