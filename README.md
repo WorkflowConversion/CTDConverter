@@ -147,12 +147,20 @@ Example:
     
 Will not process any of the parameters named `h`, `help`, or `quiet` and will not appear in the generated Galaxy *ToolConfig*.
 
+
 Generating a tool_conf.xml file
 --------------------------------
-* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. GalaxyConfigGenerator can also generate this file using this parameter.
+* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. GalaxyConfigGenerator can also generate this file using this parameter. The category will be extracted from the provided input CTDs and for each category, a different `<section>` will be generated. Input CTDs lacking a category, will be sorted under the given default category.
 * Short/long version: `-t` / `--tool-conf-destination`
 * Required: no.
 * Taken values: The destination of the file.
+
+Providing a default category
+----------------------------
+* Purpose: Input CTDs that lack a category will be sorted under the value given to this parameter. If this parameter is not given, then the `DEFAULT` category will be used.
+* Short/long version: `-d` / `--default-category`
+* Required: no.
+* Taken values: The value for the default category to use for input CTDs lacking a category.
 
 Providing package requirements
 ------------------------------

@@ -110,6 +110,8 @@ def main(argv=None): # IGNORE:C0111
                              help="list of parameters that will be ignored and won't appear on the galaxy stub", required=False)
         parser.add_argument("-p", "--package-requirement", dest="package_requirements", default=[], nargs="+", action="append", 
                             help="list of required galaxy packages", required=False)
+        parser.add_argument("-d", "--default-category", dest="default_category", default="DEFAULT", required=False, 
+                            help="default category to use for tools lacking a category when generating tool_conf.xml")
         parser.add_argument("-x", "--exit-code", dest="exit_codes", default=[], nargs="+", action="append",
                             help="list of <stdio> galaxy exit codes, in the following format: range=<range>,level=<level>,description=<description>,\n" +
                                  "example: --exit-codes \"range=3:4,level=fatal,description=Out of memory\"")
@@ -139,7 +141,8 @@ def main(argv=None): # IGNORE:C0111
                 package_requirements=args.package_requirements,
                 exit_codes=args.exit_codes,
                 galaxy_tool_path=args.galaxy_tool_path,
-                tool_conf_dest=args.tool_conf_dest)
+                tool_conf_dest=args.tool_conf_dest,
+                default_category=args.default_category)
         return 0
 
     except KeyboardInterrupt:
@@ -223,22 +226,19 @@ def convert(input_files, output_dest, **kwargs):
             print("Generated Galaxy wrapper in [%s]\n" % output_file)
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if kwargs["tool_conf_dest"] is not None:
-            generate_tool_conf(parsed_models, kwargs["tool_conf_dest"], kwargs["galaxy_tool_path"])
+            generate_tool_conf(parsed_models, kwargs["tool_conf_dest"], kwargs["galaxy_tool_path"], kwargs["default_category"])
                 
     except IOError, e:
         raise ApplicationException("One of the provided input files or the destination file could not be accessed. Detailed information: " + str(e) + "\n")
     
-def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path):
+def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path, default_category):
     # for each category, we keep a list of models corresponding to it
     categories_to_tools = dict()
     for model in parsed_models:
-        if "category" in model[0].opt_attribs:
-            category = model[0].opt_attribs["category"]
-            if category is not None and len(strip(category)) > 0:
-                category = strip(category)
-                if category not in categories_to_tools:
-                    categories_to_tools[category] = []
-                categories_to_tools[category].append(model[1])
+        category = strip(model[0].opt_attribs.get("category", default_category))
+        if category not in categories_to_tools:
+            categories_to_tools[category] = []
+        categories_to_tools[category].append(model[1])
                 
     # at this point, we should have a map for all categories->tools
     doc = Document()
