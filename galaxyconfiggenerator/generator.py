@@ -259,8 +259,6 @@ def convert(input_files, output_dest, **kwargs):
 
             macro_file = os.path.join( os.path.dirname( output_file ), 'macros.xml' )
             if not os.path.exists( macro_file ):
-                pass
-            else:
                 doc = Document()
                 macro_node = doc.createElement("macros")
                 doc.appendChild( macro_node )
