@@ -5,9 +5,9 @@ Given one or more CTD files, GalaxyConfigGenerator generates the needed Galaxy w
 
 ## How to install
 
-1. Download the source code from [https://github.com/genericworkflownodes/GalaxyConfigGenerator](https://github.com/genericworkflownodes/GalaxyConfigGenerator).
-2. Download CTDopts from [https://github.com/genericworkflownodes/CTDopts](https://github.com/genericworkflownodes/CTDopts).
-3. You can install the CTDopts and GalaxyConfigGenerator modules, or just make them available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: [https://docs.python.org/2/install/](https://docs.python.org/2/install/).
+1. Download the source code from https://github.com/genericworkflownodes/GalaxyConfigGenerator.
+2. Download CTDopts from https://github.com/genericworkflownodes/CTDopts.
+3. You can install the CTDopts and GalaxyConfigGenerator modules, or just make them available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
 
 ## How to use
 
@@ -176,12 +176,14 @@ Example:
 
     $ python generator.py ... -x "range=1:5,level=fatal,description=I/O" -x "range=6:,level=warning,description=Non fatal"
     
-Will produce the following `<stdio>` section in the generated `tool_conf.xml` file:
+Will produce the following `<stdio>` section in the generated Galaxy *ToolConfig*:
 
     <stdio>
         <exit_code range="1:5" level="fatal" description="I/O"/>
         <exit_code range="6:" level="warning" description="Non fatal"/>
     </stdio>
+    
+For more information about providing valid values for `range` and `level`, go to https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#A.3Cexit_code.3E_tag_set
 
 ### Generating a tool_conf.xml file
 
