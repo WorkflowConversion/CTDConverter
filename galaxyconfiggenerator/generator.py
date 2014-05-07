@@ -1,15 +1,16 @@
+#!/usr/bin/env python
 # encoding: utf-8
 '''
 @author:     delagarza
 
 '''
 
-import string
+
 import sys
 import os
 import traceback
 import ntpath
-
+import string
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError
@@ -24,6 +25,9 @@ __updated__ = '2014-03-26'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
+COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in_type.ext}"}
+SUPPORTED_FILE_TYPES = ["mzXML","mzML","mgf","featureXML","consensusXML","idXML","pepXML", "txt", "csv"]
+FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular'}
 
 class CLIError(Exception):
     '''Generic exception to raise and log different fatal errors.'''
@@ -233,24 +237,37 @@ def convert(input_files, output_dest, **kwargs):
             tool = create_tool(doc, model)
             doc.appendChild(tool)
             create_description(doc, tool, model)
-            create_requirements(doc, tool, model, kwargs["package_requirements"])
+            create_macros(doc, tool, model)
             create_command(doc, tool, model, **kwargs)
+            #create_configfiles(doc, tool, model, kwargs["blacklisted_parameters"])
             create_inputs(doc, tool, model, kwargs["blacklisted_parameters"])
             create_outputs(doc, tool, model, kwargs["blacklisted_parameters"])
-            create_exit_codes(doc, tool, model, kwargs["exit_codes"])
             create_help(doc, tool, model)
             
             # finally, serialize the tool
             output_file = output_dest
             # if multiple inputs are being converted, then we need to generate a different output_file for each input
             if is_converting_multiple_ctds:
-                if not output_file.endswith('/'):
-                    output_file += "/"
-                output_file += get_filename(input_file) + ".xml"
+                #if not output_file.endswith('/'):
+                #    output_file += "/"
+                #output_file += get_filename(input_file) + ".xml"
+                output_file = os.path.join( output_file, get_filename(input_file) + ".xml" )
             doc.writexml(open(output_file, 'w'), indent="    ", addindent="    ", newl='\n', encoding="UTF-8")
             # let's use model to hold the name of the outputfile
             parsed_models.append([model, get_filename(output_file)])
             print("Generated Galaxy wrapper in [%s]\n" % output_file)
+
+            macro_file = os.path.join( os.path.dirname( output_file ), 'macros.xml' )
+            if not os.path.exists( macro_file ):
+                pass
+            else:
+                doc = Document()
+                macro_node = doc.createElement("macros")
+                doc.appendChild( macro_node )
+                create_requirements_macro(doc, macro_node, kwargs["package_requirements"])
+                create_exit_codes_macro(doc, macro_node, kwargs["exit_codes"])
+                create_reference_macro(doc, macro_node)
+                doc.writexml(open(macro_file, 'w+'), indent="    ", addindent="    ", newl='\n', encoding="UTF-8")
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if kwargs["tool_conf_dest"] is not None:
             generate_tool_conf(parsed_models, kwargs["tool_conf_dest"], kwargs["galaxy_tool_path"], kwargs["default_category"])
@@ -296,8 +313,8 @@ def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path, default_
 # http://stackoverflow.com/questions/8384737/python-extract-file-name-from-path-no-matter-what-the-os-path-format
 def get_filename(path):
     head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)            
-    
+    return tail or ntpath.basename(head)
+
 def create_tool(doc, model):
     tool = doc.createElement("tool")
     # use the same name of the tool... maybe a future version would contain a way to add a specific ID?
@@ -313,51 +330,82 @@ def create_description(doc, tool, model):
         description_node.appendChild(description)
         tool.appendChild(description_node)
 
-def create_requirements(doc, tool, model, package_requirements):
-    if len(package_requirements) > 0:
-        requirements_node = doc.createElement("requirements")
-        for package_requirement in package_requirements:
-            requirement_node = doc.createElement("requirement")
-            requirement_node.setAttribute("type", "package")
-            requirement_text_node = doc.createTextNode(package_requirement)
-            requirement_node.appendChild(requirement_text_node)
-            requirements_node.appendChild(requirement_node) 
-        tool.appendChild(requirements_node)
-
 def create_command(doc, tool, model, **kwargs):
-    command = get_tool_executable_path(model) + ' '
-    command += '\n' + kwargs["add_to_command_line"] + ' '
+    command = get_tool_executable_path(model) + '\n'
+    command += kwargs["add_to_command_line"] + '\n'
     whitespace_validation = kwargs["whitespace_validation"]
     quote_parameters = kwargs["quote_parameters"]
-    
+
     for param in extract_parameters(model):
+        if type(param.parent) == ParameterGroup and param.parent.name != '1':
+            prefix = param.parent.name + "!"
+        else:
+            prefix = ''
+
         if param.name in kwargs["blacklisted_parameters"]:
-            # let's not use an extra level of indentation and use NOP
-            continue
-        galaxy_parameter_name = get_galaxy_parameter_name(param.name)
-        # if whitespace_validation has been set, we need to generate, for each parameter:
-        # #if str( $t ) != ''  and str( $t ) != 'None' :
-        # -t "$t"
-        # #end if
-        if whitespace_validation:
-            command += "\n#if str($%(param_name)s) != '' and str($%(param_name)s) != None :\n    "  % {"param_name":galaxy_parameter_name}           
-        # for boolean types, we only need the placeholder
-        if param.type is not bool:
-            # add the parameter name
-            command += '-' + param.name + ' '
-        # we need to add the placeholder
-        actual_parameter = "$" + galaxy_parameter_name
-        if quote_parameters:
-            actual_parameter = '"' + actual_parameter + '"'
-        command += actual_parameter + ' '
-        if whitespace_validation:
-            command += "\n#end if"
+            if param.name in COMMAND_REPLACE_PARAMS:
+                # replace the param value with a hardcoded value, for example the GALAXY_SLOTS ENV
+                command += '-%s%s %s\n' %  ( prefix, param.name, COMMAND_REPLACE_PARAMS[param.name])
+            else:
+                # let's not use an extra level of indentation and use NOP
+                continue
+        else:
+            galaxy_parameter_name = get_galaxy_parameter_name(param.name)
+            # if whitespace_validation has been set, we need to generate, for each parameter:
+            # #if str( $t ).split() != '':
+            # -t "$t"
+            # #end if
+            # TODO only useful for text fields, integers or floats
+            # not useful for choices, input fields ...
+
+            if whitespace_validation:
+                command += "\n#if str($%(param_name)s).strip() != '':\n"  % {"param_name": galaxy_parameter_name}
+            # for boolean types, we only need the placeholder
+            if param.type is not bool:
+                # add the parameter name
+                command += '-%s%s ' %  ( prefix, param.name )
+            # we need to add the placeholder
+            actual_parameter = "${%s}" % galaxy_parameter_name
+            if quote_parameters:
+                actual_parameter = '"%s"' % actual_parameter
+            command += actual_parameter + '\n'
+            if whitespace_validation:
+                command += "\n#end if"
             
     command_node = doc.createElement("command")
-    command_text_node = doc.createCDATASection(command.strip())
+    #command_text_node = doc.createCDATASection(command.strip())
+    command_text_node = doc.createTextNode(command.strip())
     command_node.appendChild(command_text_node)
     tool.appendChild(command_node)
-    
+
+def create_macros(doc, tool, model):
+    """
+        <macros>
+            <token name="@EXECUTABLE@">IDFilter</token>
+            <import>macros.xml</import>
+        </macros>
+        <expand macro="stdio" />
+        <expand macro="requirements" />
+        <expand macro="command" /> -> was used with configfiles
+    """
+    macros_node = doc.createElement( "macros" )
+    token_node = doc.createElement( "token" )
+    token_node.setAttribute( "name", "@EXECUTABLE@" )
+    token_node.appendChild( doc.createTextNode( get_tool_executable_path(model) ) )
+    macros_node.appendChild( token_node )
+    import_node = doc.createElement( "import" )
+    import_node.appendChild( doc.createTextNode( "macros.xml" ) )
+    macros_node.appendChild( import_node )
+    tool.appendChild( macros_node )
+    expand_node = doc.createElement( "expand" )
+    expand_node.setAttribute( "macro", "stdio" )
+    tool.appendChild( expand_node )
+    expand_node = doc.createElement( "expand" )
+    expand_node.setAttribute( "macro", "requirements" )
+    tool.appendChild( expand_node )
+    #expand_node = doc.createElement( "expand" )
+    #expand_node.setAttribute( "macro", "command" )
+    #tool.appendChild( expand_node )
 
 def get_tool_executable_path(model):
     # rules to build the galaxy executable path:
@@ -389,7 +437,45 @@ def get_tool_executable_path(model):
     
 def get_galaxy_parameter_name(param_name):
     return "param_%s" % param_name
-    
+
+##
+## historical reasons, can be removed later
+##
+def create_configfiles(doc, tool, model, blacklisted_parameters):
+    cf = "[simple_options]\n"
+    for param in extract_parameters(model):
+        if type(param.parent) == ParameterGroup and param.parent.name != '1':
+            prefix = param.parent.name + "!"
+        else:
+            prefix = ''
+
+        if param.name in blacklisted_parameters:
+            if param.name in COMMAND_REPLACE_PARAMS:
+
+                # add the parameter name
+                cf += '%s%s=' % ( prefix, param.name )
+
+                # replace the param value with a hardcoded value, for example the GALAXY_SLOTS ENV
+                cf += COMMAND_REPLACE_PARAMS[param.name]
+            else:
+                continue
+        else:
+
+
+            # add the parameter name
+            cf += '%s%s=' % ( prefix, param.name )
+
+            # we need to add the placeholder
+            cf += "$" + get_galaxy_parameter_name(param.name) + ' '
+        cf += '\n'
+    configfiles_node = doc.createElement("configfiles")
+    configfile_node = doc.createElement("configfile")
+    configfile_text_node = doc.createTextNode( cf )
+    configfile_node.appendChild( configfile_text_node )
+    configfiles_node.appendChild( configfile_node )
+    tool.appendChild( configfiles_node )
+
+
 def create_inputs(doc, tool, model, blacklisted_parameters):
     inputs_node = doc.createElement("inputs")
     # treat all non output-file parameters as inputs
@@ -400,7 +486,12 @@ def create_inputs(doc, tool, model, blacklisted_parameters):
         if param.type is not _OutFile:
             inputs_node.appendChild(create_param_node(doc, param))
     tool.appendChild(inputs_node)
-    
+
+def get_supported_file_types( file_types ):
+    print file_types
+    return [ FILE_TYPES_TO_GALAXY_DATA_TYPES.get(file_type, file_type) for file_type in file_types if file_type in SUPPORTED_FILE_TYPES]
+
+
 def create_param_node(doc, param):
     param_node = doc.createElement("param")
     param_node.setAttribute("name", get_galaxy_parameter_name(param.name))
@@ -410,6 +501,7 @@ def create_param_node(doc, param):
     else:
         label = "%s parameter" % param.name
     param_node.setAttribute("label", label)
+    param_node.setAttribute("help", "(-%s)" % param.name)
     
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
@@ -427,9 +519,9 @@ def create_param_node(doc, param):
         # assume it's just data unless restrictions are provided
         param_format = "data"
         if param.restrictions is not None:
-            # join all supported_formats for the file... this MUST be a _FileFormat            
+            # join all supported_formats for the file... this MUST be a _FileFormat
             if type(param.restrictions) is _FileFormat: 
-                param_format = ','.join(param.restrictions.formats)
+                param_format = ','.join( get_supported_file_types(param.restrictions.formats) )
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)}) 
         param_node.setAttribute("format", param_format)
@@ -458,7 +550,7 @@ def create_param_node(doc, param):
             if param.restrictions.n_max is not None:
                 param_node.setAttribute("max", str(param.restrictions.n_max))
         elif type(param.restrictions) is _FileFormat:
-            param_node.setAttribute("format", ",".join(param.restrictions.formats))                     
+            param_node.setAttribute("format", ",".join( get_supported_file_types(param.restrictions.formats) ))
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]" % {"type":type(param.restrictions), "name":param.name}) 
     
@@ -532,12 +624,15 @@ def get_lowercase_list(some_list):
 # this method assumes that param has restrictions, and that only two restictions are present (either yes/no or true/false)
 def create_boolean_parameter(param, param_node):
     # first, determine the 'truevalue' and the 'falsevalue'
+    """TODO: true and false values can be way more than 'true' and 'false'
+        but for that we need CTD support
+    """
     truevalue = None
     falsevalue = None
     choices = get_lowercase_list(param.restrictions.choices)
     if "yes" in choices:
         truevalue = "yes"
-        falsevalue = "no"        
+        falsevalue = "no"
     else:
         truevalue = "true"
         falsevalue = "false"    
@@ -568,7 +663,14 @@ def create_data_node(doc, param):
     data_format = "data"
     if param.restrictions is not None:
         if type(param.restrictions) is _FileFormat:
-            data_format = ','.join(param.restrictions.formats)            
+            # set the first data output node to the first fileformat
+            formats = get_supported_file_types( param.restrictions.formats )
+            data_format = formats.pop()
+            # if there are more than one output file formats from which the
+            # user can choose, create "change_format" nodes for all but the first
+            if formats:
+                #param_out_type is hardcoded for the moment
+                data_node.appendChild( create_change_format_node(doc, formats, 'param_out_type') )
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for output [%(name)s]" % {"type":type(param.restrictions), "name":param.name})
     data_node.setAttribute("format", data_format)
@@ -578,9 +680,109 @@ def create_data_node(doc, param):
         
     return data_node
 
-def create_exit_codes(doc, tool, model, exit_codes):
+def create_filter_node(doc, data_format):
+    """
+        <filter>'bam' in outputs</filter>
+    """
+    filter_node = doc.createElement("filter")
+    # param_out_type is hardcoded for the moment
+    option_label = doc.createTextNode("'%s' in param_out_type" % (data_format))
+    filter_node.appendChild(option_label)
+    return filter_node
+
+def create_change_format_node(doc, data_formats, input_ref):
+    """
+        <change_format>
+            <when input="secondary_structure" value="true" format="text"/>
+        </change_format>
+    """
+    change_format_node = doc.createElement("change_format")
+    for data_format in data_formats:
+        when_node = doc.createElement("when")
+        when_node.setAttribute('input', input_ref)
+        when_node.setAttribute('value', data_format)
+        when_node.setAttribute('format', data_format)
+        change_format_node.appendChild( when_node )
+    return change_format_node
+
+
+def create_requirements_macro(doc, macro, package_requirements):
+    # create xml node to define a macro: <xml name="requirements">
+    macro_xml_node = doc.createElement("xml")
+    macro_xml_node.setAttribute("name", "requirements")
+    macro.appendChild( macro_xml_node )
+
+    if len(package_requirements) > 0:
+        requirements_node = doc.createElement("requirements")
+        for package_requirement in package_requirements:
+            requirement_node = doc.createElement("requirement")
+            requirement_node.setAttribute("type", "package")
+            requirement_text_node = doc.createTextNode(package_requirement)
+            requirement_node.appendChild(requirement_text_node)
+            requirements_node.appendChild(requirement_node)
+        macro_xml_node.appendChild(requirements_node)
+    else:
+        # Add a template
+        """
+        <requirements>
+            <requirement type="binary">@EXECUTABLE@</requirement>
+            <requirement type="package" version="1.1.1">TODO</requirement>
+        </requirements>
+        """
+        requirements_node = doc.createElement("requirements")
+
+        requirement_node = doc.createElement("requirement")
+        requirement_node.setAttribute("type", "binary")
+        requirement_text_node = doc.createTextNode('@EXECUTABLE@')
+        requirement_node.appendChild(requirement_text_node)
+        requirements_node.appendChild(requirement_node)
+
+        requirement_node = doc.createElement("requirement")
+        requirement_node.setAttribute("type", "package")
+        requirement_node.setAttribute("version", "1.1.1")
+        requirement_text_node = doc.createTextNode('TODO')
+        requirement_node.appendChild(requirement_text_node)
+        requirements_node.appendChild(requirement_node)
+
+        macro_xml_node.appendChild(requirements_node)
+
+    """
+        Add a version_command to the macro file.
+        <version_command>@EXECUTABLE@ -version</version_command>
+    """
+    version_command = doc.createElement("version_command")
+    version_command_text_node = doc.createTextNode('@EXECUTABLE@ -version')
+    version_command.appendChild(version_command_text_node)
+    macro_xml_node.appendChild(version_command)
+
+
+
+def create_reference_macro(doc, macro):
+    # create xml node to define a macro: <token name="@REFERENCES@">
+    macro_xml_node = doc.createElement("token")
+    macro_xml_node.setAttribute("name", "@REFERENCES@")
+    references_text_node = doc.createTextNode("""
+
+-------
+
+**References**
+
+If you use this Galaxy tool in work leading to a scientific publication please
+cite the following papers:
+
+""")
+    macro_xml_node.appendChild( references_text_node )
+    macro.appendChild( macro_xml_node )
+
+
+def create_exit_codes_macro(doc, macro, exit_codes):
+    # create xml node to define a macro: <xml name="stdio">
+    macro_xml_node = doc.createElement("xml")
+    macro_xml_node.setAttribute("name", "stdio")
+    macro.appendChild( macro_xml_node )
+
     if len(exit_codes) > 0:
-        stdio_node = doc.createElement("stdio")        
+        stdio_node = doc.createElement("stdio")
         for exit_code in exit_codes:
             exit_code_node = doc.createElement("exit_code")
             exit_code_node.setAttribute("range", exit_code.range)
@@ -589,21 +791,53 @@ def create_exit_codes(doc, tool, model, exit_codes):
             if exit_code.description is not None:
                 exit_code_node.setAttribute("description", exit_code.description)
             stdio_node.appendChild(exit_code_node)
-        tool.appendChild(stdio_node)
-        
+        macro_xml_node.appendChild(stdio_node)
+    else:
+        # fill in a template with a meaningful defaul
+        """
+            <!-- Anything other than zero is an error -->
+            <exit_code range="1:" />
+            <exit_code range=":-1" />
+            <!-- In case the return code has not been set propery check stderr too -->
+            <regex match="Error:" />
+            <regex match="Exception:" />
+        """
+        stdio_node = doc.createElement("stdio")
+        exit_code_node = doc.createElement("exit_code")
+        exit_code_node.setAttribute("range", "1:")
+        stdio_node.appendChild(exit_code_node)
+        exit_code_node = doc.createElement("exit_code")
+        exit_code_node.setAttribute("range", ":-1")
+        stdio_node.appendChild(exit_code_node)
+        exit_code_node = doc.createElement("regex")
+        exit_code_node.setAttribute("match", "Error:")
+        stdio_node.appendChild(exit_code_node)
+        exit_code_node = doc.createElement("regex")
+        exit_code_node.setAttribute("match", "Exception:")
+        stdio_node.appendChild(exit_code_node)
+
+        macro_xml_node.appendChild(stdio_node)
+
 def create_help(doc, tool, model):
-    manual = None
+    """
+**What it does**
+
+Shows basic information about the file, such as data ranges and file type.
+
+    """
+    manual = '**What it does**\n\n'
     doc_url = None
     if 'manual' in model.opt_attribs.keys(): 
-        manual = model.opt_attribs["manual"]
+        manual += '%s\n\n' % model.opt_attribs["manual"]
     if 'docurl' in model.opt_attribs.keys():
         doc_url = model.opt_attribs["docurl"]
+
     help_text = "No help available"
     if manual is not None:
         help_text = manual
     if doc_url is not None:
         help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
-        
+    help_text += "\n\n@REFERENCES@\n"
     help_node = doc.createElement("help")
     # TODO: do we need CDATA Section here?
     help_node.appendChild(doc.createTextNode(help_text))
@@ -611,7 +845,7 @@ def create_help(doc, tool, model):
     
 # since a model might contain several ParameterGroup elements, we want to simply 'flatten' the parameters to generate the Galaxy wrapper    
 def extract_parameters(model):
-    parameters = []    
+    parameters = []
     if len(model.parameters.parameters) > 0:
         # use this to put parameters that are to be processed
         # we know that CTDModel has one parent ParameterGroup
