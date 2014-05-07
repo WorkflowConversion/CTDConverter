@@ -45,7 +45,7 @@ class ApplicationException(Exception):
         return self.msg
     
 class ExitCode:
-    def __init__(self, code_range="", level="", description=""):
+    def __init__(self, code_range="", level="", description=None):
         self.range = code_range
         self.level = level
         self.description = description    
@@ -136,7 +136,6 @@ def main(argv=None): # IGNORE:C0111
                 add_to_command_line=args.add_to_command_line, 
                 whitespace_validation=args.whitespace_validation,
                 quote_parameters=args.quote_parameters,
-                # remember that blacklisted_parameters, package_requirements and exit_codes are lists of lists of strings
                 blacklisted_parameters=args.blacklisted_parameters,
                 package_requirements=args.package_requirements,
                 exit_codes=args.exit_codes,
@@ -183,14 +182,42 @@ def convert_exit_codes(exit_codes_raw):
     # input is in the format:
     # range=3:4,level=fatal,description=Out of memory
     exit_codes = []
+    errors_so_far = ""
     for exit_code_raw in exit_codes_raw:
         exit_code = ExitCode()
+        required_keys = ["range", "level"]
+        valid_keys = required_keys[:]
+        valid_keys.append("description")
+        obtained_values = dict()
+        
         for key_value in exit_code_raw.split(","):
             # each key_value contains something like range=3 or description=whatever
             # so we can split again by using "="
             key_value_split = key_value.split("=")
-            setattr(exit_code, key_value_split[0], key_value_split[1].strip())
-        exit_codes.append(exit_code)
+            if len(key_value_split) == 2:
+                obtained_values[key_value_split[0]] = key_value_split[1].strip()
+            else:
+                errors_so_far += "Unrecognized format [%s] found in exit-code parameter. Allowed format is [key=value]\n" % key_value
+            
+        # do some sanity check and report non-recognized keys
+        for (key, value) in obtained_values.iteritems():
+            # check if the key is in the valid keys
+            if not key in valid_keys:
+                errors_so_far += "Unrecognized property [%(key)s] found in exit-code parameter [%(exit_code)s]\n" % {"key":key, "exit_code":exit_code_raw}
+            else:
+                # we know it's a valid key, so let's use it
+                setattr(exit_code, key, value)
+                
+        # now, let's check that all required keys were given
+        for key in required_keys:
+            if key not in obtained_values:
+                errors_so_far += "Required property [%(key)s] was not found in exit-code parameter [%(exit_code)s]\n" % {"key":key, "exit_code":exit_code_raw}
+        exit_codes.append(exit_code)        
+    
+    # stop processing if errors were found
+    if len(errors_so_far) > 0:
+        raise ApplicationException(errors_so_far)    
+         
     return exit_codes
     
 def convert(input_files, output_dest, **kwargs):
@@ -558,7 +585,9 @@ def create_exit_codes(doc, tool, model, exit_codes):
             exit_code_node = doc.createElement("exit_code")
             exit_code_node.setAttribute("range", exit_code.range)
             exit_code_node.setAttribute("level", exit_code.level)
-            exit_code_node.setAttribute("description", exit_code.description)
+            # description is optional
+            if exit_code.description is not None:
+                exit_code_node.setAttribute("description", exit_code.description)
             stdio_node.appendChild(exit_code_node)
         tool.appendChild(stdio_node)
         

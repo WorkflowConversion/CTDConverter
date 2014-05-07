@@ -15,11 +15,11 @@ The generator takes several parameters and a varying number of inputs and output
 
 ### One input, one output
 
-In its simplest form, GalaxyConfigGenerator takes an input CTD file and generates an output Galaxy *ToolConfig* file, as shown here:
+In its simplest form, GalaxyConfigGenerator takes an input CTD file and generates an output Galaxy *ToolConfig* file. The following use of GalaxyConfigGenerator:
 
     $ python generator.py -i /data/sample_input.ctd -o /data/sample_output.xml
 
-Will parse `/data/sample_input.ctd` and generate a Galaxy tool wrapper under `/data/sample_output.xml`; this generated file can be added to your Galaxy instance like any other tool.
+will parse `/data/sample_input.ctd` and generate a Galaxy tool wrapper under `/data/sample_output.xml`; this generated file can be added to your Galaxy instance like any other tool.
 
 ### Converting several CTDs found in a folder
 
@@ -158,6 +158,30 @@ Example:
     
 Will not process any of the parameters named `h`, `help`, or `quiet` and will not appear in the generated Galaxy *ToolConfig*.
 
+### Providing exit code ranges
+
+* Purpose: Galaxy reads the exit code of an invoked tool and can be configured to act depending on the exit code. This parameter allows you to include this information in a generated Galaxy *ToolConfig*.
+* Short/long version: `-x` / `--exit-code`
+* Required: no.
+* Taken values: A list of Galaxy exit code elements given in the following format:
+
+`range=<range>,level=<level>[,description=<description>]`
+
+Note that `description` is optional. Both `range` and `level` are required. Thus, the following are valid values for this parameter:
+
+    range=5:,level=fatal,description=Fatal error
+    range=127:,level=warning
+
+Example:
+
+    $ python generator.py ... -x "range=1:5,level=fatal,description=I/O" -x "range=6:,level=warning,description=Non fatal"
+    
+Will produce the following `<stdio>` section in the generated `tool_conf.xml` file:
+
+    <stdio>
+        <exit_code range="1:5" level="fatal" description="I/O"/>
+        <exit_code range="6:" level="warning" description="Non fatal"/>
+    </stdio>
 
 ### Generating a tool_conf.xml file
 
@@ -175,11 +199,11 @@ Will not process any of the parameters named `h`, `help`, or `quiet` and will no
 
 Example:
 
-Suppose there is a folder containing CTD files. Some of those CTDs don't have the optional attribute `category` and the rest belong to the `Data Processing` category. The following invocation:
+Suppose there is a folder containing several CTD files. Some of those CTDs don't have the optional attribute `category` and the rest belong to the `Data Processing` category. The following invocation:
 
     $ python generator.py ... -d Other
     
-will generate, for each of the categories, a different section. Additionally, for CTDs lacking a category, they will be sorted under the given category, `Other`, as shown:
+will generate, for each of the categories, a different section. Additionally, CTDs lacking a category will be sorted under the given category, `Other`, as shown:
 
     <section id="category-id-dataprocessing" name="Data Processing">
         <tool file="some_path/tool_one.xml" />
@@ -210,25 +234,6 @@ Will generate the following requirement section in the generated `/data/tool_con
         <requirement type="package">apache-tools</requirement>
         <requirement type="package">java-galaxy</requirement>
     </requirements>
-
-### Providing exit code ranges
-
-* Purpose: Galaxy reads the exit code of an invoked tool and can be configured to act depending on the exit code. This parameter allows you to include this information in a generated `tool_conf.xml`.
-* Short/long version: `-x` / `--exit-code`
-* Required: no.
-* Taken values: A list of Galaxy exit code elements given in the following format
-`range=<range>,level=<level>,description=<description>`
-
-Example:
-
-    $ python generator.py ... -x "range=1:5,level=fatal,description=I/O" -x "range=6:,level=warning,description=Non fatal"
-    
-Will produce the following `<stdio>` section in the generated `tool_conf.xml` file:
-
-    <stdio>
-        <exit_code range="1:5" level="fatal" description="I/O"/>
-        <exit_code range="6:" level="warning" description="Non fatal"/>
-    </stdio>
 
 ### Providing a path for the location of the ToolConfig files
 
