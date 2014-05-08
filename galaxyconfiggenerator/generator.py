@@ -367,7 +367,7 @@ def create_command(doc, tool, model, **kwargs):
             # not useful for choices, input fields ...
 
             if whitespace_validation:
-                command += "\n#if str($%(param_name)s).strip() != '':\n"  % {"param_name": galaxy_parameter_name}
+                command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
             # for boolean types, we only need the placeholder
             if param.type is not bool:
                 # add the parameter name
@@ -378,7 +378,7 @@ def create_command(doc, tool, model, **kwargs):
                 actual_parameter = '"%s"' % actual_parameter
             command += actual_parameter + '\n'
             if whitespace_validation:
-                command += "\n#end if\n"
+                command += "#end if\n"
 
         if param.advanced:
             advanced_command += "    %s" % command
