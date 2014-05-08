@@ -608,7 +608,8 @@ def create_param_node(doc, param):
         elif param_type != "boolean":
             # boolean parameters handle default values by using the "checked" attribute
             # there isn't much we can do... just stringify the value
-            param_node.setAttribute("value", str(param.default))
+            if not str(param.default).strip() == ':':
+                param_node.setAttribute("value", str(param.default))
     else:
         if param.type is int or param.type is float:
             # galaxy requires "value" to be included for int/float
