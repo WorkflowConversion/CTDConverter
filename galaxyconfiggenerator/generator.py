@@ -25,7 +25,7 @@ __updated__ = '2014-03-26'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
-COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in_type.ext}"}
+COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in.ext}"}
 SUPPORTED_FILE_TYPES = ["mzXML","mzML","mgf","featureXML","consensusXML","idXML","pepXML", "txt", "csv"]
 FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular'}
 
@@ -557,7 +557,7 @@ def create_param_node(doc, param):
     if param.restrictions is not None:
         # it could be either _Choices or _NumericRange, with special case for boolean types
         if param_type == "boolean":
-            create_boolean_parameter(param, param_node)            
+            create_boolean_parameter(param, param_node)
         elif type(param.restrictions) is _Choices:
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
@@ -579,7 +579,9 @@ def create_param_node(doc, param):
             param_node.setAttribute("format", ",".join( get_supported_file_types(param.restrictions.formats) ))
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]" % {"type":type(param.restrictions), "name":param.name}) 
-    
+
+        param_node.setAttribute("optional", str(not param.required))
+
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
         param_node.setAttribute("size", "20")
