@@ -343,7 +343,7 @@ def create_command(doc, tool, model, **kwargs):
     for param in extract_parameters(model):
         command = ''
         if type(param.parent) == ParameterGroup and param.parent.name != '1':
-            prefix = param.parent.name + "!"
+            prefix = param.parent.name + ":"
         else:
             prefix = ''
 
