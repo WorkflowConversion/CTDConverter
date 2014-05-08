@@ -790,10 +790,10 @@ def create_requirements_macro(doc, macro, package_requirements):
         Add a version_command to the macro file.
         <version_command>@EXECUTABLE@ -version</version_command>
     """
-    version_command = doc.createElement("version_command")
+    #version_command = doc.createElement("version_command")
     #version_command_text_node = doc.createTextNode('@EXECUTABLE@ -version')
     #version_command.appendChild(version_command_text_node)
-    macro_xml_node.appendChild(version_command)
+    #macro_xml_node.appendChild(version_command)
 
 
 
