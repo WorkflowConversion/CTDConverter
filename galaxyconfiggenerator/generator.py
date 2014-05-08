@@ -498,6 +498,8 @@ def create_inputs(doc, tool, model, blacklisted_parameters):
     expand_advanced_node = doc.createElement('expand')
     expand_advanced_node.setAttribute('macro', 'advanced_options')
 
+    collect_inputs = list()
+
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
         if param.name in blacklisted_parameters:
@@ -505,9 +507,16 @@ def create_inputs(doc, tool, model, blacklisted_parameters):
             continue
         if param.type is not _OutFile:
             if not param.advanced:
-                inputs_node.appendChild(create_param_node(doc, param))
+                if param.type is _InFile:
+                    collect_inputs.append( create_param_node(doc, param) )
+                else:
+                    inputs_node.appendChild( create_param_node(doc, param) )
             else:
                 expand_advanced_node.appendChild(create_param_node(doc, param))
+
+        for inputs in collect_inputs:
+            inputs_node.appendChild( inputs )
+
     if expand_advanced_node.hasChildNodes():
         inputs_node.appendChild(expand_advanced_node)
     tool.appendChild(inputs_node)
