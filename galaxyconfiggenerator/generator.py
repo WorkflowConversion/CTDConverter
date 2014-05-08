@@ -330,6 +330,12 @@ def create_description(doc, tool, model):
         description_node.appendChild(description)
         tool.appendChild(description_node)
 
+def get_param_name( param ):
+    if type(param.parent) == ParameterGroup and param.parent.name != '1':
+        return get_param_name(param.parent) + ":" + param.name
+    else:
+        return param.name
+
 def create_command(doc, tool, model, **kwargs):
     final_command = get_tool_executable_path(model) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
@@ -342,15 +348,12 @@ def create_command(doc, tool, model, **kwargs):
 
     for param in extract_parameters(model):
         command = ''
-        if type(param.parent) == ParameterGroup and param.parent.name != '1':
-            prefix = param.parent.name + ":"
-        else:
-            prefix = ''
+        param_name = get_param_name( param )
 
         if param.name in kwargs["blacklisted_parameters"]:
             if param.name in COMMAND_REPLACE_PARAMS:
                 # replace the param value with a hardcoded value, for example the GALAXY_SLOTS ENV
-                command += '-%s%s %s\n' %  ( prefix, param.name, COMMAND_REPLACE_PARAMS[param.name])
+                command += '-%s %s\n' %  ( param_name, COMMAND_REPLACE_PARAMS[param.name])
             else:
                 # let's not use an extra level of indentation and use NOP
                 continue
@@ -368,7 +371,7 @@ def create_command(doc, tool, model, **kwargs):
             # for boolean types, we only need the placeholder
             if param.type is not bool:
                 # add the parameter name
-                command += '-%s%s ' %  ( prefix, param.name )
+                command += '-%s ' %  ( param_name )
             # we need to add the placeholder
             actual_parameter = "${%s}" % galaxy_parameter_name
             if quote_parameters:
