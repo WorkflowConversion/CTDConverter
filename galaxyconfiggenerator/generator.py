@@ -265,7 +265,9 @@ def convert(input_files, output_dest, **kwargs):
                 create_requirements_macro(doc, macro_node, kwargs["package_requirements"])
                 create_exit_codes_macro(doc, macro_node, kwargs["exit_codes"])
                 create_reference_macro(doc, macro_node)
+                create_advanced_selector_macro( doc, macro_node )
                 doc.writexml(open(macro_file, 'w+'), indent="    ", addindent="    ", newl='\n', encoding="UTF-8")
+
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if kwargs["tool_conf_dest"] is not None:
             generate_tool_conf(parsed_models, kwargs["tool_conf_dest"], kwargs["galaxy_tool_path"], kwargs["default_category"])
@@ -329,12 +331,17 @@ def create_description(doc, tool, model):
         tool.appendChild(description_node)
 
 def create_command(doc, tool, model, **kwargs):
-    command = get_tool_executable_path(model) + '\n'
-    command += kwargs["add_to_command_line"] + '\n'
+    final_command = get_tool_executable_path(model) + '\n'
+    final_command += kwargs["add_to_command_line"] + '\n'
     whitespace_validation = kwargs["whitespace_validation"]
     quote_parameters = kwargs["quote_parameters"]
 
+    advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
+    advanced_command_end = '#end if'
+    advanced_command = ''
+
     for param in extract_parameters(model):
+        command = ''
         if type(param.parent) == ParameterGroup and param.parent.name != '1':
             prefix = param.parent.name + "!"
         else:
@@ -368,11 +375,19 @@ def create_command(doc, tool, model, **kwargs):
                 actual_parameter = '"%s"' % actual_parameter
             command += actual_parameter + '\n'
             if whitespace_validation:
-                command += "\n#end if"
-            
+                command += "\n#end if\n"
+
+        if param.advanced:
+            advanced_command += "    %s" % command
+        else:
+            final_command += command
+
+    if advanced_command:
+        final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
+
     command_node = doc.createElement("command")
     #command_text_node = doc.createCDATASection(command.strip())
-    command_text_node = doc.createTextNode(command.strip())
+    command_text_node = doc.createTextNode(final_command)
     command_node.appendChild(command_text_node)
     tool.appendChild(command_node)
 
@@ -443,7 +458,7 @@ def create_configfiles(doc, tool, model, blacklisted_parameters):
     cf = "[simple_options]\n"
     for param in extract_parameters(model):
         if type(param.parent) == ParameterGroup and param.parent.name != '1':
-            prefix = param.parent.name + "!"
+            prefix = param.parent.name + ":"
         else:
             prefix = ''
 
@@ -473,17 +488,30 @@ def create_configfiles(doc, tool, model, blacklisted_parameters):
     configfiles_node.appendChild( configfile_node )
     tool.appendChild( configfiles_node )
 
-
 def create_inputs(doc, tool, model, blacklisted_parameters):
     inputs_node = doc.createElement("inputs")
+
+    """
+        <expand macro="advanced_options">
+        </expand>
+    """
+    expand_advanced_node = doc.createElement('expand')
+    expand_advanced_node.setAttribute('macro', 'advanced_options')
+
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
         if param.name in blacklisted_parameters:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is not _OutFile:
-            inputs_node.appendChild(create_param_node(doc, param))
+            if not param.advanced:
+                inputs_node.appendChild(create_param_node(doc, param))
+            else:
+                expand_advanced_node.appendChild(create_param_node(doc, param))
+    if expand_advanced_node.hasChildNodes():
+        inputs_node.appendChild(expand_advanced_node)
     tool.appendChild(inputs_node)
+
 
 def get_supported_file_types( file_types ):
     print file_types
@@ -815,6 +843,62 @@ def create_exit_codes_macro(doc, macro, exit_codes):
         stdio_node.appendChild(exit_code_node)
 
         macro_xml_node.appendChild(stdio_node)
+
+def create_advanced_selector_macro(doc, macro):
+    """
+    Append one macro to the macro file:
+    <xml name="advanced_options">
+       <conditional name="adv_opts">
+            <param name="adv_opts_selector" type="select" label="Advanced Options">
+              <option value="basic" selected="True">Hide Advanced Options</option>
+              <option value="advanced">Show Advanced Options</option>
+            </param>
+            <when value="basic" />
+            <when value="advanced">
+                <yield />
+            </when>
+        </conditional>
+    </xml>
+    """
+
+    # create xml node to define a macro: <xml name="stdio">
+    macro_xml_node = doc.createElement("xml")
+    macro_xml_node.setAttribute("name", "advanced_options")
+    macro.appendChild( macro_xml_node )
+
+    conditional_node = doc.createElement("conditional")
+    conditional_node.setAttribute('name', 'adv_opts')
+    macro_xml_node.appendChild(conditional_node)
+
+    param_node = doc.createElement("param")
+    param_node.setAttribute('name', 'adv_opts_selector')
+    param_node.setAttribute('type', 'select')
+    param_node.setAttribute('label', 'Advanced Options')
+    conditional_node.appendChild(param_node)
+
+    option_node = doc.createElement("option")
+    option_node.setAttribute('value', 'basic')
+    option_node.setAttribute('selected', 'True')
+    option_node.appendChild( doc.createTextNode('Hide Advanced Options') )
+    param_node.appendChild(option_node)
+
+    option_node = doc.createElement("option")
+    option_node.setAttribute('value', 'advanced')
+    option_node.appendChild( doc.createTextNode('Show Advanced Options') )
+    param_node.appendChild(option_node)
+
+    when_node = doc.createElement("when")
+    param_node.setAttribute('value', 'basic')
+    conditional_node.appendChild(when_node)
+
+    when_node = doc.createElement("when")
+    when_node.setAttribute('value', 'advanced')
+    yield_node = doc.createElement('yield')
+    when_node.appendChild( yield_node )
+    conditional_node.appendChild(when_node)
+
+    macro_xml_node.appendChild(conditional_node)
+
 
 def create_help(doc, tool, model):
     """
