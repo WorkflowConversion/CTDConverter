@@ -508,14 +508,14 @@ def create_inputs(doc, tool, model, blacklisted_parameters):
         if param.type is not _OutFile:
             if not param.advanced:
                 if param.type is _InFile:
-                    collect_inputs.append( create_param_node(doc, param) )
-                else:
                     inputs_node.appendChild( create_param_node(doc, param) )
+                else:
+                    collect_inputs.append( create_param_node(doc, param) )
             else:
                 expand_advanced_node.appendChild(create_param_node(doc, param))
 
-        for inputs in collect_inputs:
-            inputs_node.appendChild( inputs )
+    for inputs in collect_inputs:
+        inputs_node.appendChild( inputs )
 
     if expand_advanced_node.hasChildNodes():
         inputs_node.appendChild(expand_advanced_node)
