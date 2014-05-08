@@ -601,7 +601,7 @@ def create_param_node(doc, param):
         if type(param.default) is list:
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
-            # meaning, that, for example, Helium, Argon and Xenon will be ignored            
+            # meaning, that, for example, Helium, Argon and Xenon will be ignored
             param_node.setAttribute("value", ' '.join(map(str, param.default)))
         elif param_type != "boolean":
             # boolean parameters handle default values by using the "checked" attribute
@@ -623,7 +623,7 @@ def create_param_node(doc, param):
                         default_value = param.restrictions.n_max
                     if default_value is None:
                         # no min/max provided... just use 0 and see what happens
-                        default_value = 0                    
+                        default_value = 0
                 else:
                     # should never be here, since we have validated this anyway... this code is here just for documentation purposes
                     # however, better safe than sorry! (it could be that the code changes and then we have an ugly scenario)
