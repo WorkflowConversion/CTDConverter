@@ -594,8 +594,7 @@ def create_param_node(doc, param):
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
         param_node.setAttribute("size", "20")
-    
-    
+
     # check for default value
     if param.default is not None:
         if type(param.default) is list:
