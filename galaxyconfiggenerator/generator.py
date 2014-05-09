@@ -369,8 +369,9 @@ def create_command(doc, tool, model, **kwargs):
             if whitespace_validation:
                 command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
             # for boolean types, we only need the placeholder
-            if param.type is not bool:
+            if not is_boolean_parameter( param ):
                 # add the parameter name
+                print param.name, param.type
                 command += '-%s ' %  ( param_name )
             # we need to add the placeholder
             actual_parameter = "${%s}" % galaxy_parameter_name
@@ -675,10 +676,12 @@ def create_boolean_parameter(param, param_node):
     else:
         truevalue = "true"
         falsevalue = "false"
-    param_node.setAttribute("truevalue", truevalue)
-    param_node.setAttribute("falsevalue", falsevalue)
-    
-    # set the checked attribute    
+    #param_node.setAttribute("truevalue", truevalue)
+    #param_node.setAttribute("falsevalue", falsevalue)
+    param_node.setAttribute("truevalue", "-%s" % get_param_name( param ))
+    param_node.setAttribute("falsevalue", '')
+
+    # set the checked attribute
     if param.default is not None:
         checked_value = "false"
         default = strip(string.lower(param.default))
