@@ -371,7 +371,6 @@ def create_command(doc, tool, model, **kwargs):
             # for boolean types, we only need the placeholder
             if not is_boolean_parameter( param ):
                 # add the parameter name
-                print param.name, param.type
                 command += '-%s ' %  ( param_name )
             # we need to add the placeholder
             actual_parameter = "${%s}" % galaxy_parameter_name
@@ -527,7 +526,6 @@ def create_inputs(doc, tool, model, blacklisted_parameters):
 
 
 def get_supported_file_types( file_types ):
-    print file_types
     return [ FILE_TYPES_TO_GALAXY_DATA_TYPES.get(file_type, file_type) for file_type in file_types if file_type in SUPPORTED_FILE_TYPES]
 
 
