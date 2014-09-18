@@ -318,9 +318,6 @@ def create_tool(model):
     
     tool = Element("tool", OrderedDict([("id",model.name),("name",model.name),("version",model.version)]))
     # use the same name of the tool... maybe a future version would contain a way to add a specific ID?  tool.setAttribute("id", model.name)
-    #tool.setAttribute("id", model.name)
-    #tool.setAttribute("version", model.version)
-    #tool.setAttribute("name", model.name)
     return tool
 
 def create_description(tool, model):
@@ -513,10 +510,6 @@ def create_param_attribute_list(param_node, param):
         label = "%s parameter" % param.name
     param_node.attrib["label"] = label
     param_node.attrib["help"] = "(-%s)" % param.name
-    #attribute_list["label"] = label
-    #attribute_list["help"] = "(-%s)" % param.name
-    #param_node.setAttribute("label", label)
-    #param_node.setAttribute("help", "(-%s)" % param.name)
     
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
@@ -528,9 +521,6 @@ def create_param_attribute_list(param_node, param):
     if is_boolean_parameter(param):
         param_type = "boolean"
         
-    #param_node.setAttribute("type", param_type)
-    #attribute_list["type"] = param_type
-    #param_node.attrib["type"] = param_type
 
     if param.type is _InFile:
         # assume it's just data unless restrictions are provided
@@ -542,7 +532,6 @@ def create_param_attribute_list(param_node, param):
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)}) 
         #attribute_list["format"] = str(param_format)
-        #param_node.setAttribute("format", param_format)
         param_node.attrib["format"] = param_format
         param_type = "data"
 
@@ -568,24 +557,19 @@ def create_param_attribute_list(param_node, param):
             # extract the min and max values and add them as attributes
             # validate the provided min and max values
             if param.restrictions.n_min is not None:
-                param_node.setAttribute("min", str(param.restrictions.n_min))
+                param_node.attrib["min"] = str(param.restrictions.n_min)
             if param.restrictions.n_max is not None:
-                param_node.setAttribute("max", str(param.restrictions.n_max))
+                param_node.attrib["max"] = str(param.restrictions.n_max)
         elif type(param.restrictions) is _FileFormat:
-            #attribute_list["format"] = ",".join( get_supported_file_types(param.restrictions.formats) )
             param_node.attrib["format"] = ",".join( get_supported_file_types(param.restrictions.formats) )
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]" % {"type":type(param.restrictions), "name":param.name}) 
 
-        #param_node.setAttribute("optional", str(not param.required))
-        #attribute_list["optional"] = str(not param.required)
         param_node.attrib["optional"] = str(not param.required)
 
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
-        #param_node.setAttribute("size", "20")
         param_node.attrib["size"] = "20"
-        #attribute_list["size"] = "20"
 
 
     # check for default value
@@ -594,13 +578,11 @@ def create_param_attribute_list(param_node, param):
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
             # meaning, that, for example, Helium, Argon and Xenon will be ignored
-            param_node.setAttribute("value", ' '.join(map(str, param.default)))
+            param_node.attrib["value"] = ' '.join(map(str, param.default))
         elif param_type != "boolean":
             # boolean parameters handle default values by using the "checked" attribute
             # there isn't much we can do... just stringify the value
-            #param_node.setAttribute("value", str(param.default))
             param_node.attrib["value"] = str(param.default)
-            #attribute_list["value"] = str(param.default)
     else:
         if param.type is int or param.type is float:
             # galaxy requires "value" to be included for int/float
@@ -626,7 +608,7 @@ def create_param_attribute_list(param_node, param):
                 # no restrictions and no default value provided...
                 # make up something
                 default_value = 0
-            param_node.setAttribute("value", str(default_value))
+            param_node.attrib["value"] = str(default_value)
 
 def warning(text):
     sys.stderr.write("WARNING: " + text + '\n')
@@ -665,10 +647,6 @@ def create_boolean_parameter(param_node, param):
     else:
         truevalue = "true"
         falsevalue = "false"
-    #param_node.setAttribute("truevalue", truevalue)
-    #param_node.setAttribute("falsevalue", falsevalue)
-    #attribute_list["truevalue"] = "-%s" % get_param_name( param )
-    #attribute_list["falsevalue"] = ''
     param_node.attrib["truevalue"] = truevalue
     param_node.attrib["falsevalue"] = falsevalue
 
@@ -696,7 +674,6 @@ def create_data_node(parent, param):
     data_node.attrib["name"] = get_galaxy_parameter_name(param.name)
 
     if param.description is not None:
-        #data_node.setAttribute("label", param.description)
         data_node.attrib["label"] = param.description
         
     data_format = "data"
@@ -712,7 +689,6 @@ def create_data_node(parent, param):
                 create_change_format_node(data_node, formats, 'param_out_type')
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for output [%(name)s]" % {"type":type(param.restrictions), "name":param.name})
-    #data_node.setAttribute("format", data_format)
     data_node.attrib["format"] = data_format
     
         
