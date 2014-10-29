@@ -532,8 +532,8 @@ def create_inputs(tool, model, blacklisted_parameters):
             else:
                 parent_node = inputs_node
 
-            # check if repeat tag is needed
-            if param.is_list and param.default is None:
+            # for lists we need a repeat tag
+            if param.is_list: 
                 rep_node = SubElement ( parent_node, "repeat")
                 create_repeat_attribute_list(rep_node, param)
                 parent_node = rep_node
@@ -552,6 +552,9 @@ def create_repeat_attribute_list(rep_node, param):
         rep_node.attrib["min"] = "1"
     else:
         rep_node.attrib["min"] = "0"
+    # for the ITEMLISTs which are given as string we only need one 
+    if param.default is not None: 
+        rep_node.attrib["max"] = "1"
     rep_node.attrib["title"] = get_galaxy_parameter_name(param.name)
 
     
