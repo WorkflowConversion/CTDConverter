@@ -14,11 +14,13 @@ import string
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError
+ 
 
-from lxml.etree import SubElement, Element, tostring, ElementTree
+from lxml.etree import SubElement, Element, ElementTree
 from collections import OrderedDict
 
 from string import strip
+from mercurial.revset import desc
 
 __all__ = []
 __version__ = 0.11
@@ -27,9 +29,9 @@ __updated__ = '2014-09-17'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
-COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in.ext}"}
-SUPPORTED_FILE_TYPES = ["mzXML","mzML","mgf","featureXML","consensusXML","idXML","pepXML", "txt", "csv"]
-FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular'}
+COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in.ext}", "processOption":"inmemory"}
+SUPPORTED_FILE_TYPES = ["svg","jpg","png","fasta","HTML","mzXML","mzML","mgf","featureXML","XML","consensusXML","idXML","pepXML", "txt", "csv", "traML", "TraML", "mzq", "trafoXML", "tsv", "msp", "qcML"]
+FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabulear', 'qcML':'qcml' }
 
 class CLIError(Exception):
     '''Generic exception to raise and log different fatal errors.'''
@@ -125,6 +127,10 @@ def main(argv=None): # IGNORE:C0111
                             help="specify the destination file of a generated tool_conf.xml for all given input files; each category will be written in its own section.")
         parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
                             help="the path that will be prepended to the file names when generating tool_conf.xml")
+        parser.add_argument("-l", "--tools-list-file", dest="tools_list_file", default=None, required=False,
+                            help="list of tools that need to be translated.")
+        parser.add_argument("-s", "--skip", dest="skip_tools", default=[], nargs="+", action="append",
+                             help="list of that don't need to be generated", required=False)
         # verbosity will be added later on, will not waste time on this now
         # parser.add_argument("-v", "--verbose", dest="verbose", action="count", help="set verbosity level [default: %(default)s]")
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -143,6 +149,8 @@ def main(argv=None): # IGNORE:C0111
                 whitespace_validation=args.whitespace_validation,
                 quote_parameters=args.quote_parameters,
                 blacklisted_parameters=args.blacklisted_parameters,
+                tools_list_file=args.tools_list_file,
+                skip_tools=args.skip_tools,
                 package_requirements=args.package_requirements,
                 exit_codes=args.exit_codes,
                 galaxy_tool_path=args.galaxy_tool_path,
@@ -171,6 +179,7 @@ def validate_and_prepare_args(args):
     # first, we convert all list of lists to flat lists
     args.input_files = [item for sublist in args.input_files for item in sublist]
     args.blacklisted_parameters=[item for sublist in args.blacklisted_parameters for item in sublist]
+    args.skip_tools=[item for sublist in args.skip_tools for item in sublist]
     args.package_requirements=[item for sublist in args.package_requirements for item in sublist]
     args.exit_codes=convert_exit_codes([item for sublist in args.exit_codes for item in sublist])
     
@@ -183,6 +192,8 @@ def validate_and_prepare_args(args):
     if len(args.input_files) > 1:
         if not os.path.isdir(args.output_dest):
             raise ApplicationException("If several input files are provided, output (%s) is expected to be an existing directory." % args.output_dest)
+        
+            
     
 def convert_exit_codes(exit_codes_raw):
     # input is in the format:
@@ -227,47 +238,65 @@ def convert_exit_codes(exit_codes_raw):
     return exit_codes
     
 def convert(input_files, output_dest, **kwargs):
+    # if a file with a list of needed tools is given they are put in the tools list
+    needed_tools = []
+    if kwargs["tools_list_file"] is not None:
+        try:
+            with open(kwargs["tools_list_file"]) as f:
+                for line in f:
+                    needed_tools.append(line.rstrip())
+        except IOError, e:
+            print "The provided input file " + str(kwargs["tools_list_file"]) + " could not be accessed. Detailed information: " + str(e) + "\n"
     # first, generate a model
-    is_converting_multiple_ctds = len(input_files) > 1
+    is_converting_multiple_ctds = len(input_files) > 1 
     parsed_models = []
     try:
         for input_file in input_files:
-            print("Parsing CTD from [%s]" % input_file)
-            model = CTDModel(from_file=input_file)
-            
-            tool = create_tool(model)
-            tree = ElementTree(tool)
-
-            create_description(tool, model)
-            create_macros(tool, model)
-            create_command(tool, model, **kwargs)
-            #create_configfiles(tool, model, kwargs["blacklisted_parameters"])
-            create_inputs(tool, model, kwargs["blacklisted_parameters"])
-            create_outputs(tool, model, kwargs["blacklisted_parameters"])
-            create_help(tool, model)
-            
-            # finally, serialize the tool
-            output_file = output_dest
-            # if multiple inputs are being converted, then we need to generate a different output_file for each input
-            if is_converting_multiple_ctds:
-                #if not output_file.endswith('/'):
-                #    output_file += "/"
-                #output_file += get_filename(input_file) + ".xml"
-                output_file = os.path.join( output_file, get_filename(input_file) + ".xml" )
-            tree.write(open(output_file,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-            # let's use model to hold the name of the outputfile
-            parsed_models.append([model, get_filename(output_file)])
-            print("Generated Galaxy wrapper in [%s]\n" % output_file)
-
-            macro_file = os.path.join( os.path.dirname( output_file ), 'macros.xml' )
-            if not os.path.exists( macro_file ):
-                macro_node = Element("macros")
-                macro_tree = ElementTree(macro_node)
-                create_requirements_macro(macro_node, kwargs["package_requirements"])
-                create_exit_codes_macro(macro_node, kwargs["exit_codes"])
-                create_reference_macro(macro_node)
-                create_advanced_selector_macro(macro_node )
-                macro_tree.write(open(macro_file,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
+            toolname = os.path.splitext(os.path.basename(input_file))[0]
+            if toolname in kwargs["skip_tools"] or (kwargs["tools_list_file"] is not None and toolname not in needed_tools):
+                print("Skipping %s" % toolname)
+                continue
+            else:
+                print("Parsing CTD from [%s]" % input_file)
+                try:
+                    model = CTDModel(from_file=input_file)
+                except Exception, e:
+                    print str(e)
+                    continue
+                tool = create_tool(model)
+    
+                tree = ElementTree(tool)
+    
+                create_description(tool, model)
+                create_macros(tool, model)
+                create_command(tool, model, **kwargs)
+                #create_configfiles(tool, model, kwargs["blacklisted_parameters"])
+                create_inputs(tool, model, kwargs["blacklisted_parameters"])
+                create_outputs(tool, model, kwargs["blacklisted_parameters"])
+                create_help(tool, model)
+                
+                # finally, serialize the tool
+                output_file = output_dest
+                # if multiple inputs are being converted, then we need to generate a different output_file for each input
+                if is_converting_multiple_ctds:
+                    #if not output_file.endswith('/'):
+                    #    output_file += "/"
+                    #output_file += get_filename(input_file) + ".xml"
+                    output_file = os.path.join( output_file, get_filename_without_suffix(input_file) + ".xml" )
+                tree.write(open(output_file,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
+                # let's use model to hold the name of the outputfile
+                parsed_models.append([model, get_filename(output_file)])
+                #print("Generated Galaxy wrapper in [%s]\n" % output_file)
+    
+                macro_file = os.path.join( os.path.dirname( output_file ), 'macros.xml' )
+                if not os.path.exists( macro_file ):
+                    macro_node = Element("macros")
+                    macro_tree = ElementTree(macro_node)
+                    create_requirements_macro(macro_node, kwargs["package_requirements"])
+                    create_exit_codes_macro(macro_node, kwargs["exit_codes"])
+                    create_reference_macro(macro_node)
+                    create_advanced_selector_macro(macro_node )
+                    macro_tree.write(open(macro_file,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if kwargs["tool_conf_dest"] is not None:
@@ -313,6 +342,10 @@ def generate_tool_conf(parsed_models, tool_conf_dest, galaxy_tool_path, default_
 def get_filename(path):
     head, tail = ntpath.split(path)
     return tail or ntpath.basename(head)
+
+def get_filename_without_suffix(path):
+    root, ext = os.path.splitext(os.path.basename(path))
+    return root 
 
 def create_tool(model):
     
@@ -369,20 +402,23 @@ def create_command(tool, model, **kwargs):
                 # add the parameter name
                 command += '-%s ' %  ( param_name )
             # we need to add the placeholder
-            actual_parameter = "${%s}" % galaxy_parameter_name
+            if param.advanced:
+                actual_parameter = "${adv_opts.%s}" % galaxy_parameter_name
+            else:
+                actual_parameter = "${%s}" % galaxy_parameter_name
             if quote_parameters:
                 actual_parameter = '"%s"' % actual_parameter
             command += actual_parameter + '\n'
             if whitespace_validation:
                 command += "#end if\n"
 
-        if param.advanced:
+        if param.advanced and param.name not in kwargs["blacklisted_parameters"]:
             advanced_command += "    %s" % command
         else:
             final_command += command
 
     if advanced_command:
-        final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
+            final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
 
     command_node = SubElement(tool,"command")
     command_node.text = final_command
@@ -480,7 +516,8 @@ def create_inputs(tool, model, blacklisted_parameters):
         <expand macro="advanced_options">
         </expand>
     """
-    expand_advanced_node = SubElement(tool, "expand", OrderedDict([("macro","advanced_options")]))
+    # has to be generated here so other parameters can be appended to it
+    expand_advanced_node = Element("expand", OrderedDict([("macro","advanced_options")]))
 
     collect_inputs = list()
 
@@ -490,8 +527,34 @@ def create_inputs(tool, model, blacklisted_parameters):
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is not _OutFile:
-            param_node = SubElement( expand_advanced_node, "param" )
+            if param.advanced :
+                parent_node = expand_advanced_node
+            else:
+                parent_node = inputs_node
+
+            # check if repeat tag is needed
+            if param.is_list and param.default is None:
+                rep_node = SubElement ( parent_node, "repeat")
+                create_repeat_attribute_list(rep_node, param)
+                parent_node = rep_node
+                
+            param_node = SubElement( parent_node, "param" )
             create_param_attribute_list(param_node, param)
+
+    # advanced paramter selection should be at the end
+    # and only available if an advanced parameter exists
+    if len(expand_advanced_node) > 0 :
+        inputs_node.append(expand_advanced_node)
+
+def create_repeat_attribute_list(rep_node, param):
+    rep_node.attrib["name"] = "rep_" + get_galaxy_parameter_name(param.name)
+    if param.required:
+        rep_node.attrib["min"] = "1"
+    else:
+        rep_node.attrib["min"] = "0"
+    rep_node.attrib["title"] = get_galaxy_parameter_name(param.name)
+
+    
 
 
 def get_supported_file_types( file_types ):
@@ -503,13 +566,6 @@ def create_param_attribute_list(param_node, param):
     #attribute_list["name"] = get_galaxy_parameter_name(param.name)
     param_node.attrib["name"] = get_galaxy_parameter_name(param.name)
 
-    label = ""
-    if param.description is not None:
-        label = param.description
-    else:
-        label = "%s parameter" % param.name
-    param_node.attrib["label"] = label
-    param_node.attrib["help"] = "(-%s)" % param.name
     
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
@@ -517,11 +573,13 @@ def create_param_attribute_list(param_node, param):
     # galaxy handles ITEMLIST from CTDs as strings
     if param.is_list:
         param_type = "text"
+
+    if is_selection_parameter(param):
+        param_type = "select"
         
     if is_boolean_parameter(param):
         param_type = "boolean"
         
-
     if param.type is _InFile:
         # assume it's just data unless restrictions are provided
         param_format = "data"
@@ -532,10 +590,10 @@ def create_param_attribute_list(param_node, param):
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], but instead got [%(type)s]" % {"name":param.name, "type":type(param.restrictions)}) 
         #attribute_list["format"] = str(param_format)
+        param_node.attrib["type"] = "data"
         param_node.attrib["format"] = param_format
-        param_type = "data"
-
-    param_node.attrib["type"] = param_type
+    else:
+        param_node.attrib["type"] = param_type
 
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
@@ -546,6 +604,7 @@ def create_param_attribute_list(param_node, param):
         elif type(param.restrictions) is _Choices:
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
+                #print str(choice)
                 option_attribute_list = OrderedDict()
                 option_attribute_list["value"] = str(choice)
                 option_node = SubElement(param_node,"option", option_attribute_list)
@@ -610,6 +669,64 @@ def create_param_attribute_list(param_node, param):
                 default_value = 0
             param_node.attrib["value"] = str(default_value)
 
+    label = ""
+    helptext = ""
+
+    if param.description is not None:
+        label, helptext = generate_label_and_help(param.description)
+    else:
+        label = "%s parameter" % param.name
+    param_node.attrib["label"] = label
+    param_node.attrib["help"] = "(-%s)" % param.name + " "+ helptext
+
+def generate_label_and_help(desc):
+    label=""
+    helptext=""
+    # This tag is found in some descriptions 
+    desc = str(desc).replace("#br#", " <br>")
+    # Get rid of dots in the end
+    if desc.endswith("."):
+        desc = desc.rstrip(".")
+    # Check if first word is a normal word and make it uppercase
+    if str(desc).find(" ") > -1:
+        first_word, rest = str(desc).split(" ",1)
+        if str(first_word).islower():
+            # check if label has a quotient of the form a/b 
+            if first_word.find("/") != 1 :
+                first_word.capitalize()
+        desc = first_word + " " + rest
+    label = desc
+    
+    # Try to split the label if it is too long    
+    if len(desc) > 50:
+        # find an example and put everything before in the label and the e.g. in the help
+        if desc.find("e.g.") > 1 :
+            label, helptext = desc.split("e.g.",1) 
+            helptext = "e.g." + helptext
+        else:
+            # find the end of the first sentence
+            # look for ". " because some labels contain .file or something similar
+            delim = ""
+            if desc.find(". ") > 1 and desc.find("? ") > 1:
+                if desc.find(". ") < desc.find("? "):
+                    delim = ". "
+                else:
+                    delim = "? "
+            elif desc.find(". ") > 1:
+                delim = ". "
+            elif desc.find("? ") > 1:
+                delim = "? "
+            if delim != "":
+                label, helptext = desc.split(delim,1) 
+
+            # add the question mark back
+            if delim == "? ":
+                label += "? "
+    
+    label=label.rstrip()
+
+    return (label, helptext)
+
 def warning(text):
     sys.stderr.write("WARNING: " + text + '\n')
 
@@ -624,6 +741,11 @@ def is_boolean_parameter(param):
             if ('yes' in choices and 'no' in choices) or ('true' in choices and 'false' in choices):
                 is_choices = True
     return is_choices
+
+# determines if there are choices for the parameter
+def is_selection_parameter(param):
+    return type(param.restrictions) is _Choices
+
 
 def get_lowercase_list(some_list):
     lowercase_list = map(str, some_list)
@@ -645,8 +767,10 @@ def create_boolean_parameter(param_node, param):
         truevalue = "yes"
         falsevalue = "no"
     else:
-        truevalue = "true"
-        falsevalue = "false"
+        #truevalue = "-%s true"   % get_param_name(param)
+        #falsevalue = "-%s false" % get_param_name(param)
+        truevalue = "-%s"   % get_param_name(param)
+        falsevalue = ""
     param_node.attrib["truevalue"] = truevalue
     param_node.attrib["falsevalue"] = falsevalue
 
@@ -663,6 +787,7 @@ def create_outputs(parent, model, blacklisted_parameters):
     outputs_node = SubElement(parent, "outputs")
 
     for param in extract_parameters(model):
+       
         if param.name in blacklisted_parameters:
             # let's not use an extra level of indentation and use NOP
             continue
@@ -673,15 +798,19 @@ def create_data_node(parent, param):
     data_node = SubElement(parent, "data")
     data_node.attrib["name"] = get_galaxy_parameter_name(param.name)
 
-    if param.description is not None:
-        data_node.attrib["label"] = param.description
         
     data_format = "data"
     if param.restrictions is not None:
         if type(param.restrictions) is _FileFormat:
             # set the first data output node to the first fileformat
             formats = get_supported_file_types( param.restrictions.formats )
-            data_format = formats.pop()
+            try:
+                data_format = formats.pop()
+            except:
+                output = "Parameter: "+ param.name + " has unsupported formats: " 
+                for form in param.restrictions.formats:
+                    output += str(form)
+                print output
             # if there are more than one output file formats from which the
             # user can choose, create "change_format" nodes for all but the first
             if formats:
@@ -690,6 +819,9 @@ def create_data_node(parent, param):
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for output [%(name)s]" % {"type":type(param.restrictions), "name":param.name})
     data_node.attrib["format"] = data_format
+
+    if param.description is not None:
+        data_node.attrib["label"] = param.description
     
         
     return data_node
@@ -828,7 +960,7 @@ def create_advanced_selector_macro(macro):
 
     # create xml node to define a macro: <xml name="stdio">
     macro_xml_node = SubElement(macro, "xml")
-    macro_xml_node.attrib["name"] = "advanced_option"
+    macro_xml_node.attrib["name"] = "advanced_options"
 
     conditional_node = SubElement(macro_xml_node, "conditional")
     conditional_node.attrib['name'] = 'adv_opts'
@@ -848,7 +980,7 @@ def create_advanced_selector_macro(macro):
     option_node.text = 'Show Advanced Options'
 
     when_node = SubElement(conditional_node, "when")
-    param_node.attrib['value'] = 'basic'
+    when_node.attrib['value'] = 'basic'
 
     when_node = SubElement(conditional_node, "when")
     when_node.attrib['value'] = 'advanced'
