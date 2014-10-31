@@ -29,7 +29,7 @@ __updated__ = '2014-09-17'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
-COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "in_type": "${param_in.ext}", "processOption":"inmemory"}
+COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "processOption":"inmemory"}
 SUPPORTED_FILE_TYPES = ["svg","jpg","png","fasta","HTML","mzXML","mzML","mgf","featureXML","XML","consensusXML","idXML","pepXML", "txt", "csv", "traML", "TraML", "mzq", "trafoXML", "tsv", "msp", "qcML"]
 FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabulear', 'qcML':'qcml' }
 
@@ -388,29 +388,40 @@ def create_command(tool, model, **kwargs):
                 continue
         else:
             galaxy_parameter_name = get_galaxy_parameter_name(param.name)
-            # if whitespace_validation has been set, we need to generate, for each parameter:
-            # #if str( $t ).split() != '':
-            # -t "$t"
-            # #end if
-            # TODO only useful for text fields, integers or floats
-            # not useful for choices, input fields ...
+            repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param.name)
 
-            if whitespace_validation:
-                command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
-            # for boolean types, we only need the placeholder
-            if not is_boolean_parameter( param ):
-                # add the parameter name
-                command += '-%s ' %  ( param_name )
-            # we need to add the placeholder
-            if param.advanced:
-                actual_parameter = "${adv_opts.%s}" % galaxy_parameter_name
-            else:
-                actual_parameter = "${%s}" % galaxy_parameter_name
-            if quote_parameters:
-                actual_parameter = '"%s"' % actual_parameter
-            command += actual_parameter + '\n'
-            if whitespace_validation:
-                command += "#end if\n"
+            # logic for ITEMLISTs
+            if param.is_list:
+               command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
+               command += "-" + str(param_name) + "\n"
+               command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
+               command += "    $token." + galaxy_parameter_name + "\n"
+               command += "  #end for\n" 
+               command += "#end if\n" 
+            else:   
+                # if whitespace_validation has been set, we need to generate, for each parameter:
+                # #if str( $t ).split() != '':
+                # -t "$t"
+                # #end if
+                # TODO only useful for text fields, integers or floats
+                # not useful for choices, input fields ...
+
+                if whitespace_validation:
+                    command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
+                # for boolean types, we only need the placeholder
+                if not is_boolean_parameter( param ):
+                    # add the parameter name
+                    command += '-%s ' %  ( param_name )
+                # we need to add the placeholder
+                if param.advanced:
+                    actual_parameter = "${adv_opts.%s}" % galaxy_parameter_name
+                else:
+                    actual_parameter = "${%s}" % galaxy_parameter_name
+                if quote_parameters:
+                    actual_parameter = '"%s"' % actual_parameter
+                command += actual_parameter + '\n'
+                if whitespace_validation:
+                    command += "#end if\n"
 
         if param.advanced and param.name not in kwargs["blacklisted_parameters"]:
             advanced_command += "    %s" % command
@@ -546,13 +557,17 @@ def create_inputs(tool, model, blacklisted_parameters):
     if len(expand_advanced_node) > 0 :
         inputs_node.append(expand_advanced_node)
 
+def get_repeat_galaxy_parameter_name(paramname):
+    return "rep_" + get_galaxy_parameter_name(paramname)
+
 def create_repeat_attribute_list(rep_node, param):
-    rep_node.attrib["name"] = "rep_" + get_galaxy_parameter_name(param.name)
+    rep_node.attrib["name"] = get_repeat_galaxy_parameter_name(param.name)
     if param.required:
         rep_node.attrib["min"] = "1"
     else:
         rep_node.attrib["min"] = "0"
-    # for the ITEMLISTs which are given as string we only need one 
+    # for the ITEMLISTs which have LISTITEM children we only
+    # need one parameter as it is given as a string
     if param.default is not None: 
         rep_node.attrib["max"] = "1"
     rep_node.attrib["title"] = get_galaxy_parameter_name(param.name)
