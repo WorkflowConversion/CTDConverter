@@ -395,33 +395,53 @@ def create_command(tool, model, **kwargs):
                command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
                command += "-" + str(param_name) + "\n"
                command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
-               command += "    $token." + galaxy_parameter_name + "\n"
+               command += "    #if \" \" in str(token):\n"
+               command += "      \"$token." + galaxy_parameter_name + "\"\n"
+               command += "    #else\n"
+               command += "      $token." + galaxy_parameter_name + "\n"
+               command += "    #end if\n"
                command += "  #end for\n" 
                command += "#end if\n" 
-            else:   
-                # if whitespace_validation has been set, we need to generate, for each parameter:
-                # #if str( $t ).split() != '':
-                # -t "$t"
-                # #end if
-                # TODO only useful for text fields, integers or floats
-                # not useful for choices, input fields ...
-
-                if whitespace_validation:
-                    command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
-                # for boolean types, we only need the placeholder
-                if not is_boolean_parameter( param ):
-                    # add the parameter name
-                    command += '-%s ' %  ( param_name )
-                # we need to add the placeholder
+            # logic for other ITEMs 
+            else:
                 if param.advanced:
-                    actual_parameter = "${adv_opts.%s}" % galaxy_parameter_name
+                    actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
                 else:
-                    actual_parameter = "${%s}" % galaxy_parameter_name
-                if quote_parameters:
-                    actual_parameter = '"%s"' % actual_parameter
-                command += actual_parameter + '\n'
-                if whitespace_validation:
-                    command += "#end if\n"
+                    actual_parameter = "$%s" % galaxy_parameter_name
+                ## if whitespace_validation has been set, we need to generate, for each parameter:
+                ## #if str( $t ).split() != '':
+                ## -t "$t"
+                ## #end if
+                ## TODO only useful for text fields, integers or floats
+                ## not useful for choices, input fields ...
+                ##if whitespace_validation:
+                    #command += "\n#if str($%(param_name)s).strip() != '':\n    "  % {"param_name": galaxy_parameter_name}
+                # This has been taken out and replaced with a check for None
+
+
+                if not is_boolean_parameter( param ):
+                    command += "#if " + actual_parameter + ":\n"
+                    command += '  -%s\n' %  ( param_name ) 
+                    command += "  #if \" \" in str("+ actual_parameter +"):\n"
+                    command += "    \"" + actual_parameter + "\"\n"
+                    command += "  #else\n"
+                    command += "    " + actual_parameter + "\n"
+                    command += "  #end if\n"
+                    command += "#end if\n" 
+                else:
+                    command += "#if " + actual_parameter + ":\n"
+                    command += '  -%s\n' %  ( param_name )
+                    command += "#end if\n" 
+
+
+                # for boolean types, we only need the placeholder
+                    # add the parameter name
+                    #command += '-%s ' %  ( param_name )
+                # we need to add the placeholder
+                #if quote_parameters:
+                    #actual_parameter = '"%s"' % actual_parameter
+                #if whitespace_validation:
+                    #command += "#end if\n"
 
         if param.advanced and param.name not in kwargs["blacklisted_parameters"]:
             advanced_command += "    %s" % command
