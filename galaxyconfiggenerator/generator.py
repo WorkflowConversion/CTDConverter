@@ -387,8 +387,8 @@ def create_command(tool, model, **kwargs):
                 # let's not use an extra level of indentation and use NOP
                 continue
         else:
-            galaxy_parameter_name = get_galaxy_parameter_name(param.name)
-            repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param.name)
+            galaxy_parameter_name = get_galaxy_parameter_name(param)
+            repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param)
 
             # logic for ITEMLISTs
             if param.is_list:
@@ -419,7 +419,7 @@ def create_command(tool, model, **kwargs):
                 # This has been taken out and replaced with a check for None
 
 
-                if not is_boolean_parameter( param ):
+                if not is_boolean_parameter( param ) and type(param.restrictions) is _Choices :
                     command += "#if " + actual_parameter + ":\n"
                     command += '  -%s\n' %  ( param_name ) 
                     command += "  #if \" \" in str("+ actual_parameter +"):\n"
@@ -428,9 +428,14 @@ def create_command(tool, model, **kwargs):
                     command += "    " + actual_parameter + "\n"
                     command += "  #end if\n"
                     command += "#end if\n" 
-                else:
+                elif is_boolean_parameter( param ) :
                     command += "#if " + actual_parameter + ":\n"
                     command += '  -%s\n' %  ( param_name )
+                    command += "#end if\n" 
+                else:
+                    command += "#if " + actual_parameter + ":\n"
+                    command += '  -%s ' %  ( param_name )
+                    command += str(actual_parameter) + "\n"
                     command += "#end if\n" 
 
 
@@ -503,8 +508,8 @@ def get_tool_executable_path(model):
             command = executablePath + executableName
     return command
     
-def get_galaxy_parameter_name(param_name):
-    return "param_%s" % param_name
+def get_galaxy_parameter_name(param):
+    return "param_%s" % get_param_name(param).replace(':','_')
 
 ##
 ## historical reasons, can be removed later
@@ -534,7 +539,7 @@ def create_configfiles(tool, model, blacklisted_parameters):
             cf += '%s%s=' % ( prefix, param.name )
 
             # we need to add the placeholder
-            cf += "$" + get_galaxy_parameter_name(param.name) + ' '
+            cf += "$" + get_galaxy_parameter_name(param) + ' '
         cf += '\n'
     configfiles_node = SubElement(tool, "configfiles")
     configfile_node = SubElement(configfiles_node, "configfile")
@@ -577,11 +582,11 @@ def create_inputs(tool, model, blacklisted_parameters):
     if len(expand_advanced_node) > 0 :
         inputs_node.append(expand_advanced_node)
 
-def get_repeat_galaxy_parameter_name(paramname):
-    return "rep_" + get_galaxy_parameter_name(paramname)
+def get_repeat_galaxy_parameter_name(param):
+    return "rep_" + get_galaxy_parameter_name(param)
 
 def create_repeat_attribute_list(rep_node, param):
-    rep_node.attrib["name"] = get_repeat_galaxy_parameter_name(param.name)
+    rep_node.attrib["name"] = get_repeat_galaxy_parameter_name(param)
     if param.required:
         rep_node.attrib["min"] = "1"
     else:
@@ -590,7 +595,7 @@ def create_repeat_attribute_list(rep_node, param):
     # need one parameter as it is given as a string
     if param.default is not None: 
         rep_node.attrib["max"] = "1"
-    rep_node.attrib["title"] = get_galaxy_parameter_name(param.name)
+    rep_node.attrib["title"] = get_galaxy_parameter_name(param)
 
     
 
@@ -602,7 +607,7 @@ def get_supported_file_types( file_types ):
 def create_param_attribute_list(param_node, param):
     
     #attribute_list["name"] = get_galaxy_parameter_name(param.name)
-    param_node.attrib["name"] = get_galaxy_parameter_name(param.name)
+    param_node.attrib["name"] = get_galaxy_parameter_name(param)
 
     
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
@@ -834,7 +839,7 @@ def create_outputs(parent, model, blacklisted_parameters):
 
 def create_data_node(parent, param):
     data_node = SubElement(parent, "data")
-    data_node.attrib["name"] = get_galaxy_parameter_name(param.name)
+    data_node.attrib["name"] = get_galaxy_parameter_name(param)
 
         
     data_format = "data"
