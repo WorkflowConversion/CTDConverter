@@ -509,7 +509,7 @@ def get_tool_executable_path(model):
     return command
     
 def get_galaxy_parameter_name(param):
-    return "param_%s" % get_param_name(param).replace(':','_')
+    return "param_%s" % get_param_name(param).replace(':','_').replace('-','_')
 
 ##
 ## historical reasons, can be removed later
