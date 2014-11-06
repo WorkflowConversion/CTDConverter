@@ -404,7 +404,7 @@ def create_command(tool, model, **kwargs):
                command += "#end if\n" 
             # logic for other ITEMs 
             else:
-                if param.advanced:
+                if param.advanced and param.type is not _OutFile:
                     actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
                 else:
                     actual_parameter = "$%s" % galaxy_parameter_name
@@ -448,7 +448,7 @@ def create_command(tool, model, **kwargs):
                 #if whitespace_validation:
                     #command += "#end if\n"
 
-        if param.advanced and param.name not in kwargs["blacklisted_parameters"]:
+        if param.advanced and param.name not in kwargs["blacklisted_parameters"] and param.type is not _OutFile:
             advanced_command += "    %s" % command
         else:
             final_command += command
