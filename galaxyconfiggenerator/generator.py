@@ -435,7 +435,7 @@ def create_command(tool, model, **kwargs):
                 else:
                     command += "#if " + actual_parameter + ":\n"
                     command += '  -%s ' %  ( param_name )
-                    command += str(actual_parameter) + "\n"
+                    command += actual_parameter + "\n"
                     command += "#end if\n" 
 
 
@@ -671,7 +671,11 @@ def create_param_attribute_list(param_node, param):
 
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
-        param_node.attrib["size"] = "20"
+        param_node.attrib["size"] = "30"
+        # add sanitizer nodes, this is needed for special character like "[" which are used for example by FeatureFinderMultiplex
+        sanitizer_node = SubElement(param_node, "sanitizer")
+        valid_node = SubElement(sanitizer_node, "valid")
+        valid_node.attrib["initial"] = "string.printable"
 
 
     # check for default value
@@ -681,6 +685,7 @@ def create_param_attribute_list(param_node, param):
             # $ tool -ignore He Ar Xe
             # meaning, that, for example, Helium, Argon and Xenon will be ignored
             param_node.attrib["value"] = ' '.join(map(str, param.default))
+
         elif param_type != "boolean":
             # boolean parameters handle default values by using the "checked" attribute
             # there isn't much we can do... just stringify the value
