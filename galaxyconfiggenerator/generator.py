@@ -31,7 +31,7 @@ TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boole
                        _OutFile: 'data', _Choices: 'select'}
 COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "processOption":"inmemory"}
 SUPPORTED_FILE_TYPES = ["svg","jpg","png","fasta","HTML","mzXML","mzML","mgf","featureXML","XML","consensusXML","idXML","pepXML", "txt", "csv", "traML", "TraML", "mzq", "trafoXML", "tsv", "msp", "qcML"]
-FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabulear', 'qcML':'qcml' }
+FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabular', 'qcML':'qcml' }
 
 class CLIError(Exception):
     '''Generic exception to raise and log different fatal errors.'''
@@ -375,7 +375,10 @@ def create_command(tool, model, **kwargs):
     advanced_command_end = '#end if'
     advanced_command = ''
 
+    found_output_parameter = False
     for param in extract_parameters(model):
+        if param.type is _OutFile:
+            found_output_parameter = True
         command = ''
         param_name = get_param_name( param )
 
@@ -453,8 +456,14 @@ def create_command(tool, model, **kwargs):
         else:
             final_command += command
 
+
+
     if advanced_command:
-            final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
+        final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
+
+    if not found_output_parameter:
+        final_command += "> $param_stdout\n" 
+        
 
     command_node = SubElement(tool,"command")
     command_node.text = final_command
@@ -841,6 +850,14 @@ def create_outputs(parent, model, blacklisted_parameters):
             continue
         if param.type is _OutFile:
             create_data_node(outputs_node, param)
+
+    # If there are no outputs defined in the ctd the node will have no children
+    # and the stdout will be used as output
+    if not len(outputs_node):
+        out_node = SubElement(outputs_node, "data")
+        out_node.attrib["name"] = "param_stdout"
+        out_node.attrib["format"] = "text"
+        out_node.attrib["label"] = "Output from stdout"
 
 def create_data_node(parent, param):
     data_node = SubElement(parent, "data")
