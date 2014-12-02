@@ -251,3 +251,21 @@ Example:
 Will generate `<tool>` elements in the generated `tool_conf.xml` as follows:
 
     <tool file="my_tools_folder/some_tool.xml" />
+
+## Notes about some of the OpenMS tools
+
+* Most of the tools can be generated either automatically. Some of the tools need some extra work (for now)
+* These adapters need to be changed, such that you provide the path to the executable
+    * FidoAdapter (add "-exe fido" in the command tag, delete the $param_exe in the command tag, delete the parameter from the input list)
+    * MSGFPlusAdapter (add "-executable msgfplus.jar" in the command tag, delete the $param_executable in the command tag, delete the parameter from the input list)
+    * MyriMatchAdapter (add "-myrimatch_executable myrimatch" in the command tag, delete the $param_myrimatch_executable in the command tag, delete the parameter from the input list)
+    * OMSSAAdapter (add "-omssa_executable omssa" in the command tag, delete the $param_omssa_executable in the command tag, delete the parameter from the input list)
+    * PepNovoAdapter (add "-pepnovo_executable pepnovo" in the command tag, delete the $param_pepnovo_executable in the command tag, delete the parameter from the input list)
+    * XTandemAdapter (add "-xtandem_executable xtandem" in the command tag, delete the $param_xtandem_executable in the command tag, delete the parameter from the input list)
+* These tools have multiple outputs (number of inputs = number of outputs) which is not yet supported in Galaxy-stable 
+    * SeedListGenerator
+    * SpecLibSearcher
+    * MapAlignerIdentification
+    * MapAlignerPoseClustering
+    * MapAlignerSpectrum
+    * MapAlignerRTTransformer
