@@ -268,7 +268,7 @@ Will generate `<tool>` elements in the generated `tool_conf.xml` as follows:
 
 ## Notes about some of the OpenMS tools
 
-* Most of the tools can be generated either automatically. Some of the tools need some extra work (for now)
+* Most of the tools can be generated automatically. Some of the tools need some extra work (for now)
 * These adapters need to be changed, such that you provide the path to the executable
     * FidoAdapter (add "-exe fido" in the command tag, delete the $param_exe in the command tag, delete the parameter from the input list)
     * MSGFPlusAdapter (add "-executable msgfplus.jar" in the command tag, delete the $param_executable in the command tag, delete the parameter from the input list)
