@@ -25,6 +25,11 @@ will parse `/data/sample_input.ctd` and generate a Galaxy tool wrapper under `/d
 
 
     $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs
+
+### Converting several CTDs found in a folder that are also in a whitelist
+
+
+    $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs -l list_of_tools.dat
     
 ### Generating a tool_conf.xml file 
 
@@ -76,6 +81,15 @@ Of course, you can also use Unix wildcards, which will be automatically expanded
 
     $ python generator.py -i /data/input_one.ctd /data/input_two.ctd /data/input_three.ctd -o /data/galaxy
     $ python generator.py -i /data/*.ctd -o /data/galaxy
+
+
+### Whitelist of tools that should be translated
+
+* Only generates wrappers for the tools provided in a file acts as a filter if *.ctd is provided as input
+* Short/Long version `-l` / `--tools-list-file`
+* Generates a tool.conf only with the whitelisted tools so it can easily pasted in the Galaxy tool-config file
+
+    $ python generator.py -i /data/*.ctd -o /data/galaxy -l tools.dat
 
 ### Output destination
 
