@@ -274,6 +274,7 @@ def convert(input_files, output_dest, **kwargs):
                 create_inputs(tool, model, kwargs["blacklisted_parameters"])
                 create_outputs(tool, model, kwargs["blacklisted_parameters"])
                 create_help(tool, model)
+                create_references(tool, model)
                 
                 # finally, serialize the tool
                 output_file = output_dest
@@ -940,8 +941,8 @@ def create_requirements_macro(macro, package_requirements):
 
         requirement_node = SubElement(requirements_node, "requirement")
         requirement_node.attrib["type"] = "package"
-        requirement_node.attrib["version"] = "1.1.1"
-        requirement_node.text = "TODO"
+        requirement_node.attrib["version"] = "1.2"
+        requirement_node.text = "openms"
 
 
 
@@ -955,19 +956,13 @@ def create_requirements_macro(macro, package_requirements):
 
 
 def create_reference_macro(macro):
-    # create xml node to define a macro: <token name="@REFERENCES@">
-    macro_xml_node = SubElement(macro, "token")
-    macro_xml_node.attrib["name"] = "@REFERENCES@"
-    macro_xml_node.text = """
-
--------
-
-**References**
-
-If you use this Galaxy tool in work leading to a scientific publication please
-cite the following papers:
-
-"""
+    # create xml node to define a macro: <xml name="references">
+    macro_xml_node = SubElement(macro, "xml")
+    macro_xml_node.attrib["name"] = "references"
+    citations_node = SubElement(macro_xml_node,"citations")
+    citation_node = SubElement(citations_node,"citation")
+    citation_node.attrib["type"] = "doi"
+    citation_node.text = "doi:10.1186/1471-2105-9-163"
 
 
 def create_exit_codes_macro(macro, exit_codes):
@@ -1071,10 +1066,14 @@ Shows basic information about the file, such as data ranges and file type.
         help_text = manual
     if doc_url is not None:
         help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
-    help_text += "\n\n@REFERENCES@\n"
     help_node = SubElement(tool, "help")
     help_node.text = help_text
     # TODO: do we need CDATA Section here?
+
+def create_references(tool, model):
+    references_node = SubElement(tool, "expand")
+    references_node.attrib['macro'] = 'references'
+
     
 # since a model might contain several ParameterGroup elements, we want to simply 'flatten' the parameters to generate the Galaxy wrapper    
 def extract_parameters(model):
