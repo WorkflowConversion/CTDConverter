@@ -781,7 +781,8 @@ def generate_label_and_help(desc):
             if delim == "? ":
                 label += "? "
     
-    label=label.rstrip()
+    # remove all linebreaks
+    label=label.rstrip().rstrip('<br>').rstrip()
 
     return (label, helptext)
 
@@ -886,8 +887,9 @@ def create_data_node(parent, param):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for output [%(name)s]" % {"type":type(param.restrictions), "name":param.name})
     data_node.attrib["format"] = data_format
 
-    if param.description is not None:
-        data_node.attrib["label"] = param.description
+    #TODO: find a smarter label ?
+    #if param.description is not None:
+    #    data_node.attrib["label"] = param.description
     
         
     return data_node
