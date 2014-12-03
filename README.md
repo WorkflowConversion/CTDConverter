@@ -277,8 +277,7 @@ Will generate `<tool>` elements in the generated `tool_conf.xml` as follows:
     * PepNovoAdapter (add "-pepnovo_executable pepnovo" in the command tag, delete the $param_pepnovo_executable in the command tag, delete the parameter from the input list)
     * XTandemAdapter (add "-xtandem_executable xtandem" in the command tag, delete the $param_xtandem_executable in the command tag, delete the parameter from the input list)
     * To avoid the deletion in the inputs you can also add these parameters to the blacklist
-
-    $ python generator.py -b exe executable myrimatch_excutable omssa_executable pepnovo_executable xtandem_executable
+        $ python generator.py -b exe executable myrimatch_excutable omssa_executable pepnovo_executable xtandem_executable
 
 * These tools have multiple outputs (number of inputs = number of outputs) which is not yet supported in Galaxy-stable 
     * SeedListGenerator
