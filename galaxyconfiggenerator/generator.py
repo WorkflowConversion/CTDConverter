@@ -25,13 +25,13 @@ from mercurial.revset import desc
 __all__ = []
 __version__ = 0.11
 __date__ = '2014-09-17'
-__updated__ = '2014-09-17'
+__updated__ = '2015-01-16'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
 COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "processOption":"inmemory"}
-SUPPORTED_FILE_TYPES = ["svg","jpg","png","fasta","HTML","mzXML","mzML","mgf","featureXML","XML","consensusXML","idXML","pepXML", "txt", "csv", "traML", "TraML", "mzq", "trafoXML", "tsv", "msp", "qcML"]
-FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabular', 'qcML':'qcml' }
+SUPPORTED_FILE_TYPES = ["svg","jpg","png","fasta","FASTA","HTML","mzXML","mzML","mgf","featureXML","xml","XML","consensusXML","idXML","pepXML", "txt", "csv", "traML", "TraML", "mzq", "trafoXML", "tsv", "msp", "qcML","obo","edta","ini","xsd"]
+FILE_TYPES_TO_GALAXY_DATA_TYPES = {'csv': 'tabular','edta': 'tabular', 'XML':'xml', 'HTML':'html', 'traML':'traml', 'TraML':'traml', 'trafoXML':'trafoxml', 'tsv':'tabular', 'qcML':'qcml', 'consensusXML':'consensusxml', 'mzML':'mzml', 'mzXML':'mzxml', 'featureXML':'featurexml', 'idXML':'idxml', 'pepXML':'pepxml', 'qcML':'qcml', 'FASTA':'fasta', 'ini':'txt', 'xsd':'txt'}
 
 class CLIError(Exception):
     '''Generic exception to raise and log different fatal errors.'''
@@ -396,16 +396,21 @@ def create_command(tool, model, **kwargs):
 
             # logic for ITEMLISTs
             if param.is_list:
-               command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
-               command += "-" + str(param_name) + "\n"
-               command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
-               command += "    #if \" \" in str(token):\n"
-               command += "      \"$token." + galaxy_parameter_name + "\"\n"
-               command += "    #else\n"
-               command += "      $token." + galaxy_parameter_name + "\n"
-               command += "    #end if\n"
-               command += "  #end for\n" 
-               command += "#end if\n" 
+                if param.type is _InFile:
+                    command += "  #for token in $" + galaxy_parameter_name + ":\n" 
+                    command += "    $token\n"
+                    command += "  #end for\n" 
+                else:
+                    command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
+                    command += "-" + str(param_name) + "\n"
+                    command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
+                    command += "    #if \" \" in str(token):\n"
+                    command += "      \"$token." + galaxy_parameter_name + "\"\n"
+                    command += "    #else\n"
+                    command += "      $token." + galaxy_parameter_name + "\n"
+                    command += "    #end if\n"
+                    command += "  #end for\n" 
+                    command += "#end if\n" 
             # logic for other ITEMs 
             else:
                 if param.advanced and param.type is not _OutFile:
@@ -579,7 +584,7 @@ def create_inputs(tool, model, blacklisted_parameters):
                 parent_node = inputs_node
 
             # for lists we need a repeat tag
-            if param.is_list: 
+            if param.is_list and param.type is not _InFile: 
                 rep_node = SubElement ( parent_node, "repeat")
                 create_repeat_attribute_list(rep_node, param)
                 parent_node = rep_node
@@ -634,8 +639,8 @@ def create_param_attribute_list(param_node, param):
         param_type = "boolean"
         
     if param.type is _InFile:
-        # assume it's just data unless restrictions are provided
-        param_format = "data"
+        # assume it's just text unless restrictions are provided
+        param_format = "txt"
         if param.restrictions is not None:
             # join all supported_formats for the file... this MUST be a _FileFormat
             if type(param.restrictions) is _FileFormat: 
@@ -645,6 +650,10 @@ def create_param_attribute_list(param_node, param):
         #attribute_list["format"] = str(param_format)
         param_node.attrib["type"] = "data"
         param_node.attrib["format"] = param_format
+        # in the case of multiple input set multiple flag
+        if param.is_list:
+            param_node.attrib["multiple"]="true"
+
     else:
         param_node.attrib["type"] = param_type
 
