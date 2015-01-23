@@ -20,12 +20,11 @@ from lxml.etree import SubElement, Element, ElementTree
 from collections import OrderedDict
 
 from string import strip
-from mercurial.revset import desc
 
 __all__ = []
 __version__ = 0.11
 __date__ = '2014-09-17'
-__updated__ = '2015-01-16'
+__updated__ = '2015-01-23'
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
@@ -397,6 +396,7 @@ def create_command(tool, model, **kwargs):
             # logic for ITEMLISTs
             if param.is_list:
                 if param.type is _InFile:
+                    command += "-" + str(param_name) + "\n"
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
                     command += "    $token\n"
                     command += "  #end for\n" 
@@ -440,6 +440,11 @@ def create_command(tool, model, **kwargs):
                 elif is_boolean_parameter( param ) :
                     command += "#if " + actual_parameter + ":\n"
                     command += '  -%s\n' %  ( param_name )
+                    command += "#end if\n" 
+                elif TYPE_TO_GALAXY_TYPE[param.type] is 'text' :
+                    command += "#if " + actual_parameter + ":\n"
+                    command += "  -%s " %  ( param_name )
+                    command += "    \"" + actual_parameter + "\"\n"
                     command += "#end if\n" 
                 else:
                     command += "#if " + actual_parameter + ":\n"
@@ -560,6 +565,16 @@ def create_configfiles(tool, model, blacklisted_parameters):
     configfile_node = SubElement(configfiles_node, "configfile")
     configfile_node.text = cf
 
+def get_input_with_same_restrictions(outparam, model):
+    for param in extract_parameters(model):
+        if param.type is _InFile:
+            if param.restrictions is not None :
+                in_param_formats = get_supported_file_types(param.restrictions.formats)
+                out_param_formats = get_supported_file_types(outparam.restrictions.formats)
+                if in_param_formats == out_param_formats:
+                    return param
+                    
+
 def create_inputs(tool, model, blacklisted_parameters):
     inputs_node = SubElement(tool, "inputs")
 
@@ -616,7 +631,7 @@ def create_repeat_attribute_list(rep_node, param):
 
 
 def get_supported_file_types( file_types ):
-    return [ FILE_TYPES_TO_GALAXY_DATA_TYPES.get(file_type, file_type) for file_type in file_types if file_type in SUPPORTED_FILE_TYPES]
+    return set([ FILE_TYPES_TO_GALAXY_DATA_TYPES.get(file_type, file_type) for file_type in file_types if file_type in SUPPORTED_FILE_TYPES])
 
 
 def create_param_attribute_list(param_node, param):
@@ -628,7 +643,7 @@ def create_param_attribute_list(param_node, param):
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type '%(type)' for parameter '%(name)'" % {"type":param.type, "name":param.name})
-    # galaxy handles ITEMLIST from CTDs as strings
+
     if param.is_list:
         param_type = "text"
 
@@ -640,7 +655,7 @@ def create_param_attribute_list(param_node, param):
         
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
-        param_format = "txt"
+        param_format = "text"
         if param.restrictions is not None:
             # join all supported_formats for the file... this MUST be a _FileFormat
             if type(param.restrictions) is _FileFormat: 
@@ -695,6 +710,11 @@ def create_param_attribute_list(param_node, param):
         sanitizer_node = SubElement(param_node, "sanitizer")
         valid_node = SubElement(sanitizer_node, "valid")
         valid_node.attrib["initial"] = "string.printable"
+       	remove_node = SubElement(valid_node, "remove")
+        remove_node.attrib["value"] = "'"
+        remove_node = SubElement(valid_node, "remove")
+        remove_node.attrib["value"] = "\""
+
 
 
     # check for default value
@@ -860,7 +880,7 @@ def create_outputs(parent, model, blacklisted_parameters):
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is _OutFile:
-            create_data_node(outputs_node, param)
+            create_output_node(outputs_node, param, model)
 
     # If there are no outputs defined in the ctd the node will have no children
     # and the stdout will be used as output
@@ -870,7 +890,7 @@ def create_outputs(parent, model, blacklisted_parameters):
         out_node.attrib["format"] = "text"
         out_node.attrib["label"] = "Output from stdout"
 
-def create_data_node(parent, param):
+def create_output_node(parent, param, model):
     data_node = SubElement(parent, "data")
     data_node.attrib["name"] = get_galaxy_parameter_name(param)
 
@@ -887,11 +907,12 @@ def create_data_node(parent, param):
                 for form in param.restrictions.formats:
                     output += str(form)
                 print output
-            # if there are more than one output file formats from which the
-            # user can choose, create "change_format" nodes for all but the first
+            # if there are more than one output file formats try to take the format from the input parameter
             if formats:
-                #param_out_type is hardcoded for the moment
-                create_change_format_node(data_node, formats, 'param_out_type')
+                corresponding_input = get_input_with_same_restrictions(param, model)
+                if corresponding_input is not None:
+                    data_format = "input"
+                    data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for output [%(name)s]" % {"type":type(param.restrictions), "name":param.name})
     data_node.attrib["format"] = data_format
@@ -942,7 +963,7 @@ def create_requirements_macro(macro, package_requirements):
         """
         <requirements>
             <requirement type="binary">@EXECUTABLE@</requirement>
-            <requirement type="package" version="1.1.1">TODO</requirement>
+            <requirement type="package" version="1.2">TODO</requirement>
         </requirements>
         """
         requirements_node = SubElement(xml_node, "requirements")
@@ -954,6 +975,25 @@ def create_requirements_macro(macro, package_requirements):
         requirement_node.attrib["type"] = "package"
         requirement_node.attrib["version"] = "1.2"
         requirement_node.text = "openms"
+
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "xtandem"
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "pepnovo"
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "fido"
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "msgfplus"
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "myrimatch"
+        requirement_node = SubElement(requirements_node, "requirement")
+        requirement_node.attrib["type"] = "package"
+        requirement_node.text = "omssa"
 
 
 
