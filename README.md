@@ -25,6 +25,11 @@ will parse `/data/sample_input.ctd` and generate a Galaxy tool wrapper under `/d
 
 
     $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs
+
+### Converting several CTDs found in a folder that are also in a whitelist
+
+
+    $ python generator.py -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs -l list_of_tools.dat
     
 ### Generating a tool_conf.xml file 
 
@@ -76,6 +81,15 @@ Of course, you can also use Unix wildcards, which will be automatically expanded
 
     $ python generator.py -i /data/input_one.ctd /data/input_two.ctd /data/input_three.ctd -o /data/galaxy
     $ python generator.py -i /data/*.ctd -o /data/galaxy
+
+
+### Whitelist of tools that should be translated
+
+* Only generates wrappers for the tools provided in a file acts as a filter if *.ctd is provided as input
+* Short/Long version `-l` / `--tools-list-file`
+* Generates a tool.conf only with the whitelisted tools so it can easily pasted in the Galaxy tool-config file
+
+    $ python generator.py -i /data/*.ctd -o /data/galaxy -l tools.dat
 
 ### Output destination
 
@@ -251,3 +265,24 @@ Example:
 Will generate `<tool>` elements in the generated `tool_conf.xml` as follows:
 
     <tool file="my_tools_folder/some_tool.xml" />
+
+## Notes about some of the OpenMS tools
+
+* Most of the tools can be generated automatically. Some of the tools need some extra work (for now)
+* These adapters need to be changed, such that you provide the path to the executable
+    * FidoAdapter (add "-exe fido" in the command tag, delete the $param_exe in the command tag, delete the parameter from the input list)
+    * MSGFPlusAdapter (add "-executable msgfplus.jar" in the command tag, delete the $param_executable in the command tag, delete the parameter from the input list)
+    * MyriMatchAdapter (add "-myrimatch_executable myrimatch" in the command tag, delete the $param_myrimatch_executable in the command tag, delete the parameter from the input list)
+    * OMSSAAdapter (add "-omssa_executable omssa" in the command tag, delete the $param_omssa_executable in the command tag, delete the parameter from the input list)
+    * PepNovoAdapter (add "-pepnovo_executable pepnovo" in the command tag, delete the $param_pepnovo_executable in the command tag, delete the parameter from the input list)
+    * XTandemAdapter (add "-xtandem_executable xtandem" in the command tag, delete the $param_xtandem_executable in the command tag, delete the parameter from the input list)
+    * To avoid the deletion in the inputs you can also add these parameters to the blacklist
+        $ python generator.py -b exe executable myrimatch_excutable omssa_executable pepnovo_executable xtandem_executable
+
+* These tools have multiple outputs (number of inputs = number of outputs) which is not yet supported in Galaxy-stable 
+    * SeedListGenerator
+    * SpecLibSearcher
+    * MapAlignerIdentification
+    * MapAlignerPoseClustering
+    * MapAlignerSpectrum
+    * MapAlignerRTTransformer
