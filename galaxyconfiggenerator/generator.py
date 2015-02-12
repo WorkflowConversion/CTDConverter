@@ -14,8 +14,6 @@ import string
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError
- 
-
 from lxml.etree import SubElement, Element, ElementTree
 from collections import OrderedDict
 
@@ -167,7 +165,7 @@ def main(argv=None): # IGNORE:C0111
     except ModelError, e:
         indent = len(program_name) * " "
         sys.stderr.write(program_name + ": " + repr(e) + "\n")
-        sys.stderr.write(indent + "There seems to be a problem with one your input CTD.\n")
+        sys.stderr.write(indent + "There seems to be a problem with one of your input CTDs.\n")
         sys.stderr.write(indent + "For help use --help\n")
         return 1
     except Exception, e:
@@ -185,12 +183,12 @@ def validate_and_prepare_args(args):
     # if input is a single file, we expect output to be a file (and not a dir that already exists)
     if len(args.input_files) == 1:
         if os.path.isdir(args.output_dest):
-            raise ApplicationException("If a single input file is provided, output (%s) is expected to be a file and not a folder." % args.output_dest)
+            raise ApplicationException("If a single input file is provided, output (%s) is expected to be a file and not a folder.\n" % args.output_dest)
         
     # if input is a list of files, we expect output to be a folder
     if len(args.input_files) > 1:
         if not os.path.isdir(args.output_dest):
-            raise ApplicationException("If several input files are provided, output (%s) is expected to be an existing directory." % args.output_dest)
+            raise ApplicationException("If several input files are provided, output (%s) is expected to be an existing directory.\n" % args.output_dest)
         
             
     
@@ -260,7 +258,7 @@ def convert(input_files, output_dest, **kwargs):
                 try:
                     model = CTDModel(from_file=input_file)
                 except Exception, e:
-                    print str(e)
+                    print "  " + str(e)
                     continue
                 tool = create_tool(model)
     
