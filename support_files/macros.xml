@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!-- CTD2Galaxy depends on this file and on the stdio, advanced_options macros!
      You can edit this file to add your own macros, if you so desire, or you can
-     add additional macro files using the -m/--macros parameter -->
+     add additional macro files using the m/macros parameter -->
 <macros>
   <xml name="requirements">
     <requirements>

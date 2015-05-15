@@ -11,14 +11,16 @@ import os
 import traceback
 import ntpath
 import string
+import shutil
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, \
-    ModelParsingError
+from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, \
+    _FileFormat, ModelError
 from collections import OrderedDict
 from string import strip
 from xml.dom.minidom import Document
+from xml.etree import ElementTree
 
 __all__ = []
 __version__ = 0.11
@@ -30,6 +32,12 @@ MESSAGE_INDENTATION_INCREMENT = 2
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
 COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "processOption": "inmemory"}
+
+DEFAULT_MACROS_FILE = "support_files/macros.xml"
+STDIO_MACRO_NAME = "stdio"
+REQUIREMENTS_MACRO_NAME = "requirements"
+ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
+REQUIRED_MACROS = [STDIO_MACRO_NAME, REQUIREMENTS_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
 
 
 class CLIError(Exception):
@@ -77,21 +85,11 @@ class ExitCode:
 
 
 class DataType:
-    def __init__(self, extension, galaxy_extension=None, galaxy_type=None, subclass=None):
+    def __init__(self, extension, galaxy_extension=None, galaxy_type=None, mimetype=None):
         self.extension = extension
         self.galaxy_extension = galaxy_extension
         self.galaxy_type = galaxy_type
-        self.subclass = subclass
-
-    #TODO: do we need these after all?
-    def __hash__(self):
-        return self.extension.__hash__()
-
-    def __cmp__(self, other):
-        return self.extension.__cmp__(other.extension)
-
-    def __eq__(self, other):
-        return self.extension.__eq__(other.extesion)
+        self.mimetype = mimetype
 
 
 def main(argv=None):  # IGNORE:C0111
@@ -128,30 +126,30 @@ def main(argv=None):  # IGNORE:C0111
     * 1st column: file extension
     * 2nd column: data type, as listed in Galaxy
     * 3rd column: full-named Galaxy data type, as it will appear on datatypes_conf.xml
-    * 4th column: whether the given data type is a subclass of other Galaxy data types
+    * 4th column: mimetype (optional)
 
     The following is an example of a valid "file formats" file:
 
     ########################################## FILE FORMATS example ##########################################
     # Every line starting with a # will be handled as a comment and will not be parsed.
     # The first column is the file format as given in the CTD and second column is the Galaxy data format.
-    # The second, third and fourth column can be left empty if the data type has already been registered in Galaxy,
-    # otherwise, they all must be provided.
+    # The second, third, fourth and fifth column can be left empty if the data type has already been registered
+    # in Galaxy, otherwise, all but the mimetype must be provided.
 
-    # CTD data type       # Short Galaxy data type      # Long Galaxy data type             # Sublcass
-    csv                   tabular                       galaxy.datatypes.data:Text          true
+    # CTD type    # Galaxy type      # Long Galaxy data type            # Mimetype
+    csv           tabular            galaxy.datatypes.data:Text
     fasta
-    ini                   txt                           galaxy.datatypes.data:Text          true
+    ini           txt                galaxy.datatypes.data:Text
     txt
-    xds                   txt                           galaxy.datatypes.data:Text          true
-    options               txt                           galaxy.datatypes.data:Text          true
-    grid                  grid                          galaxy.datatypes.data:Grid          false
+    idxml         txt                galaxy.datatypes.xml:GenericXml    application/xml
+    options       txt                galaxy.datatypes.data:Text
+    grid          grid               galaxy.datatypes.data:Grid
 
     ##########################################################################################################
 
-    Note that each line consists precisely of either one column or four. In the case of data types already registered
-    in Galaxy (such as fasta and txt in the above example), only the first column is needed. In the case of data types
-    that haven't been yet registered in Galaxy, all four columns are needed.
+    Note that each line consists precisely of either one, three or four columns. In the case of data types already
+    registered in Galaxy (such as fasta and txt in the above example), only the first column is needed. In the case of
+    data types that haven't been yet registered in Galaxy, the first three columns are needed (mimetype is optional).
 
     For information about Galaxy data types and subclasses, see the following page:
     https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
@@ -191,25 +189,21 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
                             help="Adds content to the command line", default="", required=False)
         parser.add_argument("-y", "--data-types-destination", dest="data_types_destination",
-                            help="Specify the destination file of a generated datatypes_conf.xml",
+                            help="Specify the location of a datatypes_conf.xml to modify and add the registered "
+                                 "data types. If the provided destination does not exist, a new file will be created.",
                             default=None, required=False)
         parser.add_argument("-x", "--default-executable-path", dest="default_executable_path",
                             help="Use this executable path when <executablePath> is not present in the CTD",
                             default=None, required=False)
-        parser.add_argument("-w", "--whitespace-validation", dest="whitespace_validation", action="store_true",
-                            default=False, required=False,
-                            help="If true, each parameter in the generated command line will be " +
-                                 "validated against emptiness or being equal to 'None'")
-        parser.add_argument("-q", "--quote-parameters", dest="quote_parameters", action="store_true", default=False,
-                            help="If true, each parameter in the generated command line will be quoted", required=False)
         parser.add_argument("-b", "--blacklist", dest="blacklisted_parameters", default=[], nargs="+", action="append",
                             help="List of parameters that will be ignored and won't appear on the galaxy stub",
                             required=False)
         parser.add_argument("-c", "--default-category", dest="default_category", default="DEFAULT", required=False,
                             help="Default category to use for tools lacking a category when generating tool_conf.xml")
         parser.add_argument("-t", "--tool-conf-destination", dest="tool_conf_destination", default=None, required=False,
-                            help="Specify the destination file of a generated tool_conf.xml for all given input files; "
-                                 "each category will be written in its own section.")
+                            help="Specify the location of an existing tool_conf.xml that will be modified to include "
+                                 "the converted tools. If the provided destination does not exist, a new file will"
+                                 "be created.")
         parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
                             help="The path that will be prepended to the file names when generating tool_conf.xml")
         parser.add_argument("-l", "--tools-list-file", dest="tools_list_file", default=None, required=False,
@@ -217,45 +211,51 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-s", "--skip", dest="skip_tools", default=[], nargs="+", action="append",
                             help="List of tools for which a Galaxy stub will not be generated", required=False)
         parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="+", action="append",
-                            help="Import the given file(s) as macros.", required=False)
-        parser.add_argument("-e", "--expand-macros", dest="expand_macros", default=[], nargs="+", action="append",
-                            help="Expand the given macros.", required=False)
-        parser.add_argument("-d", "--advanced-input-macro", dest="advanced_input_macro", default="",
-                            help="Use the provided macro name to expand in the <input> section.", required=False)
-
-        # verbosity will be added later on, will not waste time on this now
-        # parser.add_argument("-v", "--verbose", dest="verbose", action="count",
-        # help="set verbosity level [default: %(default)s]")
+                            help="Import the additional given file(s) as macros. All defined macros will be imported.",
+                            required=False)
+        # TODO: add verbosity, maybe?
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
-        
+
         # Process arguments
         args = parser.parse_args()
         
         # validate and prepare the passed arguments
         validate_and_prepare_args(args)
 
+        # extract the names of the macros and check that we have found the ones we need
+        macros_file_names = args.macros_files + [DEFAULT_MACROS_FILE]
+        macros_to_expand = parse_macros_files(macros_file_names)
+
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
         
         #if verbose > 0:
         #    print("Verbose mode on")
-        convert(args.input_files, 
-                args.output_destination,
-                supported_file_formats=supported_file_formats,
-                default_executable_path=args.default_executable_path,
-                data_types_destination=args.data_types_destination,
-                add_to_command_line=args.add_to_command_line, 
-                whitespace_validation=args.whitespace_validation,
-                quote_parameters=args.quote_parameters,
-                blacklisted_parameters=args.blacklisted_parameters,
-                default_category=args.default_category,
-                tool_conf_destination=args.tool_conf_destination,
-                galaxy_tool_path=args.galaxy_tool_path,
-                tools_list_file=args.tools_list_file,
-                skip_tools=args.skip_tools,
-                macros_files=args.macros_files,
-                expand_macros=args.expand_macros,
-                advanced_input_macro=args.advanced_input_macro)
+        parsed_models = convert(args.input_files,
+                                args.output_destination,
+                                supported_file_formats=supported_file_formats,
+                                default_executable_path=args.default_executable_path,
+                                add_to_command_line=args.add_to_command_line,
+                                blacklisted_parameters=args.blacklisted_parameters,
+                                tools_list_file=args.tools_list_file,
+                                skip_tools=args.skip_tools,
+                                macros_file_names=macros_file_names,
+                                macros_to_expand=macros_to_expand)
+
+        #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
+
+        # copy the macros files
+        copy_macros_files(args.macros_files, args.output_destination)
+
+        # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
+        if args.tool_conf_destination is not None:
+            generate_tool_conf(parsed_models, args.tool_conf_destination,
+                               args.galaxy_tool_path, args.default_category)
+
+        # now datatypes_conf.xml
+        if args.data_types_destination is not None:
+            generate_data_type_conf(supported_file_formats, args.data_types_destination)
+
         return 0
 
     except KeyboardInterrupt:
@@ -274,6 +274,54 @@ def main(argv=None):  # IGNORE:C0111
         return 2
 
 
+def parse_macros_files(macros_file_names):
+    macros_to_expand = set()
+
+    for macros_file_name in macros_file_names:
+        try:
+            macros_file = open(macros_file_name)
+            root = ElementTree.parse(macros_file).getroot()
+            for xml_element in root.findall("xml"):
+                name = xml_element.attrib["name"]
+                if name in macros_to_expand:
+                    warning("Macro %s has already been found. Duplicate found in file %s." %
+                            (name, macros_file_name), 0)
+                else:
+                    macros_to_expand.add(name)
+        except ElementTree.ParseError, e:
+            raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
+                                       str(e))
+        except IOError, e:
+            raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " +
+                                       str(e))
+
+    # we depend on "stdio", "requirements" and "advanced_options" to exist on all the given macros files
+    missing_needed_macros = []
+    for required_macro in REQUIRED_MACROS:
+        if required_macro not in macros_to_expand:
+            missing_needed_macros.append(required_macro)
+
+    if missing_needed_macros:
+        raise ApplicationException("The following required macro(s) were not found in any of the given macros files: %s"
+                                   % ", ".join(missing_needed_macros))
+
+    # we do not need to "expand" the advanced_options macro
+    macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
+    return macros_to_expand
+
+
+def copy_macros_files(macros_files, output_destination):
+    # figure out if the destination is a file or a folder and act accordingly
+    macros_destination = output_destination
+    if os.path.isfile(output_destination):
+        macros_destination = os.path.dirname(output_destination)
+
+    for macros_file in macros_files + [DEFAULT_MACROS_FILE]:
+        destination = macros_destination + "/" + get_filename(macros_file)
+        shutil.copyfile(macros_file, destination)
+        info("Copied macros file %s to %s" % (macros_file, destination), 0)
+
+
 def parse_file_formats(formats_file):
     supported_formats = {}
     if formats_file is not None:
@@ -288,25 +336,29 @@ def parse_file_formats(formats_file):
                 else:
                     # not an empty line, no comment
                     # strip the line and split by whitespace
-                    parsed_formats = line.split()
+                    parsed_formats = line.strip().split()
                     # valid lines contain either one or four columns
-                    if not (len(parsed_formats) == 1 or len(parsed_formats) == 4):
+                    if not (len(parsed_formats) == 1 or len(parsed_formats) == 3 or len(parsed_formats) == 4):
                         warning("Invalid line at line number %d of the given formats_file. Line will be ignored:" %
                                 line_number, 0)
                         warning(line, 1)
                         # ignore the line
                         continue
                     elif len(parsed_formats) == 1:
-                        supported_formats[parsed_formats[0]] = DataType(parsed_formats[0])
+                        supported_formats[parsed_formats[0]] = DataType(parsed_formats[0], parsed_formats[0])
                     else:
-                        supported_formats[parsed_formats[0]] = \
-                            DataType(parsed_formats[0], parsed_formats[1], parsed_formats[2], parsed_formats[3])
+                        mimetype = None
+                        # check if mimetype was provided
+                        if len(parsed_formats) == 4:
+                            mimetype = parsed_formats[3]
+                        supported_formats[parsed_formats[0]] = DataType(parsed_formats[0], parsed_formats[1],
+                                                                        parsed_formats[2], mimetype)
     return supported_formats
 
 
 def validate_and_prepare_args(args):
     # first, we convert all list of lists in args to flat lists
-    lists_to_flatten = ["input_files", "blacklisted_parameters", "skip_tools", "expand_macros", "macros_files"]
+    lists_to_flatten = ["input_files", "blacklisted_parameters", "skip_tools", "macros_files"]
     for list_to_flatten in lists_to_flatten:
         setattr(args, list_to_flatten, [item for sub_list in getattr(args, list_to_flatten) for item in sub_list])
 
@@ -383,7 +435,7 @@ def convert(input_files, output_destination, **kwargs):
                 main_doc = Document()
                 tool = create_tool(main_doc, model)
                 create_description(main_doc, tool, model)
-                create_macros(main_doc, tool, model, **kwargs)
+                expand_macros(main_doc, tool, model, **kwargs)
                 create_command(main_doc, tool, model, **kwargs)
                 create_inputs(main_doc, tool, model, **kwargs)
                 create_outputs(main_doc, tool, model, **kwargs)
@@ -401,15 +453,12 @@ def convert(input_files, output_destination, **kwargs):
                 main_doc.writexml(open(output_file, 'w'), encoding="UTF-8", indent="  ", addindent="  ", newl="\n")
                 # let's use model to hold the name of the output file
                 parsed_models.append([model, get_filename(output_file)])
-
-        # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
-        if kwargs["tool_conf_destination"] is not None:
-            generate_tool_conf(parsed_models, kwargs["tool_conf_destination"],
-                               kwargs["galaxy_tool_path"], kwargs["default_category"])
                 
     except IOError, e:
         raise ApplicationException("One of the provided input files or the destination file could not be accessed. "
                                    "Detailed information: " + str(e) + "\n")
+
+    return parsed_models
 
 
 def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, default_category):
@@ -440,11 +489,29 @@ def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, d
             tool_node.setAttribute("file", galaxy_tool_path + filename)
 
     doc.writexml(open(tool_conf_destination, 'w'), encoding="UTF-8", indent="  ", addindent="  ", newl="\n")
-
     info("Generated Galaxy tool_conf.xml in %s" % tool_conf_destination, 0)
 
 
-#def generate_data_type_conf(data_types_destination):
+def generate_data_type_conf(supported_file_formats, data_types_destination):
+    doc = Document()
+    data_types_node = add_child_node(doc, doc, "datatypes")
+    registration_node = add_child_node(doc, data_types_node, "registration")
+    registration_node.setAttribute("converters_path", "lib/galaxy/datatypes/converters")
+    registration_node.setAttribute("display_path", "display_applications")
+
+    for format_name in supported_file_formats:
+        data_type = supported_file_formats[format_name]
+        # add only if it's a data type that does not exist in Galaxy
+        if data_type.galaxy_type is not None:
+            data_type_node = add_child_node(doc, registration_node, "datatype")
+            # we know galaxy_extension is not None
+            data_type_node.setAttribute("extension", data_type.galaxy_extension)
+            data_type_node.setAttribute("type", data_type.galaxy_type)
+            if data_type.mimetype is not None:
+                data_type_node.setAttribute("mimetype", data_type.mimetype)
+
+    doc.writexml(open(data_types_destination, 'w'), encoding="UTF-8", indent="  ", addindent="  ", newl="\n")
+    info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
 
 
 # taken from
@@ -487,9 +554,6 @@ def get_param_name(param):
 def create_command(doc, tool, model, **kwargs):
     final_command = get_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
-    whitespace_validation = kwargs["whitespace_validation"]
-    quote_parameters = kwargs["quote_parameters"]
-
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
     advanced_command_end = '#end if'
     advanced_command = ''
@@ -506,7 +570,6 @@ def create_command(doc, tool, model, **kwargs):
                 # replace the param value with a hardcoded value, for example the GALAXY_SLOTS ENV
                 command += '-%s %s\n' % (param_name, COMMAND_REPLACE_PARAMS[param.name])
             else:
-                # let's not use an extra level of indentation and use NOP
                 continue
         else:
             galaxy_parameter_name = get_galaxy_parameter_name(param)
@@ -584,31 +647,23 @@ def create_command(doc, tool, model, **kwargs):
 
 # creates the xml elements needed to import the needed macros files
 # and to "expand" the macros
-def create_macros(doc, tool, model, **kwargs):
-    """
-        <macros>
-            <token name="@EXECUTABLE@">AppName</token>
-            <import>macros.xml</import>
-        </macros>
-        <expand macro="stdio" />
-        <expand macro="requirements" />
-    """
-    if len(kwargs["macros_files"]) > 0:
-        macros_node = add_child_node(doc, tool, "macros")
-        token_node = add_child_node(doc, macros_node, "token")
-        token_node.setAttribute("name", "@EXECUTABLE@")
-        add_text_node(doc, token_node, get_tool_executable_path(model, kwargs["default_executable_path"]))
+def expand_macros(doc, tool, model, **kwargs):
+    macros_node = add_child_node(doc, tool, "macros")
+    token_node = add_child_node(doc, macros_node, "token")
+    token_node.setAttribute("name", "@EXECUTABLE@")
+    add_text_node(doc, token_node, get_tool_executable_path(model, kwargs["default_executable_path"]))
 
-        # add <import> nodes
-        for macro_file in kwargs["macros_files"]:
-            import_node = add_child_node(doc, macros_node, "import")
-            # do not add the path of the file, rather, just its basename
-            add_text_node(doc, import_node, os.path.basename(macro_file.name))
+    # add <import> nodes
+    for macro_file_name in kwargs["macros_file_names"]:
+        macro_file = open(macro_file_name)
+        import_node = add_child_node(doc, macros_node, "import")
+        # do not add the path of the file, rather, just its basename
+        add_text_node(doc, import_node, os.path.basename(macro_file.name))
 
-        # add <expand> nodes
-        for expand_macro in kwargs["expand_macros"]:
-            expand_node = add_child_node(doc, tool, "expand")
-            expand_node.setAttribute("macro", expand_macro)
+    # add <expand> nodes
+    for expand_macro in kwargs["macros_to_expand"]:
+        expand_node = add_child_node(doc, tool, "expand")
+        expand_node.setAttribute("macro", expand_macro)
 
 
 def get_tool_executable_path(model, default_executable_path):
@@ -666,11 +721,8 @@ def create_inputs(doc, tool, model, **kwargs):
     inputs_node = doc.createElement("inputs")
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
-    advanced_input_macro = kwargs["advanced_input_macro"]
-    expand_advanced_node = None
-    if advanced_input_macro is not None and len(strip(advanced_input_macro)) > 0:
-        expand_advanced_node = add_child_node(doc, tool, "expand")
-        expand_advanced_node.setAttribute("macro", strip(advanced_input_macro))
+    expand_advanced_node = add_child_node(doc, tool, "expand")
+    expand_advanced_node.setAttribute("macro", ADVANCED_OPTIONS_MACRO_NAME)
 
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
@@ -1062,8 +1114,7 @@ def create_output_node(doc, parent, param, model, supported_file_formats):
 
 
 def get_supported_file_types(formats, supported_file_formats):
-    #return {format_name: supported_file_formats}
-    return set([supported_file_formats.get(format_name, DataType(format_name)).extension
+    return set([supported_file_formats.get(format_name, DataType(format_name, format_name)).galaxy_extension
                for format_name in formats if format_name in supported_file_formats.keys()])
 
 
