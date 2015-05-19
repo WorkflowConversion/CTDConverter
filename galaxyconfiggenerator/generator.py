@@ -711,7 +711,7 @@ def create_command(doc, tool, model, **kwargs):
                     command += actual_parameter + "\n"
                     command += "#end if\n" 
 
-        if param.advanced and param.name not in kwargs["blacklisted_parameters"] and param.type is not _OutFile:
+        if param.advanced and param.type is not _OutFile:
             advanced_command += "    %s" % command
         else:
             final_command += command
@@ -807,7 +807,8 @@ def create_inputs(doc, tool, model, **kwargs):
 
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
-        if param.name in kwargs["blacklisted_parameters"]:
+        # no need to show hardcoded parameters
+        if param.name in kwargs["blacklisted_parameters"] or param.name in kwargs["hardcoded_parameters"]:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is not _OutFile:
@@ -1134,8 +1135,9 @@ def create_outputs(doc, parent, model, **kwargs):
     parent.appendChild(outputs_node)
 
     for param in extract_parameters(model):
-       
-        if param.name in kwargs["blacklisted_parameters"]:
+
+        # no need to show hardcoded parameters
+        if param.name in kwargs["blacklisted_parameters"] or param.name in kwargs["hardcoded_parameters"]:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is _OutFile:
