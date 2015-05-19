@@ -107,15 +107,18 @@ def main(argv=None):  # IGNORE:C0111
     program_usage = '''
     USAGE:
     
-    Parsing a single CTD file and generate a Galaxy wrapper:
+    I - Parsing a single CTD file and generate a Galaxy wrapper:
 
     $ python generator.py -i input.ctd -o output.xml
     
 
-    Parsing all found CTD files (files with .ctd and .xml extension) in a given folder and
-    output converted Galaxy wrappers in a given folder:
+    II - Parsing all found CTD files (files with .ctd and .xml extension) in a given folder and
+         output converted Galaxy wrappers in a given folder:
 
     $ python generator.py -i /home/user/*.ctd -o /home/user/galaxywrappers
+
+
+    III - Providing file formats, mimetypes
 
     Galaxy supports the concept of file format in order to connect compatible ports, that is, input ports of a certain
     data format will be able to receive data from a port from the same format. This converter allows you to provide
@@ -154,6 +157,47 @@ def main(argv=None):  # IGNORE:C0111
     For information about Galaxy data types and subclasses, see the following page:
     https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
 
+
+    IV - Hardcoding parameters
+
+    It is possible to hardcode parameters. This makes sense if you want to set a tool in Galaxy in 'quiet' mode or if
+    your tools support multi-threading and accept the number of threads via a parameter, without giving the end user the
+    chance to change the values for these parameters.
+
+    In order to generate hardcoded parameters, you need to provide a simple file. Each line of this file contains two
+    columns separated by whitespace. Any line starting with a '#' will be ignored. The first column contains the name
+    of the parameter and the second column contains the value that will always be set for this parameter.
+
+    The following is an example of a valid file:
+
+    ##################################### HARDCODED PARAMETERS example #####################################
+    # Every line starting with a # will be handled as a comment and will not be parsed.
+    # The first column is the name of the parameter and the second column is the value that will be used.
+
+    # Parameter name            # Value
+    threads                     \${GALAXY_SLOTS:-24}
+    mode                        quiet
+    processOption               inmemory
+
+    #########################################################################################################
+
+    Using the above file will produce a <command> similar to:
+
+    [tool_name] ... -threads \${GALAXY_SLOTS:-24} -mode quiet -processOption inmemory ...
+
+
+    V - Control which tools will be converted
+
+    Sometimes only a subset of CTDs needs to be converted. It is possible to either explicitly specify which tools will
+    be converted or which tools will not be converted.
+
+    The value of the -s/--skip-tools parameter is a file in which each line will be interpreted as the name of a tool
+    that will not be converted. Conversely, the value of the -r/--required-tools is a file in which each line will be
+    interpreted as a tool that is required. Only one of these parameters can be specified at a given time.
+
+    The format of both files is exactly the same. As stated before, each line will be interpreted as the name of a tool;
+    any line starting with a '#' will be ignored.
+
     '''
     program_license = '''%(short_description)s
     Copyright 2015, Luis de la Garza
@@ -184,7 +228,7 @@ def main(argv=None):  # IGNORE:C0111
                                  "XMLs will be generated is expected;"
                                  "if a single input file is given, then a destination file is expected.")
         parser.add_argument("-f", "--formats-file", dest="formats_file",
-                            help="File containing the supported file formats. Run with '-h' or '--help' to to see a "
+                            help="File containing the supported file formats. Run with '-h' or '--help' to see a "
                                  "brief example on the layout of this file.", default=None, required=False)
         parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
                             help="Adds content to the command line", default="", required=False)
@@ -206,13 +250,18 @@ def main(argv=None):  # IGNORE:C0111
                                  "be created.")
         parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
                             help="The path that will be prepended to the file names when generating tool_conf.xml")
-        parser.add_argument("-l", "--tools-list-file", dest="tools_list_file", default=None, required=False,
-                            help="Each line of the file will be interpreted as a tool name that needs translation.")
-        parser.add_argument("-s", "--skip", dest="skip_tools", default=[], nargs="+", action="append",
-                            help="List of tools for which a Galaxy stub will not be generated", required=False)
+        parser.add_argument("-r", "--required-tools", dest="required_tools_file", default=None, required=False,
+                            help="Each line of the file will be interpreted as a tool name that needs translation. "
+                                 "Run with '-h' or '--help' to see a brief example on the format of this file.")
+        parser.add_argument("-s", "--skip-tools", dest="skip_tools_file", default=None, required=False,
+                            help="File containing a list of tools for which a Galaxy stub will not be generated. "
+                                 "Run with '-h' or '--help' to see a brief example on the format of this file.")
         parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="+", action="append",
                             help="Import the additional given file(s) as macros. All defined macros will be imported.",
                             required=False)
+        parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
+                            help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
+                                 "to see a brief example on the format of this file.")
         # TODO: add verbosity, maybe?
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
 
@@ -228,6 +277,13 @@ def main(argv=None):  # IGNORE:C0111
 
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
+
+        # parse the harcoded parameters file
+        hardcoded_parameters = parse_hardcoded_parameters(args.hardcoded_parameters)
+
+        # parse the skip/required tools files
+        skip_tools = parse_tools_list_file(args.skip_tools_file)
+        required_tools = parse_tools_list_file(args.required_tools_file)
         
         #if verbose > 0:
         #    print("Verbose mode on")
@@ -237,10 +293,11 @@ def main(argv=None):  # IGNORE:C0111
                                 default_executable_path=args.default_executable_path,
                                 add_to_command_line=args.add_to_command_line,
                                 blacklisted_parameters=args.blacklisted_parameters,
-                                tools_list_file=args.tools_list_file,
-                                skip_tools=args.skip_tools,
+                                required_tools=required_tools,
+                                skip_tools=skip_tools,
                                 macros_file_names=macros_file_names,
-                                macros_to_expand=macros_to_expand)
+                                macros_to_expand=macros_to_expand,
+                                hardcoded_parameters=hardcoded_parameters)
 
         #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
 
@@ -272,6 +329,20 @@ def main(argv=None):  # IGNORE:C0111
     except Exception, e:
         traceback.print_exc()
         return 2
+
+
+def parse_tools_list_file(tools_list_file):
+    tools_list = None
+    if tools_list_file is not None:
+        tools_list = []
+        with open(tools_list_file) as f:
+            for line in f:
+                if line is None or not line.strip() or line.strip().startswith("#"):
+                    continue
+                else:
+                    tools_list.append(line.strip())
+
+    return tools_list
 
 
 def parse_macros_files(macros_file_names):
@@ -322,6 +393,28 @@ def copy_macros_files(macros_files, output_destination):
         info("Copied macros file %s to %s" % (macros_file, destination), 0)
 
 
+def parse_hardcoded_parameters(hardcoded_parameters_file):
+    hardcoded_parameters = {}
+    if hardcoded_parameters_file is not None:
+        line_number = 0
+        with open(hardcoded_parameters_file) as f:
+            for line in f:
+                line_number += 1
+                if line is None or not line.strip() or line.strip().startswith("#"):
+                    pass
+                else:
+                    parsed_hardcoded_parameter = line.strip().split()
+                    # valid lines contain two columns
+                    if not len(parsed_hardcoded_parameter) == 2:
+                        warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
+                                "ignored:\n%s" % (line_number, line), 0)
+                        continue
+                    else:
+                        hardcoded_parameters[parsed_hardcoded_parameter[0]] = parsed_hardcoded_parameter[1]
+
+    return hardcoded_parameters
+
+
 def parse_file_formats(formats_file):
     supported_formats = {}
     if formats_file is not None:
@@ -339,9 +432,8 @@ def parse_file_formats(formats_file):
                     parsed_formats = line.strip().split()
                     # valid lines contain either one or four columns
                     if not (len(parsed_formats) == 1 or len(parsed_formats) == 3 or len(parsed_formats) == 4):
-                        warning("Invalid line at line number %d of the given formats_file. Line will be ignored:" %
-                                line_number, 0)
-                        warning(line, 1)
+                        warning("Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" %
+                                (line_number, line), 0)
                         # ignore the line
                         continue
                     elif len(parsed_formats) == 1:
@@ -357,8 +449,14 @@ def parse_file_formats(formats_file):
 
 
 def validate_and_prepare_args(args):
+    # check that only one of skip_tools_file and required_tools_file has been provided
+    if args.skip_tools_file is not None and args.required_tools_file is not None:
+        raise ApplicationException(
+            "You have provided both a file with tools to ignore and a file with required tools.\n"
+            "Only one of -s/--skip-tools, -r/--required-tools can be provided.")
+
     # first, we convert all list of lists in args to flat lists
-    lists_to_flatten = ["input_files", "blacklisted_parameters", "skip_tools", "macros_files"]
+    lists_to_flatten = ["input_files", "blacklisted_parameters", "macros_files"]
     for list_to_flatten in lists_to_flatten:
         setattr(args, list_to_flatten, [item for sub_list in getattr(args, list_to_flatten) for item in sub_list])
 
@@ -375,7 +473,8 @@ def validate_and_prepare_args(args):
                                        "existing directory.\n" % args.output_destination)
 
     # check that the provided input files, if provided, contain a valid file path
-    input_variables_to_check = ["tools_list_file", "macros_files", "input_files", "formats_file"]
+    input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files",
+                                "input_files", "formats_file", "hardcoded_parameters"]
 
     for variable_name in input_variables_to_check:
         paths_to_check = []
@@ -404,59 +503,42 @@ def validate_and_prepare_args(args):
 
 
 def convert(input_files, output_destination, **kwargs):
-    # if a file with a list of needed tools is given they are put in the tools list
-    needed_tools = []
-    if kwargs["tools_list_file"] is not None:
-        try:
-            with open(kwargs["tools_list_file"]) as f:
-                for line in f:
-                    needed_tools.append(line.rstrip())
-        except IOError, e:
-            error("The provided input file " + str(kwargs["tools_list_file"]) + " could not be accessed. "
-                  "Detailed information: " + str(e), 0)
     # first, generate a model
     is_converting_multiple_ctds = len(input_files) > 1 
     parsed_models = []
-    try:
-        for input_file in input_files:
-            tool_name = os.path.splitext(os.path.basename(input_file))[0]
-            if tool_name in kwargs["skip_tools"] or \
-                    (kwargs["tools_list_file"] is not None and tool_name not in needed_tools):
-                info("Skipping tool %s" % tool_name, 0)
-                continue
-            else:
-                info("Parsing CTD from file %s" % input_file, 0)
-                try:
-                    model = CTDModel(from_file=input_file)
-                except Exception, e:
-                    error(str(e), 1)
-                    continue
+    for input_file in input_files:
+        try:
+            model = CTDModel(from_file=input_file)
+        except Exception, e:
+            error(str(e), 1)
+            continue
 
-                main_doc = Document()
-                tool = create_tool(main_doc, model)
-                create_description(main_doc, tool, model)
-                expand_macros(main_doc, tool, model, **kwargs)
-                create_command(main_doc, tool, model, **kwargs)
-                create_inputs(main_doc, tool, model, **kwargs)
-                create_outputs(main_doc, tool, model, **kwargs)
-                create_help(main_doc, tool, model)
+        if kwargs["skip_tools"] is not None and model.name in kwargs["skip_tools"]:
+            info("Skipping tool %s" % model.name, 0)
+            continue
+        elif kwargs["required_tools"] is not None and model.name not in kwargs["required_tools"]:
+            info("Tool %s is not required, skipping it" % model.name, 0)
+            continue
+        else:
+            info("Converting from %s " % input_file, 0)
+            main_doc = Document()
+            tool = create_tool(main_doc, model)
+            create_description(main_doc, tool, model)
+            expand_macros(main_doc, tool, model, **kwargs)
+            create_command(main_doc, tool, model, **kwargs)
+            create_inputs(main_doc, tool, model, **kwargs)
+            create_outputs(main_doc, tool, model, **kwargs)
+            create_help(main_doc, tool, model)
 
-                # finally, serialize the tool
-                output_file = output_destination
-                # if multiple inputs are being converted,
-                # then we need to generate a different output_file for each input
-                if is_converting_multiple_ctds:
-                    #if not output_file.endswith('/'):
-                    #    output_file += "/"
-                    #output_file += get_filename(input_file) + ".xml"
-                    output_file = os.path.join(output_file, get_filename_without_suffix(input_file) + ".xml")
-                main_doc.writexml(open(output_file, 'w'), encoding="UTF-8", indent="  ", addindent="  ", newl="\n")
-                # let's use model to hold the name of the output file
-                parsed_models.append([model, get_filename(output_file)])
-                
-    except IOError, e:
-        raise ApplicationException("One of the provided input files or the destination file could not be accessed. "
-                                   "Detailed information: " + str(e) + "\n")
+            # finally, serialize the tool
+            output_file = output_destination
+            # if multiple inputs are being converted,
+            # then we need to generate a different output_file for each input
+            if is_converting_multiple_ctds:
+                output_file = os.path.join(output_file, get_filename_without_suffix(input_file) + ".xml")
+            main_doc.writexml(open(output_file, 'w'), encoding="UTF-8", indent="  ", addindent="  ", newl="\n")
+            # let's use model to hold the name of the output file
+            parsed_models.append([model, get_filename(output_file)])
 
     return parsed_models
 
@@ -566,12 +648,11 @@ def create_command(doc, tool, model, **kwargs):
         param_name = get_param_name(param)
 
         if param.name in kwargs["blacklisted_parameters"]:
-            if param.name in COMMAND_REPLACE_PARAMS:
-                # replace the param value with a hardcoded value, for example the GALAXY_SLOTS ENV
-                command += '-%s %s\n' % (param_name, COMMAND_REPLACE_PARAMS[param.name])
-            else:
-                continue
+            continue
+        elif param.name in kwargs["hardcoded_parameters"]:
+            command += '-%s %s\n' % (param_name, kwargs["hardcoded_parameters"][param.name])
         else:
+            # parameter is neither blacklister nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
             repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param)
 
