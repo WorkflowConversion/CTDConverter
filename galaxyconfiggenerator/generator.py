@@ -165,8 +165,13 @@ def main(argv=None):  # IGNORE:C0111
     chance to change the values for these parameters.
 
     In order to generate hardcoded parameters, you need to provide a simple file. Each line of this file contains two
-    columns separated by whitespace. Any line starting with a '#' will be ignored. The first column contains the name
-    of the parameter and the second column contains the value that will always be set for this parameter.
+    or three columns separated by whitespace. Any line starting with a '#' will be ignored. The first column contains
+    the name of the parameter, the second column contains the value that will always be set for this parameter. The
+    first two columns are mandatory.
+
+    If the parameter is to be hardcoded only for a set of tools, then a third column can be added. This column includes
+    a comma-separated list of tool names for which the parameter will be hardcoded. If a third column is not included,
+    then all processed tools containing the given parameter will get a hardcoded value for it.
 
     The following is an example of a valid file:
 
@@ -174,16 +179,25 @@ def main(argv=None):  # IGNORE:C0111
     # Every line starting with a # will be handled as a comment and will not be parsed.
     # The first column is the name of the parameter and the second column is the value that will be used.
 
-    # Parameter name            # Value
+    # Parameter name            # Value                     # Tool(s)
     threads                     \${GALAXY_SLOTS:-24}
     mode                        quiet
-    processOption               inmemory
+    xtandem_executable          xtandem                     XTandemAdapter
+    verbosity                   high                        Foo, Bar
 
     #########################################################################################################
 
     Using the above file will produce a <command> similar to:
 
-    [tool_name] ... -threads \${GALAXY_SLOTS:-24} -mode quiet -processOption inmemory ...
+    [tool_name] ... -threads \${GALAXY_SLOTS:-24} -mode quiet ...
+
+    For all tools. For XTandemAdapter, the <command> will be similar to:
+
+    XtandemAdapter ... -threads \${GALAXY_SLOTS:-24} -mode quiet -xtandem_executable xtandem ...
+
+    And for tools Foo and Bar, the <command> will be similar to:
+
+    Foo ... ... -threads \${GALAXY_SLOTS:-24} -mode quiet -verbosity high ...
 
 
     V - Control which tools will be converted
@@ -232,7 +246,7 @@ def main(argv=None):  # IGNORE:C0111
                                  "brief example on the layout of this file.", default=None, required=False)
         parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
                             help="Adds content to the command line", default="", required=False)
-        parser.add_argument("-y", "--data-types-destination", dest="data_types_destination",
+        parser.add_argument("-d", "--datatypes-destination", dest="data_types_destination",
                             help="Specify the location of a datatypes_conf.xml to modify and add the registered "
                                  "data types. If the provided destination does not exist, a new file will be created.",
                             default=None, required=False)
