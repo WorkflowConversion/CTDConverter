@@ -1,13 +1,13 @@
-# GalaxyConfigGenerator
+# CTD2Galaxy
 
 
-Given one or more CTD files, GalaxyConfigGenerator generates the needed Galaxy wrappers.
+Given one or more CTD files, `CTD2Galaxy` generates the needed Galaxy wrappers to include them in a Galaxy instance.
 
 ## How to install
 
-1. Download the source code from https://github.com/genericworkflownodes/GalaxyConfigGenerator.
+1. Download the source code from https://github.com/genericworkflownodes/CTD2Galaxy.
 2. Download CTDopts from https://github.com/genericworkflownodes/CTDopts.
-3. You can install the CTDopts and GalaxyConfigGenerator modules, or just make them available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
+3. You can install the `CTDopts` and `CTD2Galaxy` modules, or just make them available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
 
 ## How to use: most common tasks
 
@@ -17,7 +17,7 @@ Running the generator with the `-h/--help` parameter will print extended informa
 
 ### One input, one output
 
-In its simplest form, GalaxyConfigGenerator takes an input CTD file and generates an output Galaxy *ToolConfig* file. The following use of GalaxyConfigGenerator:
+In its simplest form, `CTD2Galaxy` takes an input CTD file and generates an output Galaxy *ToolConfig* file. The following use of `CTD2Galaxy`:
 
     $ python generator.py -i /data/sample_input.ctd -o /data/sample_output.xml
 
@@ -147,7 +147,7 @@ Will not process any of the parameters named `h`, `help`, or `quiet` and will no
 
 ### Generating a tool_conf.xml file
 
-* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. GalaxyConfigGenerator can also generate this file. Categories will be extracted from the provided input CTDs and for each category, a different `<section>` will be generated. Any input CTD lacking a category will be sorted under the provided default category.
+* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. `CTD2Galaxy` can also generate this file. Categories will be extracted from the provided input CTDs and for each category, a different `<section>` will be generated. Any input CTD lacking a category will be sorted under the provided default category.
 * Short/long version: `-t` / `--tool-conf-destination`
 * Required: no.
 * Taken values: The destination of the file.
