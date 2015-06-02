@@ -102,7 +102,7 @@ def main(argv=None):  # IGNORE:C0111
     program_version = "v%s" % __version__
     program_build_date = str(__updated__)
     program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
-    program_short_description = "GalaxyConfigGenerator - A project from the GenericWorkflowNodes family " \
+    program_short_description = "CTD2Galaxy - A project from the GenericWorkflowNodes family " \
                                 "(https://github.com/orgs/genericworkflownodes)"
     program_usage = '''
     USAGE:
@@ -233,7 +233,7 @@ def main(argv=None):  # IGNORE:C0111
 
     try:
         # Setup argument parser
-        parser = ArgumentParser(prog="GalaxyConfigGenerator", description=program_license,
+        parser = ArgumentParser(prog="CTD2Galaxy", description=program_license,
                                 formatter_class=RawDescriptionHelpFormatter, add_help=True)
         parser.add_argument("-i", "--input", dest="input_files", default=[], required=True, nargs="+", action="append",
                             help="List of CTD files to convert.")
@@ -333,7 +333,7 @@ def main(argv=None):  # IGNORE:C0111
         # handle keyboard interrupt
         return 0
     except ApplicationException, e:
-        error("GalaxyConfigGenerator could not complete the requested operation.", 0)
+        error("CTD2Galaxy could not complete the requested operation.", 0)
         error("Reason: " + e.msg, 0)
         return 1
     except ModelError, e:
