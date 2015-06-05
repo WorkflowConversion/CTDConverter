@@ -300,7 +300,11 @@ Note that each line consists of either one, three or four columns. In the case o
 For information about Galaxy data types and subclasses, consult the following page: https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
 
 
-## Notes about some of the OpenMS tools
+## Notes about some of the *OpenMS* tools
+
+To generate the *OpenMS* tools, use the following command:
+
+    $  python galaxyconfiggenerator/generator.py --input [CTDs] --output-destination [output] --formats-file support_files/formats.txt --default-executable-path [execPath] --blacklist help version log test --hardcoded-parameters support_files/hardcoded_parameters.txt --skip-tools support_files/skipped_tools.txt  --default-category "Generic OpenMS" --galaxy-tool-path [galaxyPath]
 
 * Most of the tools can be generated automatically. Some of the tools need some extra work (for now).
 * These adapters need to be changed, such that you provide the path to the executable:

@@ -1,0 +1,10 @@
+threads 				\${GALAXY_SLOTS:-24}
+processOption				inmemory
+exe					fido			FidoAdapter
+fidochooseparameters_executable		FidoChooseParameters	FidoAdapter
+fido_executable				Fido			FidoAdapter
+executable				msgfplus.jar		MSGFPlusAdapter
+myrimatch_executable			myrimatch		MyriMatchAdapter
+omssa_executable			omssa			OMSSAAdapter
+pepnovo_executable			pepnovo			PepNovoAdapter
+xtandem_executable			xtandem			XTandemAdapter

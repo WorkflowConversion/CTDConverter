@@ -1,0 +1,35 @@
+csv
+edta			tabular		galaxy.datatypes.tabular:Tabular
+XML			xml		galaxy.datatypes.xml:GenericXml			text/xml
+HTML			html		galaxy.datatypes.images:Html		 	text/html
+traML			traml		galaxy.datatypes.xml:GenericXml                 text/xml
+TraML			traml		galaxy.datatypes.xml:GenericXml                 text/xml
+trafoXML		trafoxml	galaxy.datatypes.xml:GenericXml			txt/xml
+tsv			tabular		galaxy.datatypes.tabular:Tabular
+qcML			qcml		galaxy.datatypes.xml:GenericXml                 text/xml
+consensusXML		consensusxml	galaxy.datatypes.xml:GenericXml
+mzML			mzml		galaxy.datatypes.xml:GenericXml                 text/xml
+mzXML			mzxml		galaxy.datatypes.xml:GenericXml
+featureXML		featurexml	galaxy.datatypes.xml:GenericXml
+idXML			idxml		galaxy.datatypes.xml:GenericXml
+pepXML			pepxml		galaxy.datatypes.xml:GenericXml                 text/xml
+qcML			qcml		galaxy.datatypes.xml:GenericXml                 text/xml
+FASTA			fasta		galaxy.datatypes.sequence:Fasta
+ini			txt		galaxy.datatypes.data:Text
+xsd			xml		galaxy.datatypes.xml:GenericXml
+svg
+jpg
+png
+mgf			
+mzq			xml		galaxy.datatypes.xml:GenericXml
+obo
+txt
+fasta
+bmp
+tiff
+ppm
+mzData			xml		galaxy.datatypes.xml:GenericXml                 text/xml
+mzid			xml		galaxy.datatypes.xml:GenericXml                 text/xml
+dta2d			txt		galaxy.datatypes.data:Text
+toppas			xml             galaxy.datatypes.xml:GenericXml                 text/xml
+msp			xml             galaxy.datatypes.xml:GenericXml                 text/xml

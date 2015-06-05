@@ -6,7 +6,19 @@
   <xml name="requirements">
     <requirements>
       <requirement type="binary">@EXECUTABLE@</requirement>
+      <requirement type="package">xtandem</requirement>
+      <requirement type="package">pepnovo</requirement>
+      <requirement type="package">fido</requirement>
+      <requirement type="package">msgfplus</requirement>
+      <requirement type="package">myrimatch</requirement>
+      <requirement type="package">omssa</requirement>
+      <requirement type="package" version="2.0">openms</requirement>
     </requirements>
+  </xml>
+  <xml name="references">
+    <citations>
+      <citation type="doi">doi:10.1186/1471-2105-9-163</citation>
+    </citations>
   </xml>
   <xml name="stdio">
     <stdio>
