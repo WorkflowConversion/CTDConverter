@@ -220,11 +220,11 @@ This will produce a `<command>` section similar to the following one for all too
 
     <command>TOOL_NAME -threads \${GALAXY_SLOTS:-24} -mode quiet  ...</command>
     
-For XTandemAdapter, the `<command>` will be similar to:
+For `XTandemAdapter`, the `<command>` will be similar to:
 
     <command>XtandemAdapter ... -threads \${GALAXY_SLOTS:-24} -mode quiet -xtandem_executable xtandem ...</command>
 
-And for tools Foo and Bar, the `<command>` will be similar to:
+And for tools `Foo` and `Bar`, the `<command>` will be similar to:
 
     <command>Foo ... ... -threads \${GALAXY_SLOTS:-24} -mode quiet -verbosity high ...</command>
 
@@ -300,7 +300,7 @@ Note that each line consists of either one, three or four columns. In the case o
 For information about Galaxy data types and subclasses, consult the following page: https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
 
 
-## Notes about some of the OpenMS tools
+## Notes about some of the *OpenMS* tools
 
 * Most of the tools can be generated automatically. Some of the tools need some extra work (for now).
 * These adapters need to be changed, such that you provide the path to the executable:
