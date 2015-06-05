@@ -31,7 +31,6 @@ MESSAGE_INDENTATION_INCREMENT = 2
 
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
-COMMAND_REPLACE_PARAMS = {'threads': '\${GALAXY_SLOTS:-24} ', "processOption": "inmemory"}
 
 DEFAULT_MACROS_FILE = "support_files/macros.xml"
 STDIO_MACRO_NAME = "stdio"
@@ -90,6 +89,39 @@ class DataType:
         self.galaxy_extension = galaxy_extension
         self.galaxy_type = galaxy_type
         self.mimetype = mimetype
+
+
+class ParameterHardcoder:
+    def __init__(self):
+        # map whose keys are the composite names of tools and parameters in the following pattern:
+        # [ToolName][separator][ParameterName] -> HardcodedValue
+        # if the parameter applies to all tools, then the following pattern is used:
+        # [ParameterName] -> HardcodedValue
+
+        # examples (assuming separator is '#'):
+        # threads -> 24
+        # XtandemAdapter#adapter -> xtandem.exe
+        # adapter -> adapter.exe
+        self.separator = "!"
+        self.parameter_map = {}
+
+    # the most specific value will be returned in case of overlap
+    def get_hardcoded_value(self, parameter_name, tool_name):
+        # look for the value that would apply for all tools
+        generic_value = self.parameter_map.get(parameter_name, None)
+        specific_value = self.parameter_map.get(self.build_key(parameter_name, tool_name), None)
+        if specific_value is not None:
+            return specific_value
+
+        return generic_value
+
+    def register_parameter(self, parameter_name, parameter_value, tool_name=None):
+        self.parameter_map[self.build_key(parameter_name, tool_name)] = parameter_value
+
+    def build_key(self, parameter_name, tool_name):
+        if tool_name is None:
+            return parameter_name
+        return "%s%s%s" % (parameter_name, self.separator, tool_name)
 
 
 def main(argv=None):  # IGNORE:C0111
@@ -292,8 +324,8 @@ def main(argv=None):  # IGNORE:C0111
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
 
-        # parse the harcoded parameters file
-        hardcoded_parameters = parse_hardcoded_parameters(args.hardcoded_parameters)
+        # parse the hardcoded parameters file
+        parameter_hardcoder = parse_hardcoded_parameters(args.hardcoded_parameters)
 
         # parse the skip/required tools files
         skip_tools = parse_tools_list_file(args.skip_tools_file)
@@ -311,7 +343,7 @@ def main(argv=None):  # IGNORE:C0111
                                 skip_tools=skip_tools,
                                 macros_file_names=macros_file_names,
                                 macros_to_expand=macros_to_expand,
-                                hardcoded_parameters=hardcoded_parameters)
+                                parameter_hardcoder=parameter_hardcoder)
 
         #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
 
@@ -408,7 +440,7 @@ def copy_macros_files(macros_files, output_destination):
 
 
 def parse_hardcoded_parameters(hardcoded_parameters_file):
-    hardcoded_parameters = {}
+    parameter_hardcoder = ParameterHardcoder()
     if hardcoded_parameters_file is not None:
         line_number = 0
         with open(hardcoded_parameters_file) as f:
@@ -417,16 +449,26 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
                 if line is None or not line.strip() or line.strip().startswith("#"):
                     pass
                 else:
-                    parsed_hardcoded_parameter = line.strip().split()
-                    # valid lines contain two columns
-                    if not len(parsed_hardcoded_parameter) == 2:
+                    # the third column must not be obtained as a whole, and not split
+                    parsed_hardcoded_parameter = line.strip().split(None, 2)
+                    # valid lines contain two or three columns
+                    if len(parsed_hardcoded_parameter) != 2 and len(parsed_hardcoded_parameter) != 3:
                         warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
                                 "ignored:\n%s" % (line_number, line), 0)
                         continue
-                    else:
-                        hardcoded_parameters[parsed_hardcoded_parameter[0]] = parsed_hardcoded_parameter[1]
 
-    return hardcoded_parameters
+                    parameter_name = parsed_hardcoded_parameter[0]
+                    hardcoded_value = parsed_hardcoded_parameter[1]
+                    tool_names = None
+                    if len(parsed_hardcoded_parameter) == 3:
+                        tool_names = parsed_hardcoded_parameter[2].split(',')
+                    if tool_names:
+                        for tool_name in tool_names:
+                            parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name.strip())
+                    else:
+                        parameter_hardcoder.register_parameter(parameter_name, hardcoded_value)
+
+    return parameter_hardcoder
 
 
 def parse_file_formats(formats_file):
@@ -561,7 +603,9 @@ def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, d
     # for each category, we keep a list of models corresponding to it
     categories_to_tools = dict()
     for model in parsed_models:
-        category = strip(model[0].opt_attribs.get("category", default_category))
+        category = strip(model[0].opt_attribs.get("category", ""))
+        if not category.strip():
+            category = default_category
         if category not in categories_to_tools:
             categories_to_tools[category] = []
         categories_to_tools[category].append(model[1])
@@ -653,6 +697,7 @@ def create_command(doc, tool, model, **kwargs):
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
     advanced_command_end = '#end if'
     advanced_command = ''
+    parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     found_output_parameter = False
     for param in extract_parameters(model):
@@ -663,8 +708,10 @@ def create_command(doc, tool, model, **kwargs):
 
         if param.name in kwargs["blacklisted_parameters"]:
             continue
-        elif param.name in kwargs["hardcoded_parameters"]:
-            command += '-%s %s\n' % (param_name, kwargs["hardcoded_parameters"][param.name])
+
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param_name, model.name)
+        if hardcoded_value:
+            command += '-%s %s\n' % (param_name, hardcoded_value)
         else:
             # parameter is neither blacklister nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
@@ -818,11 +865,13 @@ def create_inputs(doc, tool, model, **kwargs):
     # some suites (such as OpenMS) need some advanced options when handling inputs
     expand_advanced_node = add_child_node(doc, tool, "expand")
     expand_advanced_node.setAttribute("macro", ADVANCED_OPTIONS_MACRO_NAME)
+    parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     # treat all non output-file parameters as inputs
     for param in extract_parameters(model):
         # no need to show hardcoded parameters
-        if param.name in kwargs["blacklisted_parameters"] or param.name in kwargs["hardcoded_parameters"]:
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
+        if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is not _OutFile:
@@ -1147,11 +1196,13 @@ def create_boolean_parameter(param_node, param):
 def create_outputs(doc, parent, model, **kwargs):
     outputs_node = doc.createElement("outputs")
     parent.appendChild(outputs_node)
+    parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     for param in extract_parameters(model):
 
         # no need to show hardcoded parameters
-        if param.name in kwargs["blacklisted_parameters"] or param.name in kwargs["hardcoded_parameters"]:
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
+        if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is _OutFile:
