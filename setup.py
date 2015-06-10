@@ -1,13 +1,13 @@
 from distutils.core import setup
 
 setup(
-    name='GalaxyConfigGenerator',
+    name='CTD2Galaxy',
     version='0.1',
-    packages=['galaxyconfiggenerator'],
-    url='https://github.com/genericworkflownodes/GalaxyConfigGenerator',
+    packages=['CTD2Galaxy'],
+    url='https://github.com/WorkflowConversion/CTD2Galaxy',
     license='',
     author='Luis de la Garza',
     author_email='',
-    py_modules=['galaxyconfiggenerator/generator'],
-    description='A module to convert CTDs to Galaxy tool wrappers.'
+    py_modules=['CTD2Galaxy/generator'],
+    description='A program to convert CTDs to Galaxy tool wrappers.'
 )
