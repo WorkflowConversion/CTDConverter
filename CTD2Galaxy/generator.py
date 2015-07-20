@@ -32,10 +32,10 @@ MESSAGE_INDENTATION_INCREMENT = 2
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
                        _OutFile: 'data', _Choices: 'select'}
 
-DEFAULT_MACROS_FILE = "support_files/macros.xml"
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
+
 REQUIRED_MACROS = [STDIO_MACRO_NAME, REQUIREMENTS_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
 
 
@@ -303,8 +303,10 @@ def main(argv=None):  # IGNORE:C0111
                             help="File containing a list of tools for which a Galaxy stub will not be generated. "
                                  "Run with '-h' or '--help' to see a brief example on the format of this file.")
         parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="+", action="append",
-                            help="Import the additional given file(s) as macros. All defined macros will be imported.",
-                            required=False)
+                            help="Import the additional given file(s) as macros. The macros stdio, requirements and"
+                                 "advanced_options are required. Please see sample_files/macros.xml for an example"
+                                 "of a valid macros file. All defined macros will be imported.",
+                            required=True)
         parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                             help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                                  "to see a brief example on the format of this file.")
@@ -318,7 +320,7 @@ def main(argv=None):  # IGNORE:C0111
         validate_and_prepare_args(args)
 
         # extract the names of the macros and check that we have found the ones we need
-        macros_file_names = args.macros_files + [DEFAULT_MACROS_FILE]
+        macros_file_names = args.macros_files
         macros_to_expand = parse_macros_files(macros_file_names)
 
         # parse the given supported file-formats file
@@ -419,8 +421,10 @@ def parse_macros_files(macros_file_names):
             missing_needed_macros.append(required_macro)
 
     if missing_needed_macros:
-        raise ApplicationException("The following required macro(s) were not found in any of the given macros files: %s"
-                                   % ", ".join(missing_needed_macros))
+        raise ApplicationException(
+            "The following required macro(s) were not found in any of the given macros files: %s, "
+            "see sample_files/macros.xml for an example of a valid macros file."
+            % ", ".join(missing_needed_macros))
 
     # we do not need to "expand" the advanced_options macro
     macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
@@ -433,7 +437,7 @@ def copy_macros_files(macros_files, output_destination):
     if os.path.isfile(output_destination):
         macros_destination = os.path.dirname(output_destination)
 
-    for macros_file in macros_files + [DEFAULT_MACROS_FILE]:
+    for macros_file in macros_files:
         destination = macros_destination + "/" + get_filename(macros_file)
         shutil.copyfile(macros_file, destination)
         info("Copied macros file %s to %s" % (macros_file, destination), 0)
@@ -578,6 +582,7 @@ def convert(input_files, output_destination, **kwargs):
         else:
             info("Converting from %s " % input_file, 0)
             main_doc = Document()
+            write_header(main_doc, model)
             tool = create_tool(main_doc, model)
             create_description(main_doc, tool, model)
             expand_macros(main_doc, tool, model, **kwargs)
@@ -597,6 +602,13 @@ def convert(input_files, output_destination, **kwargs):
             parsed_models.append([model, get_filename(output_file)])
 
     return parsed_models
+
+
+def write_header(doc, model):
+    doc.appendChild(doc.createComment(
+        "This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). "
+        "This file was automatically generated using CTD2Galaxy."))
+    doc.appendChild(doc.createComment('Proposed Tool Section: [%s]' % model.opt_attribs.get("category", "")))
 
 
 def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, default_category):
@@ -713,7 +725,7 @@ def create_command(doc, tool, model, **kwargs):
         if hardcoded_value:
             command += '-%s %s\n' % (param_name, hardcoded_value)
         else:
-            # parameter is neither blacklister nor hardcoded...
+            # parameter is neither blacklisted nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
             repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param)
 
