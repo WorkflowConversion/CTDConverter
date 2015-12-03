@@ -135,7 +135,7 @@ Will generate the following `<command>` element in the generated Galaxy *ToolCon
 ### Blacklisting parameters
 
 * Purpose: Some parameters present in the CTD are not to be exposed on Galaxy. Think of parameters such as `--help`, `--debug`, that might won't make much sense to be exposed to final users in a workflow management system such as Galaxy.
-* Short/long version: `-b` / `--blacklist`
+* Short/long version: `-b` / `--blacklist-parameters`
 * Required: no.
 * Taken values: A list of parameters to be blacklisted.
 
