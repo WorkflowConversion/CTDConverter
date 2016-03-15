@@ -11,7 +11,6 @@ import os
 import traceback
 import ntpath
 import string
-import shutil
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
