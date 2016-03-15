@@ -240,7 +240,7 @@ And for tools `Foo` and `Bar`, the `<command>` will be similar to:
 
 There are some macros that are required, namely `stdio`, `requirements` and `advanced_options`. A template macro file is included under `support_files/macros.xml`. Although this is a required file, it can be edited to suit your needs and you could add extra macros or leave it as it is and include additional files. 
 
-Every macro found in the included files and in `support_files/macros.xml` will be expanded.
+Every macro found in the included files and in `support_files/macros.xml` will be expanded. Users are responsible for copying the given macros files in their corresponding galaxy folders.
 
 ### Providing a default executable path
 
