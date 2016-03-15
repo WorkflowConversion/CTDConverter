@@ -233,12 +233,12 @@ And for tools `Foo` and `Bar`, the `<command>` will be similar to:
 
 * Purpose: Include external macros files.
 * Short/long version: `-m` / `--macros`
-* Required: no.
+* Required: yes.
 * Taken values: List of paths of macros files to include.
 
 *ToolConfig* supports elaborate sections such as `<stdio>`, `<requirements>`, etc., that are identical across tools of the same suite. Macros files assist in the task of including external xml sections into *ToolConfig* files. For more information about the syntax of macros files, see: https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#Reusing_Repeated_Configuration_Elements
 
-Even though this is an optional parameter, there are some macros that are needed, namely `stdio`, `requirements` and `advanced_options`. A template macro file is included under `support_files/macros.xml`. Although this is a required file, it can be edited to suit your needs and you could add extra macros or leave it as it is and include additional files. 
+There are some macros that are required, namely `stdio`, `requirements` and `advanced_options`. A template macro file is included under `support_files/macros.xml`. Although this is a required file, it can be edited to suit your needs and you could add extra macros or leave it as it is and include additional files. 
 
 Every macro found in the included files and in `support_files/macros.xml` will be expanded.
 

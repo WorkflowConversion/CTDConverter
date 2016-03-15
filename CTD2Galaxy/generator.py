@@ -326,7 +326,7 @@ def main(argv=None):  # IGNORE:C0111
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
 
-        # parse the hardcoded parameters file
+        # parse the hardcoded parameters file¬
         parameter_hardcoder = parse_hardcoded_parameters(args.hardcoded_parameters)
 
         # parse the skip/required tools files
@@ -349,8 +349,7 @@ def main(argv=None):  # IGNORE:C0111
 
         #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
 
-        # copy the macros files
-        copy_macros_files(args.macros_files, args.output_destination)
+        # it is not needed to copy the macros files, since the user has provided them
 
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if args.tool_conf_destination is not None:
@@ -429,19 +428,6 @@ def parse_macros_files(macros_file_names):
     # we do not need to "expand" the advanced_options macro
     macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
     return macros_to_expand
-
-
-def copy_macros_files(macros_files, output_destination):
-    # figure out if the destination is a file or a folder and act accordingly
-    macros_destination = output_destination
-    if os.path.isfile(output_destination):
-        macros_destination = os.path.dirname(output_destination)
-
-    for macros_file in macros_files:
-        destination = macros_destination + "/" + get_filename(macros_file)
-        shutil.copyfile(macros_file, destination)
-        info("Copied macros file %s to %s" % (macros_file, destination), 0)
-
 
 def parse_hardcoded_parameters(hardcoded_parameters_file):
     parameter_hardcoder = ParameterHardcoder()
