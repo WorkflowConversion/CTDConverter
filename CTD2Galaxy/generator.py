@@ -22,9 +22,9 @@ from lxml import etree
 from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
 
 __all__ = []
-__version__ = 0.11
+__version__ = 1.0
 __date__ = '2014-09-17'
-__updated__ = '2015-01-23'
+__updated__ = '2016-05-'09
 
 MESSAGE_INDENTATION_INCREMENT = 2
 

@@ -2,7 +2,7 @@ from distutils.core import setup
 
 setup(
     name='CTD2Galaxy',
-    version='0.1',
+    version='1.0',
     packages=['CTD2Galaxy'],
     url='https://github.com/WorkflowConversion/CTD2Galaxy',
     license='',
