@@ -16,6 +16,7 @@ requirements:
 
   run:
     - python
+    - lxml
     - ctdopts 1.0
 
 test:
