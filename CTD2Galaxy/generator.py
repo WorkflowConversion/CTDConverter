@@ -675,10 +675,17 @@ def create_description(tool, model):
 
 
 def get_param_name(param):
-    if type(param.parent) == ParameterGroup and param.parent.name != '1':
-        return get_param_name(param.parent) + ":" + param.name
+    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup and param.parent.parent != None:
+        return get_param_name(param.parent) + ":" + resolve_param_mapping(param)
     else:
-        return param.name
+        return resolve_param_mapping(param)
+
+
+# some parameters are mapped to command line options, this method helps resolve those mappings, if any
+# TODO: implement mapping of parameters!!!
+def resolve_param_mapping(param):
+    return param.name
 
 
 def create_command(tool, model, **kwargs):
