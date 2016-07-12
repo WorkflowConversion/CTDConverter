@@ -3,17 +3,40 @@
 
 Given one or more CTD files, `CTD2Galaxy` generates the needed Galaxy wrappers to include them in a Galaxy instance.
 
-## How to install
+## Dependencies
+
+`CTD2Galaxy` has the following python dependencies:
+
+1. `lxml`.
+1. [CTDopts] 
+
+You can install the [CTDopts] and `lxml` modules via `conda`, like so:
+
+```sh
+$ conda install lxml
+$ conda install -c workflowconversion ctdopts
+```
+
+Note that the [CTDopts] module is available on the `workflowconversion` channel.
+
+Of course, you can just download [CTDopts] and make it available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
+
+
+## How to install CTD2Galaxy
 
 1. Download the source code from https://github.com/genericworkflownodes/CTD2Galaxy.
-2. Download CTDopts from https://github.com/genericworkflownodes/CTDopts.
-3. You can install the `CTDopts` and `CTD2Galaxy` modules, or just make them available through your `PYTHONPATH` environment variable. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
 
 ## How to use: most common tasks
 
 The generator takes several parameters and a varying number of inputs and outputs. The following sub-sections show how to perform the most common operations.
 
 Running the generator with the `-h/--help` parameter will print extended information about each of the parameters.
+
+### Macros
+
+Galaxy supports the use of macros via a `macros.xml` file (`CTD2Galaxy` provides a sample macros file in `supported_formats/macros.xml`). Instead of repeating sections, macros can be used and expanded. If you want fine control over the macros, you can use the `-m` / `--macros` parameter to provide your own macros file.
+
+Please note that the used macros file must be copied to your Galaxy installation on the same location in which you place the generated *ToolConfig* files.
 
 ### One input, one output
 
@@ -72,14 +95,14 @@ Example:
 
 Any of the following invocations will convert `/data/input_one.ctd` and `/data/input_two.ctd`:
 
-    $ python generator.py -i /data/input_one.ctd -i /data/input_two.ctd -o /data/generated    
+    $ python generator.py -i /data/input_one.ctd -i /data/input_two.ctd -o /data/generated
     $ python generator.py -i /data/input_one.ctd /data/input_two.ctd -o /data/generated
     $ python generator.py --input /data/input_one.ctd /data/input_two.ctd -o /data/generated
-    $ python generator.py --input /data/input_one.ctd --input /data/input_two.ctd -o /data/generated
+    $ python generator.py --input /data/input_one.ctd --input /data/input_two.ctd -o /data/generated 
     
 The following invocation will convert `/data/input.ctd` into `/data/output.xml`:
 
-    $ python generator.py -i /data/input.ctd -o /data/output.xml
+    $ python generator.py -i /data/input.ctd -o /data/output.xml -m sample_files/macros.xml
     
 Of course, you can also use wildcards, which will be automatically expanded by any modern operating system. This is extremely useful if you want to convert several files at a time. Imagine that the folder `/data/ctds` contains three files, `input_one.ctd`, `input_two.ctd` and `input_three.ctd`. The following two invocations will produce the same output in the `/data/galaxy`:
 
@@ -233,12 +256,13 @@ And for tools `Foo` and `Bar`, the `<command>` will be similar to:
 
 * Purpose: Include external macros files.
 * Short/long version: `-m` / `--macros`
-* Required: yes.
+* Required: no.
+* Default: `macros.xml`
 * Taken values: List of paths of macros files to include.
 
 *ToolConfig* supports elaborate sections such as `<stdio>`, `<requirements>`, etc., that are identical across tools of the same suite. Macros files assist in the task of including external xml sections into *ToolConfig* files. For more information about the syntax of macros files, see: https://wiki.galaxyproject.org/Admin/Tools/ToolConfigSyntax#Reusing_Repeated_Configuration_Elements
 
-There are some macros that are required, namely `stdio`, `requirements` and `advanced_options`. A template macro file is included under `support_files/macros.xml`. Although this is a required file, it can be edited to suit your needs and you could add extra macros or leave it as it is and include additional files. 
+There are some macros that are required, namely `stdio`, `requirements` and `advanced_options`. A template macro file is included in [macros.xml]. It can be edited to suit your needs and you could add extra macros or leave it as it is and include additional files. 
 
 Every macro found in the included files and in `support_files/macros.xml` will be expanded. Users are responsible for copying the given macros files in their corresponding galaxy folders.
 
@@ -321,3 +345,6 @@ For information about Galaxy data types and subclasses, consult the following pa
     * MapAlignerPoseClustering
     * MapAlignerSpectrum
     * MapAlignerRTTransformer
+
+[CTDopts]: https://github.com/genericworkflownodes/CTDopts.
+[macros.xml]: https://github.com/WorkflowConversion/CTD2Galaxy/blob/master/macros.xml

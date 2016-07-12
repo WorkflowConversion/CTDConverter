@@ -301,11 +301,10 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-s", "--skip-tools", dest="skip_tools_file", default=None, required=False,
                             help="File containing a list of tools for which a Galaxy stub will not be generated. "
                                  "Run with '-h' or '--help' to see a brief example on the format of this file.")
-        parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="+", action="append",
-                            help="Import the additional given file(s) as macros. The macros stdio, requirements and"
-                                 "advanced_options are required. Please see sample_files/macros.xml for an example"
-                                 "of a valid macros file. All defined macros will be imported.",
-                            required=True)
+        parser.add_argument("-m", "--macros", dest="macros_files", default=[['macros.xml']], nargs="+",
+                            action="append", required=None, help="Import the additional given file(s) as macros. "
+                                 "The macros stdio, requirements and advanced_options are required. Please see "
+                                 "macros.xml for an example of a valid macros file. Al defined macros will be imported.")
         parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                             help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                                  "to see a brief example on the format of this file.")
