@@ -34,7 +34,7 @@ Running the generator with the `-h/--help` parameter will print extended informa
 
 ### Macros
 
-Galaxy supports the use of macros via a `macros.xml` file (`CTD2Galaxy` provides a sample macros file in `supported_formats/macros.xml`). Instead of repeating sections, macros can be used and expanded. If you want fine control over the macros, you can use the `-m` / `--macros` parameter to provide your own macros file.
+Galaxy supports the use of macros via a `macros.xml` file (`CTD2Galaxy` provides a sample macros file in [macros.xml]. Instead of repeating sections, macros can be used and expanded. If you want fine control over the macros, you can use the `-m` / `--macros` parameter to provide your own macros file.
 
 Please note that the used macros file must be copied to your Galaxy installation on the same location in which you place the generated *ToolConfig* files.
 
