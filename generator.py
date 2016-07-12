@@ -301,7 +301,7 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-s", "--skip-tools", dest="skip_tools_file", default=None, required=False,
                             help="File containing a list of tools for which a Galaxy stub will not be generated. "
                                  "Run with '-h' or '--help' to see a brief example on the format of this file.")
-        parser.add_argument("-m", "--macros", dest="macros_files", default=[['macros.xml']], nargs="+",
+        parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="*",
                             action="append", required=None, help="Import the additional given file(s) as macros. "
                                  "The macros stdio, requirements and advanced_options are required. Please see "
                                  "macros.xml for an example of a valid macros file. Al defined macros will be imported.")
@@ -393,9 +393,15 @@ def parse_tools_list_file(tools_list_file):
 def parse_macros_files(macros_file_names):
     macros_to_expand = set()
 
+    if not macros_file_names:
+        # list is empty, provide the default value
+        warning("Using default macros from macros.xml", 0)
+        macros_file_names = ["macros.xml"]
+
     for macros_file_name in macros_file_names:
         try:
             macros_file = open(macros_file_name)
+            info("Loading macros from %s" % macros_file_name, 0)
             root = parse(macros_file).getroot()
             for xml_element in root.findall("xml"):
                 name = xml_element.attrib["name"]
@@ -403,6 +409,7 @@ def parse_macros_files(macros_file_names):
                     warning("Macro %s has already been found. Duplicate found in file %s." %
                             (name, macros_file_name), 0)
                 else:
+                    info("Macro %s found" % name, 1)
                     macros_to_expand.add(name)
         except ParseError, e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
