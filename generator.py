@@ -14,12 +14,13 @@ import string
 
 from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
-from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, \
-    _FileFormat, ModelError
 from collections import OrderedDict
 from string import strip
 from lxml import etree
 from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
+
+from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, \
+    ModelError, _Null
 
 __all__ = []
 __version__ = 1.0
@@ -308,6 +309,7 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                             help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                                  "to see a brief example on the format of this file.")
+
         # TODO: add verbosity, maybe?
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
 
@@ -318,8 +320,7 @@ def main(argv=None):  # IGNORE:C0111
         validate_and_prepare_args(args)
 
         # extract the names of the macros and check that we have found the ones we need
-        macros_file_names = args.macros_files
-        macros_to_expand = parse_macros_files(macros_file_names)
+        macros_to_expand = parse_macros_files(args.macros_files)
 
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
@@ -341,7 +342,7 @@ def main(argv=None):  # IGNORE:C0111
                                 blacklisted_parameters=args.blacklisted_parameters,
                                 required_tools=required_tools,
                                 skip_tools=skip_tools,
-                                macros_file_names=macros_file_names,
+                                macros_file_names=args.macros_files,
                                 macros_to_expand=macros_to_expand,
                                 parameter_hardcoder=parameter_hardcoder)
 
@@ -392,11 +393,6 @@ def parse_tools_list_file(tools_list_file):
 
 def parse_macros_files(macros_file_names):
     macros_to_expand = set()
-
-    if not macros_file_names:
-        # list is empty, provide the default value
-        warning("Using default macros from macros.xml", 0)
-        macros_file_names = ["macros.xml"]
 
     for macros_file_name in macros_file_names:
         try:
@@ -552,6 +548,11 @@ def validate_and_prepare_args(args):
         if file_name is not None and os.path.isdir(file_name):
             raise ApplicationException("The provided output file name (%s) points to a directory." % file_name)
 
+    if not args.macros_files:
+        # list is empty, provide the default value
+        warning("Using default macros from macros.xml", 0)
+        args.macros_files = ["macros.xml"]
+
 
 def convert(input_files, output_destination, **kwargs):
     # first, generate a model
@@ -680,19 +681,38 @@ def create_description(tool, model):
         description.text = model.opt_attribs["description"]
 
 
+def get_param_cli_name(param, model):
+    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup and param.parent.parent != None:
+        if model.cli:
+            warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
+        return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
+    else:
+        return resolve_param_mapping(param, model)
+
+
 def get_param_name(param):
     # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
     if type(param.parent) == ParameterGroup and param.parent.parent != None:
-        return get_param_name(param.parent) + ":" + resolve_param_mapping(param)
+        return get_param_name(param.parent) + ":" + param.name
     else:
-        return resolve_param_mapping(param)
+        return param.name
 
 
 # some parameters are mapped to command line options, this method helps resolve those mappings, if any
-# TODO: implement mapping of parameters!!!
-def resolve_param_mapping(param):
-    return param.name
+def resolve_param_mapping(param, model):
+    # go through all mappings and find if the given param appears as a reference name in a mapping element
+    param_mapping = None
+    for cli_element in model.cli:
+        for mapping_element in cli_element.mappings:
+            if mapping_element.reference_name == param.name:
+                if param_mapping is not None:
+                    warning("The parameter %s has more than one mapping in the <cli> section. "
+                            "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
+                else:
+                    param_mapping = cli_element.option_identifier
 
+    return param_mapping if param_mapping is not None else param.name
 
 def create_command(tool, model, **kwargs):
     final_command = get_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
@@ -708,13 +728,17 @@ def create_command(tool, model, **kwargs):
             found_output_parameter = True
         command = ''
         param_name = get_param_name(param)
+        param_cli_name = get_param_cli_name(param, model)
+        if param_name == param_cli_name:
+            # there was no mapping, so for the cli name we will use a '-' in the prefix
+            param_cli_name = '-' + param_name
 
         if param.name in kwargs["blacklisted_parameters"]:
             continue
 
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param_name, model.name)
         if hardcoded_value:
-            command += '-%s %s\n' % (param_name, hardcoded_value)
+            command += '%s %s\n' % (param_cli_name, hardcoded_value)
         else:
             # parameter is neither blacklisted nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
@@ -723,13 +747,13 @@ def create_command(tool, model, **kwargs):
             # logic for ITEMLISTs
             if param.is_list:
                 if param.type is _InFile:
-                    command += "-" + str(param_name) + "\n"
+                    command += param_cli_name + "\n"
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
                     command += "    $token\n"
                     command += "  #end for\n" 
                 else:
                     command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
-                    command += "-" + str(param_name) + "\n"
+                    command += param_cli_name + "\n"
                     command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
                     command += "    #if \" \" in str(token):\n"
                     command += "      \"$token." + galaxy_parameter_name + "\"\n"
@@ -753,7 +777,7 @@ def create_command(tool, model, **kwargs):
 
                 if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  -%s\n' % param_name
+                    command += '  %s\n' % param_cli_name
                     command += "  #if \" \" in str(" + actual_parameter + "):\n"
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "  #else\n"
@@ -762,16 +786,16 @@ def create_command(tool, model, **kwargs):
                     command += "#end if\n" 
                 elif is_boolean_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  -%s\n' % param_name
+                    command += '  %s\n' % param_cli_name
                     command += "#end if\n" 
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
                     command += "#if " + actual_parameter + ":\n"
-                    command += "  -%s " % param_name
+                    command += "  %s " % param_cli_name
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "#end if\n" 
                 else:
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  -%s ' % param_name
+                    command += '  %s ' % param_cli_name
                     command += actual_parameter + "\n"
                     command += "#end if\n" 
 
@@ -1001,7 +1025,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         add_child_node(valid_node, "remove", OrderedDict([("value", '"')]))
 
     # check for default value
-    if param.default is not None:
+    if param.default is not None and param.default is not _Null:
         if type(param.default) is list:
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
@@ -1009,9 +1033,12 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             param_node.attrib["value"] = ' '.join(map(str, param.default))
 
         elif param_type != "boolean":
-            # boolean parameters handle default values by using the "checked" attribute
-            # there isn't much we can do... just stringify the value
             param_node.attrib["value"] = str(param.default)
+
+        else:
+            # simple boolean with a default
+            if param.default is True:
+                param_node.attrib["checked"] = "true"
     else:
         if param.type is int or param.type is float:
             # galaxy requires "value" to be included for int/float
@@ -1123,15 +1150,7 @@ def info(info_text, indentation_level):
 
 # determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
-    is_choices = False
-    if type(param.restrictions) is _Choices:
-        # for a true boolean experience, we need 2 values
-        # and also that those two values are either yes/no or true/false
-        if len(param.restrictions.choices) == 2:
-            choices = get_lowercase_list(param.restrictions.choices)
-            if ("yes" in choices and "no" in choices) or ("true" in choices and "false" in choices):
-                is_choices = True
-    return is_choices
+    return param.type is bool
 
 
 # determines if there are choices for the parameter
