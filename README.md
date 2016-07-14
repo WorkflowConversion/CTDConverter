@@ -84,6 +84,18 @@ The following uses of the parameter will pass a single value `bar`:
     -f bar
     --foo bar
     
+### Schema validation
+
+* Purpose: Provide validation of input CTDs against a schema file (i.e, a XSD file).
+* Short/long version: `v` / `--validation-schema`
+* Required: no.
+* Taken values: location of the schema.
+* Default value: `schema/CTD.xsd`.
+
+CTDs can be validated against a schema. A copy of the most recent `CTD.xsd` is contained in the `schema` folder. However, the master version of the schema can be found under [CTDSchema].
+
+All input CTDs will automatically be validated against a schema. You can, however, validate against other schema by using this parameter.
+    
 ### Input file(s)
 
 * Purpose: Provide input CTD file(s) to convert.
@@ -346,5 +358,6 @@ For information about Galaxy data types and subclasses, consult the following pa
     * MapAlignerSpectrum
     * MapAlignerRTTransformer
 
-[CTDopts]: https://github.com/genericworkflownodes/CTDopts.
+[CTDopts]: https://github.com/genericworkflownodes/CTDopts
 [macros.xml]: https://github.com/WorkflowConversion/CTD2Galaxy/blob/master/macros.xml
+[CTDSchema]: https://github.com/genericworkflownodes/CTDSchema
