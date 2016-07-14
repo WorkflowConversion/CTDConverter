@@ -309,6 +309,8 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                             help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                                  "to see a brief example on the format of this file.")
+        parser.add_argument("-v", "--validation-schema", dest="xsd_location", default="schema/CTD.xsd", required=False,
+                            help="Location of the schema to use to validate CTDs. Default value is 'schema/CTD.xsd'")
 
         # TODO: add verbosity, maybe?
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -344,7 +346,8 @@ def main(argv=None):  # IGNORE:C0111
                                 skip_tools=skip_tools,
                                 macros_file_names=args.macros_files,
                                 macros_to_expand=macros_to_expand,
-                                parameter_hardcoder=parameter_hardcoder)
+                                parameter_hardcoder=parameter_hardcoder,
+                                xsd_location=args.xsd_location)
 
         #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
 
@@ -429,6 +432,7 @@ def parse_macros_files(macros_file_names):
     # we do not need to "expand" the advanced_options macro
     macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
     return macros_to_expand
+
 
 def parse_hardcoded_parameters(hardcoded_parameters_file):
     parameter_hardcoder = ParameterHardcoder()
@@ -520,7 +524,7 @@ def validate_and_prepare_args(args):
                                        "existing directory.\n" % args.output_destination)
 
     # check that the provided input files, if provided, contain a valid file path
-    input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files",
+    input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files", "xsd_location",
                                 "input_files", "formats_file", "hardcoded_parameters"]
 
     for variable_name in input_variables_to_check:
@@ -558,8 +562,10 @@ def convert(input_files, output_destination, **kwargs):
     # first, generate a model
     is_converting_multiple_ctds = len(input_files) > 1 
     parsed_models = []
+    schema = etree.XMLSchema(etree.parse(kwargs["xsd_location"]))
     for input_file in input_files:
         try:
+            validate_against_schema(input_file, schema)
             model = CTDModel(from_file=input_file)
         except Exception, e:
             error(str(e), 1)
@@ -595,6 +601,15 @@ def convert(input_files, output_destination, **kwargs):
             parsed_models.append([model, get_filename(output_file)])
 
     return parsed_models
+
+
+# validates a ctd file against the schema
+def validate_against_schema(ctd_file, schema):
+    try:
+        parser = etree.XMLParser(schema=schema)
+        etree.parse(ctd_file, parser=parser)
+    except etree.XMLSyntaxError, e:
+        raise ApplicationException("Input ctd file %s is not valid. Reason: %s" % (ctd_file, str(e)))
 
 
 def write_header(tool, model):
