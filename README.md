@@ -89,12 +89,11 @@ The following uses of the parameter will pass a single value `bar`:
 * Purpose: Provide validation of input CTDs against a schema file (i.e, a XSD file).
 * Short/long version: `v` / `--validation-schema`
 * Required: no.
-* Taken values: location of the schema.
-* Default value: `schema/CTD.xsd`.
+* Taken values: location of the schema file (e.g., CTD.xsd).
 
-CTDs can be validated against a schema. A copy of the most recent `CTD.xsd` is contained in the `schema` folder. However, the master version of the schema can be found under [CTDSchema].
+CTDs can be validated against a schema. The master version of the schema can be found under [CTDSchema].
 
-All input CTDs will automatically be validated against a schema. You can, however, validate against other schema by using this parameter.
+If a schema is provided, all input CTDs will be validated against it.
     
 ### Input file(s)
 

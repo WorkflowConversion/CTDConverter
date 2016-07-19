@@ -309,8 +309,8 @@ def main(argv=None):  # IGNORE:C0111
         parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                             help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                                  "to see a brief example on the format of this file.")
-        parser.add_argument("-v", "--validation-schema", dest="xsd_location", default="schema/CTD.xsd", required=False,
-                            help="Location of the schema to use to validate CTDs. Default value is 'schema/CTD.xsd'")
+        parser.add_argument("-v", "--validation-schema", dest="xsd_location", default=None, required=False,
+                            help="Location of the schema to use to validate CTDs.")
 
         # TODO: add verbosity, maybe?
         parser.add_argument("-V", "--version", action='version', version=program_version_message)
@@ -562,10 +562,19 @@ def convert(input_files, output_destination, **kwargs):
     # first, generate a model
     is_converting_multiple_ctds = len(input_files) > 1 
     parsed_models = []
-    schema = etree.XMLSchema(etree.parse(kwargs["xsd_location"]))
+    schema = None
+    if kwargs["xsd_location"] is not None:
+        try:
+            info("Loading validation schema from %s" % kwargs["xsd_location"], 0)
+            schema = etree.XMLSchema(etree.parse(kwargs["xsd_location"]))
+        except Exception, e:
+            error("Could not load validation schema %s. Reason: %s" % (kwargs["xsd_location"], str(e)), 0)
+    else:
+        info("Validation against a schema has not been enabled.", 0)
     for input_file in input_files:
         try:
-            validate_against_schema(input_file, schema)
+            if schema is not None:
+                validate_against_schema(input_file, schema)
             model = CTDModel(from_file=input_file)
         except Exception, e:
             error(str(e), 1)
