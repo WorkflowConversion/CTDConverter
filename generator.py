@@ -706,21 +706,31 @@ def create_description(tool, model):
 
 
 def get_param_cli_name(param, model):
-    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup and param.parent.parent != None:
-        if model.cli:
-            warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
-        return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, 'parent'):
+            return resolve_param_mapping(param, model)
+        elif not hasattr(param.parent.parent.parent, 'parent'):
+            return resolve_param_mapping(param, model)
+        else:
+            if model.cli:
+                warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
+            return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
     else:
         return resolve_param_mapping(param, model)
 
 
 def get_param_name(param):
-    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup and param.parent.parent != None:
-        return get_param_name(param.parent) + ":" + param.name
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, 'parent'):
+            return param.name
+        elif not hasattr(param.parent.parent.parent, 'parent'):
+            return param.name
+        else:
+            return get_param_name(param.parent) + ":" + param.name
     else:
-        return param.name
+    	return param.name
 
 
 # some parameters are mapped to command line options, this method helps resolve those mappings, if any
