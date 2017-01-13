@@ -1029,6 +1029,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
                 option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
                 option_node.text = str(choice)
 
+                # preselect the default value
+                if param.default == choice:
+                    option_node.attrib["selected"] = "true"
+
         elif type(param.restrictions) is _NumericRange:
             if param.type is not int and param.type is not float:
                 raise InvalidModelException("Expected either 'int' or 'float' in the numeric range restriction for "
@@ -1189,7 +1193,13 @@ def info(info_text, indentation_level):
 
 # determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
-    return param.type is bool
+    ## detect boolean selects of OpenMS
+    if is_selection_parameter(param):
+        if len(param.restrictions.choices) == 2:
+            if "false" in param.restrictions.choices and "true" in param.restrictions.choices:
+                return True
+    else:
+        return param.type is bool
 
 
 # determines if there are choices for the parameter
