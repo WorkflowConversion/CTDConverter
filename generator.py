@@ -992,6 +992,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     if is_selection_parameter(param):
         param_type = "select"
+        if len(param.restrictions.choices) < 5:
+            param_node.attrib["display"] = "radio"
         
     if is_boolean_parameter(param):
         param_type = "boolean"
@@ -1045,7 +1047,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
 
-        param_node.attrib["optional"] = str(not param.required)
+        if param_type == "select" and param.default in param.restrictions.choices:
+             param_node.attrib["optional"] = "False"
+        else:
+            param_node.attrib["optional"] = str(not param.required)
 
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
