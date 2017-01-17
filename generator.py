@@ -813,7 +813,7 @@ def create_command(tool, model, **kwargs):
                     # if default value is present in select list, no need to check for whitespaces
                     if is_selection_parameter(param) and param.default in param.restrictions.choices:
                         command += "#if " + actual_parameter + ":\n"
-                        command += '  %s\n' % param_cli_name
+                        command += '  %s %s\n' % (param_cli_name, actual_parameter)
                         command += "#end if\n" 
                     else:
                         command += "#if " + actual_parameter + ":\n"
