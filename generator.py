@@ -1196,7 +1196,10 @@ def is_boolean_parameter(param):
     ## detect boolean selects of OpenMS
     if is_selection_parameter(param):
         if len(param.restrictions.choices) == 2:
-            if "false" in param.restrictions.choices and "true" in param.restrictions.choices:
+            # check that default value is false to make sure it is an actual flag
+            if "false" in param.restrictions.choices and \
+                "true" in param.restrictions.choices and \
+                param.default == "false":
                 return True
     else:
         return param.type is bool
