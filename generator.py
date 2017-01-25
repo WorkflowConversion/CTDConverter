@@ -706,21 +706,31 @@ def create_description(tool, model):
 
 
 def get_param_cli_name(param, model):
-    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup and param.parent.parent != None:
-        if model.cli:
-            warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
-        return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, 'parent'):
+            return resolve_param_mapping(param, model)
+        elif not hasattr(param.parent.parent.parent, 'parent'):
+            return resolve_param_mapping(param, model)
+        else:
+            if model.cli:
+                warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
+            return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
     else:
         return resolve_param_mapping(param, model)
 
 
 def get_param_name(param):
-    # we generate parameters with colons for subgroups, but not for the topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup and param.parent.parent != None:
-        return get_param_name(param.parent) + ":" + param.name
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, 'parent'):
+            return param.name
+        elif not hasattr(param.parent.parent.parent, 'parent'):
+            return param.name
+        else:
+            return get_param_name(param.parent) + ":" + param.name
     else:
-        return param.name
+    	return param.name
 
 
 # some parameters are mapped to command line options, this method helps resolve those mappings, if any
@@ -800,14 +810,20 @@ def create_command(tool, model, **kwargs):
                 ## not useful for choices, input fields ...
 
                 if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
-                    command += "#if " + actual_parameter + ":\n"
-                    command += '  %s\n' % param_cli_name
-                    command += "  #if \" \" in str(" + actual_parameter + "):\n"
-                    command += "    \"" + actual_parameter + "\"\n"
-                    command += "  #else\n"
-                    command += "    " + actual_parameter + "\n"
-                    command += "  #end if\n"
-                    command += "#end if\n" 
+                    # if default value is present in select list, no need to check for whitespaces
+                    if is_selection_parameter(param) and param.default in param.restrictions.choices:
+                        command += "#if " + actual_parameter + ":\n"
+                        command += '  %s %s\n' % (param_cli_name, actual_parameter)
+                        command += "#end if\n" 
+                    else:
+                        command += "#if " + actual_parameter + ":\n"
+                        command += '  %s\n' % param_cli_name
+                        command += "  #if \" \" in str(" + actual_parameter + "):\n"
+                        command += "    \"" + actual_parameter + "\"\n"
+                        command += "  #else\n"
+                        command += "    " + actual_parameter + "\n"
+                        command += "  #end if\n"
+                        command += "#end if\n" 
                 elif is_boolean_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
                     command += '  %s\n' % param_cli_name
@@ -982,6 +998,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     if is_selection_parameter(param):
         param_type = "select"
+        if len(param.restrictions.choices) < 5:
+            param_node.attrib["display"] = "radio"
         
     if is_boolean_parameter(param):
         param_type = "boolean"
@@ -1017,6 +1035,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
                 option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
                 option_node.text = str(choice)
 
+                # preselect the default value
+                if param.default == choice:
+                    option_node.attrib["selected"] = "true"
+
         elif type(param.restrictions) is _NumericRange:
             if param.type is not int and param.type is not float:
                 raise InvalidModelException("Expected either 'int' or 'float' in the numeric range restriction for "
@@ -1035,7 +1057,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
 
-        param_node.attrib["optional"] = str(not param.required)
+        if param_type == "select" and param.default in param.restrictions.choices:
+             param_node.attrib["optional"] = "False"
+        else:
+            param_node.attrib["optional"] = str(not param.required)
 
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
@@ -1174,7 +1199,16 @@ def info(info_text, indentation_level):
 
 # determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
-    return param.type is bool
+    ## detect boolean selects of OpenMS
+    if is_selection_parameter(param):
+        if len(param.restrictions.choices) == 2:
+            # check that default value is false to make sure it is an actual flag
+            if "false" in param.restrictions.choices and \
+                "true" in param.restrictions.choices and \
+                param.default == "false":
+                return True
+    else:
+        return param.type is bool
 
 
 # determines if there are choices for the parameter
