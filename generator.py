@@ -810,20 +810,14 @@ def create_command(tool, model, **kwargs):
                 ## not useful for choices, input fields ...
 
                 if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
-                    # if default value is present in select list, no need to check for whitespaces
-                    if is_selection_parameter(param) and param.default in param.restrictions.choices:
-                        command += "#if " + actual_parameter + ":\n"
-                        command += '  %s %s\n' % (param_cli_name, actual_parameter)
-                        command += "#end if\n" 
-                    else:
-                        command += "#if " + actual_parameter + ":\n"
-                        command += '  %s\n' % param_cli_name
-                        command += "  #if \" \" in str(" + actual_parameter + "):\n"
-                        command += "    \"" + actual_parameter + "\"\n"
-                        command += "  #else\n"
-                        command += "    " + actual_parameter + "\n"
-                        command += "  #end if\n"
-                        command += "#end if\n" 
+                    command += "#if " + actual_parameter + ":\n"
+                    command += '  %s\n' % param_cli_name
+                    command += "  #if \" \" in str(" + actual_parameter + "):\n"
+                    command += "    \"" + actual_parameter + "\"\n"
+                    command += "  #else\n"
+                    command += "    " + actual_parameter + "\n"
+                    command += "  #end if\n"
+                    command += "#end if\n" 
                 elif is_boolean_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
                     command += '  %s\n' % param_cli_name
