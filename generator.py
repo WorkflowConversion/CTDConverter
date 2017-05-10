@@ -1276,14 +1276,15 @@ def create_output_node(parent, param, model, supported_file_formats):
             # set the first data output node to the first file format
 
             # check if there are formats that have not been registered yet...
-            output = ""
+            output = list()
             for format_name in param.restrictions.formats:
                 if not format_name in supported_file_formats.keys():
-                    output += " " + str(format_name)
+                    output.append(str(format_name))
 
             # warn only if there's about to complain
             if output:
-                warning("Parameter " + param.name + " has the following unsupported format(s):" + output, 1)
+                warning("Parameter " + param.name + " has the following unsupported format(s):" + ','.join(output), 1)
+                data_format = ','.join(output)
 
             formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
             try:
