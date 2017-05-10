@@ -1002,15 +1002,18 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         # assume it's just text unless restrictions are provided
         param_format = "text"
         if param.restrictions is not None:
-            # join all supported_formats for the file... this MUST be a _FileFormat
-            if type(param.restrictions) is _FileFormat: 
-                param_format = ','.join(get_supported_file_types(param.restrictions.formats, supported_file_formats))
+            # join all formats of the file, take mapping from supported_file if available for an entry
+            if type(param.restrictions) is _FileFormat:
+                param_format = ','.join([get_supported_file_types(i, supported_file_formats) if
+                                            get_supported_file_types(i, supported_file_formats)
+                                            else i for i in param.restrictions.formats])
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], "
                                             "but instead got [%(type)s]"
                                             % {"name": param.name, "type": type(param.restrictions)})
+
         param_node.attrib["type"] = "data"
-        param_node.attrib["format"] = param_format
+        param_node.attrib["format"] = param_format 
         # in the case of multiple input set multiple flag
         if param.is_list:
             param_node.attrib["multiple"] = "true"
