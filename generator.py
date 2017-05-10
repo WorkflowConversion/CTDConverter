@@ -1131,19 +1131,21 @@ def generate_label_and_help(desc):
     label = ""
     help_text = ""
     # This tag is found in some descriptions 
-    desc = str(desc).replace("#br#", " <br>")
+    if not isinstance(desc, basestring):
+        desc = str(desc)
+    desc = desc.encode("utf8").replace("#br#", " <br>")
     # Get rid of dots in the end
     if desc.endswith("."):
-        desc = desc.rstrip(".")
+       desc = desc.rstrip(".")
     # Check if first word is a normal word and make it uppercase
     if str(desc).find(" ") > -1:
         first_word, rest = str(desc).split(" ", 1)
         if str(first_word).islower():
-            # check if label has a quotient of the form a/b 
+            # check if label has a quotient of the form a/b
             if first_word.find("/") != 1 :
                 first_word.capitalize()
         desc = first_word + " " + rest
-    label = desc
+    label = desc.decode("utf8")
     
     # Try to split the label if it is too long    
     if len(desc) > 50:
