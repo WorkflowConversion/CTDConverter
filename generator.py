@@ -1134,7 +1134,6 @@ def generate_label_and_help(desc):
     label = ""
     help_text = ""
     # This tag is found in some descriptions 
-    # desc = str(desc).replace("#br#", " <br>")
     if not isinstance(desc, basestring):
         desc = str(desc)
     desc = desc.encode("utf8").replace("#br#", " <br>")
