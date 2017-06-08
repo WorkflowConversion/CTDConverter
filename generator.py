@@ -1004,8 +1004,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
-                param_format = ','.join([get_supported_file_types(i, supported_file_formats) if
-                                            get_supported_file_types(i, supported_file_formats)
+                param_format = ','.join([get_supported_file_type(i, supported_file_formats) if
+                                            get_supported_file_type(i, supported_file_formats)
                                             else i for i in param.restrictions.formats])
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], "
@@ -1048,8 +1048,9 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             if param.restrictions.n_max is not None:
                 param_node.attrib["max"] = str(param.restrictions.n_max)
         elif type(param.restrictions) is _FileFormat:
-            param_node.attrib["format"] = ",".join(
-                get_supported_file_types(param.restrictions.formats, supported_file_formats))
+            param_node.attrib["format"] = ','.join([get_supported_file_type(i, supported_file_formats) if
+                                            get_supported_file_type(i, supported_file_formats)
+                                            else i for i in param.restrictions.formats])
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
@@ -1313,6 +1314,14 @@ def create_output_node(parent, param, model, supported_file_formats):
     #if param.description is not None:
     #    data_node.setAttribute("label", param.description)
     return data_node
+
+
+# Get the supported file format for one given format
+def get_supported_file_type(format_name, supported_file_formats):
+    if format_name in supported_file_formats.keys():
+        return supported_file_formats.get(format_name, DataType(format_name, format_name)).galaxy_extension
+    else:
+        return None
 
 
 def get_supported_file_types(formats, supported_file_formats):
