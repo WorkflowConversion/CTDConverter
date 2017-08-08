@@ -8,13 +8,13 @@ Running the generator with the `-h/--help` parameter will print extended informa
 
 ### Macros
 
-Galaxy supports the use of macros via a `macros.xml` file (`CTD2Galaxy` provides a sample macros file in [macros.xml]). Instead of repeating sections, macros can be used and expanded. If you want fine control over the macros, you can use the `-m` / `--macros` parameter to provide your own macros file.
+Galaxy supports the use of macros via a `macros.xml` file (we provide a sample macros file in [macros.xml]). Instead of repeating sections, macros can be used and expanded. If you want fine control over the macros, you can use the `-m` / `--macros` parameter to provide your own macros file.
 
 Please note that the used macros file **must** be copied to your Galaxy installation on the same location in which you place the generated *ToolConfig* files, otherwise Galaxy will not be able to parse the generated *ToolConfig* files!
 
 ### One input, one Output
 
-In its simplest form, `CTD2Galaxy` takes an input CTD file and generates an output Galaxy *ToolConfig* file. The following use of `CTD2Galaxy`:
+In its simplest form, the converter takes an input CTD file and generates an output Galaxy *ToolConfig* file. The following usage of `generator.py`:
 
     $ python generator.py -i /data/sample_input.ctd -o /data/sample_output.xml
 
@@ -155,7 +155,7 @@ Will not process any of the parameters named `h`, `help`, or `quiet` and will no
 
 ### Generating a tool_conf.xml file
 
-* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. `CTD2Galaxy` can also generate this file. Categories will be extracted from the provided input CTDs and for each category, a different `<section>` will be generated. Any input CTD lacking a category will be sorted under the provided default category.
+* Purpose: Galaxy uses a file `tool_conf.xml` in which other tools can be included. `generator.py` can also generate this file. Categories will be extracted from the provided input CTDs and for each category, a different `<section>` will be generated. Any input CTD lacking a category will be sorted under the provided default category.
 * Short/long version: `-t` / `--tool-conf-destination`
 * Required: no.
 * Taken values: The destination of the file.
@@ -332,5 +332,5 @@ For information about Galaxy data types and subclasses, consult the following pa
     * MapAlignerRTTransformer
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
-[macros.xml]: https://github.com/WorkflowConversion/CTD2Galaxy/blob/master/macros.xml
+[macros.xml]: https://github.com/WorkflowConversion/CTDConverter/blob/master/galaxy/macros.xml
 [CTDSchema]: https://github.com/genericworkflownodes/CTDSchema

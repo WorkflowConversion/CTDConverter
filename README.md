@@ -35,5 +35,3 @@ Check the detailed documentation for each of the converters:
 
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
-[macros.xml]: https://github.com/WorkflowConversion/CTD2Galaxy/blob/master/macros.xml
-[CTDSchema]: https://github.com/genericworkflownodes/CTDSchema
