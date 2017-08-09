@@ -1000,7 +1000,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
-        param_format = "text"
+        param_format = "txt"
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
@@ -1269,7 +1269,7 @@ def create_outputs(parent, model, **kwargs):
     # and the stdout will be used as output
     if len(outputs_node) == 0:
         add_child_node(outputs_node, "data",
-                       OrderedDict([("name", "param_stdout"), ("format", "text"), ("label", "Output from stdout")]))
+                       OrderedDict([("name", "param_stdout"), ("format", "txt"), ("label", "Output from stdout")]))
 
 
 def create_output_node(parent, param, model, supported_file_formats):
@@ -1331,7 +1331,7 @@ def get_supported_file_types(formats, supported_file_formats):
 
 def create_change_format_node(parent, data_formats, input_ref):
     #  <change_format>
-    #    <when input="secondary_structure" value="true" format="text"/>
+    #    <when input="secondary_structure" value="true" format="txt"/>
     #  </change_format>
     change_format_node = add_child_node(parent, "change_format")
     for data_format in data_formats:
