@@ -9,7 +9,7 @@ Given one or more CTD files, `CTD2Converter` generates the needed wrappers to in
 - `pyyaml`
 
 ### Installing Dependencies
-The easiest way is to install [CTDopts] and all required dependencies modules via `conda`, like so:
+The easiest way is to install all required dependencies using `conda`, like so:
 
 ```sh
 $ conda install lxml pyyaml
@@ -21,13 +21,13 @@ Note that [CTDopts] is a python module available on the `workflowconversion` cha
 ### Issues with `libxml2` and Schema Validation
 `lxml` depends on `libxml2`. When you install `lxml` you'll get the latest version of `libxml2` (2.9.4) by default. You would usually want the latest version, but there is, however, a bug in validating XML files against a schema in this version of `libxml2`.
 
-If you require validation of input CTDs against a schema (which we recommend), you will need to downgrade to the latest known version of `libxml2` that works, namely, 2.9.2. You can do it by executing the following command **after** you've installed all other dependencies:
+If you require validation of input CTDs against a schema (which we recommend), you will need to downgrade to the latest known version of `libxml2` that works, namely, 2.9.2. You can do this by executing the following command **after** you've installed all other dependencies:
 
 ```sh
 $ conda install -y libxml2=2.9.2
 ```
 
-You will be warned that this command will downgrade some packages, which is fine, don't worry. The `-y` flag tells `conda` to perform the installation without confirmation.
+The `-y` flag tells `conda` to perform the installation without confirmation. You will be warned that this command will downgrade some packages, which is fine, don't worry.
 
 ## How to install `CTDConverter`
 `CTDConverter` is not a python module, rather, a series of scripts, so installing it is as easy as downloading the source code from https://github.com/genericworkflownodes/CTDConverter.
@@ -37,7 +37,7 @@ The first thing that you need to tell `CTDConverter` is the output format of the
 
     $ python convert.py [FORMAT] [ADDITIONAL_PARAMETERS ...]   
     
-Here `[FORMAT]` can be any of the supported formats (i.e., `cwl`, `galaxy`). `CTDConverter` offers a series of format-specific scripts and we've designed these scripts to behave *somewhat* similarly. All converter scripts have the same core functionality, that is, read CTD files, parse them using [CTDopts], validate against a schema, etc. Of course, each converter script might add extra functionality that is not present in other engines, for instance, only the Galaxy converter script supports generation of a `tool_conf.xml` file.
+Here `[FORMAT]` can be any of the supported formats (i.e., `cwl`, `galaxy`). `CTDConverter` offers a series of format-specific scripts and we've designed these scripts to behave *somewhat* similarly. All converter scripts have the same core functionality, that is, read CTD files, parse them using [CTDopts], validate against a schema, etc. Of course, each converter script might add extra functionality that is not present in other engines. Only the Galaxy converter script supports generation of a `tool_conf.xml` file, for instance.
 
 The following sections in this file describe the parameters that all converter scripts share.
 
@@ -72,7 +72,7 @@ You can use wildcard expansion, as supported by most modern operating systems:
 * Required: yes.
 * Taken values: a list of input CTD files.
 
-Example:
+Examples:
 
 Any of the following invocations will convert `/data/input_one.ctd` and `/data/input_two.ctd`:
 
@@ -94,7 +94,7 @@ Of course, you can also use wildcards, which will be automatically expanded by a
 * Purpose: Provide output destination for the converted wrapper files.
 * Short/long version: `-o` / `--output-destination`
 * Required: yes.
-* Taken values: if a single input file is given, then a single output file is expected. If multiple input files are given, then an existent folder, in which all converted CTDs will be written, is expected.
+* Taken values: if a single input file is given, then a single output file is expected. If multiple input files are given, then an existent folder in which all converted CTDs will be written is expected.
 
 Examples:
 
@@ -105,6 +105,8 @@ A single input is given, and the output will be generated into `/data/output.xml
 Several inputs are given. The output is the already existent folder, `/data/wrappers`, and at the end of the operation, the files `/data/wrappers/input_one.[EXT]` and `/data/wrappers/input_two.[EXT]` will be generated:
 
     $ python convert.py [FORMAT] -i /data/ctds/input_one.ctd /data/ctds/input_two.ctd -o /data/stubs
+    
+Please note that the output file name is **not** taken from the name of the input file, rather from the name of the tool, that is, from the `name` attribute in the `<tool>` element in its corresponding CTD. By convention, the name of the CTD file and the name of the tool match.
 
 ### Blacklisting Parameters
 * Purpose: Some parameters present in the CTD are not to be exposed on the output files. Think of parameters such as `--help`, `--debug` that might won't make much sense to be exposed to final users in a workflow management system.
@@ -124,7 +126,7 @@ In this case, `CTDConverter` will not process any of the parameters named `h`, `
 * Required: no.
 * Taken values: location of the schema file (e.g., CTD.xsd).
 
-CTDs can be validated against a schema. The master version of the schema can be found under [CTDSchema].
+CTDs can be validated against a schema. The master version of the schema can be found on [CTDSchema].
 
 If a schema is provided, all input CTDs will be validated against it. 
 
@@ -136,13 +138,13 @@ If a schema is provided, all input CTDs will be validated against it.
 * Required: no.
 * Taken values: The path of a file containing the mapping between parameter names and hardcoded values to use.
 
-It is sometimes required that parameters are hidden from the end user in workflow systems and that they take a predetermined, fixed value. Allowing end users to control parameters similar to `--verbosity`, `--threads`, etc., might create more problems than solving them. For this purpose, the parameter `p`/`--hardcoded-parameters` takes the path of a file that contains up to three columns separated by whitespace that map parameter names to the hardcoded value. The first column contains the name of the parameter and the second one the hardcoded value. The first two columns are mandatory.
+It is sometimes required that parameters are hidden from the end user in workflow systems and that they take a predetermined, fixed value. Allowing end users to control parameters similar to `--verbosity`, `--threads`, etc., might create more problems than solving them. For this purpose, the parameter `-p`/`--hardcoded-parameters` takes the path of a file that contains up to three columns separated by whitespace that map parameter names to the hardcoded value. The first column contains the name of the parameter and the second one the hardcoded value. Only the first two columns are mandatory.
 
 If the parameter is to be hardcoded only for certain tools, a third column containing a comma separated list of tool names for which the hardcoding will apply can be added.
 
 Lines starting with `#` will be ignored. The following is an example of a valid file:
 
-    # Parameter name            # Value							# Tool(s)
+    # Parameter name            # Value                         # Tool(s)
     threads                     8
     mode                        quiet
     xtandem_executable          xtandem                     	XTandemAdapter
@@ -164,3 +166,4 @@ The following invocation of the converter will use `/opt/suite/bin` as a prefix 
     
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
+[CTDSchema]: https://github.com/WorkflowConversion/CTDSchema
