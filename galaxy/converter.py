@@ -5,75 +5,28 @@
 @author:     delagarza
 """
 
-
-import sys
 import os
-import traceback
-import ntpath
 import string
 
-from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
 from collections import OrderedDict
 from string import strip
 from lxml import etree
 from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
 
-from CTDopts.CTDopts import CTDModel, _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, \
-    ModelError, _Null
+from common import utils, logger
+from common.exceptions import ApplicationException, InvalidModelException
+from common.utils import ParsedCTD
 
-__all__ = []
-__version__ = 1.0
-__date__ = '2014-09-17'
-__updated__ = '2016-05-09'
+from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
 
-MESSAGE_INDENTATION_INCREMENT = 2
 
-TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data', 
+TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data',
                        _OutFile: 'data', _Choices: 'select'}
-
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
 
 REQUIRED_MACROS = [STDIO_MACRO_NAME, REQUIREMENTS_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
-
-
-class CLIError(Exception):
-    # Generic exception to raise and log different fatal errors.
-    def __init__(self, msg):
-        super(CLIError).__init__(type(self))
-        self.msg = "E: %s" % msg
-
-    def __str__(self):
-        return self.msg
-
-    def __unicode__(self):
-        return self.msg
-
-
-class InvalidModelException(ModelError):
-    def __init__(self, message):
-        super(InvalidModelException, self).__init__()
-        self.message = message
-
-    def __str__(self):
-        return self.message
-
-    def __repr__(self):
-        return self.message
-
-
-class ApplicationException(Exception):
-    def __init__(self, msg):
-        super(ApplicationException).__init__(type(self))
-        self.msg = msg
-
-    def __str__(self):
-        return self.msg
-
-    def __unicode__(self):
-        return self.msg
 
 
 class ExitCode:
@@ -91,233 +44,37 @@ class DataType:
         self.mimetype = mimetype
 
 
-class ParameterHardcoder:
-    def __init__(self):
-        # map whose keys are the composite names of tools and parameters in the following pattern:
-        # [ToolName][separator][ParameterName] -> HardcodedValue
-        # if the parameter applies to all tools, then the following pattern is used:
-        # [ParameterName] -> HardcodedValue
-
-        # examples (assuming separator is '#'):
-        # threads -> 24
-        # XtandemAdapter#adapter -> xtandem.exe
-        # adapter -> adapter.exe
-        self.separator = "!"
-        self.parameter_map = {}
-
-    # the most specific value will be returned in case of overlap
-    def get_hardcoded_value(self, parameter_name, tool_name):
-        # look for the value that would apply for all tools
-        generic_value = self.parameter_map.get(parameter_name, None)
-        specific_value = self.parameter_map.get(self.build_key(parameter_name, tool_name), None)
-        if specific_value is not None:
-            return specific_value
-
-        return generic_value
-
-    def register_parameter(self, parameter_name, parameter_value, tool_name=None):
-        self.parameter_map[self.build_key(parameter_name, tool_name)] = parameter_value
-
-    def build_key(self, parameter_name, tool_name):
-        if tool_name is None:
-            return parameter_name
-        return "%s%s%s" % (parameter_name, self.separator, tool_name)
+def add_specific_args(parser):
+    parser.add_argument("-f", "--formats-file", dest="formats_file",
+                        help="File containing the supported file formats. Run with '-h' or '--help' to see a "
+                             "brief example on the layout of this file.", default=None, required=False)
+    parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
+                    help="Adds content to the command line", default="", required=False)
+    parser.add_argument("-d", "--datatypes-destination", dest="data_types_destination",
+                    help="Specify the location of a datatypes_conf.xml to modify and add the registered "
+                         "data types. If the provided destination does not exist, a new file will be created.",
+                    default=None, required=False)
+    parser.add_argument("-c", "--default-category", dest="default_category", default="DEFAULT", required=False,
+                    help="Default category to use for tools lacking a category when generating tool_conf.xml")
+    parser.add_argument("-t", "--tool-conf-destination", dest="tool_conf_destination", default=None, required=False,
+                    help="Specify the location of an existing tool_conf.xml that will be modified to include "
+                         "the converted tools. If the provided destination does not exist, a new file will"
+                         "be created.")
+    parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
+                    help="The path that will be prepended to the file names when generating tool_conf.xml")
+    parser.add_argument("-r", "--required-tools", dest="required_tools_file", default=None, required=False,
+                    help="Each line of the file will be interpreted as a tool name that needs translation. "
+                         "Run with '-h' or '--help' to see a brief example on the format of this file.")
+    parser.add_argument("-s", "--skip-tools", dest="skip_tools_file", default=None, required=False,
+                    help="File containing a list of tools for which a Galaxy stub will not be generated. "
+                         "Run with '-h' or '--help' to see a brief example on the format of this file.")
+    parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="*",
+                    action="append", required=None, help="Import the additional given file(s) as macros. "
+                                                         "The macros stdio, requirements and advanced_options are required. Please see "
+                                                         "macros.xml for an example of a valid macros file. Al defined macros will be imported.")
 
 
-def main(argv=None):  # IGNORE:C0111
-    # Command line options.
-    if argv is None:
-        argv = sys.argv
-    else:
-        sys.argv.extend(argv)
-
-    program_version = "v%s" % __version__
-    program_build_date = str(__updated__)
-    program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
-    program_short_description = "CTD2Galaxy - A project from the GenericWorkflowNodes family " \
-                                "(https://github.com/orgs/genericworkflownodes)"
-    program_usage = '''
-    USAGE:
-    
-    I - Parsing a single CTD file and generate a Galaxy wrapper:
-
-    $ python generator.py -i input.ctd -o output.xml
-    
-
-    II - Parsing all found CTD files (files with .ctd and .xml extension) in a given folder and
-         output converted Galaxy wrappers in a given folder:
-
-    $ python generator.py -i /home/user/*.ctd -o /home/user/galaxywrappers
-
-
-    III - Providing file formats, mimetypes
-
-    Galaxy supports the concept of file format in order to connect compatible ports, that is, input ports of a certain
-    data format will be able to receive data from a port from the same format. This converter allows you to provide
-    a personalized file in which you can relate the CTD data formats with supported Galaxy data formats. The layout of
-    this file consists of lines, each of either one or four columns separated by any amount of whitespace. The content
-    of each column is as follows:
-
-    * 1st column: file extension
-    * 2nd column: data type, as listed in Galaxy
-    * 3rd column: full-named Galaxy data type, as it will appear on datatypes_conf.xml
-    * 4th column: mimetype (optional)
-
-    The following is an example of a valid "file formats" file:
-
-    ########################################## FILE FORMATS example ##########################################
-    # Every line starting with a # will be handled as a comment and will not be parsed.
-    # The first column is the file format as given in the CTD and second column is the Galaxy data format.
-    # The second, third, fourth and fifth column can be left empty if the data type has already been registered
-    # in Galaxy, otherwise, all but the mimetype must be provided.
-
-    # CTD type    # Galaxy type      # Long Galaxy data type            # Mimetype
-    csv           tabular            galaxy.datatypes.data:Text
-    fasta
-    ini           txt                galaxy.datatypes.data:Text
-    txt
-    idxml         txt                galaxy.datatypes.xml:GenericXml    application/xml
-    options       txt                galaxy.datatypes.data:Text
-    grid          grid               galaxy.datatypes.data:Grid
-
-    ##########################################################################################################
-
-    Note that each line consists precisely of either one, three or four columns. In the case of data types already
-    registered in Galaxy (such as fasta and txt in the above example), only the first column is needed. In the case of
-    data types that haven't been yet registered in Galaxy, the first three columns are needed (mimetype is optional).
-
-    For information about Galaxy data types and subclasses, see the following page:
-    https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
-
-
-    IV - Hardcoding parameters
-
-    It is possible to hardcode parameters. This makes sense if you want to set a tool in Galaxy in 'quiet' mode or if
-    your tools support multi-threading and accept the number of threads via a parameter, without giving the end user the
-    chance to change the values for these parameters.
-
-    In order to generate hardcoded parameters, you need to provide a simple file. Each line of this file contains two
-    or three columns separated by whitespace. Any line starting with a '#' will be ignored. The first column contains
-    the name of the parameter, the second column contains the value that will always be set for this parameter. The
-    first two columns are mandatory.
-
-    If the parameter is to be hardcoded only for a set of tools, then a third column can be added. This column includes
-    a comma-separated list of tool names for which the parameter will be hardcoded. If a third column is not included,
-    then all processed tools containing the given parameter will get a hardcoded value for it.
-
-    The following is an example of a valid file:
-
-    ##################################### HARDCODED PARAMETERS example #####################################
-    # Every line starting with a # will be handled as a comment and will not be parsed.
-    # The first column is the name of the parameter and the second column is the value that will be used.
-
-    # Parameter name            # Value                     # Tool(s)
-    threads                     \${GALAXY_SLOTS:-24}
-    mode                        quiet
-    xtandem_executable          xtandem                     XTandemAdapter
-    verbosity                   high                        Foo, Bar
-
-    #########################################################################################################
-
-    Using the above file will produce a <command> similar to:
-
-    [tool_name] ... -threads \${GALAXY_SLOTS:-24} -mode quiet ...
-
-    For all tools. For XTandemAdapter, the <command> will be similar to:
-
-    XtandemAdapter ... -threads \${GALAXY_SLOTS:-24} -mode quiet -xtandem_executable xtandem ...
-
-    And for tools Foo and Bar, the <command> will be similar to:
-
-    Foo ... ... -threads \${GALAXY_SLOTS:-24} -mode quiet -verbosity high ...
-
-
-    V - Control which tools will be converted
-
-    Sometimes only a subset of CTDs needs to be converted. It is possible to either explicitly specify which tools will
-    be converted or which tools will not be converted.
-
-    The value of the -s/--skip-tools parameter is a file in which each line will be interpreted as the name of a tool
-    that will not be converted. Conversely, the value of the -r/--required-tools is a file in which each line will be
-    interpreted as a tool that is required. Only one of these parameters can be specified at a given time.
-
-    The format of both files is exactly the same. As stated before, each line will be interpreted as the name of a tool;
-    any line starting with a '#' will be ignored.
-
-    '''
-    program_license = '''%(short_description)s
-    Copyright 2015, Luis de la Garza
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-        http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-    
-    %(usage)s
-''' % {'short_description': program_short_description, 'usage': program_usage}
-
-    try:
-        # Setup argument parser
-        parser = ArgumentParser(prog="CTD2Galaxy", description=program_license,
-                                formatter_class=RawDescriptionHelpFormatter, add_help=True)
-        parser.add_argument("-i", "--input", dest="input_files", default=[], required=True, nargs="+", action="append",
-                            help="List of CTD files to convert.")
-        parser.add_argument("-o", "--output-destination", dest="output_destination", required=True,
-                            help="If multiple input files are given, then a folder in which all generated "
-                                 "XMLs will be generated is expected;"
-                                 "if a single input file is given, then a destination file is expected.")
-        parser.add_argument("-f", "--formats-file", dest="formats_file",
-                            help="File containing the supported file formats. Run with '-h' or '--help' to see a "
-                                 "brief example on the layout of this file.", default=None, required=False)
-        parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
-                            help="Adds content to the command line", default="", required=False)
-        parser.add_argument("-d", "--datatypes-destination", dest="data_types_destination",
-                            help="Specify the location of a datatypes_conf.xml to modify and add the registered "
-                                 "data types. If the provided destination does not exist, a new file will be created.",
-                            default=None, required=False)
-        parser.add_argument("-x", "--default-executable-path", dest="default_executable_path",
-                            help="Use this executable path when <executablePath> is not present in the CTD",
-                            default=None, required=False)
-        parser.add_argument("-b", "--blacklist-parameters", dest="blacklisted_parameters", default=[], nargs="+", action="append",
-                            help="List of parameters that will be ignored and won't appear on the galaxy stub",
-                            required=False)
-        parser.add_argument("-c", "--default-category", dest="default_category", default="DEFAULT", required=False,
-                            help="Default category to use for tools lacking a category when generating tool_conf.xml")
-        parser.add_argument("-t", "--tool-conf-destination", dest="tool_conf_destination", default=None, required=False,
-                            help="Specify the location of an existing tool_conf.xml that will be modified to include "
-                                 "the converted tools. If the provided destination does not exist, a new file will"
-                                 "be created.")
-        parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
-                            help="The path that will be prepended to the file names when generating tool_conf.xml")
-        parser.add_argument("-r", "--required-tools", dest="required_tools_file", default=None, required=False,
-                            help="Each line of the file will be interpreted as a tool name that needs translation. "
-                                 "Run with '-h' or '--help' to see a brief example on the format of this file.")
-        parser.add_argument("-s", "--skip-tools", dest="skip_tools_file", default=None, required=False,
-                            help="File containing a list of tools for which a Galaxy stub will not be generated. "
-                                 "Run with '-h' or '--help' to see a brief example on the format of this file.")
-        parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="*",
-                            action="append", required=None, help="Import the additional given file(s) as macros. "
-                                 "The macros stdio, requirements and advanced_options are required. Please see "
-                                 "macros.xml for an example of a valid macros file. Al defined macros will be imported.")
-        parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
-                            help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
-                                 "to see a brief example on the format of this file.")
-        parser.add_argument("-v", "--validation-schema", dest="xsd_location", default=None, required=False,
-                            help="Location of the schema to use to validate CTDs.")
-
-        # TODO: add verbosity, maybe?
-        parser.add_argument("-V", "--version", action='version', version=program_version_message)
-
-        # Process arguments
-        args = parser.parse_args()
-        
+def convert_models(args, parsed_ctds):  # IGNORE:C0111
         # validate and prepare the passed arguments
         validate_and_prepare_args(args)
 
@@ -328,56 +85,33 @@ def main(argv=None):  # IGNORE:C0111
         supported_file_formats = parse_file_formats(args.formats_file)
 
         # parse the hardcoded parameters file¬
-        parameter_hardcoder = parse_hardcoded_parameters(args.hardcoded_parameters)
+        parameter_hardcoder = utils.parse_hardcoded_parameters(args.hardcoded_parameters)
 
         # parse the skip/required tools files
         skip_tools = parse_tools_list_file(args.skip_tools_file)
         required_tools = parse_tools_list_file(args.required_tools_file)
         
-        #if verbose > 0:
-        #    print("Verbose mode on")
-        parsed_models = convert(args.input_files,
-                                args.output_destination,
-                                supported_file_formats=supported_file_formats,
-                                default_executable_path=args.default_executable_path,
-                                add_to_command_line=args.add_to_command_line,
-                                blacklisted_parameters=args.blacklisted_parameters,
-                                required_tools=required_tools,
-                                skip_tools=skip_tools,
-                                macros_file_names=args.macros_files,
-                                macros_to_expand=macros_to_expand,
-                                parameter_hardcoder=parameter_hardcoder,
-                                xsd_location=args.xsd_location)
-
-        #TODO: add some sort of warning if a macro that doesn't exist is to be expanded
-
-        # it is not needed to copy the macros files, since the user has provided them
+        _convert_internal(parsed_ctds,
+                         supported_file_formats=supported_file_formats,
+                         default_executable_path=args.default_executable_path,
+                         add_to_command_line=args.add_to_command_line,
+                         blacklisted_parameters=args.blacklisted_parameters,
+                         required_tools=required_tools,
+                         skip_tools=skip_tools,
+                         macros_file_names=args.macros_files,
+                         macros_to_expand=macros_to_expand,
+                         parameter_hardcoder=parameter_hardcoder)
 
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if args.tool_conf_destination is not None:
-            generate_tool_conf(parsed_models, args.tool_conf_destination,
+            generate_tool_conf(parsed_ctds, args.tool_conf_destination,
                                args.galaxy_tool_path, args.default_category)
 
-        # now datatypes_conf.xml
+        # generate datatypes_conf.xml
         if args.data_types_destination is not None:
             generate_data_type_conf(supported_file_formats, args.data_types_destination)
 
         return 0
-
-    except KeyboardInterrupt:
-        # handle keyboard interrupt
-        return 0
-    except ApplicationException, e:
-        error("CTD2Galaxy could not complete the requested operation.", 0)
-        error("Reason: " + e.msg, 0)
-        return 1
-    except ModelError, e:
-        error("There seems to be a problem with one of your input CTDs.", 0)
-        error("Reason: " + e.msg, 0)
-        return 1
-    except Exception, e:
-        traceback.print_exc()
-        return 2
 
 
 def parse_tools_list_file(tools_list_file):
@@ -400,15 +134,15 @@ def parse_macros_files(macros_file_names):
     for macros_file_name in macros_file_names:
         try:
             macros_file = open(macros_file_name)
-            info("Loading macros from %s" % macros_file_name, 0)
+            logger.info("Loading macros from %s" % macros_file_name, 0)
             root = parse(macros_file).getroot()
             for xml_element in root.findall("xml"):
                 name = xml_element.attrib["name"]
                 if name in macros_to_expand:
-                    warning("Macro %s has already been found. Duplicate found in file %s." %
+                    logger.warning("Macro %s has already been found. Duplicate found in file %s." %
                             (name, macros_file_name), 0)
                 else:
-                    info("Macro %s found" % name, 1)
+                    logger.info("Macro %s found" % name, 1)
                     macros_to_expand.add(name)
         except ParseError, e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
@@ -426,44 +160,12 @@ def parse_macros_files(macros_file_names):
     if missing_needed_macros:
         raise ApplicationException(
             "The following required macro(s) were not found in any of the given macros files: %s, "
-            "see sample_files/macros.xml for an example of a valid macros file."
+            "see galaxy/macros.xml for an example of a valid macros file."
             % ", ".join(missing_needed_macros))
 
     # we do not need to "expand" the advanced_options macro
     macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
     return macros_to_expand
-
-
-def parse_hardcoded_parameters(hardcoded_parameters_file):
-    parameter_hardcoder = ParameterHardcoder()
-    if hardcoded_parameters_file is not None:
-        line_number = 0
-        with open(hardcoded_parameters_file) as f:
-            for line in f:
-                line_number += 1
-                if line is None or not line.strip() or line.strip().startswith("#"):
-                    pass
-                else:
-                    # the third column must not be obtained as a whole, and not split
-                    parsed_hardcoded_parameter = line.strip().split(None, 2)
-                    # valid lines contain two or three columns
-                    if len(parsed_hardcoded_parameter) != 2 and len(parsed_hardcoded_parameter) != 3:
-                        warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
-                                "ignored:\n%s" % (line_number, line), 0)
-                        continue
-
-                    parameter_name = parsed_hardcoded_parameter[0]
-                    hardcoded_value = parsed_hardcoded_parameter[1]
-                    tool_names = None
-                    if len(parsed_hardcoded_parameter) == 3:
-                        tool_names = parsed_hardcoded_parameter[2].split(',')
-                    if tool_names:
-                        for tool_name in tool_names:
-                            parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name.strip())
-                    else:
-                        parameter_hardcoder.register_parameter(parameter_name, hardcoded_value)
-
-    return parameter_hardcoder
 
 
 def parse_file_formats(formats_file):
@@ -483,8 +185,9 @@ def parse_file_formats(formats_file):
                     parsed_formats = line.strip().split()
                     # valid lines contain either one or four columns
                     if not (len(parsed_formats) == 1 or len(parsed_formats) == 3 or len(parsed_formats) == 4):
-                        warning("Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" %
-                                (line_number, line), 0)
+                        logger.warning(
+                            "Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" %
+                            (line_number, line), 0)
                         # ignore the line
                         continue
                     elif len(parsed_formats) == 1:
@@ -506,47 +209,16 @@ def validate_and_prepare_args(args):
             "You have provided both a file with tools to ignore and a file with required tools.\n"
             "Only one of -s/--skip-tools, -r/--required-tools can be provided.")
 
-    # first, we convert all list of lists in args to flat lists
-    lists_to_flatten = ["input_files", "blacklisted_parameters", "macros_files"]
-    for list_to_flatten in lists_to_flatten:
-        setattr(args, list_to_flatten, [item for sub_list in getattr(args, list_to_flatten) for item in sub_list])
+    # flatten macros_files to make sure that we have a list containing file names and not a list of lists
+    utils.flatten_list_of_lists(args, "macros_files")
 
-    # if input is a single file, we expect output to be a file (and not a dir that already exists)
-    if len(args.input_files) == 1:
-        if os.path.isdir(args.output_destination):
-            raise ApplicationException("If a single input file is provided, output (%s) is expected to be a file "
-                                       "and not a folder.\n" % args.output_destination)
-        
-    # if input is a list of files, we expect output to be a folder
-    if len(args.input_files) > 1:
-        if not os.path.isdir(args.output_destination):
-            raise ApplicationException("If several input files are provided, output (%s) is expected to be an "
-                                       "existing directory.\n" % args.output_destination)
-
-    # check that the provided input files, if provided, contain a valid file path
-    input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files", "xsd_location",
-                                "input_files", "formats_file", "hardcoded_parameters"]
-
+    # check that the arguments point to a valid, existing path
+    input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files", "formats_file"]
     for variable_name in input_variables_to_check:
-        paths_to_check = []
-        # check if we are handling a single file or a list of files
-        member_value = getattr(args, variable_name)
-        if member_value is not None:
-            if isinstance(member_value, list):
-                for file_name in member_value:
-                    paths_to_check.append(strip(str(file_name)))
-            else:
-                paths_to_check.append(strip(str(member_value)))
-
-            for path_to_check in paths_to_check:
-                if not os.path.isfile(path_to_check) or not os.path.exists(path_to_check):
-                    raise ApplicationException(
-                        "The provided input file (%s) does not exist or is not a valid file path."
-                        % path_to_check)
+        utils.validate_argument_is_valid_path(args, variable_name)
 
     # check that the provided output files, if provided, contain a valid file path (i.e., not a folder)
     output_variables_to_check = ["data_types_destination", "tool_conf_destination"]
-
     for variable_name in output_variables_to_check:
         file_name = getattr(args, variable_name)
         if file_name is not None and os.path.isdir(file_name):
@@ -554,40 +226,30 @@ def validate_and_prepare_args(args):
 
     if not args.macros_files:
         # list is empty, provide the default value
-        warning("Using default macros from macros.xml", 0)
-        args.macros_files = ["macros.xml"]
+        logger.warning("Using default macros from galaxy/macros.xml", 0)
+        args.macros_files = ["galaxy/macros.xml"]
 
 
-def convert(input_files, output_destination, **kwargs):
-    # first, generate a model
-    is_converting_multiple_ctds = len(input_files) > 1 
-    parsed_models = []
-    schema = None
-    if kwargs["xsd_location"] is not None:
-        try:
-            info("Loading validation schema from %s" % kwargs["xsd_location"], 0)
-            schema = etree.XMLSchema(etree.parse(kwargs["xsd_location"]))
-        except Exception, e:
-            error("Could not load validation schema %s. Reason: %s" % (kwargs["xsd_location"], str(e)), 0)
-    else:
-        info("Validation against a schema has not been enabled.", 0)
-    for input_file in input_files:
-        try:
-            if schema is not None:
-                validate_against_schema(input_file, schema)
-            model = CTDModel(from_file=input_file)
-        except Exception, e:
-            error(str(e), 1)
-            continue
+def get_preferred_file_extension():
+    return "xml"
+
+
+def _convert_internal(parsed_ctds, **kwargs):
+    # parse all input files into models using CTDopts (via utils)
+    # the output is a tuple containing the model, output destination, origin file
+    for parsed_ctd in parsed_ctds:
+        model = parsed_ctd.ctd_model
+        origin_file = parsed_ctd.input_file
+        output_file = parsed_ctd.suggested_output_file
 
         if kwargs["skip_tools"] is not None and model.name in kwargs["skip_tools"]:
-            info("Skipping tool %s" % model.name, 0)
+            logger.info("Skipping tool %s" % model.name, 0)
             continue
         elif kwargs["required_tools"] is not None and model.name not in kwargs["required_tools"]:
-            info("Tool %s is not required, skipping it" % model.name, 0)
+            logger.info("Tool %s is not required, skipping it" % model.name, 0)
             continue
         else:
-            info("Converting from %s " % input_file, 0)
+            logger.info("Converting from %s " % origin_file, 0)
             tool = create_tool(model)
             write_header(tool, model)
             create_description(tool, model)
@@ -597,47 +259,28 @@ def convert(input_files, output_destination, **kwargs):
             create_outputs(tool, model, **kwargs)
             create_help(tool, model)
 
-            # finally, serialize the tool
-            output_file = output_destination
-            # if multiple inputs are being converted,
-            # then we need to generate a different output_file for each input
-            if is_converting_multiple_ctds:
-                output_file = os.path.join(output_file, get_filename_without_suffix(input_file) + ".xml")
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
             tree.write(open(output_file, 'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-            # let's use model to hold the name of the output file
-            parsed_models.append([model, get_filename(output_file)])
-
-    return parsed_models
-
-
-# validates a ctd file against the schema
-def validate_against_schema(ctd_file, schema):
-    try:
-        parser = etree.XMLParser(schema=schema)
-        etree.parse(ctd_file, parser=parser)
-    except etree.XMLSyntaxError, e:
-        raise ApplicationException("Input ctd file %s is not valid. Reason: %s" % (ctd_file, str(e)))
 
 
 def write_header(tool, model):
     tool.addprevious(etree.Comment(
         "This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). "
-        "This file was automatically generated using CTD2Galaxy."))
+        "This file was automatically generated using CTDConverter."))
     tool.addprevious(etree.Comment('Proposed Tool Section: [%s]' % model.opt_attribs.get("category", "")))
 
 
-def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, default_category):
+def generate_tool_conf(parsed_ctds, tool_conf_destination, galaxy_tool_path, default_category):
     # for each category, we keep a list of models corresponding to it
     categories_to_tools = dict()
-    for model in parsed_models:
-        category = strip(model[0].opt_attribs.get("category", ""))
+    for parsed_ctd in parsed_ctds:
+        category = strip(parsed_ctd.ctd_model.opt_attribs.get("category", ""))
         if not category.strip():
             category = default_category
         if category not in categories_to_tools:
             categories_to_tools[category] = []
-        categories_to_tools[category].append(model[1])
+        categories_to_tools[category].append(utils.get_filename(parsed_ctd.suggested_output_file))
                 
     # at this point, we should have a map for all categories->tools
     toolbox_node = Element("toolbox")
@@ -658,7 +301,7 @@ def generate_tool_conf(parsed_models, tool_conf_destination, galaxy_tool_path, d
 
     toolconf_tree = ElementTree(toolbox_node)
     toolconf_tree.write(open(tool_conf_destination,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    info("Generated Galaxy tool_conf.xml in %s" % tool_conf_destination, 0)
+    logger.info("Generated Galaxy tool_conf.xml in %s" % tool_conf_destination, 0)
 
 
 def generate_data_type_conf(supported_file_formats, data_types_destination):
@@ -680,19 +323,7 @@ def generate_data_type_conf(supported_file_formats, data_types_destination):
 
     data_types_tree = ElementTree(data_types_node)
     data_types_tree.write(open(data_types_destination,'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
-
-
-# taken from
-# http://stackoverflow.com/questions/8384737/python-extract-file-name-from-path-no-matter-what-the-os-path-format
-def get_filename(path):
-    head, tail = ntpath.split(path)
-    return tail or ntpath.basename(head)
-
-
-def get_filename_without_suffix(path):
-    root, ext = os.path.splitext(os.path.basename(path))
-    return root 
+    logger.info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
 
 
 def create_tool(model):
@@ -714,7 +345,7 @@ def get_param_cli_name(param, model):
             return resolve_param_mapping(param, model)
         else:
             if model.cli:
-                warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", py1)
+                logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
             return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
     else:
         return resolve_param_mapping(param, model)
@@ -730,7 +361,7 @@ def get_param_name(param):
         else:
             return get_param_name(param.parent) + ":" + param.name
     else:
-    	return param.name
+        return param.name
 
 
 # some parameters are mapped to command line options, this method helps resolve those mappings, if any
@@ -741,12 +372,13 @@ def resolve_param_mapping(param, model):
         for mapping_element in cli_element.mappings:
             if mapping_element.reference_name == param.name:
                 if param_mapping is not None:
-                    warning("The parameter %s has more than one mapping in the <cli> section. "
+                    logger.warning("The parameter %s has more than one mapping in the <cli> section. "
                             "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
                 else:
                     param_mapping = cli_element.option_identifier
 
     return param_mapping if param_mapping is not None else param.name
+
 
 def create_command(tool, model, **kwargs):
     final_command = get_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
@@ -802,12 +434,8 @@ def create_command(tool, model, **kwargs):
                     actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
                 else:
                     actual_parameter = "$%s" % galaxy_parameter_name
-                ## if whitespace_validation has been set, we need to generate, for each parameter:
-                ## #if str( $t ).split() != '':
-                ## -t "$t"
-                ## #end if
-                ## TODO only useful for text fields, integers or floats
-                ## not useful for choices, input fields ...
+                # TODO only useful for text fields, integers or floats
+                # not useful for choices, input fields ...
 
                 if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
                     command += "#if " + actual_parameter + ":\n"
@@ -940,7 +568,7 @@ def create_inputs(tool, model, **kwargs):
                 else:
                     # something went wrong... we are handling an advanced parameter and the
                     # advanced input macro was not set... inform the user about it
-                    info("The parameter %s has been set as advanced, but advanced_input_macro has "
+                    logger.info("The parameter %s has been set as advanced, but advanced_input_macro has "
                          "not been set." % param.name, 1)
                     # there is not much we can do, other than use the inputs_node as a parent node!
                     parent_node = inputs_node
@@ -1056,7 +684,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
                                         % {"type": type(param.restrictions), "name": param.name})
 
         if param_type == "select" and param.default in param.restrictions.choices:
-             param_node.attrib["optional"] = "False"
+            param_node.attrib["optional"] = "False"
         else:
             param_node.attrib["optional"] = str(not param.required)
 
@@ -1091,7 +719,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # galaxy requires "value" to be included for int/float
             # since no default was included, we need to figure out one in a clever way... but let the user know
             # that we are "thinking" for him/her
-            warning("Generating default value for parameter [%s]. "
+            logger.warning("Generating default value for parameter [%s]. "
                     "Galaxy requires the attribute 'value' to be set for integer/floats. "
                     "Edit the CTD file and provide a suitable default value." % param.name, 1)
             # check if there's a min/max and try to use them
@@ -1129,7 +757,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
 
 def generate_label_and_help(desc):
-    label = ""
     help_text = ""
     # This tag is found in some descriptions 
     if not isinstance(desc, basestring):
@@ -1137,7 +764,7 @@ def generate_label_and_help(desc):
     desc = desc.encode("utf8").replace("#br#", " <br>")
     # Get rid of dots in the end
     if desc.endswith("."):
-       desc = desc.rstrip(".")
+        desc = desc.rstrip(".")
     # Check if first word is a normal word and make it uppercase
     if str(desc).find(" ") > -1:
         first_word, rest = str(desc).split(" ", 1)
@@ -1179,33 +806,15 @@ def generate_label_and_help(desc):
     return label, help_text
 
 
-def get_indented_text(text, indentation_level):
-    return ("%(indentation)s%(text)s" %
-            {"indentation": "  " * (MESSAGE_INDENTATION_INCREMENT * indentation_level),
-             "text": text})
-
-
-def warning(warning_text, indentation_level):
-    sys.stdout.write(get_indented_text("WARNING: %s\n" % warning_text, indentation_level))
-
-
-def error(error_text, indentation_level):
-    sys.stderr.write(get_indented_text("ERROR: %s\n" % error_text, indentation_level))
-
-
-def info(info_text, indentation_level):
-    sys.stdout.write(get_indented_text("INFO: %s\n" % info_text, indentation_level))
-
-
 # determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
-    ## detect boolean selects of OpenMS
+    # detect boolean selects of OpenMS
     if is_selection_parameter(param):
         if len(param.restrictions.choices) == 2:
             # check that default value is false to make sure it is an actual flag
             if "false" in param.restrictions.choices and \
-                "true" in param.restrictions.choices and \
-                param.default == "false":
+                            "true" in param.restrictions.choices and \
+                            param.default == "false":
                 return True
     else:
         return param.type is bool
@@ -1247,7 +856,6 @@ def create_boolean_parameter(param_node, param):
         default = strip(string.lower(param.default))
         if default == "yes" or default == "true":
             checked_value = "true"
-        #attribute_list["checked"] = checked_value
         param_node.attrib["checked"] = checked_value
 
 
@@ -1289,7 +897,8 @@ def create_output_node(parent, param, model, supported_file_formats):
 
             # warn only if there's about to complain
             if output:
-                warning("Parameter " + param.name + " has the following unsupported format(s):" + ','.join(output), 1)
+                logger.warning("Parameter " + param.name + " has the following unsupported format(s):"
+                              + ','.join(output), 1)
                 data_format = ','.join(output)
 
             formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
@@ -1310,9 +919,7 @@ def create_output_node(parent, param, model, supported_file_formats):
                                                                    "name": param.name})
     data_node.attrib["format"] = data_format
 
-    #TODO: find a smarter label ?
-    #if param.description is not None:
-    #    data_node.setAttribute("label", param.description)
+    # TODO: find a smarter label ?
     return data_node
 
 
@@ -1383,7 +990,3 @@ def extract_parameters(model):
 def add_child_node(parent_node, child_node_name, attributes=OrderedDict([])):
     child_node = SubElement(parent_node, child_node_name, attributes)
     return child_node
-
-
-if __name__ == "__main__":
-    sys.exit(main())
