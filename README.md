@@ -46,7 +46,6 @@ Please refer to the detailed documentation for each of the converters for more i
 - [Generation of Galaxy ToolConfig files](galaxy/README.md)
 - [Generation of CWL task files](cwl/README.md)
 
-
 ## Converting a single CTD
 In its simplest form, the converter takes an input CTD file and generates an output file. The following usage of `CTDConverter`:
 
