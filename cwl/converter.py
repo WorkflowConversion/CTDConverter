@@ -100,6 +100,9 @@ def convert_to_cwl(ctd_model, args):
 
     # add inputs/outputs
     for param in utils.extract_and_flatten_parameters(ctd_model):
+        if param.name in args.blacklisted_parameters:
+            continue
+            
         param_name = utils.extract_param_name(param)
         cwl_fixed_param_name = fix_param_name(param_name)
         hardcoded_value = args.parameter_hardcoder.get_hardcoded_value(param_name, ctd_model.name)
@@ -182,4 +185,4 @@ def fix_param_name(param_name):
 # for instance ['null', int]
 def generate_cwl_param_type(param, forced_type=None):
     cwl_type = TYPE_TO_CWL_TYPE[param.type] if forced_type is None else forced_type
-    return cwl_type if param.required else "['null', %s]" % cwl_type
+    return cwl_type if param.required else ['null', cwl_type]
