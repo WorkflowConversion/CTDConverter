@@ -8,7 +8,7 @@ from string import strip
 from logger import info, error, warning
 
 from common.exceptions import ApplicationException
-from CTDopts.CTDopts import CTDModel
+from CTDopts.CTDopts import CTDModel, ParameterGroup
 
 
 MESSAGE_INDENTATION_INCREMENT = 2
@@ -104,7 +104,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
         except Exception, e:
             error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
     else:
-        info("Validation against a schema has not been enabled.", 0)
+        warning("Validation against a schema has not been enabled.", 0)
     for input_ctd in input_ctds:
         try:
             if schema is not None:
@@ -113,7 +113,8 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
             # if multiple inputs are being converted, we need to generate a different output_file for each input
             if is_converting_multiple_ctds:
                 output_file = os.path.join(output_file,
-                                           get_filename_without_suffix(input_ctd) + '.' + output_file_extension)
+                                           get_filename_without_suffix(input_ctd) + "." + output_file_extension)
+            info("Parsing %s" % input_ctd)
             parsed_ctds.append(ParsedCTD(CTDModel(from_file=input_ctd), input_ctd, output_file))
         except Exception, e:
             error(str(e), 1)
@@ -158,8 +159,8 @@ def add_common_parameters(parser, version, last_updated):
     # TODO: add verbosity, maybe?
     program_version = "v%s" % version
     program_build_date = str(last_updated)
-    program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
-    parser.add_argument("-v", "--version", action='version', version=program_version_message)
+    program_version_message = "%%(prog)s %s (%s)" % (program_version, program_build_date)
+    parser.add_argument("-v", "--version", action="version", version=program_version_message)
 
 
 def parse_hardcoded_parameters(hardcoded_parameters_file):
@@ -192,3 +193,128 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
                         parameter_hardcoder.register_parameter(parameter_name, hardcoded_value)
 
     return parameter_hardcoder
+
+
+def extract_tool_help_text(ctd_model):
+    manual = ""
+    doc_url = None
+    if "manual" in ctd_model.opt_attribs.keys():
+        manual += "%s\n\n" % ctd_model.opt_attribs["manual"]
+    if "docurl" in ctd_model.opt_attribs.keys():
+        doc_url = ctd_model.opt_attribs["docurl"]
+
+    help_text = "No help available"
+    if manual is not None:
+        help_text = manual
+    if doc_url is not None:
+        help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
+
+    return help_text
+
+
+def extract_tool_executable_path(model, default_executable_path):
+    # rules to build the executable path:
+    # if executablePath is null, then use default_executable_path
+    # if executablePath is null and executableName is null, then the name of the tool will be used
+    # if executablePath is null and executableName is not null, then executableName will be used
+    # if executablePath is not null and executableName is null,
+    #   then executablePath and the name of the tool will be used
+    # if executablePath is not null and executableName is not null, then both will be used
+
+    # first, check if the model has executablePath / executableName defined
+    executable_path = model.opt_attribs.get("executablePath", None)
+    executable_name = model.opt_attribs.get("executableName", None)
+
+    # check if we need to use the default_executable_path
+    if executable_path is None:
+        executable_path = default_executable_path
+
+    # fix the executablePath to make sure that there is a '/' in the end
+    if executable_path is not None:
+        executable_path = executable_path.strip()
+        if not executable_path.endswith("/"):
+            executable_path += "/"
+
+    # assume that we have all information present
+    command = str(executable_path) + str(executable_name)
+    if executable_path is None:
+        if executable_name is None:
+            command = model.name
+        else:
+            command = executable_name
+    else:
+        if executable_name is None:
+            command = executable_path + model.name
+    return command
+
+
+def extract_and_flatten_parameters(ctd_model):
+    parameters = []
+    if len(ctd_model.parameters.parameters) > 0:
+        # use this to put parameters that are to be processed
+        # we know that CTDModel has one parent ParameterGroup
+        pending = [ctd_model.parameters]
+        while len(pending) > 0:
+            # take one element from 'pending'
+            parameter = pending.pop()
+            if type(parameter) is not ParameterGroup:
+                parameters.append(parameter)
+            else:
+                # append the first-level children of this ParameterGroup
+                pending.extend(parameter.parameters.values())
+    # returned the reversed list of parameters (as it is now,
+    # we have the last parameter in the CTD as first in the list)
+    return reversed(parameters)
+
+
+# some parameters are mapped to command line options, this method helps resolve those mappings, if any
+def resolve_param_mapping(param, ctd_model):
+    # go through all mappings and find if the given param appears as a reference name in a mapping element
+    param_mapping = None
+    for cli_element in ctd_model.cli:
+        for mapping_element in cli_element.mappings:
+            if mapping_element.reference_name == param.name:
+                if param_mapping is not None:
+                    warning("The parameter %s has more than one mapping in the <cli> section. "
+                            "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
+                else:
+                    param_mapping = cli_element.option_identifier
+
+    return param_mapping if param_mapping is not None else param.name
+
+
+def _extract_param_cli_name(param, ctd_model):
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, 'parent'):
+            return resolve_param_mapping(param, ctd_model)
+        elif not hasattr(param.parent.parent.parent, 'parent'):
+            return resolve_param_mapping(param, ctd_model)
+        else:
+            if ctd_model.cli:
+                warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
+            return extract_param_name(param.parent) + ":" + resolve_param_mapping(param, ctd_model)
+    else:
+        return resolve_param_mapping(param, ctd_model)
+
+
+def extract_param_name(param):
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    if type(param.parent) == ParameterGroup:
+        if not hasattr(param.parent.parent, "parent"):
+            return param.name
+        elif not hasattr(param.parent.parent.parent, "parent"):
+            return param.name
+        else:
+            return extract_param_name(param.parent) + ":" + param.name
+    else:
+        return param.name
+
+
+def extract_command_line_prefix(param, ctd_model):
+    param_name = extract_param_name(param)
+    param_cli_name = _extract_param_cli_name(param, ctd_model)
+    if param_name == param_cli_name:
+        # there was no mapping, so for the cli name we will use a '-' in the prefix
+        param_cli_name = "-" + param_name
+    return param_cli_name

@@ -6,6 +6,7 @@
 * Taken values: The destination of the file.
 
     $ python convert.py galaxy -i /data/ctds/*.ctd -o /data/generated-galaxy-stubs -t /data/generated-galaxy-stubs/tool_conf.xml
+    
 
 ## Adding Parameters to the Command-line
 * Purpose: Galaxy *ToolConfig* files include a `<command>` element in which the command line to invoke the tool can be given. Sometimes it is needed to invoke your tools in a certain way (i.e., passing certain parameters). For instance, some tools offer the possibility to be invoked in a verbose or quiet way or even to be invoked in a headless way (i.e., without GUI).

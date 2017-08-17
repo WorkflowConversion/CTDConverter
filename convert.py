@@ -7,7 +7,6 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from common.exceptions import ApplicationException, ModelError
 
-
 __all__ = []
 __version__ = 2.0
 __date__ = '2014-09-17'
@@ -174,11 +173,11 @@ def main(argv=None):
     # at this point we cannot parse the arguments, because each converter takes different arguments, meaning each
     # converter will register its own parameters after we've registered the basic ones... we have to do it old school
     if len(argv) < 2:
-        utils.error('Not enough arguments provided')
-        print('\nUsage: $ python convert.py [TARGET] [ARGUMENTS]\n\n' +
-          'Where:\n' +
-          '  target: one of \'cwl\' or \'galaxy\'\n\n' +
-          'Run again using the -h/--help option to print more detailed help.\n')
+        utils.error("Not enough arguments provided")
+        print("\nUsage: $ python convert.py [TARGET] [ARGUMENTS]\n\n" +
+              "Where:\n" +
+              "  target: one of 'cwl' or 'galaxy'\n\n" +
+              "Run again using the -h/--help option to print more detailed help.\n")
         return 1
 
     # TODO: at some point this should look like real software engineering and use a map containing converter instances
@@ -193,8 +192,10 @@ def main(argv=None):
         print(program_license)
         return 0
     else:
-        utils.error('Unrecognized target engine. Supported targets are \'cwl\' and \'galaxy\'.')
+        utils.error("Unrecognized target engine. Supported targets are 'cwl' and 'galaxy'.")
         return 1
+
+    utils.info("Using %s converter" % target)
 
     try:
         # Setup argument parser
@@ -217,24 +218,26 @@ def main(argv=None):
         return converter.convert_models(args, parsed_ctds)
 
     except KeyboardInterrupt:
-        # handle keyboard interrupt
+        print("Interrupted...")
         return 0
 
     except ApplicationException, e:
+        traceback.print_exc()
         utils.error("CTDConverter could not complete the requested operation.", 0)
         utils.error("Reason: " + e.msg, 0)
         return 1
 
     except ModelError, e:
+        traceback.print_exc()
         utils.error("There seems to be a problem with one of your input CTDs.", 0)
         utils.error("Reason: " + e.msg, 0)
         return 1
 
     except Exception, e:
         traceback.print_exc()
+        utils.error("CTDConverter could not complete the requested operation.", 0)
+        utils.error("Reason: " + e.msg, 0)
         return 2
-
-    return 0
 
 
 def validate_and_prepare_common_arguments(args):
@@ -259,6 +262,9 @@ def validate_and_prepare_common_arguments(args):
     input_arguments_to_check = ["xsd_location", "input_files", "hardcoded_parameters"]
     for argument_name in input_arguments_to_check:
         utils.validate_argument_is_valid_path(args, argument_name)
+
+    # add the parameter hardcoder
+    args.parameter_hardcoder = utils.parse_hardcoded_parameters(args.hardcoded_parameters)
 
 
 if __name__ == "__main__":

@@ -1,10 +1,5 @@
 #!/usr/bin/env python
 # encoding: utf-8
-
-"""
-@author:     delagarza
-"""
-
 import os
 import string
 
@@ -15,7 +10,6 @@ from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
 
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
-from common.utils import ParsedCTD
 
 from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
 
@@ -70,11 +64,12 @@ def add_specific_args(parser):
                          "Run with '-h' or '--help' to see a brief example on the format of this file.")
     parser.add_argument("-m", "--macros", dest="macros_files", default=[], nargs="*",
                     action="append", required=None, help="Import the additional given file(s) as macros. "
-                                                         "The macros stdio, requirements and advanced_options are required. Please see "
-                                                         "macros.xml for an example of a valid macros file. Al defined macros will be imported.")
+                                                         "The macros stdio, requirements and advanced_options are "
+                                                         "required. Please see galaxy/macros.xml for an example of a "
+                                                         "valid macros file. All defined macros will be imported.")
 
 
-def convert_models(args, parsed_ctds):  # IGNORE:C0111
+def convert_models(args, parsed_ctds):
         # validate and prepare the passed arguments
         validate_and_prepare_args(args)
 
@@ -84,23 +79,20 @@ def convert_models(args, parsed_ctds):  # IGNORE:C0111
         # parse the given supported file-formats file
         supported_file_formats = parse_file_formats(args.formats_file)
 
-        # parse the hardcoded parameters file¬
-        parameter_hardcoder = utils.parse_hardcoded_parameters(args.hardcoded_parameters)
-
         # parse the skip/required tools files
         skip_tools = parse_tools_list_file(args.skip_tools_file)
         required_tools = parse_tools_list_file(args.required_tools_file)
         
         _convert_internal(parsed_ctds,
-                         supported_file_formats=supported_file_formats,
-                         default_executable_path=args.default_executable_path,
-                         add_to_command_line=args.add_to_command_line,
-                         blacklisted_parameters=args.blacklisted_parameters,
-                         required_tools=required_tools,
-                         skip_tools=skip_tools,
-                         macros_file_names=args.macros_files,
-                         macros_to_expand=macros_to_expand,
-                         parameter_hardcoder=parameter_hardcoder)
+                          supported_file_formats=supported_file_formats,
+                          default_executable_path=args.default_executable_path,
+                          add_to_command_line=args.add_to_command_line,
+                          blacklisted_parameters=args.blacklisted_parameters,
+                          required_tools=required_tools,
+                          skip_tools=skip_tools,
+                          macros_file_names=args.macros_files,
+                          macros_to_expand=macros_to_expand,
+                          parameter_hardcoder=args.parameter_hardcoder)
 
         # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
         if args.tool_conf_destination is not None:
@@ -249,7 +241,7 @@ def _convert_internal(parsed_ctds, **kwargs):
             logger.info("Tool %s is not required, skipping it" % model.name, 0)
             continue
         else:
-            logger.info("Converting from %s " % origin_file, 0)
+            logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
             tool = create_tool(model)
             write_header(tool, model)
             create_description(tool, model)
@@ -261,6 +253,7 @@ def _convert_internal(parsed_ctds, **kwargs):
 
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
+            logger.info("Writing to %s" % utils.get_filename(output_file), 1)
             tree.write(open(output_file, 'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
 
@@ -336,75 +329,28 @@ def create_description(tool, model):
         description.text = model.opt_attribs["description"]
 
 
-def get_param_cli_name(param, model):
-    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup:
-        if not hasattr(param.parent.parent, 'parent'):
-            return resolve_param_mapping(param, model)
-        elif not hasattr(param.parent.parent.parent, 'parent'):
-            return resolve_param_mapping(param, model)
-        else:
-            if model.cli:
-                logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
-            return get_param_name(param.parent) + ":" + resolve_param_mapping(param, model)
-    else:
-        return resolve_param_mapping(param, model)
-
-
-def get_param_name(param):
-    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
-    if type(param.parent) == ParameterGroup:
-        if not hasattr(param.parent.parent, 'parent'):
-            return param.name
-        elif not hasattr(param.parent.parent.parent, 'parent'):
-            return param.name
-        else:
-            return get_param_name(param.parent) + ":" + param.name
-    else:
-        return param.name
-
-
-# some parameters are mapped to command line options, this method helps resolve those mappings, if any
-def resolve_param_mapping(param, model):
-    # go through all mappings and find if the given param appears as a reference name in a mapping element
-    param_mapping = None
-    for cli_element in model.cli:
-        for mapping_element in cli_element.mappings:
-            if mapping_element.reference_name == param.name:
-                if param_mapping is not None:
-                    logger.warning("The parameter %s has more than one mapping in the <cli> section. "
-                            "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
-                else:
-                    param_mapping = cli_element.option_identifier
-
-    return param_mapping if param_mapping is not None else param.name
-
-
 def create_command(tool, model, **kwargs):
-    final_command = get_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
+    final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
-    advanced_command_end = '#end if'
-    advanced_command = ''
+    advanced_command_end = "#end if"
+    advanced_command = ""
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     found_output_parameter = False
-    for param in extract_parameters(model):
+    for param in utils.extract_and_flatten_parameters(model):
         if param.type is _OutFile:
             found_output_parameter = True
-        command = ''
-        param_name = get_param_name(param)
-        param_cli_name = get_param_cli_name(param, model)
-        if param_name == param_cli_name:
-            # there was no mapping, so for the cli name we will use a '-' in the prefix
-            param_cli_name = '-' + param_name
+        command = ""
+        param_name = utils.extract_param_name(param)
+        command_line_prefix = utils.extract_command_line_prefix(param, model)
 
         if param.name in kwargs["blacklisted_parameters"]:
             continue
 
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param_name, model.name)
         if hardcoded_value:
-            command += '%s %s\n' % (param_cli_name, hardcoded_value)
+            command += "%s %s\n" % (command_line_prefix, hardcoded_value)
         else:
             # parameter is neither blacklisted nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
@@ -413,13 +359,13 @@ def create_command(tool, model, **kwargs):
             # logic for ITEMLISTs
             if param.is_list:
                 if param.type is _InFile:
-                    command += param_cli_name + "\n"
+                    command += command_line_prefix + "\n"
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
                     command += "    $token\n"
                     command += "  #end for\n" 
                 else:
                     command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
-                    command += param_cli_name + "\n"
+                    command += command_line_prefix + "\n"
                     command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
                     command += "    #if \" \" in str(token):\n"
                     command += "      \"$token." + galaxy_parameter_name + "\"\n"
@@ -439,7 +385,7 @@ def create_command(tool, model, **kwargs):
 
                 if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  %s\n' % param_cli_name
+                    command += "  %s\n" % command_line_prefix
                     command += "  #if \" \" in str(" + actual_parameter + "):\n"
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "  #else\n"
@@ -448,16 +394,16 @@ def create_command(tool, model, **kwargs):
                     command += "#end if\n" 
                 elif is_boolean_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  %s\n' % param_cli_name
+                    command += "  %s\n" % command_line_prefix
                     command += "#end if\n" 
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
                     command += "#if " + actual_parameter + ":\n"
-                    command += "  %s " % param_cli_name
+                    command += "  %s " % command_line_prefix
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "#end if\n" 
                 else:
                     command += "#if " + actual_parameter + ":\n"
-                    command += '  %s ' % param_cli_name
+                    command += "  %s " % command_line_prefix
                     command += actual_parameter + "\n"
                     command += "#end if\n" 
 
@@ -482,7 +428,7 @@ def expand_macros(tool, model, **kwargs):
     macros_node = add_child_node(tool, "macros")
     token_node = add_child_node(macros_node, "token")
     token_node.attrib["name"] = "@EXECUTABLE@"
-    token_node.text = get_tool_executable_path(model, kwargs["default_executable_path"])
+    token_node.text = utils.extract_tool_executable_path(model, kwargs["default_executable_path"])
 
     # add <import> nodes
     for macro_file_name in kwargs["macros_file_names"]:
@@ -497,48 +443,12 @@ def expand_macros(tool, model, **kwargs):
         expand_node.attrib["macro"] = expand_macro
 
 
-def get_tool_executable_path(model, default_executable_path):
-    # rules to build the galaxy executable path:
-    # if executablePath is null, then use default_executable_path and store it in executablePath
-    # if executablePath is null and executableName is null, then the name of the tool will be used
-    # if executablePath is null and executableName is not null, then executableName will be used
-    # if executablePath is not null and executableName is null,
-    #   then executablePath and the name of the tool will be used
-    # if executablePath is not null and executableName is not null, then both will be used
-
-    # first, check if the model has executablePath / executableName defined
-    executable_path = model.opt_attribs.get("executablePath", None)
-    executable_name = model.opt_attribs.get("executableName", None)
-
-    # check if we need to use the default_executable_path
-    if executable_path is None:
-        executable_path = default_executable_path
-
-    # fix the executablePath to make sure that there is a '/' in the end
-    if executable_path is not None:
-        executable_path = executable_path.strip()
-        if not executable_path.endswith('/'):
-            executable_path += '/'
-
-    # assume that we have all information present
-    command = str(executable_path) + str(executable_name)
-    if executable_path is None:
-        if executable_name is None:
-            command = model.name
-        else:
-            command = executable_name
-    else:
-        if executable_name is None:
-            command = executable_path + model.name
-    return command
-
-
 def get_galaxy_parameter_name(param):
-    return "param_%s" % get_param_name(param).replace(':', '_').replace('-', '_')
+    return "param_%s" % utils.extract_param_name(param).replace(":", "_").replace("-", "_")
 
 
 def get_input_with_same_restrictions(out_param, model, supported_file_formats):
-    for param in extract_parameters(model):
+    for param in utils.extract_and_flatten_parameters(model):
         if param.type is _InFile:
             if param.restrictions is not None:
                 in_param_formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
@@ -555,7 +465,7 @@ def create_inputs(tool, model, **kwargs):
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     # treat all non output-file parameters as inputs
-    for param in extract_parameters(model):
+    for param in utils.extract_and_flatten_parameters(model):
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
         if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
@@ -569,7 +479,7 @@ def create_inputs(tool, model, **kwargs):
                     # something went wrong... we are handling an advanced parameter and the
                     # advanced input macro was not set... inform the user about it
                     logger.info("The parameter %s has been set as advanced, but advanced_input_macro has "
-                         "not been set." % param.name, 1)
+                                "not been set." % param.name, 1)
                     # there is not much we can do, other than use the inputs_node as a parent node!
                     parent_node = inputs_node
             else:
@@ -632,9 +542,9 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
-                param_format = ','.join([get_supported_file_type(i, supported_file_formats) if
-                                            get_supported_file_type(i, supported_file_formats)
-                                            else i for i in param.restrictions.formats])
+                param_format = ",".join([get_supported_file_type(i, supported_file_formats) if
+                                        get_supported_file_type(i, supported_file_formats)
+                                        else i for i in param.restrictions.formats])
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], "
                                             "but instead got [%(type)s]"
@@ -720,8 +630,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # since no default was included, we need to figure out one in a clever way... but let the user know
             # that we are "thinking" for him/her
             logger.warning("Generating default value for parameter [%s]. "
-                    "Galaxy requires the attribute 'value' to be set for integer/floats. "
-                    "Edit the CTD file and provide a suitable default value." % param.name, 1)
+                           "Galaxy requires the attribute 'value' to be set for integer/floats. "
+                           "Edit the CTD file and provide a suitable default value." % param.name, 1)
             # check if there's a min/max and try to use them
             default_value = None
             if param.restrictions is not None:
@@ -841,7 +751,7 @@ def create_boolean_parameter(param_node, param):
         but for that we need CTD support
     """
     # by default, 'true' and 'false' are handled as flags, like the verbose flag (i.e., -v)
-    true_value = "-%s" % get_param_name(param)
+    true_value = "-%s" % utils.extract_param_name(param)
     false_value = ""
     choices = get_lowercase_list(param.restrictions.choices)
     if "yes" in choices:
@@ -863,7 +773,7 @@ def create_outputs(parent, model, **kwargs):
     outputs_node = add_child_node(parent, "outputs")
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
-    for param in extract_parameters(model):
+    for param in utils.extract_and_flatten_parameters(model):
 
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
@@ -948,42 +858,9 @@ def create_change_format_node(parent, data_formats, input_ref):
 
 # Shows basic information about the file, such as data ranges and file type.
 def create_help(tool, model):
-    manual = ''
-    doc_url = None
-    if 'manual' in model.opt_attribs.keys(): 
-        manual += '%s\n\n' % model.opt_attribs["manual"]
-    if 'docurl' in model.opt_attribs.keys():
-        doc_url = model.opt_attribs["docurl"]
-
-    help_text = "No help available"
-    if manual is not None:
-        help_text = manual
-    if doc_url is not None:
-        help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
     help_node = add_child_node(tool, "help")
     # TODO: do we need CDATA Section here?
-    help_node.text = help_text
-
-
-# since a model might contain several ParameterGroup elements,
-# we want to simply 'flatten' the parameters to generate the Galaxy wrapper
-def extract_parameters(model):
-    parameters = []
-    if len(model.parameters.parameters) > 0:
-        # use this to put parameters that are to be processed
-        # we know that CTDModel has one parent ParameterGroup
-        pending = [model.parameters]
-        while len(pending) > 0:
-            # take one element from 'pending'
-            parameter = pending.pop()
-            if type(parameter) is not ParameterGroup:
-                parameters.append(parameter)
-            else:
-                # append the first-level children of this ParameterGroup
-                pending.extend(parameter.parameters.values()) 
-    # returned the reversed list of parameters (as it is now,
-    # we have the last parameter in the CTD as first in the list)
-    return reversed(parameters)
+    help_node.text = utils.extract_tool_help_text(model)
 
 
 # adds and returns a child node using the given name to the given parent node
