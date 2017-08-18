@@ -4,32 +4,41 @@ Given one or more CTD files, `CTD2Converter` generates the needed wrappers to in
 ## Dependencies
 `CTDConverter` has the following python dependencies:
 
-- [CTDopts]
+- [CTDopts] 
 - `lxml`
-- `pyyaml`
+- `ruamel.yaml`
 
 ### Installing Dependencies
 We recommend the use of `conda` to manage all dependencies. If you're not sure what `conda` is, make sure to read the [using-conda](conda documentation).
 
 The easiest way to get you started with CTD conversion is to create a `conda` environment on which you'll install all dependencies. Using environments in `conda` allows you to have parallel, independent python environments, thus avoiding conflicts between libraries. If you haven't installed `conda`, check [conda-install](conda's installation guide).
 
-Once you've installed `conda`, create an environment named `ctd-converter` and list all dependencies, like so:
+Once you've installed `conda`, create an environment named `ctd-converter`, like so:
 
 ```sh
-$ conda create --name ctd-converter --channel workflowconversion ctdopts lxml pyyaml libxml2=2.9.2
+$ conda create --name ctd-converter
 ```
-
-[CTDopts] is a python module available on the `workflowconversion` channel in the Anaconda cloud. Of course, you could just download [CTDopts] and make it available through your `PYTHONPATH` environment variable, if you're into that. To get more information about how to install python modules, visit: https://docs.python.org/2/install/.
-
-`lxml` depends on `libxml2`. When you install `lxml` you'll get the latest version of `libxml2` (2.9.4) by default. You would usually want the latest version, but there is, however, a bug in validating XML files against a schema in this version of `libxml2`.
-
-If you require validation of input CTDs against a schema (which we recommend), you will need to downgrade to the latest known version of `libxml2` that works, namely, 2.9.2.
 
 You will now need to *activate* the environment by executing the following command:
 
 ```sh
 $ source activate ctd-converter
 ```
+
+Install the required dependencies as follows (the order of execution **is actually important**, due to transitive dependencies):
+
+```sh
+$ conda install --channel workflowconversion ctdopts
+$ conda install lxml
+$ conda install --channel conda-forge ruamel.yaml
+$ conda install libxml2=2.9.2
+```
+
+`lxml` depends on `libxml2`. When you install `lxml` you'll get the latest version of `libxml2` (2.9.4) by default. You would usually want the latest version, but there is, however, a bug in validating XML files against a schema in this version of `libxml2`.
+
+If you require validation of input CTDs against a schema (which we recommend), you will need to downgrade to the latest known version of `libxml2` that works, namely, 2.9.2.
+
+You could just download dependencies manually and make them available through your `PYTHONPATH` environment variable, if you're into that. To get more information about how to install python modules without using `conda`, visit: https://docs.python.org/2/install/.
 
 ## How to install `CTDConverter`
 `CTDConverter` is not a python module, rather, a series of scripts, so installing it is as easy as downloading the source code from https://github.com/genericworkflownodes/CTDConverter. Once you've installed all dependencies, downloaded `CTDConverter` and activated your `conda` environment, you're good to go.

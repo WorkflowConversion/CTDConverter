@@ -9,11 +9,7 @@
 # since cwlgen is just "fancy classes" around the yaml.dump() method, we implemented our own generation of yaml
 
 
-import yaml
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
+import ruamel.yaml as yaml
 
 from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
 from common import utils, logger
@@ -77,7 +73,9 @@ def convert_models(args, parsed_ctds):
 
         stream = file(output_file, 'w')
         stream.write(CWL_SHEBANG + '\n\n')
-        yaml.dump(cwl_tool, stream, default_flow_style=True)
+        stream.write("# This CWL file was automatically generated using CTDConverter.\n")
+        stream.write("# Visit https://github.com/WorkflowConversion/CTDConverter for more information.\n\n")
+        yaml.dump(cwl_tool, stream, default_flow_style=False)
         stream.close()
 
     return 0
@@ -102,7 +100,7 @@ def convert_to_cwl(ctd_model, args):
     for param in utils.extract_and_flatten_parameters(ctd_model):
         if param.name in args.blacklisted_parameters:
             continue
-            
+
         param_name = utils.extract_param_name(param)
         cwl_fixed_param_name = fix_param_name(param_name)
         hardcoded_value = args.parameter_hardcoder.get_hardcoded_value(param_name, ctd_model.name)
