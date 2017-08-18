@@ -57,6 +57,9 @@ Please refer to the detailed documentation for each of the converters for more i
 - [Generation of Galaxy ToolConfig files](galaxy/README.md)
 - [Generation of CWL task files](cwl/README.md)
 
+## Fail Policy while processing several Files
+`CTDConverter` can parse several CTDs and convert them. However, the process will be interrupted and an error code will be returned at the first encountered error (e.g., a CTD is not valid, there are missing support files, etc.).
+
 ## Converting a single CTD
 In its simplest form, the converter takes an input CTD file and generates an output file. The following usage of `CTDConverter`:
 

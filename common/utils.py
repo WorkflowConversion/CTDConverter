@@ -105,20 +105,18 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
             error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
     else:
         warning("Validation against a schema has not been enabled.", 0)
+
     for input_ctd in input_ctds:
-        try:
-            if schema is not None:
-                validate_against_schema(input_ctd, schema)
-            output_file = output_destination
-            # if multiple inputs are being converted, we need to generate a different output_file for each input
-            if is_converting_multiple_ctds:
-                output_file = os.path.join(output_file,
-                                           get_filename_without_suffix(input_ctd) + "." + output_file_extension)
-            info("Parsing %s" % input_ctd)
-            parsed_ctds.append(ParsedCTD(CTDModel(from_file=input_ctd), input_ctd, output_file))
-        except Exception, e:
-            error(str(e), 1)
-            continue
+        if schema is not None:
+            validate_against_schema(input_ctd, schema)
+
+        output_file = output_destination
+        # if multiple inputs are being converted, we need to generate a different output_file for each input
+        if is_converting_multiple_ctds:
+            output_file = os.path.join(output_file, get_filename_without_suffix(input_ctd) + "." + output_file_extension)
+        info("Parsing %s" % input_ctd)
+        parsed_ctds.append(ParsedCTD(CTDModel(from_file=input_ctd), input_ctd, output_file))
+
     return parsed_ctds
 
 

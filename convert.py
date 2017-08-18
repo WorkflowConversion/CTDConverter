@@ -215,7 +215,8 @@ def main(argv=None):
                                              converter.get_preferred_file_extension())
 
         # let the converter do its own thing
-        return converter.convert_models(args, parsed_ctds)
+        converter.convert_models(args, parsed_ctds)
+        return 0
 
     except KeyboardInterrupt:
         print("Interrupted...")

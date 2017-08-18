@@ -103,8 +103,6 @@ def convert_models(args, parsed_ctds):
         if args.data_types_destination is not None:
             generate_data_type_conf(supported_file_formats, args.data_types_destination)
 
-        return 0
-
 
 def parse_tools_list_file(tools_list_file):
     tools_list = None

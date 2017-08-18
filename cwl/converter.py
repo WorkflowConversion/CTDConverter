@@ -78,8 +78,6 @@ def convert_models(args, parsed_ctds):
         yaml.dump(cwl_tool, stream, default_flow_style=False)
         stream.close()
 
-    return 0
-
 
 # returns a dictionary
 def convert_to_cwl(ctd_model, args):
