@@ -28,6 +28,7 @@ INPUT_BINDING = 'inputBinding'
 OUTPUT_BINDING = 'outputBinding'
 PREFIX = 'prefix'
 OUTPUTS = 'outputs'
+POSITION = 'position'
 VALUE_FROM = 'valueFrom'
 GLOB = 'glob'
 LABEL = 'label'
@@ -108,21 +109,16 @@ def convert_to_cwl(ctd_model, args):
             create_lists_if_missing(cwl_tool, [INPUTS, OUTPUTS])
             # we know the only outputs are of type _OutFile
             # we need an input of type string that will contain the name of the output file
-            input_binding = {}
-            input_binding[PREFIX] = utils.extract_command_line_prefix(param, ctd_model)
-            if hardcoded_value is not None:
-                input_binding[VALUE_FROM] = hardcoded_value
-
             label = "Filename for %s output file" % param_name
             input_name_for_output_filename = get_input_name_for_output_filename(param)
             input_param = {}
             input_param[ID] = input_name_for_output_filename
-            input_param[INPUT_BINDING] = input_binding
             input_param[DOC] = label
             input_param[LABEL] = label
             if param_default is not None:
                 input_param[DEFAULT] = param_default
             input_param[TYPE] = generate_cwl_param_type(param, TYPE_STRING)
+            insert_input_binding(ctd_model, param, hardcoded_value, input_param)
 
             output_binding = {}
             output_binding[GLOB] = "$(inputs.%s)" % input_name_for_output_filename
@@ -140,19 +136,14 @@ def convert_to_cwl(ctd_model, args):
         else:
             create_lists_if_missing(cwl_tool, [INPUTS])
             # we know that anything that is not an _OutFile is an input
-            input_binding = {}
-            input_binding[PREFIX] = utils.extract_command_line_prefix(param, ctd_model)
-            if hardcoded_value is not None:
-                input_binding[VALUE_FROM] = hardcoded_value
-
             input_param = {}
             input_param[ID] = cwl_fixed_param_name
             input_param[DOC] = param.description
             input_param[LABEL] = param.description
             if param_default is not None:
                 input_param[DEFAULT] = param_default
-            input_param[INPUT_BINDING] = input_binding
             input_param[TYPE] = generate_cwl_param_type(param)
+            insert_input_binding(ctd_model, param, hardcoded_value, input_param)
 
             cwl_tool[INPUTS].append(input_param)
 
@@ -182,3 +173,24 @@ def fix_param_name(param_name):
 def generate_cwl_param_type(param, forced_type=None):
     cwl_type = TYPE_TO_CWL_TYPE[param.type] if forced_type is None else forced_type
     return cwl_type if param.required else ['null', cwl_type]
+
+
+# generate, and insert, the inputBinding
+def insert_input_binding(ctd_model, param, hardcoded_value, cwl_input_param):
+    prefix = utils.extract_command_line_prefix(param, ctd_model)
+    prefix = None if prefix is None or not prefix.strip() else prefix
+
+    input_binding = {}
+
+    if prefix is not None:
+        input_binding[PREFIX] = prefix
+
+    if hardcoded_value is not None:
+        input_binding[VALUE_FROM] = hardcoded_value
+
+    if param.is_positional():
+        input_binding[POSITION] = param.position
+
+    # insert input binding if there's something in it
+    if input_binding:
+        cwl_input_param[INPUT_BINDING] = input_binding
