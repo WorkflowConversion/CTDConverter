@@ -510,7 +510,7 @@ def create_repeat_attribute_list(rep_node, param):
         rep_node.attrib["min"] = "0"
     # for the ITEMLISTs which have LISTITEM children we only
     # need one parameter as it is given as a string
-    if param.default is not None: 
+    if param.default is not None and param.default is not _Null:  
         rep_node.attrib["max"] = "1"
     rep_node.attrib["title"] = get_galaxy_parameter_name(param)
 
