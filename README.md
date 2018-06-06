@@ -9,9 +9,11 @@ Given one or more CTD files, `CTD2Converter` generates the needed wrappers to in
 - `ruamel.yaml`
 
 ### Installing Dependencies
-We recommend the use of `conda` to manage all dependencies. If you're not sure what `conda` is, make sure to read the [using-conda](conda documentation).
+We recommend the use of `conda` to manage all dependencies. If you're not sure what `conda` is, make sure to read about the [conda project](https://conda.io/docs/index.html).
 
-The easiest way to get you started with CTD conversion is to create a `conda` environment on which you'll install all dependencies. Using environments in `conda` allows you to have parallel, independent python environments, thus avoiding conflicts between libraries. If you haven't installed `conda`, check [conda-install](conda's installation guide).
+The easiest way to get you started with CTD conversion is to create a `conda` environment on which you'll install all dependencies.  Using environments in `conda` allows you to have parallel, independent python environments, thus avoiding conflicts between libraries. 
+
+If you haven't installed `conda`, check [conda-install](conda's installation guide). See [this guide](https://conda.io/docs/user-guide/tasks/manage-environments.html) if you need help creating a `conda` environment.
 
 Once you've installed `conda`, create an environment named `ctd-converter`, like so:
 
