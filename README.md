@@ -1,5 +1,5 @@
 # CTDConverter
-Given one or more CTD files, `CTD2Converter` generates the needed wrappers to include them in workflow engines, such as Galaxy and CWL.
+Given one or more CTD files, `CTDConverter` generates the needed wrappers to include them in workflow engines, such as Galaxy and CWL.
 
 ## Dependencies
 `CTDConverter` has the following python dependencies:
