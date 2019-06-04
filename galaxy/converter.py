@@ -395,12 +395,12 @@ def create_command(tool, model, **kwargs):
                     command += "  %s\n" % command_line_prefix
                     command += "#end if\n" 
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
-                    command += "#if " + actual_parameter + ":\n"
+                    command += "#if str(" + actual_parameter + "):\n"
                     command += "  %s " % command_line_prefix
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "#end if\n" 
                 else:
-                    command += "#if " + actual_parameter + ":\n"
+                    command += "#if str(" + actual_parameter + "):\n"
                     command += "  %s " % command_line_prefix
                     command += actual_parameter + "\n"
                     command += "#end if\n" 
@@ -791,6 +791,8 @@ def create_outputs(parent, model, **kwargs):
 def create_output_node(parent, param, model, supported_file_formats):
     data_node = add_child_node(parent, "data")
     data_node.attrib["name"] = get_galaxy_parameter_name(param)
+    if data_node.attrib["name"].startswith('param_out_'):
+        data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % data_node.attrib["name"][10:]
 
     data_format = "data"
     if param.restrictions is not None:
@@ -827,7 +829,6 @@ def create_output_node(parent, param, model, supported_file_formats):
                                                                    "name": param.name})
     data_node.attrib["format"] = data_format
 
-    # TODO: find a smarter label ?
     return data_node
 
 
