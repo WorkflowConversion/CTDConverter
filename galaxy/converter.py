@@ -20,7 +20,7 @@ STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
 
-REQUIRED_MACROS = [STDIO_MACRO_NAME, REQUIREMENTS_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
+REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
 
 
 class ExitCode:
@@ -119,7 +119,7 @@ def parse_tools_list_file(tools_list_file):
 
 
 def parse_macros_files(macros_file_names):
-    macros_to_expand = set()
+    macros_to_expand = list()
 
     for macros_file_name in macros_file_names:
         try:
@@ -133,7 +133,7 @@ def parse_macros_files(macros_file_names):
                             (name, macros_file_name), 0)
                 else:
                     logger.info("Macro %s found" % name, 1)
-                    macros_to_expand.add(name)
+                    macros_to_expand.append(name)
         except ParseError, e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
                                        str(e))
@@ -434,7 +434,6 @@ def expand_macros(tool, model, **kwargs):
         import_node = add_child_node(macros_node, "import")
         # do not add the path of the file, rather, just its basename
         import_node.text = os.path.basename(macro_file.name)
-
     # add <expand> nodes
     for expand_macro in kwargs["macros_to_expand"]:
         expand_node = add_child_node(tool, "expand")
@@ -459,7 +458,7 @@ def create_inputs(tool, model, **kwargs):
     inputs_node = SubElement(tool, "inputs")
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
-    expand_advanced_node = add_child_node(tool, "expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
+    expand_advanced_node = None
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     # treat all non output-file parameters as inputs
@@ -469,33 +468,44 @@ def create_inputs(tool, model, **kwargs):
         if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
             # let's not use an extra level of indentation and use NOP
             continue
-        if param.type is not _OutFile:
-            if param.advanced:
-                if expand_advanced_node is not None:
-                    parent_node = expand_advanced_node
-                else:
-                    # something went wrong... we are handling an advanced parameter and the
-                    # advanced input macro was not set... inform the user about it
-                    logger.info("The parameter %s has been set as advanced, but advanced_input_macro has "
-                                "not been set." % param.name, 1)
-                    # there is not much we can do, other than use the inputs_node as a parent node!
-                    parent_node = inputs_node
-            else:
-                parent_node = inputs_node
+        if param.type is _OutFile:
+            continue
+        if param.advanced:
+            continue
 
-            # for lists we need a repeat tag
-            if param.is_list and param.type is not _InFile:
-                rep_node = add_child_node(parent_node, "repeat")
-                create_repeat_attribute_list(rep_node, param)
-                parent_node = rep_node
+        parent_node = inputs_node
 
-            param_node = add_child_node(parent_node, "param")
-            create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
+        # for lists we need a repeat tag
+        if param.is_list and param.type is not _InFile:
+            rep_node = add_child_node(parent_node, "repeat")
+            create_repeat_attribute_list(rep_node, param)
+            parent_node = rep_node
 
-    # advanced parameter selection should be at the end
-    # and only available if an advanced parameter exists
-    if expand_advanced_node is not None and len(expand_advanced_node) > 0:
-        inputs_node.append(expand_advanced_node)
+        param_node = add_child_node(parent_node, "param")
+        create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
+
+    for param in utils.extract_and_flatten_parameters(model):
+        # no need to show hardcoded parameters
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
+        if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
+            # let's not use an extra level of indentation and use NOP
+            continue
+        if param.type is _OutFile:
+            continue
+        if not param.advanced:
+            continue
+        if expand_advanced_node is None:
+            expand_advanced_node = add_child_node(inputs_node, "expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
+        parent_node = expand_advanced_node
+
+        # for lists we need a repeat tag
+        if param.is_list and param.type is not _InFile:
+            rep_node = add_child_node(parent_node, "repeat")
+            create_repeat_attribute_list(rep_node, param)
+            parent_node = rep_node
+
+        param_node = add_child_node(parent_node, "param")
+        create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
 
 
 def get_repeat_galaxy_parameter_name(param):
