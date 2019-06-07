@@ -45,7 +45,7 @@ III - Hardcoding parameters
   change the values for these parameters.
 
   In order to generate hardcoded parameters, you need to provide a simple file. Each line of this file contains
-  two or three columns separated by whitespace. Any line starting with a '#' will be ignored. The first column contains
+  two or three columns separated by tabs. Any line starting with a '#' will be ignored. The first column contains
   the name of the parameter, the second column contains the value that will always be set for this parameter. Only the
   first two columns are mandatory.
 

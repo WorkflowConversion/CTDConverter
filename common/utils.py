@@ -172,9 +172,9 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
                     pass
                 else:
                     # the third column must not be obtained as a whole, and not split
-                    parsed_hardcoded_parameter = line.strip().split(None, 2)
+                    parsed_hardcoded_parameter = [ _ for _ in line.strip().split("\t") if _ != ""]
                     # valid lines contain two or three columns
-                    if len(parsed_hardcoded_parameter) != 2 and len(parsed_hardcoded_parameter) != 3:
+                    if not (2 <= len(parsed_hardcoded_parameter) <= 3):
                         warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
                                 "ignored:\n%s" % (line_number, line), 0)
                         continue
