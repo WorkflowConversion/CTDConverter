@@ -394,8 +394,13 @@ def create_command(tool, model, **kwargs):
                     command += "#if " + actual_parameter + ":\n"
                     command += "  %s\n" % command_line_prefix
                     command += "#end if\n" 
-                elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
-                    command += "#if str(" + actual_parameter + "):\n"
+                elif TYPE_TO_GALAXY_TYPE[param.type] in ['text', 'integer', 'float']:
+                    command += "#if str(" + actual_parameter + ") != \"\":\n"
+                    command += "  %s " % command_line_prefix
+                    command += "    \"" + actual_parameter + "\"\n"
+                    command += "#end if\n" 
+                elif TYPE_TO_GALAXY_TYPE[param.type] is 'data':
+                    command += "#if str(" + actual_parameter + ") != \"None\":\n"
                     command += "  %s " % command_line_prefix
                     command += "    \"" + actual_parameter + "\"\n"
                     command += "#end if\n" 
@@ -831,8 +836,10 @@ def create_output_node(parent, param, model, supported_file_formats):
             if formats:
                 corresponding_input = get_input_with_same_restrictions(param, model, supported_file_formats)
                 if corresponding_input is not None:
-                    data_format = "input"
+                    
+                    data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
                     data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
+                    return data_node
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),
