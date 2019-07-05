@@ -241,13 +241,22 @@ def _convert_internal(parsed_ctds, **kwargs):
         else:
             logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
             tool = create_tool(model)
-            write_header(tool, model)
-            create_description(tool, model)
-            expand_macros(tool, model, **kwargs)
+            import_macros(tool, model, **kwargs)
+            if 'references' in kwargs['macros_to_expand']:
+                macros_to_skip = ['references']
+            else:
+                macros_to_skip = []
+
+            expand_macros(tool, macros_to_skip=macros_to_skip, **kwargs)
+
             create_command(tool, model, **kwargs)
             create_inputs(tool, model, **kwargs)
             create_outputs(tool, model, **kwargs)
             create_help(tool, model)
+
+            if 'references' in kwargs['macros_to_expand']:
+                kwargs['macros_to_expand'] = ['references']
+                expand_macros(tool, **kwargs)
 
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
@@ -421,8 +430,7 @@ def create_command(tool, model, **kwargs):
 
 
 # creates the xml elements needed to import the needed macros files
-# and to "expand" the macros
-def expand_macros(tool, model, **kwargs):
+def import_macros(tool, model, **kwargs):
     macros_node = add_child_node(tool, "macros")
     token_node = add_child_node(macros_node, "token")
     token_node.attrib["name"] = "@EXECUTABLE@"
@@ -434,11 +442,15 @@ def expand_macros(tool, model, **kwargs):
         import_node = add_child_node(macros_node, "import")
         # do not add the path of the file, rather, just its basename
         import_node.text = os.path.basename(macro_file.name)
+
+# and to "expand" the macros
+def expand_macros(tool, **kwargs):
     # add <expand> nodes
     for expand_macro in kwargs["macros_to_expand"]:
+        if 'macros_to_skip' in kwargs and expand_macro in kwargs['macros_to_skip']:
+            continue
         expand_node = add_child_node(tool, "expand")
         expand_node.attrib["macro"] = expand_macro
-
 
 def get_galaxy_parameter_name(param):
     return "param_%s" % utils.extract_param_name(param).replace(":", "_").replace("-", "_")

@@ -28,4 +28,9 @@
       </when>
     </conditional>
   </xml>
+  <xml name="references">
+    <citations>
+      <citation type="doi"></citation>
+    </citations>
+  </xml>
 </macros>
