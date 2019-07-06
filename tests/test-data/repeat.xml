@@ -298,7 +298,7 @@
 ]]></command>
   <inputs>
     <repeat name="rep_param_string_wodefault_optional" min="0" title="param_string_wodefault_optional">
-      <param name="param_string_wodefault_optional" type="text" optional="True" size="30" label="string list" help="(-string_wodefault_optional) ">
+      <param name="param_string_wodefault_optional" type="text" optional="True" label="string list" help="" argument="-string_wodefault_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -308,7 +308,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_wodefault_mandatory" min="1" title="param_string_wodefault_mandatory">
-      <param name="param_string_wodefault_mandatory" type="text" optional="False" size="30" label="string list" help="(-string_wodefault_mandatory) ">
+      <param name="param_string_wodefault_mandatory" type="text" optional="False" label="string list" help="" argument="-string_wodefault_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -318,7 +318,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_default_optional" min="0" max="1" title="param_string_default_optional">
-      <param name="param_string_default_optional" type="text" optional="True" size="30" value="A B" label="string list" help="(-string_default_optional) ">
+      <param name="param_string_default_optional" type="text" optional="True" value="A B" label="string list" help="" argument="-string_default_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -328,7 +328,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_default_mandatory" min="1" max="1" title="param_string_default_mandatory">
-      <param name="param_string_default_mandatory" type="text" optional="False" size="30" value="A B" label="string list" help="(-string_default_mandatory) ">
+      <param name="param_string_default_mandatory" type="text" optional="False" value="A B" label="string list" help="" argument="-string_default_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -338,7 +338,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_wodefault_optional" min="0" title="param_int_wodefault_optional">
-      <param name="param_int_wodefault_optional" type="text" optional="True" size="30" value="0" label="int list" help="(-int_wodefault_optional) ">
+      <param name="param_int_wodefault_optional" type="text" optional="True" label="int list" help="" argument="-int_wodefault_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -348,7 +348,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_wodefault_mandatory" min="1" title="param_int_wodefault_mandatory">
-      <param name="param_int_wodefault_mandatory" type="text" optional="False" size="30" value="0" label="int list" help="(-int_wodefault_mandatory) ">
+      <param name="param_int_wodefault_mandatory" type="text" optional="False" label="int list" help="" argument="-int_wodefault_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -358,7 +358,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_default_optional" min="0" max="1" title="param_int_default_optional">
-      <param name="param_int_default_optional" type="text" optional="True" size="30" value="1 2" label="int list" help="(-int_default_optional) ">
+      <param name="param_int_default_optional" type="text" optional="True" value="1 2" label="int list" help="" argument="-int_default_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -368,7 +368,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_default_mandatory" min="1" max="1" title="param_int_default_mandatory">
-      <param name="param_int_default_mandatory" type="text" optional="False" size="30" value="1 2" label="int list" help="(-int_default_mandatory) ">
+      <param name="param_int_default_mandatory" type="text" optional="False" value="1 2" label="int list" help="" argument="-int_default_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -378,7 +378,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_wodefault_optional" min="0" title="param_int_resticted_wodefault_optional">
-      <param name="param_int_resticted_wodefault_optional" type="text" optional="True" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional) ">
+      <param name="param_int_resticted_wodefault_optional" type="text" optional="True" min="0" max="100" label="int list" help="" argument="-int_resticted_wodefault_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -388,7 +388,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_wodefault_mandatory" min="1" title="param_int_resticted_wodefault_mandatory">
-      <param name="param_int_resticted_wodefault_mandatory" type="text" optional="False" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory) ">
+      <param name="param_int_resticted_wodefault_mandatory" type="text" optional="False" min="0" max="100" label="int list" help="" argument="-int_resticted_wodefault_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -398,7 +398,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_default_optional" min="0" max="1" title="param_int_resticted_default_optional">
-      <param name="param_int_resticted_default_optional" type="text" optional="True" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional) ">
+      <param name="param_int_resticted_default_optional" type="text" optional="True" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -408,7 +408,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_default_mandatory" min="1" max="1" title="param_int_resticted_default_mandatory">
-      <param name="param_int_resticted_default_mandatory" type="text" optional="False" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory) ">
+      <param name="param_int_resticted_default_mandatory" type="text" optional="False" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -418,7 +418,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_wodefault_optional" min="0" title="param_double_wodefault_optional">
-      <param name="param_double_wodefault_optional" type="text" optional="True" size="30" value="0" label="double list" help="(-double_wodefault_optional) ">
+      <param name="param_double_wodefault_optional" type="text" optional="True" label="double list" help="" argument="-double_wodefault_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -428,7 +428,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_wodefault_mandatory" min="1" title="param_double_wodefault_mandatory">
-      <param name="param_double_wodefault_mandatory" type="text" optional="False" size="30" value="0" label="double list" help="(-double_wodefault_mandatory) ">
+      <param name="param_double_wodefault_mandatory" type="text" optional="False" label="double list" help="" argument="-double_wodefault_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -438,7 +438,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_default_optional" min="0" max="1" title="param_double_default_optional">
-      <param name="param_double_default_optional" type="text" optional="True" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional) ">
+      <param name="param_double_default_optional" type="text" optional="True" value="1.0 2.0" label="double list" help="" argument="-double_default_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -448,7 +448,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_default_mandatory" min="1" max="1" title="param_double_default_mandatory">
-      <param name="param_double_default_mandatory" type="text" optional="False" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory) ">
+      <param name="param_double_default_mandatory" type="text" optional="False" value="1.0 2.0" label="double list" help="" argument="-double_default_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -458,7 +458,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_wodefault_optional" min="0" title="param_double_resticted_wodefault_optional">
-      <param name="param_double_resticted_wodefault_optional" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional) ">
+      <param name="param_double_resticted_wodefault_optional" type="text" optional="True" min="0.0" max="1.0" label="double list" help="" argument="-double_resticted_wodefault_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -468,7 +468,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_wodefault_mandatory" min="1" title="param_double_resticted_wodefault_mandatory">
-      <param name="param_double_resticted_wodefault_mandatory" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory) ">
+      <param name="param_double_resticted_wodefault_mandatory" type="text" optional="False" min="0.0" max="1.0" label="double list" help="" argument="-double_resticted_wodefault_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -478,7 +478,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_default_optional" min="0" max="1" title="param_double_resticted_default_optional">
-      <param name="param_double_resticted_default_optional" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional) ">
+      <param name="param_double_resticted_default_optional" type="text" optional="True" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_optional">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -488,7 +488,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_default_mandatory" min="1" max="1" title="param_double_resticted_default_mandatory">
-      <param name="param_double_resticted_default_mandatory" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory) ">
+      <param name="param_double_resticted_default_mandatory" type="text" optional="False" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_mandatory">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -499,7 +499,7 @@
     </repeat>
     <expand macro="advanced_options">
       <repeat name="rep_param_string_wodefault_optional_adv" min="0" title="param_string_wodefault_optional_adv">
-        <param name="param_string_wodefault_optional_adv" type="text" optional="True" size="30" label="string list" help="(-string_wodefault_optional_adv) ">
+        <param name="param_string_wodefault_optional_adv" type="text" optional="True" label="string list" help="" argument="-string_wodefault_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -509,7 +509,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_wodefault_mandatory_adv" min="1" title="param_string_wodefault_mandatory_adv">
-        <param name="param_string_wodefault_mandatory_adv" type="text" optional="False" size="30" label="string list" help="(-string_wodefault_mandatory_adv) ">
+        <param name="param_string_wodefault_mandatory_adv" type="text" optional="False" label="string list" help="" argument="-string_wodefault_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -519,7 +519,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_default_optional_adv" min="0" max="1" title="param_string_default_optional_adv">
-        <param name="param_string_default_optional_adv" type="text" optional="True" size="30" value="A B" label="string list" help="(-string_default_optional_adv) ">
+        <param name="param_string_default_optional_adv" type="text" optional="True" value="A B" label="string list" help="" argument="-string_default_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -529,7 +529,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_default_mandatory_adv" min="1" max="1" title="param_string_default_mandatory_adv">
-        <param name="param_string_default_mandatory_adv" type="text" optional="False" size="30" value="A B" label="string list" help="(-string_default_mandatory_adv) ">
+        <param name="param_string_default_mandatory_adv" type="text" optional="False" value="A B" label="string list" help="" argument="-string_default_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -539,7 +539,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_wodefault_optional_adv" min="0" title="param_int_wodefault_optional_adv">
-        <param name="param_int_wodefault_optional_adv" type="text" optional="True" size="30" value="0" label="int list" help="(-int_wodefault_optional_adv) ">
+        <param name="param_int_wodefault_optional_adv" type="text" optional="True" label="int list" help="" argument="-int_wodefault_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -549,7 +549,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_wodefault_mandatory_adv" min="1" title="param_int_wodefault_mandatory_adv">
-        <param name="param_int_wodefault_mandatory_adv" type="text" optional="False" size="30" value="0" label="int list" help="(-int_wodefault_mandatory_adv) ">
+        <param name="param_int_wodefault_mandatory_adv" type="text" optional="False" label="int list" help="" argument="-int_wodefault_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -559,7 +559,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_default_optional_adv" min="0" max="1" title="param_int_default_optional_adv">
-        <param name="param_int_default_optional_adv" type="text" optional="True" size="30" value="1 2" label="int list" help="(-int_default_optional_adv) ">
+        <param name="param_int_default_optional_adv" type="text" optional="True" value="1 2" label="int list" help="" argument="-int_default_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -569,7 +569,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_default_mandatory_adv" min="1" max="1" title="param_int_default_mandatory_adv">
-        <param name="param_int_default_mandatory_adv" type="text" optional="False" size="30" value="1 2" label="int list" help="(-int_default_mandatory_adv) ">
+        <param name="param_int_default_mandatory_adv" type="text" optional="False" value="1 2" label="int list" help="" argument="-int_default_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -579,7 +579,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_wodefault_optional_adv" min="0" title="param_int_resticted_wodefault_optional_adv">
-        <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="True" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional_adv) ">
+        <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="True" min="0" max="100" label="int list" help="" argument="-int_resticted_wodefault_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -589,7 +589,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_wodefault_mandatory_adv" min="1" title="param_int_resticted_wodefault_mandatory_adv">
-        <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory_adv) ">
+        <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0" max="100" label="int list" help="" argument="-int_resticted_wodefault_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -599,7 +599,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_default_optional_adv" min="0" max="1" title="param_int_resticted_default_optional_adv">
-        <param name="param_int_resticted_default_optional_adv" type="text" optional="True" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional_adv) ">
+        <param name="param_int_resticted_default_optional_adv" type="text" optional="True" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -609,7 +609,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_default_mandatory_adv" min="1" max="1" title="param_int_resticted_default_mandatory_adv">
-        <param name="param_int_resticted_default_mandatory_adv" type="text" optional="False" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory_adv) ">
+        <param name="param_int_resticted_default_mandatory_adv" type="text" optional="False" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -619,7 +619,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_wodefault_optional_adv" min="0" title="param_double_wodefault_optional_adv">
-        <param name="param_double_wodefault_optional_adv" type="text" optional="True" size="30" value="0" label="double list" help="(-double_wodefault_optional_adv) ">
+        <param name="param_double_wodefault_optional_adv" type="text" optional="True" label="double list" help="" argument="-double_wodefault_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -629,7 +629,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_wodefault_mandatory_adv" min="1" title="param_double_wodefault_mandatory_adv">
-        <param name="param_double_wodefault_mandatory_adv" type="text" optional="False" size="30" value="0" label="double list" help="(-double_wodefault_mandatory_adv) ">
+        <param name="param_double_wodefault_mandatory_adv" type="text" optional="False" label="double list" help="" argument="-double_wodefault_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -639,7 +639,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_default_optional_adv" min="0" max="1" title="param_double_default_optional_adv">
-        <param name="param_double_default_optional_adv" type="text" optional="True" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional_adv) ">
+        <param name="param_double_default_optional_adv" type="text" optional="True" value="1.0 2.0" label="double list" help="" argument="-double_default_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -649,7 +649,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_default_mandatory_adv" min="1" max="1" title="param_double_default_mandatory_adv">
-        <param name="param_double_default_mandatory_adv" type="text" optional="False" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory_adv) ">
+        <param name="param_double_default_mandatory_adv" type="text" optional="False" value="1.0 2.0" label="double list" help="" argument="-double_default_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -659,7 +659,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_wodefault_optional_adv" min="0" title="param_double_resticted_wodefault_optional_adv">
-        <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional_adv) ">
+        <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="True" min="0.0" max="1.0" label="double list" help="" argument="-double_resticted_wodefault_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -669,7 +669,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_wodefault_mandatory_adv" min="1" title="param_double_resticted_wodefault_mandatory_adv">
-        <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory_adv) ">
+        <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" label="double list" help="" argument="-double_resticted_wodefault_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -679,7 +679,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_default_optional_adv" min="0" max="1" title="param_double_resticted_default_optional_adv">
-        <param name="param_double_resticted_default_optional_adv" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional_adv) ">
+        <param name="param_double_resticted_default_optional_adv" type="text" optional="True" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_optional_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -689,7 +689,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_default_mandatory_adv" min="1" max="1" title="param_double_resticted_default_mandatory_adv">
-        <param name="param_double_resticted_default_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory_adv) ">
+        <param name="param_double_resticted_default_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_mandatory_adv">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>

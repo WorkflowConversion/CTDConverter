@@ -415,7 +415,9 @@ def create_command(tool, model, **kwargs):
                 if param.type is _InFile:
                     command += command_line_prefix + "\n"
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
-                    command += "    $token\n"
+                    command += "    #if $token\n"
+                    command += "      '$token'\n"
+                    command += "    #end if"
                     command += "  #end for\n"
                 elif is_selection_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
@@ -702,8 +704,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
 
     if param_type == "text":
-        # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
-        param_node.attrib["size"] = "30"
         # add sanitizer nodes, this is needed for special character like "["
         # which are used for example by FeatureFinderMultiplex
         sanitizer_node = SubElement(param_node, "sanitizer")
@@ -729,37 +729,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # simple boolean with a default
             if param.default is True:
                 param_node.attrib["checked"] = "true"
-    else:
-        if param.type is int or param.type is float:
-            # galaxy requires "value" to be included for int/float
-            # since no default was included, we need to figure out one in a clever way... but let the user know
-            # that we are "thinking" for him/her
-            logger.warning("Generating default value for parameter [%s]. "
-                           "Galaxy requires the attribute 'value' to be set for integer/floats. "
-                           "Edit the CTD file and provide a suitable default value." % param.name, 1)
-            # check if there's a min/max and try to use them
-            default_value = None
-            if param.restrictions is not None:
-                if type(param.restrictions) is _NumericRange:
-                    default_value = param.restrictions.n_min
-                    if default_value is None:
-                        default_value = param.restrictions.n_max
-                    if default_value is None:
-                        # no min/max provided... just use 0 and see what happens
-                        default_value = 0
-                else:
-                    # should never be here, since we have validated this anyway...
-                    # this code is here just for documentation purposes
-                    # however, better safe than sorry!
-                    # (it could be that the code changes and then we have an ugly scenario)
-                    raise InvalidModelException("Expected either a numeric range for parameter [%(name)s], "
-                                                "but instead got [%(type)s]"
-                                                % {"name": param.name, "type": type(param.restrictions)})
-            else:
-                # no restrictions and no default value provided...
-                # make up something
-                default_value = 0
-            param_node.attrib["value"] = str(default_value)
 
     label = "%s parameter" % param.name
     help_text = ""
@@ -768,8 +737,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         label, help_text = generate_label_and_help(param.description)
 
     param_node.attrib["label"] = label
-    param_node.attrib["help"] = "(-%s)" % param.name + " " + help_text
-
+    param_node.attrib["help"] = help_text
+    param_node.attrib["argument"] = "-"+param.name
 
 def generate_label_and_help(desc):
     help_text = ""

@@ -21,11 +21,11 @@ $param_false
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_true" type="boolean" optional="True" truevalue="" falsevalue="-true false" checked="true" label="bool" help="(-true) "/>
-    <param name="param_false" type="boolean" optional="True" truevalue="-false" falsevalue="" checked="false" label="bool" help="(-false) "/>
+    <param name="param_true" type="boolean" optional="True" truevalue="" falsevalue="-true false" checked="true" label="bool" help="" argument="-true"/>
+    <param name="param_false" type="boolean" optional="True" truevalue="-false" falsevalue="" checked="false" label="bool" help="" argument="-false"/>
     <expand macro="advanced_options">
-      <param name="param_true_adv" type="boolean" optional="True" truevalue="" falsevalue="-true_adv false" checked="true" label="bool" help="(-true_adv) "/>
-      <param name="param_false_adv" type="boolean" optional="True" truevalue="-false_adv" falsevalue="" checked="false" label="bool" help="(-false_adv) "/>
+      <param name="param_true_adv" type="boolean" optional="True" truevalue="" falsevalue="-true_adv false" checked="true" label="bool" help="" argument="-true_adv"/>
+      <param name="param_false_adv" type="boolean" optional="True" truevalue="-false_adv" falsevalue="" checked="false" label="bool" help="" argument="-false_adv"/>
     </expand>
   </inputs>
   <outputs>
