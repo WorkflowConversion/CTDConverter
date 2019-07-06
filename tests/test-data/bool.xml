@@ -10,7 +10,7 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>echo BoolTest
+  <command><![CDATA[echo BoolTest
 
 #if $param_true_optional_unrestricted:
   -true_optional_unrestricted
@@ -36,8 +36,8 @@
   -false_optional_unrestricted_adv
 #end if
 #end if
-&gt; $param_stdout
-</command>
+> $param_stdout
+]]></command>
   <inputs>
     <param name="param_true_optional_unrestricted" display="radio" type="select" optional="False" value="true" label="bool" help="(-true_optional_unrestricted) ">
       <option value="true" selected="true">true</option>
@@ -55,8 +55,8 @@
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>Bool parameter tests.
+  <help><![CDATA[Bool parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html</help>
+For more information, visit http://docs.are/unavailable.html]]></help>
 </tool>

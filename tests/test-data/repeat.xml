@@ -10,7 +10,7 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>echo RepeatTest
+  <command><![CDATA[echo RepeatTest
 
 
 #if $rep_param_string_wodefault_optional:
@@ -454,8 +454,8 @@
   #end for
 #end if
 #end if
-&gt; $param_stdout
-</command>
+> $param_stdout
+]]></command>
   <inputs>
     <repeat name="rep_param_string_wodefault_optional" min="0" title="param_string_wodefault_optional">
       <param name="param_string_wodefault_optional" type="text" size="30" label="string list" help="(-string_wodefault_optional) ">
@@ -863,8 +863,8 @@
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>Repeat parameter tests.
+  <help><![CDATA[Repeat parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html</help>
+For more information, visit http://docs.are/unavailable.html]]></help>
 </tool>

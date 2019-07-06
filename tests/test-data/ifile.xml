@@ -10,7 +10,7 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>echo inFileTest
+  <command><![CDATA[echo inFileTest
 
 #if str($param_mandatory_noformat):
   -mandatory_noformat $param_mandatory_noformat
@@ -134,8 +134,8 @@
     $token
   #end for
 #end if
-&gt; $param_stdout
-</command>
+> $param_stdout
+]]></command>
   <inputs>
     <param name="param_mandatory_noformat" type="data" format="txt" label="input file" help="(-mandatory_noformat) "/>
     <param name="param_optional_noformat" type="data" format="txt" label="input file" help="(-optional_noformat) "/>
@@ -263,8 +263,8 @@
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>Input File parameter tests.
+  <help><![CDATA[Input File parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html</help>
+For more information, visit http://docs.are/unavailable.html]]></help>
 </tool>

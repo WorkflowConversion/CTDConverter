@@ -6,7 +6,7 @@ import string
 from collections import OrderedDict
 from string import strip
 from lxml import etree
-from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
+from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse
 
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
@@ -39,6 +39,10 @@ class DataType:
 
 
 def add_specific_args(parser):
+    """
+    add command line arguments specific for galaxy tool generation
+    @param parser an instance of ArgumentParser
+    """
     parser.add_argument("-f", "--formats-file", dest="formats_file",
                         help="File containing the supported file formats. Run with '-h' or '--help' to see a "
                              "brief example on the layout of this file.", default=None, required=False)
@@ -70,41 +74,49 @@ def add_specific_args(parser):
 
 
 def convert_models(args, parsed_ctds):
-        # validate and prepare the passed arguments
-        validate_and_prepare_args(args)
+    """
+    main conversion function
 
-        # extract the names of the macros and check that we have found the ones we need
-        macros_to_expand = parse_macros_files(args.macros_files)
+    @param args command line arguments
+    @param parsed_ctds the ctds 
+    """
+    # validate and prepare the passed arguments
+    validate_and_prepare_args(args)
 
-        # parse the given supported file-formats file
-        supported_file_formats = parse_file_formats(args.formats_file)
+    # extract the names of the macros and check that we have found the ones we need
+    macros_to_expand = parse_macros_files(args.macros_files)
 
-        # parse the skip/required tools files
-        skip_tools = parse_tools_list_file(args.skip_tools_file)
-        required_tools = parse_tools_list_file(args.required_tools_file)
-        
-        _convert_internal(parsed_ctds,
-                          supported_file_formats=supported_file_formats,
-                          default_executable_path=args.default_executable_path,
-                          add_to_command_line=args.add_to_command_line,
-                          blacklisted_parameters=args.blacklisted_parameters,
-                          required_tools=required_tools,
-                          skip_tools=skip_tools,
-                          macros_file_names=args.macros_files,
-                          macros_to_expand=macros_to_expand,
-                          parameter_hardcoder=args.parameter_hardcoder)
+    # parse the given supported file-formats file
+    supported_file_formats = parse_file_formats(args.formats_file)
 
-        # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
-        if args.tool_conf_destination is not None:
-            generate_tool_conf(parsed_ctds, args.tool_conf_destination,
-                               args.galaxy_tool_path, args.default_category)
+    # parse the skip/required tools files
+    skip_tools = parse_tools_list_file(args.skip_tools_file)
+    required_tools = parse_tools_list_file(args.required_tools_file)
+    
+    _convert_internal(parsed_ctds,
+                      supported_file_formats=supported_file_formats,
+                      default_executable_path=args.default_executable_path,
+                      add_to_command_line=args.add_to_command_line,
+                      blacklisted_parameters=args.blacklisted_parameters,
+                      required_tools=required_tools,
+                      skip_tools=skip_tools,
+                      macros_file_names=args.macros_files,
+                      macros_to_expand=macros_to_expand,
+                      parameter_hardcoder=args.parameter_hardcoder)
 
-        # generate datatypes_conf.xml
-        if args.data_types_destination is not None:
-            generate_data_type_conf(supported_file_formats, args.data_types_destination)
+    # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
+    if args.tool_conf_destination is not None:
+        generate_tool_conf(parsed_ctds, args.tool_conf_destination,
+                           args.galaxy_tool_path, args.default_category)
+
+    # generate datatypes_conf.xml
+    if args.data_types_destination is not None:
+        generate_data_type_conf(supported_file_formats, args.data_types_destination)
 
 
 def parse_tools_list_file(tools_list_file):
+    """
+    """
     tools_list = None
     if tools_list_file is not None:
         tools_list = []
@@ -119,6 +131,8 @@ def parse_tools_list_file(tools_list_file):
 
 
 def parse_macros_files(macros_file_names):
+    """
+    """
     macros_to_expand = list()
 
     for macros_file_name in macros_file_names:
@@ -159,6 +173,8 @@ def parse_macros_files(macros_file_names):
 
 
 def parse_file_formats(formats_file):
+    """
+    """
     supported_formats = {}
     if formats_file is not None:
         line_number = 0
@@ -193,6 +209,11 @@ def parse_file_formats(formats_file):
 
 
 def validate_and_prepare_args(args):
+    """
+    check command line arguments
+    @param args command line arguments
+    @return None
+    """
     # check that only one of skip_tools_file and required_tools_file has been provided
     if args.skip_tools_file is not None and args.required_tools_file is not None:
         raise ApplicationException(
@@ -221,12 +242,22 @@ def validate_and_prepare_args(args):
 
 
 def get_preferred_file_extension():
+    """
+    get the file extension for the output files
+    @return "xml"
+    """
     return "xml"
 
 
 def _convert_internal(parsed_ctds, **kwargs):
-    # parse all input files into models using CTDopts (via utils)
-    # the output is a tuple containing the model, output destination, origin file
+    """
+    parse all input files into models using CTDopts (via utils)
+
+    @param parsed_ctds the ctds
+    @param kwargs skip_tools, required_tools, and additional parameters for
+        expand_macros, create_command, create_inputs, create_outputs
+    @return a tuple containing the model, output destination, origin file
+    """
     for parsed_ctd in parsed_ctds:
         model = parsed_ctd.ctd_model
         origin_file = parsed_ctd.input_file
@@ -256,6 +287,11 @@ def _convert_internal(parsed_ctds, **kwargs):
 
 
 def write_header(tool, model):
+    """
+    add comments to the tool header
+    @param tool the tool xml
+    @param model the ctd model
+    """
     tool.addprevious(etree.Comment(
         "This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). "
         "This file was automatically generated using CTDConverter."))
@@ -318,16 +354,30 @@ def generate_data_type_conf(supported_file_formats, data_types_destination):
 
 
 def create_tool(model):
+    """
+    initialize the tool
+    @param model the ctd model
+    """
     return Element("tool", OrderedDict([("id", model.name), ("name", model.name), ("version", model.version)]))
 
 
 def create_description(tool, model):
+    """
+    add description to the tool
+    @param tool the Galaxy tool
+    @param model the ctd model
+    """
     if "description" in model.opt_attribs.keys() and model.opt_attribs["description"] is not None:
         description = SubElement(tool,"description")
         description.text = model.opt_attribs["description"]
 
 
 def create_command(tool, model, **kwargs):
+    """
+    @param tool the Galaxy tool
+    @param model the ctd model
+    @param kwargs
+    """
     final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
@@ -417,12 +467,17 @@ def create_command(tool, model, **kwargs):
         final_command += "> $param_stdout\n" 
 
     command_node = add_child_node(tool, "command")
-    command_node.text = final_command
+    command_node.text = CDATA(final_command)
 
 
 # creates the xml elements needed to import the needed macros files
 # and to "expand" the macros
 def expand_macros(tool, model, **kwargs):
+    """
+    @param tool the Galaxy tool
+    @param model the ctd model
+    @param kwargs
+    """
     macros_node = add_child_node(tool, "macros")
     token_node = add_child_node(macros_node, "token")
     token_node.attrib["name"] = "@EXECUTABLE@"
@@ -455,13 +510,19 @@ def get_input_with_same_restrictions(out_param, model, supported_file_formats):
                     
 
 def create_inputs(tool, model, **kwargs):
+    """
+    create input section of the Galaxy tool
+    @param tool the Galaxy tool
+    @param model the ctd model
+    @param kwargs
+    """
     inputs_node = SubElement(tool, "inputs")
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
     expand_advanced_node = None
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
-    # treat all non output-file parameters as inputs
+    # treat all non output-file/advanced/blacklisted/hardcoded parameters as inputs
     for param in utils.extract_and_flatten_parameters(model):
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
@@ -484,6 +545,8 @@ def create_inputs(tool, model, **kwargs):
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
 
+    # tread advanced parameters as inputs
+    # TODO: merge with previous loop to avoid code duplication?
     for param in utils.extract_and_flatten_parameters(model):
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
@@ -526,6 +589,12 @@ def create_repeat_attribute_list(rep_node, param):
 
 
 def create_param_attribute_list(param_node, param, supported_file_formats):
+    """
+    get the attributes of input parameters
+    @param param_node the galaxy tool param node 
+    @param param the ctd parameter 
+    @param supported_file_formats
+    """
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
 
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
@@ -778,6 +847,12 @@ def create_boolean_parameter(param_node, param):
 
 
 def create_outputs(parent, model, **kwargs):
+    """
+    create outputs section of the Galaxy tool
+    @param tool the Galaxy tool
+    @param model the ctd model
+    @param kwargs
+    """
     outputs_node = add_child_node(parent, "outputs")
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
@@ -867,12 +942,23 @@ def create_change_format_node(parent, data_formats, input_ref):
 
 # Shows basic information about the file, such as data ranges and file type.
 def create_help(tool, model):
+    """
+    create help section of the Galaxy tool
+    @param tool the Galaxy tool
+    @param model the ctd model
+    @param kwargs
+    """
     help_node = add_child_node(tool, "help")
-    # TODO: do we need CDATA Section here?
-    help_node.text = utils.extract_tool_help_text(model)
+    help_node.text = CDATA(utils.extract_tool_help_text(model))
 
 
-# adds and returns a child node using the given name to the given parent node
 def add_child_node(parent_node, child_node_name, attributes=OrderedDict([])):
+    """
+    helper function to add a child node using the given name to the given parent node
+    @param parent_node the parent
+    @param child_node_name the desired name of the child
+    @param attributes desired attributes of the child
+    @return the created child node
+    """
     child_node = SubElement(parent_node, child_node_name, attributes)
     return child_node
