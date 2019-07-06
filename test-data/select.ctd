@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool ctdVersion="1.7" version="2.3.0" name="echo SelectTest" docurl="http://docs.are/unavailable.html" category="String Test" >
+<description><![CDATA[String parameter tests]]></description>
+<manual><![CDATA[String parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="http://open-ms.sourceforge.net/schemas/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="StringTest" description="String test.">
+    <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
+      <ITEM name="param_wodefault_mandatory_restricted"     value=""        type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
+      <ITEM name="param_default_mandatory_restricted"       value="default" type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
+      <ITEM name="param_wodefault_optional_restricted"      value=""        type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
+      <ITEM name="param_default_optional_restricted"        value="default" type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
+      <ITEM name="param_wodefault_mandatory_restricted_adv" value=""        type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
+      <ITEM name="param_default_mandatory_restricted_adv"   value="default" type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
+      <ITEM name="param_wodefault_optional_restricted_adv"  value=""        type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
+      <ITEM name="param_default_optional_restricted_adv"    value="default" type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
+    </NODE>
+  </NODE>
+</PARAMETERS>
+</tool>
