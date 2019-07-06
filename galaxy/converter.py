@@ -6,7 +6,7 @@ import string
 from collections import OrderedDict
 from string import strip
 from lxml import etree
-from lxml.etree import SubElement, Element, ElementTree, ParseError, parse
+from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse
 
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
@@ -328,8 +328,7 @@ def create_description(tool, model):
 
 
 def create_command(tool, model, **kwargs):
-    final_command = "<![CDATA["
-    final_command += utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
+    final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
     advanced_command_end = "#end if"
@@ -418,9 +417,8 @@ def create_command(tool, model, **kwargs):
 
     if not found_output_parameter:
         final_command += "> $param_stdout\n" 
-    final_command += "]]>"
     command_node = add_child_node(tool, "command")
-    command_node.text = final_command
+    command_node.text = CDATA(final_command)
 
 
 # creates the xml elements needed to import the needed macros files
@@ -839,7 +837,7 @@ def create_change_format_node(parent, data_formats, input_ref):
 def create_help(tool, model):
     help_node = add_child_node(tool, "help")
     # TODO: do we need CDATA Section here?
-    help_node.text = "<![CDATA[" + utils.extract_tool_help_text(model) + "]]>"
+    help_node.text = CDATA(utils.extract_tool_help_text(model))
 
 
 # adds and returns a child node using the given name to the given parent node
