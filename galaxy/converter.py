@@ -241,12 +241,14 @@ def _convert_internal(parsed_ctds, **kwargs):
         else:
             logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
             tool = create_tool(model)
+            write_header(tool, model)
+            create_description(tool, model)
+            
             import_macros(tool, model, **kwargs)
             if 'references' in kwargs['macros_to_expand']:
                 macros_to_skip = ['references']
             else:
                 macros_to_skip = []
-
             expand_macros(tool, macros_to_skip=macros_to_skip, **kwargs)
 
             create_command(tool, model, **kwargs)
