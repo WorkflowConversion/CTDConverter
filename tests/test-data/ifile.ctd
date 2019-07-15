@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool ctdVersion="1.7" version="2.3.0" name="echo inFileTest" docurl="http://docs.are/unavailable.html" category="String Test" >
+<description><![CDATA[Input File parameter tests]]></description>
+<manual><![CDATA[Input File parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="http://open-ms.sourceforge.net/schemas/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="InFileTest" description="In File test.">
+    <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
+      <ITEM name="param_wodefault_mandatory_unrestricted_noformat"     value=""        type="input-file" description="input file" required="true"  advanced="false" />
+      <ITEM name="param_default_mandatory_unrestricted_noformat"       value="default" type="input-file" description="input file" required="true"  advanced="false" />
+      <ITEM name="param_wodefault_optional_unrestricted_noformat"      value=""        type="input-file" description="input file" required="false" advanced="false" />
+      <ITEM name="param_default_optional_unrestricted_noformat"        value="default" type="input-file" description="input file" required="false" advanced="false" />
+      <ITEM name="param_wodefault_mandatory_unrestricted_adv_noformat" value=""        type="input-file" description="input file" required="true"  advanced="true" />
+      <ITEM name="param_default_mandatory_unrestricted_adv_noformat"   value="default" type="input-file" description="input file" required="true"  advanced="true" />
+      <ITEM name="param_wodefault_optional_unrestricted_adv_noformat"  value=""        type="input-file" description="input file" required="false" advanced="true" />
+      <ITEM name="param_default_optional_unrestricted_adv_noformat"    value="default" type="input-file" description="input file" required="false" advanced="true" />
+      <ITEM name="param_wodefault_mandatory_unrestricted_multformat"     value=""        type="input-file" description="input file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_default_mandatory_unrestricted_multformat"       value="default" type="input-file" description="input file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_wodefault_optional_unrestricted_multformat"      value=""        type="input-file" description="input file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_default_optional_unrestricted_multformat"        value="default" type="input-file" description="input file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_wodefault_mandatory_unrestricted_adv_multformat" value=""        type="input-file" description="input file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_default_mandatory_unrestricted_adv_multformat"   value="default" type="input-file" description="input file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_wodefault_optional_unrestricted_adv_multformat"  value=""        type="input-file" description="input file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="param_default_optional_unrestricted_adv_multformat"    value="default" type="input-file" description="input file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+    </NODE>
+  </NODE>
+</PARAMETERS>
+</tool>

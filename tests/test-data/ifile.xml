@@ -1,0 +1,94 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
+<!--Proposed Tool Section: [String Test]-->
+<tool id="echo inFileTest" name="echo inFileTest" version="2.3.0">
+  <description>Input File parameter tests</description>
+  <macros>
+    <token name="@EXECUTABLE@">echo inFileTest</token>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements"/>
+  <expand macro="stdio"/>
+  <expand macro="references"/>
+  <command>echo inFileTest
+
+#if str($param_param_wodefault_mandatory_unrestricted_noformat):
+  -param_wodefault_mandatory_unrestricted_noformat $param_param_wodefault_mandatory_unrestricted_noformat
+#end if
+#if str($param_param_default_mandatory_unrestricted_noformat):
+  -param_default_mandatory_unrestricted_noformat $param_param_default_mandatory_unrestricted_noformat
+#end if
+#if str($param_param_wodefault_optional_unrestricted_noformat):
+  -param_wodefault_optional_unrestricted_noformat $param_param_wodefault_optional_unrestricted_noformat
+#end if
+#if str($param_param_default_optional_unrestricted_noformat):
+  -param_default_optional_unrestricted_noformat $param_param_default_optional_unrestricted_noformat
+#end if
+#if str($param_param_wodefault_mandatory_unrestricted_multformat):
+  -param_wodefault_mandatory_unrestricted_multformat $param_param_wodefault_mandatory_unrestricted_multformat
+#end if
+#if str($param_param_default_mandatory_unrestricted_multformat):
+  -param_default_mandatory_unrestricted_multformat $param_param_default_mandatory_unrestricted_multformat
+#end if
+#if str($param_param_wodefault_optional_unrestricted_multformat):
+  -param_wodefault_optional_unrestricted_multformat $param_param_wodefault_optional_unrestricted_multformat
+#end if
+#if str($param_param_default_optional_unrestricted_multformat):
+  -param_default_optional_unrestricted_multformat $param_param_default_optional_unrestricted_multformat
+#end if
+#if $adv_opts.adv_opts_selector=='advanced':
+    #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv_noformat):
+  -param_wodefault_mandatory_unrestricted_adv_noformat $adv_opts.param_param_wodefault_mandatory_unrestricted_adv_noformat
+#end if
+    #if str($adv_opts.param_param_default_mandatory_unrestricted_adv_noformat):
+  -param_default_mandatory_unrestricted_adv_noformat $adv_opts.param_param_default_mandatory_unrestricted_adv_noformat
+#end if
+    #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv_noformat):
+  -param_wodefault_optional_unrestricted_adv_noformat $adv_opts.param_param_wodefault_optional_unrestricted_adv_noformat
+#end if
+    #if str($adv_opts.param_param_default_optional_unrestricted_adv_noformat):
+  -param_default_optional_unrestricted_adv_noformat $adv_opts.param_param_default_optional_unrestricted_adv_noformat
+#end if
+    #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv_multformat):
+  -param_wodefault_mandatory_unrestricted_adv_multformat $adv_opts.param_param_wodefault_mandatory_unrestricted_adv_multformat
+#end if
+    #if str($adv_opts.param_param_default_mandatory_unrestricted_adv_multformat):
+  -param_default_mandatory_unrestricted_adv_multformat $adv_opts.param_param_default_mandatory_unrestricted_adv_multformat
+#end if
+    #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv_multformat):
+  -param_wodefault_optional_unrestricted_adv_multformat $adv_opts.param_param_wodefault_optional_unrestricted_adv_multformat
+#end if
+    #if str($adv_opts.param_param_default_optional_unrestricted_adv_multformat):
+  -param_default_optional_unrestricted_adv_multformat $adv_opts.param_param_default_optional_unrestricted_adv_multformat
+#end if
+#end if
+&gt; $param_stdout
+</command>
+  <inputs>
+    <param name="param_param_wodefault_mandatory_unrestricted_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_mandatory_unrestricted_noformat) "/>
+    <param name="param_param_default_mandatory_unrestricted_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_mandatory_unrestricted_noformat) "/>
+    <param name="param_param_wodefault_optional_unrestricted_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_optional_unrestricted_noformat) "/>
+    <param name="param_param_default_optional_unrestricted_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_optional_unrestricted_noformat) "/>
+    <param name="param_param_wodefault_mandatory_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="False" label="input file" help="(-param_wodefault_mandatory_unrestricted_multformat) "/>
+    <param name="param_param_default_mandatory_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="False" value="default" label="input file" help="(-param_default_mandatory_unrestricted_multformat) "/>
+    <param name="param_param_wodefault_optional_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="True" label="input file" help="(-param_wodefault_optional_unrestricted_multformat) "/>
+    <param name="param_param_default_optional_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="True" value="default" label="input file" help="(-param_default_optional_unrestricted_multformat) "/>
+    <expand macro="advanced_options">
+      <param name="param_param_wodefault_mandatory_unrestricted_adv_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_mandatory_unrestricted_adv_noformat) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_mandatory_unrestricted_adv_noformat) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_optional_unrestricted_adv_noformat) "/>
+      <param name="param_param_default_optional_unrestricted_adv_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_optional_unrestricted_adv_noformat) "/>
+      <param name="param_param_wodefault_mandatory_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="False" label="input file" help="(-param_wodefault_mandatory_unrestricted_adv_multformat) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="False" value="default" label="input file" help="(-param_default_mandatory_unrestricted_adv_multformat) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="True" label="input file" help="(-param_wodefault_optional_unrestricted_adv_multformat) "/>
+      <param name="param_param_default_optional_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="True" value="default" label="input file" help="(-param_default_optional_unrestricted_adv_multformat) "/>
+    </expand>
+  </inputs>
+  <outputs>
+    <data name="param_stdout" format="txt" label="Output from stdout"/>
+  </outputs>
+  <help>Input File parameter tests.
+
+
+For more information, visit http://docs.are/unavailable.html</help>
+</tool>
