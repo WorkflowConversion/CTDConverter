@@ -24,7 +24,7 @@ install:
   - conda config --add channels workflowconversion
 
 #  - git clone https://github.com/WorkflowConversion/CTDopts $HOME/CTDopts
-  - git clone -b empty_numeric_defaults https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
+  - git clone -b topic/empty_numeric_defaults https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
   - cd $HOME/CTDopts
   - python setup.py install 
   - conda install -c conda-forge lxml
