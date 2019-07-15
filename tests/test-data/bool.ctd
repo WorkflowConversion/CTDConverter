@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool ctdVersion="1.7" version="2.3.0" name="echo StringTest" docurl="http://docs.are/unavailable.html" category="String Test" >
+<description><![CDATA[String parameter tests]]></description>
+<manual><![CDATA[String parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="http://open-ms.sourceforge.net/schemas/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="StringTest" description="String test.">
+    <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
+      <!-- note bool parameters seem to be always required false -->
+      <ITEM name="param_true_optional_unrestricted"      value="true"  type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
+      <ITEM name="param_false_optional_unrestricted"     value="false" type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
+      <ITEM name="param_true_optional_unrestricted_adv"  value="true"  type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
+      <ITEM name="param_false_optional_unrestricted_adv" value="false" type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
+    </NODE>
+  </NODE>
+</PARAMETERS>
+</tool>
