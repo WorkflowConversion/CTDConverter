@@ -10,16 +10,16 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>&lt;![CDATA[echo StringTest
+  <command>echo StringTest
 
 &gt; $param_stdout
-]]&gt;</command>
+</command>
   <inputs/>
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>&lt;![CDATA[String parameter tests.
+  <help>String parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]&gt;</help>
+For more information, visit http://docs.are/unavailable.html</help>
 </tool>

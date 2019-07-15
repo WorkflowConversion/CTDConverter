@@ -10,7 +10,7 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>&lt;![CDATA[echo SelectTest
+  <command>echo SelectTest
 
 #if $param_param_wodefault_mandatory_restricted:
   -param_wodefault_mandatory_restricted
@@ -79,45 +79,45 @@
 #end if
 #end if
 &gt; $param_stdout
-]]&gt;</command>
+</command>
   <inputs>
-    <param name="param_param_wodefault_mandatory_restricted" display="radio" type="select" optional="False" label="string" help="" argument="param_wodefault_mandatory_restricted">
+    <param name="param_param_wodefault_mandatory_restricted" display="radio" type="select" optional="False" label="string" help="(-param_wodefault_mandatory_restricted) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="default">default</option>
     </param>
-    <param name="param_param_default_mandatory_restricted" display="radio" type="select" optional="False" value="default" label="string" help="" argument="param_default_mandatory_restricted">
+    <param name="param_param_default_mandatory_restricted" display="radio" type="select" optional="False" value="default" label="string" help="(-param_default_mandatory_restricted) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="default" selected="true">default</option>
     </param>
-    <param name="param_param_wodefault_optional_restricted" display="radio" type="select" optional="True" label="string" help="" argument="param_wodefault_optional_restricted">
+    <param name="param_param_wodefault_optional_restricted" display="radio" type="select" optional="True" label="string" help="(-param_wodefault_optional_restricted) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="default">default</option>
     </param>
-    <param name="param_param_default_optional_restricted" display="radio" type="select" optional="False" value="default" label="string" help="" argument="param_default_optional_restricted">
+    <param name="param_param_default_optional_restricted" display="radio" type="select" optional="False" value="default" label="string" help="(-param_default_optional_restricted) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="default" selected="true">default</option>
     </param>
     <expand macro="advanced_options">
-      <param name="param_param_wodefault_mandatory_restricted_adv" display="radio" type="select" optional="False" label="string" help="" argument="param_wodefault_mandatory_restricted_adv">
+      <param name="param_param_wodefault_mandatory_restricted_adv" display="radio" type="select" optional="False" label="string" help="(-param_wodefault_mandatory_restricted_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="default">default</option>
       </param>
-      <param name="param_param_default_mandatory_restricted_adv" display="radio" type="select" optional="False" value="default" label="string" help="" argument="param_default_mandatory_restricted_adv">
+      <param name="param_param_default_mandatory_restricted_adv" display="radio" type="select" optional="False" value="default" label="string" help="(-param_default_mandatory_restricted_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="default" selected="true">default</option>
       </param>
-      <param name="param_param_wodefault_optional_restricted_adv" display="radio" type="select" optional="True" label="string" help="" argument="param_wodefault_optional_restricted_adv">
+      <param name="param_param_wodefault_optional_restricted_adv" display="radio" type="select" optional="True" label="string" help="(-param_wodefault_optional_restricted_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="default">default</option>
       </param>
-      <param name="param_param_default_optional_restricted_adv" display="radio" type="select" optional="False" value="default" label="string" help="" argument="param_default_optional_restricted_adv">
+      <param name="param_param_default_optional_restricted_adv" display="radio" type="select" optional="False" value="default" label="string" help="(-param_default_optional_restricted_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="default" selected="true">default</option>
@@ -127,8 +127,8 @@
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>&lt;![CDATA[String parameter tests.
+  <help>String parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]&gt;</help>
+For more information, visit http://docs.are/unavailable.html</help>
 </tool>

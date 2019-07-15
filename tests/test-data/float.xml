@@ -10,7 +10,7 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command>&lt;![CDATA[echo FloatTest
+  <command>echo FloatTest
 
 #if str($param_param_wodefault_mandatory_unrestricted):
   -param_wodefault_mandatory_unrestricted $param_param_wodefault_mandatory_unrestricted
@@ -111,48 +111,48 @@
 #end if
 #end if
 &gt; $param_stdout
-]]&gt;</command>
+</command>
   <inputs>
-    <param name="param_param_wodefault_mandatory_unrestricted" type="float" value="0" label="float" help="" argument="param_wodefault_mandatory_unrestricted"/>
-    <param name="param_param_default_mandatory_unrestricted" type="float" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted"/>
-    <param name="param_param_wodefault_optional_unrestricted" type="float" value="0" label="float" help="" argument="param_wodefault_optional_unrestricted"/>
-    <param name="param_param_default_optional_unrestricted" type="float" value="0.0" label="float" help="" argument="param_default_optional_unrestricted"/>
-    <param name="param_param_wodefault_mandatory_unrestricted_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_min"/>
-    <param name="param_param_default_mandatory_unrestricted_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_min"/>
-    <param name="param_param_wodefault_optional_unrestricted_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="" argument="param_wodefault_optional_unrestricted_min"/>
-    <param name="param_param_default_optional_unrestricted_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_min"/>
-    <param name="param_param_wodefault_mandatory_unrestricted_max" type="float" max="100.0" optional="False" value="100.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_max"/>
-    <param name="param_param_default_mandatory_unrestricted_max" type="float" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_max"/>
-    <param name="param_param_wodefault_optional_unrestricted_max" type="float" max="100.0" optional="True" value="100.0" label="float" help="" argument="param_wodefault_optional_unrestricted_max"/>
-    <param name="param_param_default_optional_unrestricted_max" type="float" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_max"/>
-    <param name="param_param_wodefault_mandatory_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_minmax"/>
-    <param name="param_param_default_mandatory_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_minmax"/>
-    <param name="param_param_wodefault_optional_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_wodefault_optional_unrestricted_minmax"/>
-    <param name="param_param_default_optional_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_minmax"/>
+    <param name="param_param_wodefault_mandatory_unrestricted" type="float" value="0" label="float" help="(-param_wodefault_mandatory_unrestricted) "/>
+    <param name="param_param_default_mandatory_unrestricted" type="float" value="0.0" label="float" help="(-param_default_mandatory_unrestricted) "/>
+    <param name="param_param_wodefault_optional_unrestricted" type="float" value="0" label="float" help="(-param_wodefault_optional_unrestricted) "/>
+    <param name="param_param_default_optional_unrestricted" type="float" value="0.0" label="float" help="(-param_default_optional_unrestricted) "/>
+    <param name="param_param_wodefault_mandatory_unrestricted_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="(-param_wodefault_mandatory_unrestricted_min) "/>
+    <param name="param_param_default_mandatory_unrestricted_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_min) "/>
+    <param name="param_param_wodefault_optional_unrestricted_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="(-param_wodefault_optional_unrestricted_min) "/>
+    <param name="param_param_default_optional_unrestricted_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_min) "/>
+    <param name="param_param_wodefault_mandatory_unrestricted_max" type="float" max="100.0" optional="False" value="100.0" label="float" help="(-param_wodefault_mandatory_unrestricted_max) "/>
+    <param name="param_param_default_mandatory_unrestricted_max" type="float" max="100.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_max) "/>
+    <param name="param_param_wodefault_optional_unrestricted_max" type="float" max="100.0" optional="True" value="100.0" label="float" help="(-param_wodefault_optional_unrestricted_max) "/>
+    <param name="param_param_default_optional_unrestricted_max" type="float" max="100.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_max) "/>
+    <param name="param_param_wodefault_mandatory_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="(-param_wodefault_mandatory_unrestricted_minmax) "/>
+    <param name="param_param_default_mandatory_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_minmax) "/>
+    <param name="param_param_wodefault_optional_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="(-param_wodefault_optional_unrestricted_minmax) "/>
+    <param name="param_param_default_optional_unrestricted_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_minmax) "/>
     <expand macro="advanced_options">
-      <param name="param_param_wodefault_mandatory_unrestricted_adv" type="float" value="0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_adv"/>
-      <param name="param_param_default_mandatory_unrestricted_adv" type="float" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_adv"/>
-      <param name="param_param_wodefault_optional_unrestricted_adv" type="float" value="0" label="float" help="" argument="param_wodefault_optional_unrestricted_adv"/>
-      <param name="param_param_default_optional_unrestricted_adv" type="float" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_adv"/>
-      <param name="param_param_wodefault_mandatory_unrestricted_adv_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_adv_min"/>
-      <param name="param_param_default_mandatory_unrestricted_adv_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_adv_min"/>
-      <param name="param_param_wodefault_optional_unrestricted_adv_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="" argument="param_wodefault_optional_unrestricted_adv_min"/>
-      <param name="param_param_default_optional_unrestricted_adv_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_adv_min"/>
-      <param name="param_param_wodefault_mandatory_unrestricted_adv_max" type="float" max="100.0" optional="False" value="100.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_adv_max"/>
-      <param name="param_param_default_mandatory_unrestricted_adv_max" type="float" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_adv_max"/>
-      <param name="param_param_wodefault_optional_unrestricted_adv_max" type="float" max="100.0" optional="True" value="100.0" label="float" help="" argument="param_wodefault_optional_unrestricted_adv_max"/>
-      <param name="param_param_default_optional_unrestricted_adv_max" type="float" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_adv_max"/>
-      <param name="param_param_wodefault_mandatory_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_wodefault_mandatory_unrestricted_adv_minmax"/>
-      <param name="param_param_default_mandatory_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="" argument="param_default_mandatory_unrestricted_adv_minmax"/>
-      <param name="param_param_wodefault_optional_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_wodefault_optional_unrestricted_adv_minmax"/>
-      <param name="param_param_default_optional_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="" argument="param_default_optional_unrestricted_adv_minmax"/>
+      <param name="param_param_wodefault_mandatory_unrestricted_adv" type="float" value="0" label="float" help="(-param_wodefault_mandatory_unrestricted_adv) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv" type="float" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_adv) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv" type="float" value="0" label="float" help="(-param_wodefault_optional_unrestricted_adv) "/>
+      <param name="param_param_default_optional_unrestricted_adv" type="float" value="0.0" label="float" help="(-param_default_optional_unrestricted_adv) "/>
+      <param name="param_param_wodefault_mandatory_unrestricted_adv_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="(-param_wodefault_mandatory_unrestricted_adv_min) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv_min" type="float" min="0.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_adv_min) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="(-param_wodefault_optional_unrestricted_adv_min) "/>
+      <param name="param_param_default_optional_unrestricted_adv_min" type="float" min="0.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_adv_min) "/>
+      <param name="param_param_wodefault_mandatory_unrestricted_adv_max" type="float" max="100.0" optional="False" value="100.0" label="float" help="(-param_wodefault_mandatory_unrestricted_adv_max) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv_max" type="float" max="100.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_adv_max) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv_max" type="float" max="100.0" optional="True" value="100.0" label="float" help="(-param_wodefault_optional_unrestricted_adv_max) "/>
+      <param name="param_param_default_optional_unrestricted_adv_max" type="float" max="100.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_adv_max) "/>
+      <param name="param_param_wodefault_mandatory_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="(-param_wodefault_mandatory_unrestricted_adv_minmax) "/>
+      <param name="param_param_default_mandatory_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="False" value="0.0" label="float" help="(-param_default_mandatory_unrestricted_adv_minmax) "/>
+      <param name="param_param_wodefault_optional_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="(-param_wodefault_optional_unrestricted_adv_minmax) "/>
+      <param name="param_param_default_optional_unrestricted_adv_minmax" type="float" min="0.0" max="100.0" optional="True" value="0.0" label="float" help="(-param_default_optional_unrestricted_adv_minmax) "/>
     </expand>
   </inputs>
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help>&lt;![CDATA[Floateger parameter tests.
+  <help>Floateger parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]&gt;</help>
+For more information, visit http://docs.are/unavailable.html</help>
 </tool>
