@@ -41,8 +41,8 @@ class GalaxyCliTestCase(unittest.TestCase):
         for i in range(0, len(new_l)):
             self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
 
-    def test_galaxy_cli_full_file_ctd(self):
-        self._compare_cli_output('AccurateMassSearch')
+    def test_galaxy_cli_bool_ctd(self):
+        self._compare_cli_output('bool')
 
     def test_galaxy_cli_empty_ctd(self):
         self._compare_cli_output('empty')
@@ -53,12 +53,20 @@ class GalaxyCliTestCase(unittest.TestCase):
     def test_galaxy_cli_integer_ctd(self):
         self._compare_cli_output('integer')
 
+    def test_galaxy_cli_repeat_ctd(self):
+        self._compare_cli_output('repeat')
+
     def test_galaxy_cli_select_ctd(self):
         self._compare_cli_output('select')
 
     def test_galaxy_cli_string_ctd(self):
         self._compare_cli_output('string')
 
+    def test_galaxy_cli_ifile_ctd(self):
+        self._compare_cli_output('ifile')
+
+    def test_galaxy_cli_ofile_ctd(self):
+        self._compare_cli_output('ofile')
 
 
 if __name__ == '__main__':
