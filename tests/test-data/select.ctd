@@ -1,19 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tool ctdVersion="1.7" version="2.3.0" name="echo SelectTest" docurl="http://docs.are/unavailable.html" category="String Test" >
-<description><![CDATA[String parameter tests]]></description>
-<manual><![CDATA[String parameter tests.]]></manual>
-<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="http://open-ms.sourceforge.net/schemas/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <NODE name="StringTest" description="String test.">
+<description><![CDATA[Select parameter tests]]></description>
+<manual><![CDATA[Select parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="SelectTest" description="Select test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
-    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
-      <ITEM name="param_wodefault_mandatory_restricted"     value=""        type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
-      <ITEM name="param_default_mandatory_restricted"       value="default" type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
-      <ITEM name="param_wodefault_optional_restricted"      value=""        type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
-      <ITEM name="param_default_optional_restricted"        value="default" type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
-      <ITEM name="param_wodefault_mandatory_restricted_adv" value=""        type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
-      <ITEM name="param_default_mandatory_restricted_adv"   value="default" type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
-      <ITEM name="param_wodefault_optional_restricted_adv"  value=""        type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
-      <ITEM name="param_default_optional_restricted_adv"    value="default" type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;SelectTest&apos;">
+      <!-- cases that should be rendered as select -->
+      <!-- selects allowing a single option -->
+      <ITEM name="wodefault_mandatory"     value=""        type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
+      <ITEM name="default_mandatory"       value="default" type="string" description="string" required="true"  advanced="false" restrictions="A,B,default"/>
+      <ITEM name="wodefault_optional"      value=""        type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
+      <ITEM name="default_optional"        value="default" type="string" description="string" required="false" advanced="false" restrictions="A,B,default"/>
+      <ITEM name="wodefault_mandatory_adv" value=""        type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
+      <ITEM name="default_mandatory_adv"   value="default" type="string" description="string" required="true"  advanced="true" restrictions="A,B,default"/>
+      <ITEM name="wodefault_optional_adv"  value=""        type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
+      <ITEM name="default_optional_adv"    value="default" type="string" description="string" required="false" advanced="true" restrictions="A,B,default"/>
+      <!-- note: such selects do not occur for int/double (for those restrictions="min:max" is used) -->
+
+      <!-- selects allowing a multiple options -->
+      <ITEMLIST name="list_wodefault_optional"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C"></ITEMLIST>
+      <ITEMLIST name="list_wodefault_mandatory" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C"></ITEMLIST>
+      <ITEMLIST name="list_default_optional"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C">
+          <LISTITEM value="A"/>
+          <LISTITEM value="B"/>
+      </ITEMLIST>
+      <ITEMLIST name="list_default_mandatory" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C">
+          <LISTITEM value="A"/>
+          <LISTITEM value="B"/>
+      </ITEMLIST>
+      <ITEMLIST name="list_wodefault_optional_adv"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C"></ITEMLIST>
+      <ITEMLIST name="list_wodefault_mandatory_adv" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C"></ITEMLIST>
+      <ITEMLIST name="list_default_optional_adv"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C">
+          <LISTITEM value="A"/>
+          <LISTITEM value="B"/>
+      </ITEMLIST>
+      <ITEMLIST name="list_default_mandatory_adv" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C">
+          <LISTITEM value="A"/>
+          <LISTITEM value="B"/>
+      </ITEMLIST>
     </NODE>
   </NODE>
 </PARAMETERS>

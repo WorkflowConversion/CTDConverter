@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tool ctdVersion="1.7" version="2.3.0" name="echo outFileTest" docurl="http://docs.are/unavailable.html" category="String Test" >
+<tool ctdVersion="1.7" version="2.3.0" name="echo outFileTest" docurl="http://docs.are/unavailable.html" category="Input File Test" >
 <description><![CDATA[Input File parameter tests]]></description>
 <manual><![CDATA[Input File parameter tests.]]></manual>
-<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="http://open-ms.sourceforge.net/schemas/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <NODE name="InFileTest" description="In File test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
-      <ITEM name="param_wodefault_mandatory_unrestricted_snglformat"     value=""        type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext"/>
-      <ITEM name="param_default_mandatory_unrestricted_snglformat"       value="default" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext" />
-      <ITEM name="param_wodefault_optional_unrestricted_snglformat"      value=""        type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext" />
-      <ITEM name="param_default_optional_unrestricted_snglformat"        value="default" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext" />
-      <ITEM name="param_wodefault_mandatory_unrestricted_adv_snglformat" value=""        type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext" />
-      <ITEM name="param_default_mandatory_unrestricted_adv_snglformat"   value="default" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext" />
-      <ITEM name="param_wodefault_optional_unrestricted_adv_snglformat"  value=""        type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext" />
-      <ITEM name="param_default_optional_unrestricted_adv_snglformat"    value="default" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext" />
-      <ITEM name="param_wodefault_mandatory_unrestricted_multformat"     value=""        type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_default_mandatory_unrestricted_multformat"       value="default" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_wodefault_optional_unrestricted_multformat"      value=""        type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_default_optional_unrestricted_multformat"        value="default" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_wodefault_mandatory_unrestricted_adv_multformat" value=""        type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_default_mandatory_unrestricted_adv_multformat"   value="default" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_wodefault_optional_unrestricted_adv_multformat"  value=""        type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
-      <ITEM name="param_default_optional_unrestricted_adv_multformat"    value="default" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
-    </NODE>
+      <ITEM name="wodefault_mandatory_noformat"   value=""        type="output-file" description="output file" required="true"  advanced="false"/>
+      <ITEM name="default_mandatory_noformat"     value="default" type="output-file" description="output file" required="true"  advanced="false"/>
+      <ITEM name="wodefault_optional_noformat"    value=""        type="output-file" description="output file" required="false" advanced="false"/>
+      <ITEM name="default_optional_noformat"      value="default" type="output-file" description="output file" required="false" advanced="false"/>
+      <ITEM name="wodefault_mandatory_oneformat"  value=""        type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext"/>
+      <ITEM name="default_mandatory_oneformat"    value="default" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext"/>
+      <ITEM name="wodefault_optional_oneformat"   value=""        type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext"/>
+      <ITEM name="default_optional_oneformat"     value="default" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext"/>
+      <ITEM name="wodefault_mandatory_multformat" value=""        type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="default_mandatory_multformat"   value="default" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="wodefault_optional_multformat"  value=""        type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="default_optional_multformat"    value="default" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"/>
+
+	  <!-- multiple outputs (did not find a case with a default) -->
+	  <ITEMLIST name="list_mandatory_noformat"   value="" type="output-file" description="output file" required="true"  advanced="false" ></ITEMLIST>
+      <ITEMLIST name="list_optional_noformat"    value="" type="output-file" description="output file" required="false" advanced="false" ></ITEMLIST>
+      <ITEMLIST name="list_mandatory_oneformat"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext"></ITEMLIST>
+      <ITEMLIST name="list_optional_oneformat"   value="" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext"></ITEMLIST>
+      <ITEMLIST name="list_mandatory_multformat" value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
+      <ITEMLIST name="list_optional_multformat"  value="" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
+
+      <!-- advanced (did not find a case of a list, or with a defaul) -->
+      <ITEM name="mandatory_noformat_adv"   value="" type="output-file" description="output file" required="true"  advanced="true"/>
+      <ITEM name="optional_noformat_adv"    value="" type="output-file" description="output file" required="false" advanced="true"/>
+      <ITEM name="mandatory_oneformat_adv"  value="" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext"/>
+      <ITEM name="optional_oneformat_adv"   value="" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext"/>
+      <ITEM name="mandatory_multformat_adv" value="" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+      <ITEM name="optional_multformat_adv"  value="" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
+	</NODE>
   </NODE>
 </PARAMETERS>
 </tool>

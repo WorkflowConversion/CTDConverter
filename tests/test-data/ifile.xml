@@ -12,76 +12,252 @@
   <expand macro="references"/>
   <command>echo inFileTest
 
-#if str($param_param_wodefault_mandatory_unrestricted_noformat):
-  -param_wodefault_mandatory_unrestricted_noformat $param_param_wodefault_mandatory_unrestricted_noformat
+#if str($param_mandatory_noformat):
+  -mandatory_noformat $param_mandatory_noformat
 #end if
-#if str($param_param_default_mandatory_unrestricted_noformat):
-  -param_default_mandatory_unrestricted_noformat $param_param_default_mandatory_unrestricted_noformat
+#if str($param_optional_noformat):
+  -optional_noformat $param_optional_noformat
 #end if
-#if str($param_param_wodefault_optional_unrestricted_noformat):
-  -param_wodefault_optional_unrestricted_noformat $param_param_wodefault_optional_unrestricted_noformat
+#if str($param_mandatory_oneformat):
+  -mandatory_oneformat $param_mandatory_oneformat
 #end if
-#if str($param_param_default_optional_unrestricted_noformat):
-  -param_default_optional_unrestricted_noformat $param_param_default_optional_unrestricted_noformat
+#if str($param_optional_oneformat):
+  -optional_oneformat $param_optional_oneformat
 #end if
-#if str($param_param_wodefault_mandatory_unrestricted_multformat):
-  -param_wodefault_mandatory_unrestricted_multformat $param_param_wodefault_mandatory_unrestricted_multformat
+#if str($param_mandatory_multformat):
+  -mandatory_multformat $param_mandatory_multformat
 #end if
-#if str($param_param_default_mandatory_unrestricted_multformat):
-  -param_default_mandatory_unrestricted_multformat $param_param_default_mandatory_unrestricted_multformat
+#if str($param_optional_multformat):
+  -optional_multformat $param_optional_multformat
 #end if
-#if str($param_param_wodefault_optional_unrestricted_multformat):
-  -param_wodefault_optional_unrestricted_multformat $param_param_wodefault_optional_unrestricted_multformat
+#if str($param_default_mandatory_noformat):
+  -default_mandatory_noformat $param_default_mandatory_noformat
 #end if
-#if str($param_param_default_optional_unrestricted_multformat):
-  -param_default_optional_unrestricted_multformat $param_param_default_optional_unrestricted_multformat
+#if str($param_default_optional_noformat):
+  -default_optional_noformat $param_default_optional_noformat
 #end if
+#if str($param_default_mandatory_oneformat):
+  -default_mandatory_oneformat $param_default_mandatory_oneformat
+#end if
+#if str($param_default_optional_oneformat):
+  -default_optional_oneformat $param_default_optional_oneformat
+#end if
+#if str($param_default_mandatory_multformat):
+  -default_mandatory_multformat $param_default_mandatory_multformat
+#end if
+#if str($param_default_optional_multformat):
+  -default_optional_multformat $param_default_optional_multformat
+#end if
+-list_mandatory_noformat
+  #for token in $param_list_mandatory_noformat:
+    $token
+  #end for
+-list_optional_noformat
+  #for token in $param_list_optional_noformat:
+    $token
+  #end for
+-list_mandatory_oneformat
+  #for token in $param_list_mandatory_oneformat:
+    $token
+  #end for
+-list_optional_oneformat
+  #for token in $param_list_optional_oneformat:
+    $token
+  #end for
+-list_mandatory_multformat
+  #for token in $param_list_mandatory_multformat:
+    $token
+  #end for
+-list_optional_multformat
+  #for token in $param_list_optional_multformat:
+    $token
+  #end for
 #if $adv_opts.adv_opts_selector=='advanced':
-    #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv_noformat):
-  -param_wodefault_mandatory_unrestricted_adv_noformat $adv_opts.param_param_wodefault_mandatory_unrestricted_adv_noformat
+    #if str($adv_opts.param_mandatory_noformat_adv):
+  -mandatory_noformat_adv $adv_opts.param_mandatory_noformat_adv
 #end if
-    #if str($adv_opts.param_param_default_mandatory_unrestricted_adv_noformat):
-  -param_default_mandatory_unrestricted_adv_noformat $adv_opts.param_param_default_mandatory_unrestricted_adv_noformat
+    #if str($adv_opts.param_optional_noformat_adv):
+  -optional_noformat_adv $adv_opts.param_optional_noformat_adv
 #end if
-    #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv_noformat):
-  -param_wodefault_optional_unrestricted_adv_noformat $adv_opts.param_param_wodefault_optional_unrestricted_adv_noformat
+    #if str($adv_opts.param_mandatory_oneformat_adv):
+  -mandatory_oneformat_adv $adv_opts.param_mandatory_oneformat_adv
 #end if
-    #if str($adv_opts.param_param_default_optional_unrestricted_adv_noformat):
-  -param_default_optional_unrestricted_adv_noformat $adv_opts.param_param_default_optional_unrestricted_adv_noformat
+    #if str($adv_opts.param_optional_oneformat_adv):
+  -optional_oneformat_adv $adv_opts.param_optional_oneformat_adv
 #end if
-    #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv_multformat):
-  -param_wodefault_mandatory_unrestricted_adv_multformat $adv_opts.param_param_wodefault_mandatory_unrestricted_adv_multformat
+    #if str($adv_opts.param_mandatory_multformat_adv):
+  -mandatory_multformat_adv $adv_opts.param_mandatory_multformat_adv
 #end if
-    #if str($adv_opts.param_param_default_mandatory_unrestricted_adv_multformat):
-  -param_default_mandatory_unrestricted_adv_multformat $adv_opts.param_param_default_mandatory_unrestricted_adv_multformat
+    #if str($adv_opts.param_optional_multformat_adv):
+  -optional_multformat_adv $adv_opts.param_optional_multformat_adv
 #end if
-    #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv_multformat):
-  -param_wodefault_optional_unrestricted_adv_multformat $adv_opts.param_param_wodefault_optional_unrestricted_adv_multformat
+    #if str($adv_opts.param_default_mandatory_noformat_adv):
+  -default_mandatory_noformat_adv $adv_opts.param_default_mandatory_noformat_adv
 #end if
-    #if str($adv_opts.param_param_default_optional_unrestricted_adv_multformat):
-  -param_default_optional_unrestricted_adv_multformat $adv_opts.param_param_default_optional_unrestricted_adv_multformat
+    #if str($adv_opts.param_default_optional_noformat_adv):
+  -default_optional_noformat_adv $adv_opts.param_default_optional_noformat_adv
 #end if
+    #if str($adv_opts.param_default_mandatory_oneformat_adv):
+  -default_mandatory_oneformat_adv $adv_opts.param_default_mandatory_oneformat_adv
+#end if
+    #if str($adv_opts.param_default_optional_oneformat_adv):
+  -default_optional_oneformat_adv $adv_opts.param_default_optional_oneformat_adv
+#end if
+    #if str($adv_opts.param_default_mandatory_multformat_adv):
+  -default_mandatory_multformat_adv $adv_opts.param_default_mandatory_multformat_adv
+#end if
+    #if str($adv_opts.param_default_optional_multformat_adv):
+  -default_optional_multformat_adv $adv_opts.param_default_optional_multformat_adv
+#end if
+    -list_mandatory_noformat_adv
+  #for token in $param_list_mandatory_noformat_adv:
+    $token
+  #end for
+    -list_optional_noformat_adv
+  #for token in $param_list_optional_noformat_adv:
+    $token
+  #end for
+    -list_mandatory_oneformat_adv
+  #for token in $param_list_mandatory_oneformat_adv:
+    $token
+  #end for
+    -list_optional_oneformat_adv
+  #for token in $param_list_optional_oneformat_adv:
+    $token
+  #end for
+    -list_mandatory_multformat_adv
+  #for token in $param_list_mandatory_multformat_adv:
+    $token
+  #end for
+    -list_optional_multformat_adv
+  #for token in $param_list_optional_multformat_adv:
+    $token
+  #end for
 #end if
 &gt; $param_stdout
 </command>
   <inputs>
-    <param name="param_param_wodefault_mandatory_unrestricted_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_mandatory_unrestricted_noformat) "/>
-    <param name="param_param_default_mandatory_unrestricted_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_mandatory_unrestricted_noformat) "/>
-    <param name="param_param_wodefault_optional_unrestricted_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_optional_unrestricted_noformat) "/>
-    <param name="param_param_default_optional_unrestricted_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_optional_unrestricted_noformat) "/>
-    <param name="param_param_wodefault_mandatory_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="False" label="input file" help="(-param_wodefault_mandatory_unrestricted_multformat) "/>
-    <param name="param_param_default_mandatory_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="False" value="default" label="input file" help="(-param_default_mandatory_unrestricted_multformat) "/>
-    <param name="param_param_wodefault_optional_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="True" label="input file" help="(-param_wodefault_optional_unrestricted_multformat) "/>
-    <param name="param_param_default_optional_unrestricted_multformat" type="data" format="ext,eyt,ezt" optional="True" value="default" label="input file" help="(-param_default_optional_unrestricted_multformat) "/>
+    <param name="param_mandatory_noformat" type="data" format="txt" label="input file" help="(-mandatory_noformat) "/>
+    <param name="param_optional_noformat" type="data" format="txt" label="input file" help="(-optional_noformat) "/>
+    <param name="param_mandatory_oneformat" type="data" format="txt" optional="False" label="input file" help="(-mandatory_oneformat) "/>
+    <param name="param_optional_oneformat" type="data" format="txt" optional="True" label="input file" help="(-optional_oneformat) "/>
+    <param name="param_mandatory_multformat" type="data" format="txt,txt,txt" optional="False" label="input file" help="(-mandatory_multformat) "/>
+    <param name="param_optional_multformat" type="data" format="txt,txt,txt" optional="True" label="input file" help="(-optional_multformat) "/>
+    <param name="param_default_mandatory_noformat" type="data" format="txt" value="test.ext" label="input file" help="(-default_mandatory_noformat) "/>
+    <param name="param_default_optional_noformat" type="data" format="txt" value="test.ext" label="input file" help="(-default_optional_noformat) "/>
+    <param name="param_default_mandatory_oneformat" type="data" format="txt" optional="False" value="test.ext" label="input file" help="(-default_mandatory_oneformat) "/>
+    <param name="param_default_optional_oneformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="(-default_optional_oneformat) "/>
+    <param name="param_default_mandatory_multformat" type="data" format="txt,txt,txt" optional="False" value="test.ext" label="input file" help="(-default_mandatory_multformat) "/>
+    <param name="param_default_optional_multformat" type="data" format="txt,txt,txt" optional="True" value="test.ext" label="input file" help="(-default_optional_multformat) "/>
+    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" size="30" label="input file" help="(-list_mandatory_noformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" size="30" label="input file" help="(-list_optional_noformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" size="30" label="input file" help="(-list_mandatory_oneformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" size="30" label="input file" help="(-list_optional_oneformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_list_mandatory_multformat" type="data" format="txt,txt,txt" multiple="true" optional="False" size="30" label="input file" help="(-list_mandatory_multformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_list_optional_multformat" type="data" format="txt,txt,txt" multiple="true" optional="True" size="30" label="input file" help="(-list_optional_multformat) ">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
     <expand macro="advanced_options">
-      <param name="param_param_wodefault_mandatory_unrestricted_adv_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_mandatory_unrestricted_adv_noformat) "/>
-      <param name="param_param_default_mandatory_unrestricted_adv_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_mandatory_unrestricted_adv_noformat) "/>
-      <param name="param_param_wodefault_optional_unrestricted_adv_noformat" type="data" format="txt" label="input file" help="(-param_wodefault_optional_unrestricted_adv_noformat) "/>
-      <param name="param_param_default_optional_unrestricted_adv_noformat" type="data" format="txt" value="default" label="input file" help="(-param_default_optional_unrestricted_adv_noformat) "/>
-      <param name="param_param_wodefault_mandatory_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="False" label="input file" help="(-param_wodefault_mandatory_unrestricted_adv_multformat) "/>
-      <param name="param_param_default_mandatory_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="False" value="default" label="input file" help="(-param_default_mandatory_unrestricted_adv_multformat) "/>
-      <param name="param_param_wodefault_optional_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="True" label="input file" help="(-param_wodefault_optional_unrestricted_adv_multformat) "/>
-      <param name="param_param_default_optional_unrestricted_adv_multformat" type="data" format="ext,eyt,ezt" optional="True" value="default" label="input file" help="(-param_default_optional_unrestricted_adv_multformat) "/>
+      <param name="param_mandatory_noformat_adv" type="data" format="txt" label="input file" help="(-mandatory_noformat_adv) "/>
+      <param name="param_optional_noformat_adv" type="data" format="txt" label="input file" help="(-optional_noformat_adv) "/>
+      <param name="param_mandatory_oneformat_adv" type="data" format="txt" optional="False" label="input file" help="(-mandatory_oneformat_adv) "/>
+      <param name="param_optional_oneformat_adv" type="data" format="txt" optional="True" label="input file" help="(-optional_oneformat_adv) "/>
+      <param name="param_mandatory_multformat_adv" type="data" format="txt,txt,txt" optional="False" label="input file" help="(-mandatory_multformat_adv) "/>
+      <param name="param_optional_multformat_adv" type="data" format="txt,txt,txt" optional="True" label="input file" help="(-optional_multformat_adv) "/>
+      <param name="param_default_mandatory_noformat_adv" type="data" format="txt" value="test.ext" label="input file" help="(-default_mandatory_noformat_adv) "/>
+      <param name="param_default_optional_noformat_adv" type="data" format="txt" value="test.ext" label="input file" help="(-default_optional_noformat_adv) "/>
+      <param name="param_default_mandatory_oneformat_adv" type="data" format="txt" optional="False" value="test.ext" label="input file" help="(-default_mandatory_oneformat_adv) "/>
+      <param name="param_default_optional_oneformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="(-default_optional_oneformat_adv) "/>
+      <param name="param_default_mandatory_multformat_adv" type="data" format="txt,txt,txt" optional="False" value="test.ext" label="input file" help="(-default_mandatory_multformat_adv) "/>
+      <param name="param_default_optional_multformat_adv" type="data" format="txt,txt,txt" optional="True" value="test.ext" label="input file" help="(-default_optional_multformat_adv) "/>
+      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" size="30" label="input file" help="(-list_mandatory_noformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" size="30" label="input file" help="(-list_optional_noformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" size="30" label="input file" help="(-list_mandatory_oneformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" size="30" label="input file" help="(-list_optional_oneformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_list_mandatory_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="False" size="30" label="input file" help="(-list_mandatory_multformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_list_optional_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="True" size="30" label="input file" help="(-list_optional_multformat_adv) ">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
     </expand>
   </inputs>
   <outputs>

@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [String Test]-->
+<!--Proposed Tool Section: [Input File Test]-->
 <tool id="echo outFileTest" name="echo outFileTest" version="2.3.0">
   <description>Input File parameter tests</description>
   <macros>
@@ -12,73 +12,153 @@
   <expand macro="references"/>
   <command>echo outFileTest
 
-#if str($param_param_wodefault_mandatory_unrestricted_snglformat):
-  -param_wodefault_mandatory_unrestricted_snglformat $param_param_wodefault_mandatory_unrestricted_snglformat
+#if str($param_wodefault_mandatory_noformat):
+  -wodefault_mandatory_noformat $param_wodefault_mandatory_noformat
 #end if
-#if str($param_param_default_mandatory_unrestricted_snglformat):
-  -param_default_mandatory_unrestricted_snglformat $param_param_default_mandatory_unrestricted_snglformat
+#if str($param_default_mandatory_noformat):
+  -default_mandatory_noformat $param_default_mandatory_noformat
 #end if
-#if str($param_param_wodefault_optional_unrestricted_snglformat):
-  -param_wodefault_optional_unrestricted_snglformat $param_param_wodefault_optional_unrestricted_snglformat
+#if str($param_wodefault_optional_noformat):
+  -wodefault_optional_noformat $param_wodefault_optional_noformat
 #end if
-#if str($param_param_default_optional_unrestricted_snglformat):
-  -param_default_optional_unrestricted_snglformat $param_param_default_optional_unrestricted_snglformat
+#if str($param_default_optional_noformat):
+  -default_optional_noformat $param_default_optional_noformat
 #end if
-#if str($param_param_wodefault_mandatory_unrestricted_adv_snglformat):
-  -param_wodefault_mandatory_unrestricted_adv_snglformat $param_param_wodefault_mandatory_unrestricted_adv_snglformat
+#if str($param_wodefault_mandatory_oneformat):
+  -wodefault_mandatory_oneformat $param_wodefault_mandatory_oneformat
 #end if
-#if str($param_param_default_mandatory_unrestricted_adv_snglformat):
-  -param_default_mandatory_unrestricted_adv_snglformat $param_param_default_mandatory_unrestricted_adv_snglformat
+#if str($param_default_mandatory_oneformat):
+  -default_mandatory_oneformat $param_default_mandatory_oneformat
 #end if
-#if str($param_param_wodefault_optional_unrestricted_adv_snglformat):
-  -param_wodefault_optional_unrestricted_adv_snglformat $param_param_wodefault_optional_unrestricted_adv_snglformat
+#if str($param_wodefault_optional_oneformat):
+  -wodefault_optional_oneformat $param_wodefault_optional_oneformat
 #end if
-#if str($param_param_default_optional_unrestricted_adv_snglformat):
-  -param_default_optional_unrestricted_adv_snglformat $param_param_default_optional_unrestricted_adv_snglformat
+#if str($param_default_optional_oneformat):
+  -default_optional_oneformat $param_default_optional_oneformat
 #end if
-#if str($param_param_wodefault_mandatory_unrestricted_multformat):
-  -param_wodefault_mandatory_unrestricted_multformat $param_param_wodefault_mandatory_unrestricted_multformat
+#if str($param_wodefault_mandatory_multformat):
+  -wodefault_mandatory_multformat $param_wodefault_mandatory_multformat
 #end if
-#if str($param_param_default_mandatory_unrestricted_multformat):
-  -param_default_mandatory_unrestricted_multformat $param_param_default_mandatory_unrestricted_multformat
+#if str($param_default_mandatory_multformat):
+  -default_mandatory_multformat $param_default_mandatory_multformat
 #end if
-#if str($param_param_wodefault_optional_unrestricted_multformat):
-  -param_wodefault_optional_unrestricted_multformat $param_param_wodefault_optional_unrestricted_multformat
+#if str($param_wodefault_optional_multformat):
+  -wodefault_optional_multformat $param_wodefault_optional_multformat
 #end if
-#if str($param_param_default_optional_unrestricted_multformat):
-  -param_default_optional_unrestricted_multformat $param_param_default_optional_unrestricted_multformat
+#if str($param_default_optional_multformat):
+  -default_optional_multformat $param_default_optional_multformat
 #end if
-#if str($param_param_wodefault_mandatory_unrestricted_adv_multformat):
-  -param_wodefault_mandatory_unrestricted_adv_multformat $param_param_wodefault_mandatory_unrestricted_adv_multformat
+
+#if $rep_param_list_mandatory_noformat:
+-list_mandatory_noformat
+  #for token in $rep_param_list_mandatory_noformat:
+    #if " " in str(token):
+      "$token.param_list_mandatory_noformat"
+    #else
+      $token.param_list_mandatory_noformat
+    #end if
+  #end for
 #end if
-#if str($param_param_default_mandatory_unrestricted_adv_multformat):
-  -param_default_mandatory_unrestricted_adv_multformat $param_param_default_mandatory_unrestricted_adv_multformat
+
+#if $rep_param_list_optional_noformat:
+-list_optional_noformat
+  #for token in $rep_param_list_optional_noformat:
+    #if " " in str(token):
+      "$token.param_list_optional_noformat"
+    #else
+      $token.param_list_optional_noformat
+    #end if
+  #end for
 #end if
-#if str($param_param_wodefault_optional_unrestricted_adv_multformat):
-  -param_wodefault_optional_unrestricted_adv_multformat $param_param_wodefault_optional_unrestricted_adv_multformat
+
+#if $rep_param_list_mandatory_oneformat:
+-list_mandatory_oneformat
+  #for token in $rep_param_list_mandatory_oneformat:
+    #if " " in str(token):
+      "$token.param_list_mandatory_oneformat"
+    #else
+      $token.param_list_mandatory_oneformat
+    #end if
+  #end for
 #end if
-#if str($param_param_default_optional_unrestricted_adv_multformat):
-  -param_default_optional_unrestricted_adv_multformat $param_param_default_optional_unrestricted_adv_multformat
+
+#if $rep_param_list_optional_oneformat:
+-list_optional_oneformat
+  #for token in $rep_param_list_optional_oneformat:
+    #if " " in str(token):
+      "$token.param_list_optional_oneformat"
+    #else
+      $token.param_list_optional_oneformat
+    #end if
+  #end for
+#end if
+
+#if $rep_param_list_mandatory_multformat:
+-list_mandatory_multformat
+  #for token in $rep_param_list_mandatory_multformat:
+    #if " " in str(token):
+      "$token.param_list_mandatory_multformat"
+    #else
+      $token.param_list_mandatory_multformat
+    #end if
+  #end for
+#end if
+
+#if $rep_param_list_optional_multformat:
+-list_optional_multformat
+  #for token in $rep_param_list_optional_multformat:
+    #if " " in str(token):
+      "$token.param_list_optional_multformat"
+    #else
+      $token.param_list_optional_multformat
+    #end if
+  #end for
+#end if
+#if str($param_mandatory_noformat_adv):
+  -mandatory_noformat_adv $param_mandatory_noformat_adv
+#end if
+#if str($param_optional_noformat_adv):
+  -optional_noformat_adv $param_optional_noformat_adv
+#end if
+#if str($param_mandatory_oneformat_adv):
+  -mandatory_oneformat_adv $param_mandatory_oneformat_adv
+#end if
+#if str($param_optional_oneformat_adv):
+  -optional_oneformat_adv $param_optional_oneformat_adv
+#end if
+#if str($param_mandatory_multformat_adv):
+  -mandatory_multformat_adv $param_mandatory_multformat_adv
+#end if
+#if str($param_optional_multformat_adv):
+  -optional_multformat_adv $param_optional_multformat_adv
 #end if
 </command>
   <inputs/>
   <outputs>
-    <data name="param_param_wodefault_mandatory_unrestricted_snglformat" format="ext"/>
-    <data name="param_param_default_mandatory_unrestricted_snglformat" format="ext"/>
-    <data name="param_param_wodefault_optional_unrestricted_snglformat" format="ext"/>
-    <data name="param_param_default_optional_unrestricted_snglformat" format="ext"/>
-    <data name="param_param_wodefault_mandatory_unrestricted_adv_snglformat" format="ext"/>
-    <data name="param_param_default_mandatory_unrestricted_adv_snglformat" format="ext"/>
-    <data name="param_param_wodefault_optional_unrestricted_adv_snglformat" format="ext"/>
-    <data name="param_param_default_optional_unrestricted_adv_snglformat" format="ext"/>
-    <data name="param_param_wodefault_mandatory_unrestricted_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_default_mandatory_unrestricted_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_wodefault_optional_unrestricted_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_default_optional_unrestricted_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_wodefault_mandatory_unrestricted_adv_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_default_mandatory_unrestricted_adv_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_wodefault_optional_unrestricted_adv_multformat" format="ext,eyt,ezt"/>
-    <data name="param_param_default_optional_unrestricted_adv_multformat" format="ext,eyt,ezt"/>
+    <data name="param_wodefault_mandatory_noformat" format="data"/>
+    <data name="param_default_mandatory_noformat" format="data"/>
+    <data name="param_wodefault_optional_noformat" format="data"/>
+    <data name="param_default_optional_noformat" format="data"/>
+    <data name="param_wodefault_mandatory_oneformat" format="txt"/>
+    <data name="param_default_mandatory_oneformat" format="txt"/>
+    <data name="param_wodefault_optional_oneformat" format="txt"/>
+    <data name="param_default_optional_oneformat" format="txt"/>
+    <data name="param_wodefault_mandatory_multformat" format="txt"/>
+    <data name="param_default_mandatory_multformat" format="txt"/>
+    <data name="param_wodefault_optional_multformat" format="txt"/>
+    <data name="param_default_optional_multformat" format="txt"/>
+    <data name="param_list_mandatory_noformat" format="data"/>
+    <data name="param_list_optional_noformat" format="data"/>
+    <data name="param_list_mandatory_oneformat" format="txt"/>
+    <data name="param_list_optional_oneformat" format="txt"/>
+    <data name="param_list_mandatory_multformat" format="txt"/>
+    <data name="param_list_optional_multformat" format="txt"/>
+    <data name="param_mandatory_noformat_adv" format="data"/>
+    <data name="param_optional_noformat_adv" format="data"/>
+    <data name="param_mandatory_oneformat_adv" format="txt"/>
+    <data name="param_optional_oneformat_adv" format="txt"/>
+    <data name="param_mandatory_multformat_adv" format="txt"/>
+    <data name="param_optional_multformat_adv" format="txt"/>
   </outputs>
   <help>Input File parameter tests.
 
