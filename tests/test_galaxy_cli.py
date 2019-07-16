@@ -16,12 +16,13 @@ class GalaxyCliTestCase(unittest.TestCase):
     def _compare_cli_output(self, fileprefix):
         in_pth = to_test_data('{}.ctd'.format(fileprefix))
         macro_pth = to_test_data('macros.xml')
+        ftypes_pth = to_test_data('filetypes.txt')
         tmp = tempfile.mkdtemp()
 
         out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
         #out_file = to_test_data('{}.xml'.format(fileprefix))
 
-        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-m', macro_pth, '-b', 'version']
+        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '-b', 'version']
         print(cmd)
 
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
