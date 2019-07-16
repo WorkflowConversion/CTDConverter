@@ -1,0 +1,4 @@
+# CTD type    # Galaxy type     # Long Galaxy data type                    # Mimetype
+ext           txt               galaxy.datatypes.data:Text
+eyt           txt               galaxy.datatypes.data:Text
+ezt           txt               galaxy.datatypes.data:Text
