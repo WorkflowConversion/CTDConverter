@@ -441,9 +441,7 @@ def create_command(tool, model, **kwargs):
                     command += "  #end if\n"
                     command += "#end if\n" 
                 elif is_boolean_parameter(param):
-                    command += "#if " + actual_parameter + ":\n"
-                    command += "  %s\n" % command_line_prefix
-                    command += "#end if\n" 
+                    command += "%s\n" % actual_parameter
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
                     command += "#if str(" + actual_parameter + "):\n"
                     command += "  %s " % command_line_prefix
@@ -596,7 +594,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     @param supported_file_formats
     """
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
-
+    print param_node.attrib["name"]
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
@@ -607,7 +605,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     if is_selection_parameter(param):
         param_type = "select"
-        if len(param.restrictions.choices) < 5:
+        if 2 < len(param.restrictions.choices) < 5:
             param_node.attrib["display"] = "radio"
         
     if is_boolean_parameter(param):
@@ -670,7 +668,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
 
-        if param_type == "select" and param.default in param.restrictions.choices:
+        if param_type == "select" and param_type != "boolean" and param.default in param.restrictions.choices:
             param_node.attrib["optional"] = "False"
         else:
             param_node.attrib["optional"] = str(not param.required)
@@ -793,16 +791,15 @@ def generate_label_and_help(desc):
     return label, help_text
 
 
-# determines if the given choices are boolean (basically, if the possible values are yes/no, true/false)
 def is_boolean_parameter(param):
+    """
+    determines if the given choices are boolean (basically, if the possible values are true/false)
+    @param param the ctd parameter
+    @return True iff a boolean parameter
+    """
     # detect boolean selects of OpenMS
     if is_selection_parameter(param):
-        if len(param.restrictions.choices) == 2:
-            # check that default value is false to make sure it is an actual flag
-            if "false" in param.restrictions.choices and \
-                            "true" in param.restrictions.choices and \
-                            param.default == "false":
-                return True
+        return set(param.restrictions.choices) == set(["true", "false"])
     else:
         return param.type is bool
 
@@ -819,23 +816,25 @@ def get_lowercase_list(some_list):
     return lowercase_list
 
 
-# creates a galaxy boolean parameter type
-# this method assumes that param has restrictions, and that only two restictions are present
-# (either yes/no or true/false)
 def create_boolean_parameter(param_node, param):
-    # first, determine the 'truevalue' and the 'falsevalue'
-    """TODO: true and false values can be way more than 'true' and 'false'
+    """
+    creates a galaxy boolean parameter type
+    this method assumes that param has restrictions, and that only two restictions are present
+    (either yes/no or true/false)    # first, determine the 'truevalue' and the 'falsevalue'
+
+    TODO: true and false values can be way more than 'true' and 'false'
         but for that we need CTD support
     """
-    # by default, 'true' and 'false' are handled as flags, like the verbose flag (i.e., -v)
-    true_value = "-%s" % utils.extract_param_name(param)
-    false_value = ""
+    # in ctd (1.6.2) bools are strings with restriction true,false 
+    # - if the default is false then they are flags
+    # - otherwise the true or false value needs to be added (where the true case is unnecessary)
     choices = get_lowercase_list(param.restrictions.choices)
-    if "yes" in choices:
-        true_value = "yes"
-        false_value = "no"
-    param_node.attrib["truevalue"] = true_value
-    param_node.attrib["falsevalue"] = false_value
+    if set(choices) == set(["true","false"]) and param.default == "true":
+        param_node.attrib["truevalue"] = ""
+        param_node.attrib["falsevalue"] = "-%s false" % utils.extract_param_name(param)
+    else: 
+        param_node.attrib["truevalue"] = "-%s" % utils.extract_param_name(param)
+        param_node.attrib["falsevalue"] = ""
 
     # set the checked attribute
     if param.default is not None:

@@ -6,11 +6,11 @@
   <NODE name="BoolTest" description="Bool test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;BoolTest&apos;">
-      <!-- note bool parameters seem to be always required false -->
-      <ITEM name="true_optional_unrestricted"      value="true"  type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
-      <ITEM name="false_optional_unrestricted"     value="false" type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
-      <ITEM name="true_optional_unrestricted_adv"  value="true"  type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
-      <ITEM name="false_optional_unrestricted_adv" value="false" type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
+      <!-- note bool parameters seem to be always required="false" -->
+      <ITEM name="true"      value="true"  type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
+      <ITEM name="false"     value="false" type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
+      <ITEM name="true_adv"  value="true"  type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
+      <ITEM name="false_adv" value="false" type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
     </NODE>
   </NODE>
 </PARAMETERS>

@@ -12,44 +12,20 @@
   <expand macro="references"/>
   <command><![CDATA[echo BoolTest
 
-#if $param_true_optional_unrestricted:
-  -true_optional_unrestricted
-  #if " " in str($param_true_optional_unrestricted):
-    "$param_true_optional_unrestricted"
-  #else
-    $param_true_optional_unrestricted
-  #end if
-#end if
-#if $param_false_optional_unrestricted:
-  -false_optional_unrestricted
-#end if
+$param_true
+$param_false
 #if $adv_opts.adv_opts_selector=='advanced':
-    #if $adv_opts.param_true_optional_unrestricted_adv:
-  -true_optional_unrestricted_adv
-  #if " " in str($adv_opts.param_true_optional_unrestricted_adv):
-    "$adv_opts.param_true_optional_unrestricted_adv"
-  #else
-    $adv_opts.param_true_optional_unrestricted_adv
-  #end if
-#end if
-    #if $adv_opts.param_false_optional_unrestricted_adv:
-  -false_optional_unrestricted_adv
-#end if
+    $adv_opts.param_true_adv
+    $adv_opts.param_false_adv
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_true_optional_unrestricted" display="radio" type="select" optional="False" value="true" label="bool" help="(-true_optional_unrestricted) ">
-      <option value="true" selected="true">true</option>
-      <option value="false">false</option>
-    </param>
-    <param name="param_false_optional_unrestricted" display="radio" type="boolean" truevalue="-false_optional_unrestricted" falsevalue="" checked="false" optional="True" label="bool" help="(-false_optional_unrestricted) "/>
+    <param name="param_true" type="boolean" truevalue="" falsevalue="-true false" checked="true" optional="True" label="bool" help="(-true) "/>
+    <param name="param_false" type="boolean" truevalue="-false" falsevalue="" checked="false" optional="True" label="bool" help="(-false) "/>
     <expand macro="advanced_options">
-      <param name="param_true_optional_unrestricted_adv" display="radio" type="select" optional="False" value="true" label="bool" help="(-true_optional_unrestricted_adv) ">
-        <option value="true" selected="true">true</option>
-        <option value="false">false</option>
-      </param>
-      <param name="param_false_optional_unrestricted_adv" display="radio" type="boolean" truevalue="-false_optional_unrestricted_adv" falsevalue="" checked="false" optional="True" label="bool" help="(-false_optional_unrestricted_adv) "/>
+      <param name="param_true_adv" type="boolean" truevalue="" falsevalue="-true_adv false" checked="true" optional="True" label="bool" help="(-true_adv) "/>
+      <param name="param_false_adv" type="boolean" truevalue="-false_adv" falsevalue="" checked="false" optional="True" label="bool" help="(-false_adv) "/>
     </expand>
   </inputs>
   <outputs>
