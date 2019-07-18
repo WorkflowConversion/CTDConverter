@@ -714,7 +714,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     # check for default value
     if param.default is not None and param.default is not _Null:
-        if type(param.default) is list:
+        # defaults of selects are set via the selected attribute of the options
+        if param_type == "select":
+            pass
+        elif type(param.default) is list:
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
             # meaning, that, for example, Helium, Argon and Xenon will be ignored
@@ -722,7 +725,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
         elif param_type != "boolean":
             param_node.attrib["value"] = str(param.default)
-
         else:
             # simple boolean with a default
             if param.default is True:
@@ -835,6 +837,8 @@ def is_boolean_parameter(param):
 def is_selection_parameter(param):
     """
     determines if there are choices for the parameter and its not bool
+    @param param the ctd parameter
+    @return True iff a selection parameter
     """
     if type(param.restrictions) is _Choices:
         return set(param.restrictions.choices) != set(["true", "false"])

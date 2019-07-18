@@ -169,7 +169,7 @@
       <option value="D">D</option>
       <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_default_mandatory" display="radio" type="select" optional="False" value="C" label="string" help="(-default_mandatory) ">
+    <param name="param_default_mandatory" display="radio" type="select" optional="False" label="string" help="(-default_mandatory) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -181,7 +181,7 @@
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_default_optional" display="radio" type="select" optional="False" value="C" label="string" help="(-default_optional) ">
+    <param name="param_default_optional" display="radio" type="select" optional="False" label="string" help="(-default_optional) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -196,7 +196,7 @@
       <option value="E">E</option>
       <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_default_mandatory_many" type="select" optional="False" value="C" label="string" help="(-default_mandatory_many) ">
+    <param name="param_default_mandatory_many" type="select" optional="False" label="string" help="(-default_mandatory_many) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -210,7 +210,7 @@
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_default_optional_many" type="select" optional="False" value="C" label="string" help="(-default_optional_many) ">
+    <param name="param_default_optional_many" type="select" optional="False" label="string" help="(-default_optional_many) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -231,13 +231,13 @@
       <option value="D">D</option>
       <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_list_default_optional" multiple="true" type="select" optional="True" value="C D" label="string list" help="(-list_default_optional) ">
+    <param name="param_list_default_optional" multiple="true" type="select" optional="True" label="string list" help="(-list_default_optional) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
     </param>
-    <param name="param_list_default_mandatory" multiple="true" type="select" optional="False" value="C D" label="string list" help="(-list_default_mandatory) ">
+    <param name="param_list_default_mandatory" multiple="true" type="select" optional="False" label="string list" help="(-list_default_mandatory) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -259,14 +259,14 @@
       <option value="E">E</option>
       <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_list_default_optional_many" multiple="true" type="select" optional="True" value="C D" label="string list" help="(-list_default_optional_many) ">
+    <param name="param_list_default_optional_many" multiple="true" type="select" optional="True" label="string list" help="(-list_default_optional_many) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_default_mandatory_many" multiple="true" type="select" optional="False" value="C D" label="string list" help="(-list_default_mandatory_many) ">
+    <param name="param_list_default_mandatory_many" multiple="true" type="select" optional="False" label="string list" help="(-list_default_mandatory_many) ">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -282,7 +282,7 @@
         <option value="D">D</option>
         <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_default_mandatory_adv" display="radio" type="select" optional="False" value="C" label="string" help="(-default_mandatory_adv) ">
+      <param name="param_default_mandatory_adv" display="radio" type="select" optional="False" label="string" help="(-default_mandatory_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -294,7 +294,7 @@
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_default_optional_adv" display="radio" type="select" optional="False" value="C" label="string" help="(-default_optional_adv) ">
+      <param name="param_default_optional_adv" display="radio" type="select" optional="False" label="string" help="(-default_optional_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -309,7 +309,7 @@
         <option value="E">E</option>
         <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_default_mandatory_many_adv" type="select" optional="False" value="C" label="string" help="(-default_mandatory_many_adv) ">
+      <param name="param_default_mandatory_many_adv" type="select" optional="False" label="string" help="(-default_mandatory_many_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -323,7 +323,7 @@
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_default_optional_many_adv" type="select" optional="False" value="C" label="string" help="(-default_optional_many_adv) ">
+      <param name="param_default_optional_many_adv" type="select" optional="False" label="string" help="(-default_optional_many_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -344,13 +344,13 @@
         <option value="D">D</option>
         <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_list_default_optional_adv" multiple="true" type="select" optional="True" value="C D" label="string list" help="(-list_default_optional_adv) ">
+      <param name="param_list_default_optional_adv" multiple="true" type="select" optional="True" label="string list" help="(-list_default_optional_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
       </param>
-      <param name="param_list_default_mandatory_adv" multiple="true" type="select" optional="False" value="C D" label="string list" help="(-list_default_mandatory_adv) ">
+      <param name="param_list_default_mandatory_adv" multiple="true" type="select" optional="False" label="string list" help="(-list_default_mandatory_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -372,14 +372,14 @@
         <option value="E">E</option>
         <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_list_default_optional_many_adv" multiple="true" type="select" optional="True" value="C D" label="string list" help="(-list_default_optional_many_adv) ">
+      <param name="param_list_default_optional_many_adv" multiple="true" type="select" optional="True" label="string list" help="(-list_default_optional_many_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_default_mandatory_many_adv" multiple="true" type="select" optional="False" value="C D" label="string list" help="(-list_default_mandatory_many_adv) ">
+      <param name="param_list_default_mandatory_many_adv" multiple="true" type="select" optional="False" label="string list" help="(-list_default_mandatory_many_adv) ">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
