@@ -2,7 +2,7 @@
 <macros>
   <xml name="requirements">
     <requirements>
-      <requirement type="package" version="x.y">requirement</requirement>
+      <requirement type="package" version="4.4.18">bash</requirement>
       <yield/>
     </requirements>
   </xml>

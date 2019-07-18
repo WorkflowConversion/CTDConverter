@@ -52,66 +52,42 @@
 #if $rep_param_list_mandatory_noformat:
 -list_mandatory_noformat
   #for token in $rep_param_list_mandatory_noformat:
-    #if " " in str(token):
-      "$token.param_list_mandatory_noformat"
-    #else
-      $token.param_list_mandatory_noformat
-    #end if
+    '$token.param_list_mandatory_noformat'
   #end for
 #end if
 
 #if $rep_param_list_optional_noformat:
 -list_optional_noformat
   #for token in $rep_param_list_optional_noformat:
-    #if " " in str(token):
-      "$token.param_list_optional_noformat"
-    #else
-      $token.param_list_optional_noformat
-    #end if
+    '$token.param_list_optional_noformat'
   #end for
 #end if
 
 #if $rep_param_list_mandatory_oneformat:
 -list_mandatory_oneformat
   #for token in $rep_param_list_mandatory_oneformat:
-    #if " " in str(token):
-      "$token.param_list_mandatory_oneformat"
-    #else
-      $token.param_list_mandatory_oneformat
-    #end if
+    '$token.param_list_mandatory_oneformat'
   #end for
 #end if
 
 #if $rep_param_list_optional_oneformat:
 -list_optional_oneformat
   #for token in $rep_param_list_optional_oneformat:
-    #if " " in str(token):
-      "$token.param_list_optional_oneformat"
-    #else
-      $token.param_list_optional_oneformat
-    #end if
+    '$token.param_list_optional_oneformat'
   #end for
 #end if
 
 #if $rep_param_list_mandatory_multformat:
 -list_mandatory_multformat
   #for token in $rep_param_list_mandatory_multformat:
-    #if " " in str(token):
-      "$token.param_list_mandatory_multformat"
-    #else
-      $token.param_list_mandatory_multformat
-    #end if
+    '$token.param_list_mandatory_multformat'
   #end for
 #end if
 
 #if $rep_param_list_optional_multformat:
 -list_optional_multformat
   #for token in $rep_param_list_optional_multformat:
-    #if " " in str(token):
-      "$token.param_list_optional_multformat"
-    #else
-      $token.param_list_optional_multformat
-    #end if
+    '$token.param_list_optional_multformat'
   #end for
 #end if
 #if str($param_mandatory_noformat_adv):

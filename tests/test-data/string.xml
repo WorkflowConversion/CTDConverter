@@ -13,35 +13,35 @@
   <command><![CDATA[echo StringTest
 
 #if str($param_param_wodefault_mandatory_unrestricted):
-  -param_wodefault_mandatory_unrestricted     "$param_param_wodefault_mandatory_unrestricted"
+  -param_wodefault_mandatory_unrestricted     '$param_param_wodefault_mandatory_unrestricted'
 #end if
 #if str($param_param_default_mandatory_unrestricted):
-  -param_default_mandatory_unrestricted     "$param_param_default_mandatory_unrestricted"
+  -param_default_mandatory_unrestricted     '$param_param_default_mandatory_unrestricted'
 #end if
 #if str($param_param_wodefault_optional_unrestricted):
-  -param_wodefault_optional_unrestricted     "$param_param_wodefault_optional_unrestricted"
+  -param_wodefault_optional_unrestricted     '$param_param_wodefault_optional_unrestricted'
 #end if
 #if str($param_param_default_optional_unrestricted):
-  -param_default_optional_unrestricted     "$param_param_default_optional_unrestricted"
+  -param_default_optional_unrestricted     '$param_param_default_optional_unrestricted'
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
     #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv):
-  -param_wodefault_mandatory_unrestricted_adv     "$adv_opts.param_param_wodefault_mandatory_unrestricted_adv"
+  -param_wodefault_mandatory_unrestricted_adv     '$adv_opts.param_param_wodefault_mandatory_unrestricted_adv'
 #end if
     #if str($adv_opts.param_param_default_mandatory_unrestricted_adv):
-  -param_default_mandatory_unrestricted_adv     "$adv_opts.param_param_default_mandatory_unrestricted_adv"
+  -param_default_mandatory_unrestricted_adv     '$adv_opts.param_param_default_mandatory_unrestricted_adv'
 #end if
     #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv):
-  -param_wodefault_optional_unrestricted_adv     "$adv_opts.param_param_wodefault_optional_unrestricted_adv"
+  -param_wodefault_optional_unrestricted_adv     '$adv_opts.param_param_wodefault_optional_unrestricted_adv'
 #end if
     #if str($adv_opts.param_param_default_optional_unrestricted_adv):
-  -param_default_optional_unrestricted_adv     "$adv_opts.param_param_default_optional_unrestricted_adv"
+  -param_default_optional_unrestricted_adv     '$adv_opts.param_param_default_optional_unrestricted_adv'
 #end if
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_param_wodefault_mandatory_unrestricted" type="text" size="30" label="string" help="(-param_wodefault_mandatory_unrestricted) ">
+    <param name="param_param_wodefault_mandatory_unrestricted" type="text" optional="False" size="30" label="string" help="(-param_wodefault_mandatory_unrestricted) ">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -49,7 +49,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_param_default_mandatory_unrestricted" type="text" size="30" value="default" label="string" help="(-param_default_mandatory_unrestricted) ">
+    <param name="param_param_default_mandatory_unrestricted" type="text" optional="False" size="30" value="default" label="string" help="(-param_default_mandatory_unrestricted) ">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -57,7 +57,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_param_wodefault_optional_unrestricted" type="text" size="30" label="string" help="(-param_wodefault_optional_unrestricted) ">
+    <param name="param_param_wodefault_optional_unrestricted" type="text" optional="True" size="30" label="string" help="(-param_wodefault_optional_unrestricted) ">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -65,7 +65,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_param_default_optional_unrestricted" type="text" size="30" value="default" label="string" help="(-param_default_optional_unrestricted) ">
+    <param name="param_param_default_optional_unrestricted" type="text" optional="True" size="30" value="default" label="string" help="(-param_default_optional_unrestricted) ">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -74,7 +74,7 @@
       </sanitizer>
     </param>
     <expand macro="advanced_options">
-      <param name="param_param_wodefault_mandatory_unrestricted_adv" type="text" size="30" label="string" help="(-param_wodefault_mandatory_unrestricted_adv) ">
+      <param name="param_param_wodefault_mandatory_unrestricted_adv" type="text" optional="False" size="30" label="string" help="(-param_wodefault_mandatory_unrestricted_adv) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -82,7 +82,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_param_default_mandatory_unrestricted_adv" type="text" size="30" value="default" label="string" help="(-param_default_mandatory_unrestricted_adv) ">
+      <param name="param_param_default_mandatory_unrestricted_adv" type="text" optional="False" size="30" value="default" label="string" help="(-param_default_mandatory_unrestricted_adv) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -90,7 +90,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_param_wodefault_optional_unrestricted_adv" type="text" size="30" label="string" help="(-param_wodefault_optional_unrestricted_adv) ">
+      <param name="param_param_wodefault_optional_unrestricted_adv" type="text" optional="True" size="30" label="string" help="(-param_wodefault_optional_unrestricted_adv) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -98,7 +98,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_param_default_optional_unrestricted_adv" type="text" size="30" value="default" label="string" help="(-param_default_optional_unrestricted_adv) ">
+      <param name="param_param_default_optional_unrestricted_adv" type="text" optional="True" size="30" value="default" label="string" help="(-param_default_optional_unrestricted_adv) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>

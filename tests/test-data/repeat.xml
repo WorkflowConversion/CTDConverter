@@ -16,441 +16,281 @@
 #if $rep_param_string_wodefault_optional:
 -string_wodefault_optional
   #for token in $rep_param_string_wodefault_optional:
-    #if " " in str(token):
-      "$token.param_string_wodefault_optional"
-    #else
-      $token.param_string_wodefault_optional
-    #end if
+    '$token.param_string_wodefault_optional'
   #end for
 #end if
 
 #if $rep_param_string_wodefault_mandatory:
 -string_wodefault_mandatory
   #for token in $rep_param_string_wodefault_mandatory:
-    #if " " in str(token):
-      "$token.param_string_wodefault_mandatory"
-    #else
-      $token.param_string_wodefault_mandatory
-    #end if
+    '$token.param_string_wodefault_mandatory'
   #end for
 #end if
 
 #if $rep_param_string_default_optional:
 -string_default_optional
   #for token in $rep_param_string_default_optional:
-    #if " " in str(token):
-      "$token.param_string_default_optional"
-    #else
-      $token.param_string_default_optional
-    #end if
+    '$token.param_string_default_optional'
   #end for
 #end if
 
 #if $rep_param_string_default_mandatory:
 -string_default_mandatory
   #for token in $rep_param_string_default_mandatory:
-    #if " " in str(token):
-      "$token.param_string_default_mandatory"
-    #else
-      $token.param_string_default_mandatory
-    #end if
+    '$token.param_string_default_mandatory'
   #end for
 #end if
 
 #if $rep_param_int_wodefault_optional:
 -int_wodefault_optional
   #for token in $rep_param_int_wodefault_optional:
-    #if " " in str(token):
-      "$token.param_int_wodefault_optional"
-    #else
-      $token.param_int_wodefault_optional
-    #end if
+    '$token.param_int_wodefault_optional'
   #end for
 #end if
 
 #if $rep_param_int_wodefault_mandatory:
 -int_wodefault_mandatory
   #for token in $rep_param_int_wodefault_mandatory:
-    #if " " in str(token):
-      "$token.param_int_wodefault_mandatory"
-    #else
-      $token.param_int_wodefault_mandatory
-    #end if
+    '$token.param_int_wodefault_mandatory'
   #end for
 #end if
 
 #if $rep_param_int_default_optional:
 -int_default_optional
   #for token in $rep_param_int_default_optional:
-    #if " " in str(token):
-      "$token.param_int_default_optional"
-    #else
-      $token.param_int_default_optional
-    #end if
+    '$token.param_int_default_optional'
   #end for
 #end if
 
 #if $rep_param_int_default_mandatory:
 -int_default_mandatory
   #for token in $rep_param_int_default_mandatory:
-    #if " " in str(token):
-      "$token.param_int_default_mandatory"
-    #else
-      $token.param_int_default_mandatory
-    #end if
+    '$token.param_int_default_mandatory'
   #end for
 #end if
 
 #if $rep_param_int_resticted_wodefault_optional:
 -int_resticted_wodefault_optional
   #for token in $rep_param_int_resticted_wodefault_optional:
-    #if " " in str(token):
-      "$token.param_int_resticted_wodefault_optional"
-    #else
-      $token.param_int_resticted_wodefault_optional
-    #end if
+    '$token.param_int_resticted_wodefault_optional'
   #end for
 #end if
 
 #if $rep_param_int_resticted_wodefault_mandatory:
 -int_resticted_wodefault_mandatory
   #for token in $rep_param_int_resticted_wodefault_mandatory:
-    #if " " in str(token):
-      "$token.param_int_resticted_wodefault_mandatory"
-    #else
-      $token.param_int_resticted_wodefault_mandatory
-    #end if
+    '$token.param_int_resticted_wodefault_mandatory'
   #end for
 #end if
 
 #if $rep_param_int_resticted_default_optional:
 -int_resticted_default_optional
   #for token in $rep_param_int_resticted_default_optional:
-    #if " " in str(token):
-      "$token.param_int_resticted_default_optional"
-    #else
-      $token.param_int_resticted_default_optional
-    #end if
+    '$token.param_int_resticted_default_optional'
   #end for
 #end if
 
 #if $rep_param_int_resticted_default_mandatory:
 -int_resticted_default_mandatory
   #for token in $rep_param_int_resticted_default_mandatory:
-    #if " " in str(token):
-      "$token.param_int_resticted_default_mandatory"
-    #else
-      $token.param_int_resticted_default_mandatory
-    #end if
+    '$token.param_int_resticted_default_mandatory'
   #end for
 #end if
 
 #if $rep_param_double_wodefault_optional:
 -double_wodefault_optional
   #for token in $rep_param_double_wodefault_optional:
-    #if " " in str(token):
-      "$token.param_double_wodefault_optional"
-    #else
-      $token.param_double_wodefault_optional
-    #end if
+    '$token.param_double_wodefault_optional'
   #end for
 #end if
 
 #if $rep_param_double_wodefault_mandatory:
 -double_wodefault_mandatory
   #for token in $rep_param_double_wodefault_mandatory:
-    #if " " in str(token):
-      "$token.param_double_wodefault_mandatory"
-    #else
-      $token.param_double_wodefault_mandatory
-    #end if
+    '$token.param_double_wodefault_mandatory'
   #end for
 #end if
 
 #if $rep_param_double_default_optional:
 -double_default_optional
   #for token in $rep_param_double_default_optional:
-    #if " " in str(token):
-      "$token.param_double_default_optional"
-    #else
-      $token.param_double_default_optional
-    #end if
+    '$token.param_double_default_optional'
   #end for
 #end if
 
 #if $rep_param_double_default_mandatory:
 -double_default_mandatory
   #for token in $rep_param_double_default_mandatory:
-    #if " " in str(token):
-      "$token.param_double_default_mandatory"
-    #else
-      $token.param_double_default_mandatory
-    #end if
+    '$token.param_double_default_mandatory'
   #end for
 #end if
 
 #if $rep_param_double_resticted_wodefault_optional:
 -double_resticted_wodefault_optional
   #for token in $rep_param_double_resticted_wodefault_optional:
-    #if " " in str(token):
-      "$token.param_double_resticted_wodefault_optional"
-    #else
-      $token.param_double_resticted_wodefault_optional
-    #end if
+    '$token.param_double_resticted_wodefault_optional'
   #end for
 #end if
 
 #if $rep_param_double_resticted_wodefault_mandatory:
 -double_resticted_wodefault_mandatory
   #for token in $rep_param_double_resticted_wodefault_mandatory:
-    #if " " in str(token):
-      "$token.param_double_resticted_wodefault_mandatory"
-    #else
-      $token.param_double_resticted_wodefault_mandatory
-    #end if
+    '$token.param_double_resticted_wodefault_mandatory'
   #end for
 #end if
 
 #if $rep_param_double_resticted_default_optional:
 -double_resticted_default_optional
   #for token in $rep_param_double_resticted_default_optional:
-    #if " " in str(token):
-      "$token.param_double_resticted_default_optional"
-    #else
-      $token.param_double_resticted_default_optional
-    #end if
+    '$token.param_double_resticted_default_optional'
   #end for
 #end if
 
 #if $rep_param_double_resticted_default_mandatory:
 -double_resticted_default_mandatory
   #for token in $rep_param_double_resticted_default_mandatory:
-    #if " " in str(token):
-      "$token.param_double_resticted_default_mandatory"
-    #else
-      $token.param_double_resticted_default_mandatory
-    #end if
+    '$token.param_double_resticted_default_mandatory'
   #end for
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
     
-#if $rep_param_string_wodefault_optional_adv:
+#if $adv_opts.rep_param_string_wodefault_optional_adv:
 -string_wodefault_optional_adv
-  #for token in $rep_param_string_wodefault_optional_adv:
-    #if " " in str(token):
-      "$token.param_string_wodefault_optional_adv"
-    #else
-      $token.param_string_wodefault_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_string_wodefault_optional_adv:
+    '$token.param_string_wodefault_optional_adv'
   #end for
 #end if
     
-#if $rep_param_string_wodefault_mandatory_adv:
+#if $adv_opts.rep_param_string_wodefault_mandatory_adv:
 -string_wodefault_mandatory_adv
-  #for token in $rep_param_string_wodefault_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_string_wodefault_mandatory_adv"
-    #else
-      $token.param_string_wodefault_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_string_wodefault_mandatory_adv:
+    '$token.param_string_wodefault_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_string_default_optional_adv:
+#if $adv_opts.rep_param_string_default_optional_adv:
 -string_default_optional_adv
-  #for token in $rep_param_string_default_optional_adv:
-    #if " " in str(token):
-      "$token.param_string_default_optional_adv"
-    #else
-      $token.param_string_default_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_string_default_optional_adv:
+    '$token.param_string_default_optional_adv'
   #end for
 #end if
     
-#if $rep_param_string_default_mandatory_adv:
+#if $adv_opts.rep_param_string_default_mandatory_adv:
 -string_default_mandatory_adv
-  #for token in $rep_param_string_default_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_string_default_mandatory_adv"
-    #else
-      $token.param_string_default_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_string_default_mandatory_adv:
+    '$token.param_string_default_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_int_wodefault_optional_adv:
+#if $adv_opts.rep_param_int_wodefault_optional_adv:
 -int_wodefault_optional_adv
-  #for token in $rep_param_int_wodefault_optional_adv:
-    #if " " in str(token):
-      "$token.param_int_wodefault_optional_adv"
-    #else
-      $token.param_int_wodefault_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_wodefault_optional_adv:
+    '$token.param_int_wodefault_optional_adv'
   #end for
 #end if
     
-#if $rep_param_int_wodefault_mandatory_adv:
+#if $adv_opts.rep_param_int_wodefault_mandatory_adv:
 -int_wodefault_mandatory_adv
-  #for token in $rep_param_int_wodefault_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_int_wodefault_mandatory_adv"
-    #else
-      $token.param_int_wodefault_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_wodefault_mandatory_adv:
+    '$token.param_int_wodefault_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_int_default_optional_adv:
+#if $adv_opts.rep_param_int_default_optional_adv:
 -int_default_optional_adv
-  #for token in $rep_param_int_default_optional_adv:
-    #if " " in str(token):
-      "$token.param_int_default_optional_adv"
-    #else
-      $token.param_int_default_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_default_optional_adv:
+    '$token.param_int_default_optional_adv'
   #end for
 #end if
     
-#if $rep_param_int_default_mandatory_adv:
+#if $adv_opts.rep_param_int_default_mandatory_adv:
 -int_default_mandatory_adv
-  #for token in $rep_param_int_default_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_int_default_mandatory_adv"
-    #else
-      $token.param_int_default_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_default_mandatory_adv:
+    '$token.param_int_default_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_int_resticted_wodefault_optional_adv:
+#if $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
 -int_resticted_wodefault_optional_adv
-  #for token in $rep_param_int_resticted_wodefault_optional_adv:
-    #if " " in str(token):
-      "$token.param_int_resticted_wodefault_optional_adv"
-    #else
-      $token.param_int_resticted_wodefault_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
+    '$token.param_int_resticted_wodefault_optional_adv'
   #end for
 #end if
     
-#if $rep_param_int_resticted_wodefault_mandatory_adv:
+#if $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
 -int_resticted_wodefault_mandatory_adv
-  #for token in $rep_param_int_resticted_wodefault_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_int_resticted_wodefault_mandatory_adv"
-    #else
-      $token.param_int_resticted_wodefault_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
+    '$token.param_int_resticted_wodefault_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_int_resticted_default_optional_adv:
+#if $adv_opts.rep_param_int_resticted_default_optional_adv:
 -int_resticted_default_optional_adv
-  #for token in $rep_param_int_resticted_default_optional_adv:
-    #if " " in str(token):
-      "$token.param_int_resticted_default_optional_adv"
-    #else
-      $token.param_int_resticted_default_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_resticted_default_optional_adv:
+    '$token.param_int_resticted_default_optional_adv'
   #end for
 #end if
     
-#if $rep_param_int_resticted_default_mandatory_adv:
+#if $adv_opts.rep_param_int_resticted_default_mandatory_adv:
 -int_resticted_default_mandatory_adv
-  #for token in $rep_param_int_resticted_default_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_int_resticted_default_mandatory_adv"
-    #else
-      $token.param_int_resticted_default_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_int_resticted_default_mandatory_adv:
+    '$token.param_int_resticted_default_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_double_wodefault_optional_adv:
+#if $adv_opts.rep_param_double_wodefault_optional_adv:
 -double_wodefault_optional_adv
-  #for token in $rep_param_double_wodefault_optional_adv:
-    #if " " in str(token):
-      "$token.param_double_wodefault_optional_adv"
-    #else
-      $token.param_double_wodefault_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_wodefault_optional_adv:
+    '$token.param_double_wodefault_optional_adv'
   #end for
 #end if
     
-#if $rep_param_double_wodefault_mandatory_adv:
+#if $adv_opts.rep_param_double_wodefault_mandatory_adv:
 -double_wodefault_mandatory_adv
-  #for token in $rep_param_double_wodefault_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_double_wodefault_mandatory_adv"
-    #else
-      $token.param_double_wodefault_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_wodefault_mandatory_adv:
+    '$token.param_double_wodefault_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_double_default_optional_adv:
+#if $adv_opts.rep_param_double_default_optional_adv:
 -double_default_optional_adv
-  #for token in $rep_param_double_default_optional_adv:
-    #if " " in str(token):
-      "$token.param_double_default_optional_adv"
-    #else
-      $token.param_double_default_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_default_optional_adv:
+    '$token.param_double_default_optional_adv'
   #end for
 #end if
     
-#if $rep_param_double_default_mandatory_adv:
+#if $adv_opts.rep_param_double_default_mandatory_adv:
 -double_default_mandatory_adv
-  #for token in $rep_param_double_default_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_double_default_mandatory_adv"
-    #else
-      $token.param_double_default_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_default_mandatory_adv:
+    '$token.param_double_default_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_double_resticted_wodefault_optional_adv:
+#if $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
 -double_resticted_wodefault_optional_adv
-  #for token in $rep_param_double_resticted_wodefault_optional_adv:
-    #if " " in str(token):
-      "$token.param_double_resticted_wodefault_optional_adv"
-    #else
-      $token.param_double_resticted_wodefault_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
+    '$token.param_double_resticted_wodefault_optional_adv'
   #end for
 #end if
     
-#if $rep_param_double_resticted_wodefault_mandatory_adv:
+#if $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
 -double_resticted_wodefault_mandatory_adv
-  #for token in $rep_param_double_resticted_wodefault_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_double_resticted_wodefault_mandatory_adv"
-    #else
-      $token.param_double_resticted_wodefault_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
+    '$token.param_double_resticted_wodefault_mandatory_adv'
   #end for
 #end if
     
-#if $rep_param_double_resticted_default_optional_adv:
+#if $adv_opts.rep_param_double_resticted_default_optional_adv:
 -double_resticted_default_optional_adv
-  #for token in $rep_param_double_resticted_default_optional_adv:
-    #if " " in str(token):
-      "$token.param_double_resticted_default_optional_adv"
-    #else
-      $token.param_double_resticted_default_optional_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_resticted_default_optional_adv:
+    '$token.param_double_resticted_default_optional_adv'
   #end for
 #end if
     
-#if $rep_param_double_resticted_default_mandatory_adv:
+#if $adv_opts.rep_param_double_resticted_default_mandatory_adv:
 -double_resticted_default_mandatory_adv
-  #for token in $rep_param_double_resticted_default_mandatory_adv:
-    #if " " in str(token):
-      "$token.param_double_resticted_default_mandatory_adv"
-    #else
-      $token.param_double_resticted_default_mandatory_adv
-    #end if
+  #for token in $adv_opts.rep_param_double_resticted_default_mandatory_adv:
+    '$token.param_double_resticted_default_mandatory_adv'
   #end for
 #end if
 #end if
@@ -458,7 +298,7 @@
 ]]></command>
   <inputs>
     <repeat name="rep_param_string_wodefault_optional" min="0" title="param_string_wodefault_optional">
-      <param name="param_string_wodefault_optional" type="text" size="30" label="string list" help="(-string_wodefault_optional) ">
+      <param name="param_string_wodefault_optional" type="text" optional="True" size="30" label="string list" help="(-string_wodefault_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -468,7 +308,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_wodefault_mandatory" min="1" title="param_string_wodefault_mandatory">
-      <param name="param_string_wodefault_mandatory" type="text" size="30" label="string list" help="(-string_wodefault_mandatory) ">
+      <param name="param_string_wodefault_mandatory" type="text" optional="False" size="30" label="string list" help="(-string_wodefault_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -478,7 +318,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_default_optional" min="0" max="1" title="param_string_default_optional">
-      <param name="param_string_default_optional" type="text" size="30" value="A B" label="string list" help="(-string_default_optional) ">
+      <param name="param_string_default_optional" type="text" optional="True" size="30" value="A B" label="string list" help="(-string_default_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -488,7 +328,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_string_default_mandatory" min="1" max="1" title="param_string_default_mandatory">
-      <param name="param_string_default_mandatory" type="text" size="30" value="A B" label="string list" help="(-string_default_mandatory) ">
+      <param name="param_string_default_mandatory" type="text" optional="False" size="30" value="A B" label="string list" help="(-string_default_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -498,7 +338,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_wodefault_optional" min="0" title="param_int_wodefault_optional">
-      <param name="param_int_wodefault_optional" type="text" size="30" value="0" label="int list" help="(-int_wodefault_optional) ">
+      <param name="param_int_wodefault_optional" type="text" optional="True" size="30" value="0" label="int list" help="(-int_wodefault_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -508,7 +348,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_wodefault_mandatory" min="1" title="param_int_wodefault_mandatory">
-      <param name="param_int_wodefault_mandatory" type="text" size="30" value="0" label="int list" help="(-int_wodefault_mandatory) ">
+      <param name="param_int_wodefault_mandatory" type="text" optional="False" size="30" value="0" label="int list" help="(-int_wodefault_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -518,7 +358,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_default_optional" min="0" max="1" title="param_int_default_optional">
-      <param name="param_int_default_optional" type="text" size="30" value="1 2" label="int list" help="(-int_default_optional) ">
+      <param name="param_int_default_optional" type="text" optional="True" size="30" value="1 2" label="int list" help="(-int_default_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -528,7 +368,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_default_mandatory" min="1" max="1" title="param_int_default_mandatory">
-      <param name="param_int_default_mandatory" type="text" size="30" value="1 2" label="int list" help="(-int_default_mandatory) ">
+      <param name="param_int_default_mandatory" type="text" optional="False" size="30" value="1 2" label="int list" help="(-int_default_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -538,7 +378,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_wodefault_optional" min="0" title="param_int_resticted_wodefault_optional">
-      <param name="param_int_resticted_wodefault_optional" type="text" min="0" max="100" optional="True" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional) ">
+      <param name="param_int_resticted_wodefault_optional" type="text" optional="True" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -548,7 +388,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_wodefault_mandatory" min="1" title="param_int_resticted_wodefault_mandatory">
-      <param name="param_int_resticted_wodefault_mandatory" type="text" min="0" max="100" optional="False" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory) ">
+      <param name="param_int_resticted_wodefault_mandatory" type="text" optional="False" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -558,7 +398,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_default_optional" min="0" max="1" title="param_int_resticted_default_optional">
-      <param name="param_int_resticted_default_optional" type="text" min="0" max="100" optional="True" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional) ">
+      <param name="param_int_resticted_default_optional" type="text" optional="True" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -568,7 +408,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_int_resticted_default_mandatory" min="1" max="1" title="param_int_resticted_default_mandatory">
-      <param name="param_int_resticted_default_mandatory" type="text" min="0" max="100" optional="False" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory) ">
+      <param name="param_int_resticted_default_mandatory" type="text" optional="False" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -578,7 +418,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_wodefault_optional" min="0" title="param_double_wodefault_optional">
-      <param name="param_double_wodefault_optional" type="text" size="30" value="0" label="double list" help="(-double_wodefault_optional) ">
+      <param name="param_double_wodefault_optional" type="text" optional="True" size="30" value="0" label="double list" help="(-double_wodefault_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -588,7 +428,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_wodefault_mandatory" min="1" title="param_double_wodefault_mandatory">
-      <param name="param_double_wodefault_mandatory" type="text" size="30" value="0" label="double list" help="(-double_wodefault_mandatory) ">
+      <param name="param_double_wodefault_mandatory" type="text" optional="False" size="30" value="0" label="double list" help="(-double_wodefault_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -598,7 +438,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_default_optional" min="0" max="1" title="param_double_default_optional">
-      <param name="param_double_default_optional" type="text" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional) ">
+      <param name="param_double_default_optional" type="text" optional="True" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -608,7 +448,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_default_mandatory" min="1" max="1" title="param_double_default_mandatory">
-      <param name="param_double_default_mandatory" type="text" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory) ">
+      <param name="param_double_default_mandatory" type="text" optional="False" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -618,7 +458,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_wodefault_optional" min="0" title="param_double_resticted_wodefault_optional">
-      <param name="param_double_resticted_wodefault_optional" type="text" min="0.0" max="1.0" optional="True" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional) ">
+      <param name="param_double_resticted_wodefault_optional" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -628,7 +468,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_wodefault_mandatory" min="1" title="param_double_resticted_wodefault_mandatory">
-      <param name="param_double_resticted_wodefault_mandatory" type="text" min="0.0" max="1.0" optional="False" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory) ">
+      <param name="param_double_resticted_wodefault_mandatory" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -638,7 +478,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_default_optional" min="0" max="1" title="param_double_resticted_default_optional">
-      <param name="param_double_resticted_default_optional" type="text" min="0.0" max="1.0" optional="True" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional) ">
+      <param name="param_double_resticted_default_optional" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -648,7 +488,7 @@
       </param>
     </repeat>
     <repeat name="rep_param_double_resticted_default_mandatory" min="1" max="1" title="param_double_resticted_default_mandatory">
-      <param name="param_double_resticted_default_mandatory" type="text" min="0.0" max="1.0" optional="False" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory) ">
+      <param name="param_double_resticted_default_mandatory" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory) ">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -659,7 +499,7 @@
     </repeat>
     <expand macro="advanced_options">
       <repeat name="rep_param_string_wodefault_optional_adv" min="0" title="param_string_wodefault_optional_adv">
-        <param name="param_string_wodefault_optional_adv" type="text" size="30" label="string list" help="(-string_wodefault_optional_adv) ">
+        <param name="param_string_wodefault_optional_adv" type="text" optional="True" size="30" label="string list" help="(-string_wodefault_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -669,7 +509,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_wodefault_mandatory_adv" min="1" title="param_string_wodefault_mandatory_adv">
-        <param name="param_string_wodefault_mandatory_adv" type="text" size="30" label="string list" help="(-string_wodefault_mandatory_adv) ">
+        <param name="param_string_wodefault_mandatory_adv" type="text" optional="False" size="30" label="string list" help="(-string_wodefault_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -679,7 +519,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_default_optional_adv" min="0" max="1" title="param_string_default_optional_adv">
-        <param name="param_string_default_optional_adv" type="text" size="30" value="A B" label="string list" help="(-string_default_optional_adv) ">
+        <param name="param_string_default_optional_adv" type="text" optional="True" size="30" value="A B" label="string list" help="(-string_default_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -689,7 +529,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_string_default_mandatory_adv" min="1" max="1" title="param_string_default_mandatory_adv">
-        <param name="param_string_default_mandatory_adv" type="text" size="30" value="A B" label="string list" help="(-string_default_mandatory_adv) ">
+        <param name="param_string_default_mandatory_adv" type="text" optional="False" size="30" value="A B" label="string list" help="(-string_default_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -699,7 +539,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_wodefault_optional_adv" min="0" title="param_int_wodefault_optional_adv">
-        <param name="param_int_wodefault_optional_adv" type="text" size="30" value="0" label="int list" help="(-int_wodefault_optional_adv) ">
+        <param name="param_int_wodefault_optional_adv" type="text" optional="True" size="30" value="0" label="int list" help="(-int_wodefault_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -709,7 +549,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_wodefault_mandatory_adv" min="1" title="param_int_wodefault_mandatory_adv">
-        <param name="param_int_wodefault_mandatory_adv" type="text" size="30" value="0" label="int list" help="(-int_wodefault_mandatory_adv) ">
+        <param name="param_int_wodefault_mandatory_adv" type="text" optional="False" size="30" value="0" label="int list" help="(-int_wodefault_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -719,7 +559,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_default_optional_adv" min="0" max="1" title="param_int_default_optional_adv">
-        <param name="param_int_default_optional_adv" type="text" size="30" value="1 2" label="int list" help="(-int_default_optional_adv) ">
+        <param name="param_int_default_optional_adv" type="text" optional="True" size="30" value="1 2" label="int list" help="(-int_default_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -729,7 +569,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_default_mandatory_adv" min="1" max="1" title="param_int_default_mandatory_adv">
-        <param name="param_int_default_mandatory_adv" type="text" size="30" value="1 2" label="int list" help="(-int_default_mandatory_adv) ">
+        <param name="param_int_default_mandatory_adv" type="text" optional="False" size="30" value="1 2" label="int list" help="(-int_default_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -739,7 +579,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_wodefault_optional_adv" min="0" title="param_int_resticted_wodefault_optional_adv">
-        <param name="param_int_resticted_wodefault_optional_adv" type="text" min="0" max="100" optional="True" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional_adv) ">
+        <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="True" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -749,7 +589,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_wodefault_mandatory_adv" min="1" title="param_int_resticted_wodefault_mandatory_adv">
-        <param name="param_int_resticted_wodefault_mandatory_adv" type="text" min="0" max="100" optional="False" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory_adv) ">
+        <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0" max="100" size="30" value="0" label="int list" help="(-int_resticted_wodefault_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -759,7 +599,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_default_optional_adv" min="0" max="1" title="param_int_resticted_default_optional_adv">
-        <param name="param_int_resticted_default_optional_adv" type="text" min="0" max="100" optional="True" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional_adv) ">
+        <param name="param_int_resticted_default_optional_adv" type="text" optional="True" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -769,7 +609,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_int_resticted_default_mandatory_adv" min="1" max="1" title="param_int_resticted_default_mandatory_adv">
-        <param name="param_int_resticted_default_mandatory_adv" type="text" min="0" max="100" optional="False" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory_adv) ">
+        <param name="param_int_resticted_default_mandatory_adv" type="text" optional="False" min="0" max="100" size="30" value="1 2" label="int list" help="(-int_resticted_default_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -779,7 +619,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_wodefault_optional_adv" min="0" title="param_double_wodefault_optional_adv">
-        <param name="param_double_wodefault_optional_adv" type="text" size="30" value="0" label="double list" help="(-double_wodefault_optional_adv) ">
+        <param name="param_double_wodefault_optional_adv" type="text" optional="True" size="30" value="0" label="double list" help="(-double_wodefault_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -789,7 +629,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_wodefault_mandatory_adv" min="1" title="param_double_wodefault_mandatory_adv">
-        <param name="param_double_wodefault_mandatory_adv" type="text" size="30" value="0" label="double list" help="(-double_wodefault_mandatory_adv) ">
+        <param name="param_double_wodefault_mandatory_adv" type="text" optional="False" size="30" value="0" label="double list" help="(-double_wodefault_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -799,7 +639,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_default_optional_adv" min="0" max="1" title="param_double_default_optional_adv">
-        <param name="param_double_default_optional_adv" type="text" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional_adv) ">
+        <param name="param_double_default_optional_adv" type="text" optional="True" size="30" value="1.0 2.0" label="double list" help="(-double_default_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -809,7 +649,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_default_mandatory_adv" min="1" max="1" title="param_double_default_mandatory_adv">
-        <param name="param_double_default_mandatory_adv" type="text" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory_adv) ">
+        <param name="param_double_default_mandatory_adv" type="text" optional="False" size="30" value="1.0 2.0" label="double list" help="(-double_default_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -819,7 +659,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_wodefault_optional_adv" min="0" title="param_double_resticted_wodefault_optional_adv">
-        <param name="param_double_resticted_wodefault_optional_adv" type="text" min="0.0" max="1.0" optional="True" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional_adv) ">
+        <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -829,7 +669,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_wodefault_mandatory_adv" min="1" title="param_double_resticted_wodefault_mandatory_adv">
-        <param name="param_double_resticted_wodefault_mandatory_adv" type="text" min="0.0" max="1.0" optional="False" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory_adv) ">
+        <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.0" label="double list" help="(-double_resticted_wodefault_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -839,7 +679,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_default_optional_adv" min="0" max="1" title="param_double_resticted_default_optional_adv">
-        <param name="param_double_resticted_default_optional_adv" type="text" min="0.0" max="1.0" optional="True" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional_adv) ">
+        <param name="param_double_resticted_default_optional_adv" type="text" optional="True" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_optional_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>
@@ -849,7 +689,7 @@
         </param>
       </repeat>
       <repeat name="rep_param_double_resticted_default_mandatory_adv" min="1" max="1" title="param_double_resticted_default_mandatory_adv">
-        <param name="param_double_resticted_default_mandatory_adv" type="text" min="0.0" max="1.0" optional="False" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory_adv) ">
+        <param name="param_double_resticted_default_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" size="30" value="0.3 0.5" label="double list" help="(-double_resticted_default_mandatory_adv) ">
           <sanitizer>
             <valid initial="string.printable">
               <remove value="'"/>

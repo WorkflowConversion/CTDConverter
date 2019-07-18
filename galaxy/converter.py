@@ -403,6 +403,12 @@ def create_command(tool, model, **kwargs):
             # parameter is neither blacklisted nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
             repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param)
+            if param.advanced and param.type is not _OutFile:
+                actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
+                actual_repeat = "$adv_opts.%s" % repeat_galaxy_parameter_name
+            else:
+                actual_parameter = "$%s" % galaxy_parameter_name
+                actual_repeat = "$%s" % repeat_galaxy_parameter_name
 
             # logic for ITEMLISTs
             if param.is_list:
@@ -410,42 +416,36 @@ def create_command(tool, model, **kwargs):
                     command += command_line_prefix + "\n"
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
                     command += "    $token\n"
-                    command += "  #end for\n" 
+                    command += "  #end for\n"
+                elif is_selection_parameter(param):
+                    command += "#if " + actual_parameter + ":\n"
+                    command += "  #set tmp=' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + "])\n"
+                    command += "  %s\n" % command_line_prefix 
+                    command += "  $tmp\n"
+                    command += "#end if\n"
                 else:
-                    command += "\n#if $" + repeat_galaxy_parameter_name + ":\n"
+                    command += "\n#if " + actual_repeat + ":\n"
                     command += command_line_prefix + "\n"
-                    command += "  #for token in $" + repeat_galaxy_parameter_name + ":\n" 
-                    command += "    #if \" \" in str(token):\n"
-                    command += "      \"$token." + galaxy_parameter_name + "\"\n"
-                    command += "    #else\n"
-                    command += "      $token." + galaxy_parameter_name + "\n"
-                    command += "    #end if\n"
+                    command += "  #for token in " + actual_repeat + ":\n" 
+                    command += "    '$token." + galaxy_parameter_name + "'\n"
                     command += "  #end for\n" 
                     command += "#end if\n" 
             # logic for other ITEMs 
             else:
-                if param.advanced and param.type is not _OutFile:
-                    actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
-                else:
-                    actual_parameter = "$%s" % galaxy_parameter_name
                 # TODO only useful for text fields, integers or floats
                 # not useful for choices, input fields ...
 
-                if not is_boolean_parameter(param) and type(param.restrictions) is _Choices :
+                if is_selection_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
                     command += "  %s\n" % command_line_prefix
-                    command += "  #if \" \" in str(" + actual_parameter + "):\n"
-                    command += "    \"" + actual_parameter + "\"\n"
-                    command += "  #else\n"
-                    command += "    " + actual_parameter + "\n"
-                    command += "  #end if\n"
+                    command += "  '" + actual_parameter + "'\n"
                     command += "#end if\n" 
                 elif is_boolean_parameter(param):
                     command += "%s\n" % actual_parameter
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
                     command += "#if str(" + actual_parameter + "):\n"
                     command += "  %s " % command_line_prefix
-                    command += "    \"" + actual_parameter + "\"\n"
+                    command += "    '" + actual_parameter + "'\n"
                     command += "#end if\n" 
                 else:
                     command += "#if str(" + actual_parameter + "):\n"
@@ -494,6 +494,13 @@ def expand_macros(tool, model, **kwargs):
 
 
 def get_galaxy_parameter_name(param):
+    """
+    get the name of the parameter used in the galaxy tool
+    - prepend param_
+    - replace : and - by _
+    @param param the parameter
+    @return the name used for the parameter in the tool form
+    """
     return "param_%s" % utils.extract_param_name(param).replace(":", "_").replace("-", "_")
 
 
@@ -505,7 +512,7 @@ def get_input_with_same_restrictions(out_param, model, supported_file_formats):
                 out_param_formats = get_supported_file_types(out_param.restrictions.formats, supported_file_formats)
                 if in_param_formats == out_param_formats:
                     return param
-                    
+
 
 def create_inputs(tool, model, **kwargs):
     """
@@ -534,8 +541,12 @@ def create_inputs(tool, model, **kwargs):
 
         parent_node = inputs_node
 
-        # for lists we need a repeat tag
-        if param.is_list and param.type is not _InFile:
+        # for lists we need a repeat tag, execept if
+        # - list of strings with a fixed set of options -> select w multiple=true
+        # - InFiles -> data w multiple=true
+        if param.is_list and\
+           not (param.type is str and param.restrictions is not None) and\
+           param.type is not _InFile:
             rep_node = add_child_node(parent_node, "repeat")
             create_repeat_attribute_list(rep_node, param)
             parent_node = rep_node
@@ -560,7 +571,9 @@ def create_inputs(tool, model, **kwargs):
         parent_node = expand_advanced_node
 
         # for lists we need a repeat tag
-        if param.is_list and param.type is not _InFile:
+        if param.is_list and\
+           not (param.type is str and param.restrictions is not None) and\
+           param.type is not _InFile:
             rep_node = add_child_node(parent_node, "repeat")
             create_repeat_attribute_list(rep_node, param)
             parent_node = rep_node
@@ -570,6 +583,12 @@ def create_inputs(tool, model, **kwargs):
 
 
 def get_repeat_galaxy_parameter_name(param):
+    """
+    get the name of the repeat that contains the parameter
+    - prepend rep_
+    @param param the parameter
+    @return the name of the repeat
+    """
     return "rep_" + get_galaxy_parameter_name(param)
 
 
@@ -594,7 +613,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     @param supported_file_formats
     """
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
-    print param_node.attrib["name"]
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
@@ -605,8 +623,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     if is_selection_parameter(param):
         param_type = "select"
-        if 2 < len(param.restrictions.choices) < 5:
+        if len(param.restrictions.choices) < 5 and not param.is_list:
             param_node.attrib["display"] = "radio"
+        if param.is_list:
+            param_node.attrib["multiple"] = "true"
         
     if is_boolean_parameter(param):
         param_type = "boolean"
@@ -634,20 +654,32 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     else:
         param_node.attrib["type"] = param_type
 
+    if param_type == "select" and param.default in param.restrictions.choices:
+        param_node.attrib["optional"] = "False"
+    else:
+        param_node.attrib["optional"] = str(not param.required)
+
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None:
         # it could be either _Choices or _NumericRange, with special case for boolean types
         if param_type == "boolean":
             create_boolean_parameter(param_node, param)
         elif type(param.restrictions) is _Choices:
+            # add a nothing selected option to mandatory options w/o default 
+            if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
+                param.restrictions.choices.insert(0, "select a value")
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
                 option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
                 option_node.text = str(choice)
 
                 # preselect the default value
-                if param.default == choice:
+                if param.default == choice or (type(param.default) is list and choice in param.default):
                     option_node.attrib["selected"] = "true"
+            # add validator to check that "nothing selected" is not seletcedto mandatory options w/o default
+            if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
+                validator_node = add_child_node(param_node, "validator", OrderedDict([("type", "expression"), ("message", "A value needs to be selected")]))
+                validator_node.text = 'value != "select a value"'
 
         elif type(param.restrictions) is _NumericRange:
             if param.type is not int and param.type is not float:
@@ -668,10 +700,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
 
-        if param_type == "select" and param_type != "boolean" and param.default in param.restrictions.choices:
-            param_node.attrib["optional"] = "False"
-        else:
-            param_node.attrib["optional"] = str(not param.required)
 
     if param_type == "text":
         # add size attribute... this is the length of a textbox field in Galaxy (it could also be 15x2, for instance)
@@ -798,15 +826,18 @@ def is_boolean_parameter(param):
     @return True iff a boolean parameter
     """
     # detect boolean selects of OpenMS
-    if is_selection_parameter(param):
+    if type(param.restrictions) is _Choices:
         return set(param.restrictions.choices) == set(["true", "false"])
     else:
         return param.type is bool
 
 
-# determines if there are choices for the parameter
 def is_selection_parameter(param):
-    return type(param.restrictions) is _Choices
+    """
+    determines if there are choices for the parameter and its not bool
+    """
+    if type(param.restrictions) is _Choices:
+        return set(param.restrictions.choices) != set(["true", "false"])
 
 
 def get_lowercase_list(some_list):
