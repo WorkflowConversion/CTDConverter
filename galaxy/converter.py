@@ -454,7 +454,7 @@ def create_command(tool, model, **kwargs):
                     command += "#end if\n" 
 
         if param.advanced and param.type is not _OutFile:
-            advanced_command += "    %s" % command
+            advanced_command += "%s" % utils.indent(command)
         else:
             final_command += command
 
@@ -462,7 +462,7 @@ def create_command(tool, model, **kwargs):
         final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
 
     if not found_output_parameter:
-        final_command += "> $param_stdout\n" 
+        final_command += "> $param_stdout\n"
 
     command_node = add_child_node(tool, "command")
     command_node.text = CDATA(final_command)

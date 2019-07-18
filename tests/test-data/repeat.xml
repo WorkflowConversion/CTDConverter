@@ -153,146 +153,146 @@
   #end for
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
-    
-#if $adv_opts.rep_param_string_wodefault_optional_adv:
--string_wodefault_optional_adv
-  #for token in $adv_opts.rep_param_string_wodefault_optional_adv:
-    '$token.param_string_wodefault_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_string_wodefault_mandatory_adv:
--string_wodefault_mandatory_adv
-  #for token in $adv_opts.rep_param_string_wodefault_mandatory_adv:
-    '$token.param_string_wodefault_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_string_default_optional_adv:
--string_default_optional_adv
-  #for token in $adv_opts.rep_param_string_default_optional_adv:
-    '$token.param_string_default_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_string_default_mandatory_adv:
--string_default_mandatory_adv
-  #for token in $adv_opts.rep_param_string_default_mandatory_adv:
-    '$token.param_string_default_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_wodefault_optional_adv:
--int_wodefault_optional_adv
-  #for token in $adv_opts.rep_param_int_wodefault_optional_adv:
-    '$token.param_int_wodefault_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_wodefault_mandatory_adv:
--int_wodefault_mandatory_adv
-  #for token in $adv_opts.rep_param_int_wodefault_mandatory_adv:
-    '$token.param_int_wodefault_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_default_optional_adv:
--int_default_optional_adv
-  #for token in $adv_opts.rep_param_int_default_optional_adv:
-    '$token.param_int_default_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_default_mandatory_adv:
--int_default_mandatory_adv
-  #for token in $adv_opts.rep_param_int_default_mandatory_adv:
-    '$token.param_int_default_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
--int_resticted_wodefault_optional_adv
-  #for token in $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
-    '$token.param_int_resticted_wodefault_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
--int_resticted_wodefault_mandatory_adv
-  #for token in $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
-    '$token.param_int_resticted_wodefault_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_resticted_default_optional_adv:
--int_resticted_default_optional_adv
-  #for token in $adv_opts.rep_param_int_resticted_default_optional_adv:
-    '$token.param_int_resticted_default_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_int_resticted_default_mandatory_adv:
--int_resticted_default_mandatory_adv
-  #for token in $adv_opts.rep_param_int_resticted_default_mandatory_adv:
-    '$token.param_int_resticted_default_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_wodefault_optional_adv:
--double_wodefault_optional_adv
-  #for token in $adv_opts.rep_param_double_wodefault_optional_adv:
-    '$token.param_double_wodefault_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_wodefault_mandatory_adv:
--double_wodefault_mandatory_adv
-  #for token in $adv_opts.rep_param_double_wodefault_mandatory_adv:
-    '$token.param_double_wodefault_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_default_optional_adv:
--double_default_optional_adv
-  #for token in $adv_opts.rep_param_double_default_optional_adv:
-    '$token.param_double_default_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_default_mandatory_adv:
--double_default_mandatory_adv
-  #for token in $adv_opts.rep_param_double_default_mandatory_adv:
-    '$token.param_double_default_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
--double_resticted_wodefault_optional_adv
-  #for token in $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
-    '$token.param_double_resticted_wodefault_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
--double_resticted_wodefault_mandatory_adv
-  #for token in $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
-    '$token.param_double_resticted_wodefault_mandatory_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_resticted_default_optional_adv:
--double_resticted_default_optional_adv
-  #for token in $adv_opts.rep_param_double_resticted_default_optional_adv:
-    '$token.param_double_resticted_default_optional_adv'
-  #end for
-#end if
-    
-#if $adv_opts.rep_param_double_resticted_default_mandatory_adv:
--double_resticted_default_mandatory_adv
-  #for token in $adv_opts.rep_param_double_resticted_default_mandatory_adv:
-    '$token.param_double_resticted_default_mandatory_adv'
-  #end for
-#end if
+  
+  #if $adv_opts.rep_param_string_wodefault_optional_adv:
+  -string_wodefault_optional_adv
+    #for token in $adv_opts.rep_param_string_wodefault_optional_adv:
+      '$token.param_string_wodefault_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_string_wodefault_mandatory_adv:
+  -string_wodefault_mandatory_adv
+    #for token in $adv_opts.rep_param_string_wodefault_mandatory_adv:
+      '$token.param_string_wodefault_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_string_default_optional_adv:
+  -string_default_optional_adv
+    #for token in $adv_opts.rep_param_string_default_optional_adv:
+      '$token.param_string_default_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_string_default_mandatory_adv:
+  -string_default_mandatory_adv
+    #for token in $adv_opts.rep_param_string_default_mandatory_adv:
+      '$token.param_string_default_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_wodefault_optional_adv:
+  -int_wodefault_optional_adv
+    #for token in $adv_opts.rep_param_int_wodefault_optional_adv:
+      '$token.param_int_wodefault_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_wodefault_mandatory_adv:
+  -int_wodefault_mandatory_adv
+    #for token in $adv_opts.rep_param_int_wodefault_mandatory_adv:
+      '$token.param_int_wodefault_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_default_optional_adv:
+  -int_default_optional_adv
+    #for token in $adv_opts.rep_param_int_default_optional_adv:
+      '$token.param_int_default_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_default_mandatory_adv:
+  -int_default_mandatory_adv
+    #for token in $adv_opts.rep_param_int_default_mandatory_adv:
+      '$token.param_int_default_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
+  -int_resticted_wodefault_optional_adv
+    #for token in $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
+      '$token.param_int_resticted_wodefault_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
+  -int_resticted_wodefault_mandatory_adv
+    #for token in $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
+      '$token.param_int_resticted_wodefault_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_resticted_default_optional_adv:
+  -int_resticted_default_optional_adv
+    #for token in $adv_opts.rep_param_int_resticted_default_optional_adv:
+      '$token.param_int_resticted_default_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_int_resticted_default_mandatory_adv:
+  -int_resticted_default_mandatory_adv
+    #for token in $adv_opts.rep_param_int_resticted_default_mandatory_adv:
+      '$token.param_int_resticted_default_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_wodefault_optional_adv:
+  -double_wodefault_optional_adv
+    #for token in $adv_opts.rep_param_double_wodefault_optional_adv:
+      '$token.param_double_wodefault_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_wodefault_mandatory_adv:
+  -double_wodefault_mandatory_adv
+    #for token in $adv_opts.rep_param_double_wodefault_mandatory_adv:
+      '$token.param_double_wodefault_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_default_optional_adv:
+  -double_default_optional_adv
+    #for token in $adv_opts.rep_param_double_default_optional_adv:
+      '$token.param_double_default_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_default_mandatory_adv:
+  -double_default_mandatory_adv
+    #for token in $adv_opts.rep_param_double_default_mandatory_adv:
+      '$token.param_double_default_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
+  -double_resticted_wodefault_optional_adv
+    #for token in $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
+      '$token.param_double_resticted_wodefault_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
+  -double_resticted_wodefault_mandatory_adv
+    #for token in $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
+      '$token.param_double_resticted_wodefault_mandatory_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_resticted_default_optional_adv:
+  -double_resticted_default_optional_adv
+    #for token in $adv_opts.rep_param_double_resticted_default_optional_adv:
+      '$token.param_double_resticted_default_optional_adv'
+    #end for
+  #end if
+  
+  #if $adv_opts.rep_param_double_resticted_default_mandatory_adv:
+  -double_resticted_default_mandatory_adv
+    #for token in $adv_opts.rep_param_double_resticted_default_mandatory_adv:
+      '$token.param_double_resticted_default_mandatory_adv'
+    #end for
+  #end if
 #end if
 > $param_stdout
 ]]></command>

@@ -316,3 +316,14 @@ def extract_command_line_prefix(param, ctd_model):
         # there was no mapping, so for the cli name we will use a '-' in the prefix
         param_cli_name = "-" + param_name
     return param_cli_name
+
+
+def indent(s, indentation="  "):
+    """
+    helper function to indent text
+    @param s the text (a string)
+    @param indentation the desired indentation
+    @return indented text
+    """
+    return "\n".join([indentation+_ for _ in s.splitlines()])+"\n"
+

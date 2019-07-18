@@ -25,18 +25,18 @@
   -param_default_optional_unrestricted     '$param_param_default_optional_unrestricted'
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
-    #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv):
-  -param_wodefault_mandatory_unrestricted_adv     '$adv_opts.param_param_wodefault_mandatory_unrestricted_adv'
-#end if
-    #if str($adv_opts.param_param_default_mandatory_unrestricted_adv):
-  -param_default_mandatory_unrestricted_adv     '$adv_opts.param_param_default_mandatory_unrestricted_adv'
-#end if
-    #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv):
-  -param_wodefault_optional_unrestricted_adv     '$adv_opts.param_param_wodefault_optional_unrestricted_adv'
-#end if
-    #if str($adv_opts.param_param_default_optional_unrestricted_adv):
-  -param_default_optional_unrestricted_adv     '$adv_opts.param_param_default_optional_unrestricted_adv'
-#end if
+  #if str($adv_opts.param_param_wodefault_mandatory_unrestricted_adv):
+    -param_wodefault_mandatory_unrestricted_adv     '$adv_opts.param_param_wodefault_mandatory_unrestricted_adv'
+  #end if
+  #if str($adv_opts.param_param_default_mandatory_unrestricted_adv):
+    -param_default_mandatory_unrestricted_adv     '$adv_opts.param_param_default_mandatory_unrestricted_adv'
+  #end if
+  #if str($adv_opts.param_param_wodefault_optional_unrestricted_adv):
+    -param_wodefault_optional_unrestricted_adv     '$adv_opts.param_param_wodefault_optional_unrestricted_adv'
+  #end if
+  #if str($adv_opts.param_param_default_optional_unrestricted_adv):
+    -param_default_optional_unrestricted_adv     '$adv_opts.param_param_default_optional_unrestricted_adv'
+  #end if
 #end if
 > $param_stdout
 ]]></command>
