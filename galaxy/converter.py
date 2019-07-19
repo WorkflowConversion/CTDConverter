@@ -526,7 +526,7 @@ def create_inputs(tool, model, **kwargs):
     inputs_node = SubElement(tool, "inputs")
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
-    expand_advanced_node = None
+    advanced_node = None
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     # treat all non output-file/advanced/blacklisted/hardcoded parameters as inputs
@@ -539,9 +539,11 @@ def create_inputs(tool, model, **kwargs):
         if param.type is _OutFile:
             continue
         if param.advanced:
-            continue
-
-        parent_node = inputs_node
+            if advanced_node is None:
+                advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
+            parent_node = advanced_node
+        else:
+            parent_node = inputs_node
 
         # for lists we need a repeat tag, execept if
         # - list of strings with a fixed set of options -> select w multiple=true
@@ -556,32 +558,8 @@ def create_inputs(tool, model, **kwargs):
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
 
-    # tread advanced parameters as inputs
-    # TODO: merge with previous loop to avoid code duplication?
-    for param in utils.extract_and_flatten_parameters(model):
-        # no need to show hardcoded parameters
-        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
-        if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
-            # let's not use an extra level of indentation and use NOP
-            continue
-        if param.type is _OutFile:
-            continue
-        if not param.advanced:
-            continue
-        if expand_advanced_node is None:
-            expand_advanced_node = add_child_node(inputs_node, "expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
-        parent_node = expand_advanced_node
-
-        # for lists we need a repeat tag
-        if param.is_list and\
-           not (param.type is str and param.restrictions is not None) and\
-           param.type is not _InFile:
-            rep_node = add_child_node(parent_node, "repeat")
-            create_repeat_attribute_list(rep_node, param)
-            parent_node = rep_node
-
-        param_node = add_child_node(parent_node, "param")
-        create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
+    if not advanced_node is None:
+        inputs_node.append(advanced_node)
 
 
 def get_repeat_galaxy_parameter_name(param):
