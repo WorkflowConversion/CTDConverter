@@ -51,32 +51,32 @@
 -list_mandatory_noformat
   #for token in $param_list_mandatory_noformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 -list_optional_noformat
   #for token in $param_list_optional_noformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 -list_mandatory_oneformat
   #for token in $param_list_mandatory_oneformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 -list_optional_oneformat
   #for token in $param_list_optional_oneformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 -list_mandatory_multformat
   #for token in $param_list_mandatory_multformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 -list_optional_multformat
   #for token in $param_list_optional_multformat:
     #if $token
-      $token
+      '$token'
     #end if  #end for
 #if $adv_opts.adv_opts_selector=='advanced':
   #if str($adv_opts.param_mandatory_noformat_adv):
@@ -118,32 +118,32 @@
   -list_mandatory_noformat_adv
     #for token in $param_list_mandatory_noformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
   -list_optional_noformat_adv
     #for token in $param_list_optional_noformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
   -list_mandatory_oneformat_adv
     #for token in $param_list_mandatory_oneformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
   -list_optional_oneformat_adv
     #for token in $param_list_optional_oneformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
   -list_mandatory_multformat_adv
     #for token in $param_list_mandatory_multformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
   -list_optional_multformat_adv
     #for token in $param_list_optional_multformat_adv:
       #if $token
-        $token
+        '$token'
       #end if  #end for
 #end if
 > $param_stdout

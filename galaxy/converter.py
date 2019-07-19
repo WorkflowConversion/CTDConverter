@@ -729,6 +729,8 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # simple boolean with a default
             if param.default is True:
                 param_node.attrib["checked"] = "true"
+    elif param.type is int or param.type is float:
+        param_node.attrib["value"] = ""
 
     label = "%s parameter" % param.name
     help_text = ""
