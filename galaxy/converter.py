@@ -730,7 +730,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
         # add sanitizer nodes to other text params, this is needed for special character like "["
         # which are used for example by FeatureFinderMultiplex
-        else:
+        elif not param.type is _InFile:
             sanitizer_node = SubElement(param_node, "sanitizer")
             valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
             SubElement(valid_node, "remove", OrderedDict([("value", '\'')]))

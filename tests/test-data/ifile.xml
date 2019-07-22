@@ -78,6 +78,36 @@
     #if $token
       '$token'
     #end if  #end for
+-list_default_mandatory_noformat
+  #for token in $param_list_default_mandatory_noformat:
+    #if $token
+      '$token'
+    #end if  #end for
+-list_default_optional_noformat
+  #for token in $param_list_default_optional_noformat:
+    #if $token
+      '$token'
+    #end if  #end for
+-list_default_mandatory_oneformat
+  #for token in $param_list_default_mandatory_oneformat:
+    #if $token
+      '$token'
+    #end if  #end for
+-list_default_optional_oneformat
+  #for token in $param_list_default_optional_oneformat:
+    #if $token
+      '$token'
+    #end if  #end for
+-list_default_mandatory_multformat
+  #for token in $param_list_default_mandatory_multformat:
+    #if $token
+      '$token'
+    #end if  #end for
+-list_default_optional_multformat
+  #for token in $param_list_default_optional_multformat:
+    #if $token
+      '$token'
+    #end if  #end for
 #if $adv_opts.adv_opts_selector=='advanced':
   #if str($adv_opts.param_mandatory_noformat_adv):
     -mandatory_noformat_adv $adv_opts.param_mandatory_noformat_adv
@@ -145,6 +175,36 @@
       #if $token
         '$token'
       #end if  #end for
+  -list_default_mandatory_noformat_adv
+    #for token in $param_list_default_mandatory_noformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
+  -list_default_optional_noformat_adv
+    #for token in $param_list_default_optional_noformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
+  -list_default_mandatory_oneformat_adv
+    #for token in $param_list_default_mandatory_oneformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
+  -list_default_optional_oneformat_adv
+    #for token in $param_list_default_optional_oneformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
+  -list_default_mandatory_multformat_adv
+    #for token in $param_list_default_mandatory_multformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
+  -list_default_optional_multformat_adv
+    #for token in $param_list_default_optional_multformat_adv:
+      #if $token
+        '$token'
+      #end if  #end for
 #end if
 > $param_stdout
 ]]></command>
@@ -161,54 +221,18 @@
     <param name="param_default_optional_oneformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat"/>
     <param name="param_default_mandatory_multformat" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat"/>
     <param name="param_default_optional_multformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat"/>
-    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="param_list_mandatory_multformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
-    <param name="param_list_optional_multformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-          <remove value="&quot;"/>
-        </valid>
-      </sanitizer>
-    </param>
+    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat"/>
+    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat"/>
+    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat"/>
+    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat"/>
+    <param name="param_list_mandatory_multformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat"/>
+    <param name="param_list_optional_multformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat"/>
+    <param name="param_list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_noformat"/>
+    <param name="param_list_default_optional_noformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_noformat"/>
+    <param name="param_list_default_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_oneformat"/>
+    <param name="param_list_default_optional_oneformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_oneformat"/>
+    <param name="param_list_default_mandatory_multformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_multformat"/>
+    <param name="param_list_default_optional_multformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_multformat"/>
     <expand macro="advanced_options">
       <param name="param_mandatory_noformat_adv" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_noformat_adv"/>
       <param name="param_optional_noformat_adv" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_noformat_adv"/>
@@ -222,54 +246,18 @@
       <param name="param_default_optional_oneformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat_adv"/>
       <param name="param_default_mandatory_multformat_adv" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat_adv"/>
       <param name="param_default_optional_multformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat_adv"/>
-      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-      <param name="param_list_mandatory_multformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-      <param name="param_list_optional_multformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat_adv">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
+      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat_adv"/>
+      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat_adv"/>
+      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat_adv"/>
+      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat_adv"/>
+      <param name="param_list_mandatory_multformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat_adv"/>
+      <param name="param_list_optional_multformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat_adv"/>
+      <param name="param_list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_noformat_adv"/>
+      <param name="param_list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_noformat_adv"/>
+      <param name="param_list_default_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_oneformat_adv"/>
+      <param name="param_list_default_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_oneformat_adv"/>
+      <param name="param_list_default_mandatory_multformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_mandatory_multformat_adv"/>
+      <param name="param_list_default_optional_multformat_adv" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help=" (comma separated list)" argument="-list_default_optional_multformat_adv"/>
     </expand>
   </inputs>
   <outputs>
