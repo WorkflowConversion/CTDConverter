@@ -620,9 +620,9 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
-                param_format = ",".join([get_supported_file_type(i, supported_file_formats) if
+                param_format = ",".join(set([get_supported_file_type(i, supported_file_formats) if
                                         get_supported_file_type(i, supported_file_formats)
-                                        else i for i in param.restrictions.formats])
+                                        else i for i in param.restrictions.formats]))
             else:
                 raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], "
                                             "but instead got [%(type)s]"
@@ -681,9 +681,9 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             if param.restrictions.n_max is not None:
                 param_node.attrib["max"] = str(param.restrictions.n_max)
         elif type(param.restrictions) is _FileFormat:
-            param_node.attrib["format"] = ','.join([get_supported_file_type(i, supported_file_formats) if
+            param_node.attrib["format"] = ','.join(set([get_supported_file_type(i, supported_file_formats) if
                                             get_supported_file_type(i, supported_file_formats)
-                                            else i for i in param.restrictions.formats])
+                                            else i for i in param.restrictions.formats]))
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
