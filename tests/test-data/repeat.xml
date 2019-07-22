@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [String Test]-->
-<tool id="echo RepeatTest" name="echo RepeatTest" version="2.3.0">
+<tool id="echo_RepeatTest" name="echo RepeatTest" version="2.3.0">
   <description>Repeat parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo RepeatTest</token>
@@ -13,691 +13,659 @@
   <command><![CDATA[echo RepeatTest
 
 
-#if $rep_param_string_wodefault_optional:
--string_wodefault_optional
-  #for token in $rep_param_string_wodefault_optional:
-    '$token.param_string_wodefault_optional'
-  #end for
+#if str($param_string_wodefault_optional):
+  -string_wodefault_optional
+  '$param_string_wodefault_optional'
 #end if
 
-#if $rep_param_string_wodefault_mandatory:
--string_wodefault_mandatory
-  #for token in $rep_param_string_wodefault_mandatory:
-    '$token.param_string_wodefault_mandatory'
-  #end for
+#if str($param_string_wodefault_mandatory):
+  -string_wodefault_mandatory
+  '$param_string_wodefault_mandatory'
 #end if
 
-#if $rep_param_string_default_optional:
--string_default_optional
-  #for token in $rep_param_string_default_optional:
-    '$token.param_string_default_optional'
-  #end for
+#if str($param_string_default_optional):
+  -string_default_optional
+  '$param_string_default_optional'
 #end if
 
-#if $rep_param_string_default_mandatory:
--string_default_mandatory
-  #for token in $rep_param_string_default_mandatory:
-    '$token.param_string_default_mandatory'
-  #end for
+#if str($param_string_default_mandatory):
+  -string_default_mandatory
+  '$param_string_default_mandatory'
 #end if
 
-#if $rep_param_int_wodefault_optional:
--int_wodefault_optional
-  #for token in $rep_param_int_wodefault_optional:
-    '$token.param_int_wodefault_optional'
-  #end for
+#if str($param_int_wodefault_optional):
+  -int_wodefault_optional
+  '$param_int_wodefault_optional'
 #end if
 
-#if $rep_param_int_wodefault_mandatory:
--int_wodefault_mandatory
-  #for token in $rep_param_int_wodefault_mandatory:
-    '$token.param_int_wodefault_mandatory'
-  #end for
+#if str($param_int_wodefault_mandatory):
+  -int_wodefault_mandatory
+  '$param_int_wodefault_mandatory'
 #end if
 
-#if $rep_param_int_default_optional:
--int_default_optional
-  #for token in $rep_param_int_default_optional:
-    '$token.param_int_default_optional'
-  #end for
+#if str($param_int_default_optional):
+  -int_default_optional
+  '$param_int_default_optional'
 #end if
 
-#if $rep_param_int_default_mandatory:
--int_default_mandatory
-  #for token in $rep_param_int_default_mandatory:
-    '$token.param_int_default_mandatory'
-  #end for
+#if str($param_int_default_mandatory):
+  -int_default_mandatory
+  '$param_int_default_mandatory'
 #end if
 
-#if $rep_param_int_resticted_wodefault_optional:
--int_resticted_wodefault_optional
-  #for token in $rep_param_int_resticted_wodefault_optional:
-    '$token.param_int_resticted_wodefault_optional'
-  #end for
+#if str($param_int_resticted_wodefault_optional):
+  -int_resticted_wodefault_optional
+  '$param_int_resticted_wodefault_optional'
 #end if
 
-#if $rep_param_int_resticted_wodefault_mandatory:
--int_resticted_wodefault_mandatory
-  #for token in $rep_param_int_resticted_wodefault_mandatory:
-    '$token.param_int_resticted_wodefault_mandatory'
-  #end for
+#if str($param_int_resticted_wodefault_mandatory):
+  -int_resticted_wodefault_mandatory
+  '$param_int_resticted_wodefault_mandatory'
 #end if
 
-#if $rep_param_int_resticted_default_optional:
--int_resticted_default_optional
-  #for token in $rep_param_int_resticted_default_optional:
-    '$token.param_int_resticted_default_optional'
-  #end for
+#if str($param_int_resticted_default_optional):
+  -int_resticted_default_optional
+  '$param_int_resticted_default_optional'
 #end if
 
-#if $rep_param_int_resticted_default_mandatory:
--int_resticted_default_mandatory
-  #for token in $rep_param_int_resticted_default_mandatory:
-    '$token.param_int_resticted_default_mandatory'
-  #end for
+#if str($param_int_resticted_default_mandatory):
+  -int_resticted_default_mandatory
+  '$param_int_resticted_default_mandatory'
 #end if
 
-#if $rep_param_double_wodefault_optional:
--double_wodefault_optional
-  #for token in $rep_param_double_wodefault_optional:
-    '$token.param_double_wodefault_optional'
-  #end for
+#if str($param_double_wodefault_optional):
+  -double_wodefault_optional
+  '$param_double_wodefault_optional'
 #end if
 
-#if $rep_param_double_wodefault_mandatory:
--double_wodefault_mandatory
-  #for token in $rep_param_double_wodefault_mandatory:
-    '$token.param_double_wodefault_mandatory'
-  #end for
+#if str($param_double_wodefault_mandatory):
+  -double_wodefault_mandatory
+  '$param_double_wodefault_mandatory'
 #end if
 
-#if $rep_param_double_default_optional:
--double_default_optional
-  #for token in $rep_param_double_default_optional:
-    '$token.param_double_default_optional'
-  #end for
+#if str($param_double_default_optional):
+  -double_default_optional
+  '$param_double_default_optional'
 #end if
 
-#if $rep_param_double_default_mandatory:
--double_default_mandatory
-  #for token in $rep_param_double_default_mandatory:
-    '$token.param_double_default_mandatory'
-  #end for
+#if str($param_double_default_mandatory):
+  -double_default_mandatory
+  '$param_double_default_mandatory'
 #end if
 
-#if $rep_param_double_resticted_wodefault_optional:
--double_resticted_wodefault_optional
-  #for token in $rep_param_double_resticted_wodefault_optional:
-    '$token.param_double_resticted_wodefault_optional'
-  #end for
+#if str($param_double_resticted_wodefault_optional):
+  -double_resticted_wodefault_optional
+  '$param_double_resticted_wodefault_optional'
 #end if
 
-#if $rep_param_double_resticted_wodefault_mandatory:
--double_resticted_wodefault_mandatory
-  #for token in $rep_param_double_resticted_wodefault_mandatory:
-    '$token.param_double_resticted_wodefault_mandatory'
-  #end for
+#if str($param_double_resticted_wodefault_mandatory):
+  -double_resticted_wodefault_mandatory
+  '$param_double_resticted_wodefault_mandatory'
 #end if
 
-#if $rep_param_double_resticted_default_optional:
--double_resticted_default_optional
-  #for token in $rep_param_double_resticted_default_optional:
-    '$token.param_double_resticted_default_optional'
-  #end for
+#if str($param_double_resticted_default_optional):
+  -double_resticted_default_optional
+  '$param_double_resticted_default_optional'
 #end if
 
-#if $rep_param_double_resticted_default_mandatory:
--double_resticted_default_mandatory
-  #for token in $rep_param_double_resticted_default_mandatory:
-    '$token.param_double_resticted_default_mandatory'
-  #end for
+#if str($param_double_resticted_default_mandatory):
+  -double_resticted_default_mandatory
+  '$param_double_resticted_default_mandatory'
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
   
-  #if $adv_opts.rep_param_string_wodefault_optional_adv:
-  -string_wodefault_optional_adv
-    #for token in $adv_opts.rep_param_string_wodefault_optional_adv:
-      '$token.param_string_wodefault_optional_adv'
-    #end for
+  #if str($adv_opts.param_string_wodefault_optional_adv):
+    -string_wodefault_optional_adv
+    '$adv_opts.param_string_wodefault_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_string_wodefault_mandatory_adv:
-  -string_wodefault_mandatory_adv
-    #for token in $adv_opts.rep_param_string_wodefault_mandatory_adv:
-      '$token.param_string_wodefault_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_string_wodefault_mandatory_adv):
+    -string_wodefault_mandatory_adv
+    '$adv_opts.param_string_wodefault_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_string_default_optional_adv:
-  -string_default_optional_adv
-    #for token in $adv_opts.rep_param_string_default_optional_adv:
-      '$token.param_string_default_optional_adv'
-    #end for
+  #if str($adv_opts.param_string_default_optional_adv):
+    -string_default_optional_adv
+    '$adv_opts.param_string_default_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_string_default_mandatory_adv:
-  -string_default_mandatory_adv
-    #for token in $adv_opts.rep_param_string_default_mandatory_adv:
-      '$token.param_string_default_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_string_default_mandatory_adv):
+    -string_default_mandatory_adv
+    '$adv_opts.param_string_default_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_wodefault_optional_adv:
-  -int_wodefault_optional_adv
-    #for token in $adv_opts.rep_param_int_wodefault_optional_adv:
-      '$token.param_int_wodefault_optional_adv'
-    #end for
+  #if str($adv_opts.param_int_wodefault_optional_adv):
+    -int_wodefault_optional_adv
+    '$adv_opts.param_int_wodefault_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_wodefault_mandatory_adv:
-  -int_wodefault_mandatory_adv
-    #for token in $adv_opts.rep_param_int_wodefault_mandatory_adv:
-      '$token.param_int_wodefault_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_int_wodefault_mandatory_adv):
+    -int_wodefault_mandatory_adv
+    '$adv_opts.param_int_wodefault_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_default_optional_adv:
-  -int_default_optional_adv
-    #for token in $adv_opts.rep_param_int_default_optional_adv:
-      '$token.param_int_default_optional_adv'
-    #end for
+  #if str($adv_opts.param_int_default_optional_adv):
+    -int_default_optional_adv
+    '$adv_opts.param_int_default_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_default_mandatory_adv:
-  -int_default_mandatory_adv
-    #for token in $adv_opts.rep_param_int_default_mandatory_adv:
-      '$token.param_int_default_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_int_default_mandatory_adv):
+    -int_default_mandatory_adv
+    '$adv_opts.param_int_default_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
-  -int_resticted_wodefault_optional_adv
-    #for token in $adv_opts.rep_param_int_resticted_wodefault_optional_adv:
-      '$token.param_int_resticted_wodefault_optional_adv'
-    #end for
+  #if str($adv_opts.param_int_resticted_wodefault_optional_adv):
+    -int_resticted_wodefault_optional_adv
+    '$adv_opts.param_int_resticted_wodefault_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
-  -int_resticted_wodefault_mandatory_adv
-    #for token in $adv_opts.rep_param_int_resticted_wodefault_mandatory_adv:
-      '$token.param_int_resticted_wodefault_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_int_resticted_wodefault_mandatory_adv):
+    -int_resticted_wodefault_mandatory_adv
+    '$adv_opts.param_int_resticted_wodefault_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_resticted_default_optional_adv:
-  -int_resticted_default_optional_adv
-    #for token in $adv_opts.rep_param_int_resticted_default_optional_adv:
-      '$token.param_int_resticted_default_optional_adv'
-    #end for
+  #if str($adv_opts.param_int_resticted_default_optional_adv):
+    -int_resticted_default_optional_adv
+    '$adv_opts.param_int_resticted_default_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_int_resticted_default_mandatory_adv:
-  -int_resticted_default_mandatory_adv
-    #for token in $adv_opts.rep_param_int_resticted_default_mandatory_adv:
-      '$token.param_int_resticted_default_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_int_resticted_default_mandatory_adv):
+    -int_resticted_default_mandatory_adv
+    '$adv_opts.param_int_resticted_default_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_wodefault_optional_adv:
-  -double_wodefault_optional_adv
-    #for token in $adv_opts.rep_param_double_wodefault_optional_adv:
-      '$token.param_double_wodefault_optional_adv'
-    #end for
+  #if str($adv_opts.param_double_wodefault_optional_adv):
+    -double_wodefault_optional_adv
+    '$adv_opts.param_double_wodefault_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_wodefault_mandatory_adv:
-  -double_wodefault_mandatory_adv
-    #for token in $adv_opts.rep_param_double_wodefault_mandatory_adv:
-      '$token.param_double_wodefault_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_double_wodefault_mandatory_adv):
+    -double_wodefault_mandatory_adv
+    '$adv_opts.param_double_wodefault_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_default_optional_adv:
-  -double_default_optional_adv
-    #for token in $adv_opts.rep_param_double_default_optional_adv:
-      '$token.param_double_default_optional_adv'
-    #end for
+  #if str($adv_opts.param_double_default_optional_adv):
+    -double_default_optional_adv
+    '$adv_opts.param_double_default_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_default_mandatory_adv:
-  -double_default_mandatory_adv
-    #for token in $adv_opts.rep_param_double_default_mandatory_adv:
-      '$token.param_double_default_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_double_default_mandatory_adv):
+    -double_default_mandatory_adv
+    '$adv_opts.param_double_default_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
-  -double_resticted_wodefault_optional_adv
-    #for token in $adv_opts.rep_param_double_resticted_wodefault_optional_adv:
-      '$token.param_double_resticted_wodefault_optional_adv'
-    #end for
+  #if str($adv_opts.param_double_resticted_wodefault_optional_adv):
+    -double_resticted_wodefault_optional_adv
+    '$adv_opts.param_double_resticted_wodefault_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
-  -double_resticted_wodefault_mandatory_adv
-    #for token in $adv_opts.rep_param_double_resticted_wodefault_mandatory_adv:
-      '$token.param_double_resticted_wodefault_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_double_resticted_wodefault_mandatory_adv):
+    -double_resticted_wodefault_mandatory_adv
+    '$adv_opts.param_double_resticted_wodefault_mandatory_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_resticted_default_optional_adv:
-  -double_resticted_default_optional_adv
-    #for token in $adv_opts.rep_param_double_resticted_default_optional_adv:
-      '$token.param_double_resticted_default_optional_adv'
-    #end for
+  #if str($adv_opts.param_double_resticted_default_optional_adv):
+    -double_resticted_default_optional_adv
+    '$adv_opts.param_double_resticted_default_optional_adv'
   #end if
   
-  #if $adv_opts.rep_param_double_resticted_default_mandatory_adv:
-  -double_resticted_default_mandatory_adv
-    #for token in $adv_opts.rep_param_double_resticted_default_mandatory_adv:
-      '$token.param_double_resticted_default_mandatory_adv'
-    #end for
+  #if str($adv_opts.param_double_resticted_default_mandatory_adv):
+    -double_resticted_default_mandatory_adv
+    '$adv_opts.param_double_resticted_default_mandatory_adv'
   #end if
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
-    <repeat name="rep_param_string_wodefault_optional" min="0" title="param_string_wodefault_optional">
-      <param name="param_string_wodefault_optional" type="text" optional="True" label="string list" help="" argument="-string_wodefault_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_string_wodefault_mandatory" min="1" title="param_string_wodefault_mandatory">
-      <param name="param_string_wodefault_mandatory" type="text" optional="False" label="string list" help="" argument="-string_wodefault_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_string_default_optional" min="0" max="1" title="param_string_default_optional">
-      <param name="param_string_default_optional" type="text" optional="True" value="A B" label="string list" help="" argument="-string_default_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_string_default_mandatory" min="1" max="1" title="param_string_default_mandatory">
-      <param name="param_string_default_mandatory" type="text" optional="False" value="A B" label="string list" help="" argument="-string_default_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_wodefault_optional" min="0" title="param_int_wodefault_optional">
-      <param name="param_int_wodefault_optional" type="text" optional="True" value="" label="int list" help="" argument="-int_wodefault_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_wodefault_mandatory" min="1" title="param_int_wodefault_mandatory">
-      <param name="param_int_wodefault_mandatory" type="text" optional="False" value="" label="int list" help="" argument="-int_wodefault_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_default_optional" min="0" max="1" title="param_int_default_optional">
-      <param name="param_int_default_optional" type="text" optional="True" value="1 2" label="int list" help="" argument="-int_default_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_default_mandatory" min="1" max="1" title="param_int_default_mandatory">
-      <param name="param_int_default_mandatory" type="text" optional="False" value="1 2" label="int list" help="" argument="-int_default_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_resticted_wodefault_optional" min="0" title="param_int_resticted_wodefault_optional">
-      <param name="param_int_resticted_wodefault_optional" type="text" optional="True" min="0" max="100" value="" label="int list" help="" argument="-int_resticted_wodefault_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_resticted_wodefault_mandatory" min="1" title="param_int_resticted_wodefault_mandatory">
-      <param name="param_int_resticted_wodefault_mandatory" type="text" optional="False" min="0" max="100" value="" label="int list" help="" argument="-int_resticted_wodefault_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_resticted_default_optional" min="0" max="1" title="param_int_resticted_default_optional">
-      <param name="param_int_resticted_default_optional" type="text" optional="True" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_int_resticted_default_mandatory" min="1" max="1" title="param_int_resticted_default_mandatory">
-      <param name="param_int_resticted_default_mandatory" type="text" optional="False" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_wodefault_optional" min="0" title="param_double_wodefault_optional">
-      <param name="param_double_wodefault_optional" type="text" optional="True" value="" label="double list" help="" argument="-double_wodefault_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_wodefault_mandatory" min="1" title="param_double_wodefault_mandatory">
-      <param name="param_double_wodefault_mandatory" type="text" optional="False" value="" label="double list" help="" argument="-double_wodefault_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_default_optional" min="0" max="1" title="param_double_default_optional">
-      <param name="param_double_default_optional" type="text" optional="True" value="1.0 2.0" label="double list" help="" argument="-double_default_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_default_mandatory" min="1" max="1" title="param_double_default_mandatory">
-      <param name="param_double_default_mandatory" type="text" optional="False" value="1.0 2.0" label="double list" help="" argument="-double_default_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_resticted_wodefault_optional" min="0" title="param_double_resticted_wodefault_optional">
-      <param name="param_double_resticted_wodefault_optional" type="text" optional="True" min="0.0" max="1.0" value="" label="double list" help="" argument="-double_resticted_wodefault_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_resticted_wodefault_mandatory" min="1" title="param_double_resticted_wodefault_mandatory">
-      <param name="param_double_resticted_wodefault_mandatory" type="text" optional="False" min="0.0" max="1.0" value="" label="double list" help="" argument="-double_resticted_wodefault_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_resticted_default_optional" min="0" max="1" title="param_double_resticted_default_optional">
-      <param name="param_double_resticted_default_optional" type="text" optional="True" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_optional">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
-    <repeat name="rep_param_double_resticted_default_mandatory" min="1" max="1" title="param_double_resticted_default_mandatory">
-      <param name="param_double_resticted_default_mandatory" type="text" optional="False" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_mandatory">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-            <remove value="&quot;"/>
-          </valid>
-        </sanitizer>
-      </param>
-    </repeat>
+    <param name="param_string_wodefault_optional" type="text" optional="True" label="string list" help=" (comma separated list)" argument="-string_wodefault_optional">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_string_wodefault_mandatory" type="text" optional="False" label="string list" help=" (comma separated list)" argument="-string_wodefault_mandatory">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_string_default_optional" type="text" optional="True" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_optional">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_string_default_mandatory" type="text" optional="False" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_mandatory">
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+          <remove value="&quot;"/>
+        </valid>
+      </sanitizer>
+    </param>
+    <param name="param_int_wodefault_optional" type="text" optional="True" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_optional">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_wodefault_mandatory" type="text" optional="False" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_mandatory">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_default_optional" type="text" optional="True" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_optional">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_default_mandatory" type="text" optional="False" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_mandatory">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_resticted_wodefault_optional" type="text" optional="True" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_optional">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_resticted_wodefault_mandatory" type="text" optional="False" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_mandatory">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_resticted_default_optional" type="text" optional="True" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_optional">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_int_resticted_default_mandatory" type="text" optional="False" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_mandatory">
+      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_wodefault_optional" type="text" optional="True" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_optional">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_wodefault_mandatory" type="text" optional="False" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_mandatory">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_default_optional" type="text" optional="True" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_optional">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_default_mandatory" type="text" optional="False" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_mandatory">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_resticted_wodefault_optional" type="text" optional="True" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_optional">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_resticted_wodefault_mandatory" type="text" optional="False" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_mandatory">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_resticted_default_optional" type="text" optional="True" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_optional">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
+    <param name="param_double_resticted_default_mandatory" type="text" optional="False" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_mandatory">
+      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+      <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+]]></validator>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value=" "/>
+        </valid>
+        <mapping initial="none">
+          <add source=" " target=""/>
+        </mapping>
+      </sanitizer>
+    </param>
     <expand macro="advanced_options">
-      <repeat name="rep_param_string_wodefault_optional_adv" min="0" title="param_string_wodefault_optional_adv">
-        <param name="param_string_wodefault_optional_adv" type="text" optional="True" label="string list" help="" argument="-string_wodefault_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_string_wodefault_mandatory_adv" min="1" title="param_string_wodefault_mandatory_adv">
-        <param name="param_string_wodefault_mandatory_adv" type="text" optional="False" label="string list" help="" argument="-string_wodefault_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_string_default_optional_adv" min="0" max="1" title="param_string_default_optional_adv">
-        <param name="param_string_default_optional_adv" type="text" optional="True" value="A B" label="string list" help="" argument="-string_default_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_string_default_mandatory_adv" min="1" max="1" title="param_string_default_mandatory_adv">
-        <param name="param_string_default_mandatory_adv" type="text" optional="False" value="A B" label="string list" help="" argument="-string_default_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_wodefault_optional_adv" min="0" title="param_int_wodefault_optional_adv">
-        <param name="param_int_wodefault_optional_adv" type="text" optional="True" value="" label="int list" help="" argument="-int_wodefault_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_wodefault_mandatory_adv" min="1" title="param_int_wodefault_mandatory_adv">
-        <param name="param_int_wodefault_mandatory_adv" type="text" optional="False" value="" label="int list" help="" argument="-int_wodefault_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_default_optional_adv" min="0" max="1" title="param_int_default_optional_adv">
-        <param name="param_int_default_optional_adv" type="text" optional="True" value="1 2" label="int list" help="" argument="-int_default_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_default_mandatory_adv" min="1" max="1" title="param_int_default_mandatory_adv">
-        <param name="param_int_default_mandatory_adv" type="text" optional="False" value="1 2" label="int list" help="" argument="-int_default_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_resticted_wodefault_optional_adv" min="0" title="param_int_resticted_wodefault_optional_adv">
-        <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="True" min="0" max="100" value="" label="int list" help="" argument="-int_resticted_wodefault_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_resticted_wodefault_mandatory_adv" min="1" title="param_int_resticted_wodefault_mandatory_adv">
-        <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0" max="100" value="" label="int list" help="" argument="-int_resticted_wodefault_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_resticted_default_optional_adv" min="0" max="1" title="param_int_resticted_default_optional_adv">
-        <param name="param_int_resticted_default_optional_adv" type="text" optional="True" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_int_resticted_default_mandatory_adv" min="1" max="1" title="param_int_resticted_default_mandatory_adv">
-        <param name="param_int_resticted_default_mandatory_adv" type="text" optional="False" min="0" max="100" value="1 2" label="int list" help="" argument="-int_resticted_default_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_wodefault_optional_adv" min="0" title="param_double_wodefault_optional_adv">
-        <param name="param_double_wodefault_optional_adv" type="text" optional="True" value="" label="double list" help="" argument="-double_wodefault_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_wodefault_mandatory_adv" min="1" title="param_double_wodefault_mandatory_adv">
-        <param name="param_double_wodefault_mandatory_adv" type="text" optional="False" value="" label="double list" help="" argument="-double_wodefault_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_default_optional_adv" min="0" max="1" title="param_double_default_optional_adv">
-        <param name="param_double_default_optional_adv" type="text" optional="True" value="1.0 2.0" label="double list" help="" argument="-double_default_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_default_mandatory_adv" min="1" max="1" title="param_double_default_mandatory_adv">
-        <param name="param_double_default_mandatory_adv" type="text" optional="False" value="1.0 2.0" label="double list" help="" argument="-double_default_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_resticted_wodefault_optional_adv" min="0" title="param_double_resticted_wodefault_optional_adv">
-        <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="True" min="0.0" max="1.0" value="" label="double list" help="" argument="-double_resticted_wodefault_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_resticted_wodefault_mandatory_adv" min="1" title="param_double_resticted_wodefault_mandatory_adv">
-        <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" value="" label="double list" help="" argument="-double_resticted_wodefault_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_resticted_default_optional_adv" min="0" max="1" title="param_double_resticted_default_optional_adv">
-        <param name="param_double_resticted_default_optional_adv" type="text" optional="True" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_optional_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
-      <repeat name="rep_param_double_resticted_default_mandatory_adv" min="1" max="1" title="param_double_resticted_default_mandatory_adv">
-        <param name="param_double_resticted_default_mandatory_adv" type="text" optional="False" min="0.0" max="1.0" value="0.3 0.5" label="double list" help="" argument="-double_resticted_default_mandatory_adv">
-          <sanitizer>
-            <valid initial="string.printable">
-              <remove value="'"/>
-              <remove value="&quot;"/>
-            </valid>
-          </sanitizer>
-        </param>
-      </repeat>
+      <param name="param_string_wodefault_optional_adv" type="text" optional="True" label="string list" help=" (comma separated list)" argument="-string_wodefault_optional_adv">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_string_wodefault_mandatory_adv" type="text" optional="False" label="string list" help=" (comma separated list)" argument="-string_wodefault_mandatory_adv">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_string_default_optional_adv" type="text" optional="True" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_optional_adv">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_string_default_mandatory_adv" type="text" optional="False" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_mandatory_adv">
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+            <remove value="&quot;"/>
+          </valid>
+        </sanitizer>
+      </param>
+      <param name="param_int_wodefault_optional_adv" type="text" optional="True" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_optional_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_wodefault_mandatory_adv" type="text" optional="False" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_mandatory_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_default_optional_adv" type="text" optional="True" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_optional_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_default_mandatory_adv" type="text" optional="False" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_mandatory_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="True" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_optional_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="False" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_mandatory_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_resticted_default_optional_adv" type="text" optional="True" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_optional_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_int_resticted_default_mandatory_adv" type="text" optional="False" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_mandatory_adv">
+        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_wodefault_optional_adv" type="text" optional="True" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_optional_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_wodefault_mandatory_adv" type="text" optional="False" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_mandatory_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_default_optional_adv" type="text" optional="True" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_optional_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_default_mandatory_adv" type="text" optional="False" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_mandatory_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="True" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_optional_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="False" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_mandatory_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_resticted_default_optional_adv" type="text" optional="True" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_optional_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
+      <param name="param_double_resticted_default_mandatory_adv" type="text" optional="False" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_mandatory_adv">
+        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+        <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+]]></validator>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value=" "/>
+          </valid>
+          <mapping initial="none">
+            <add source=" " target=""/>
+          </mapping>
+        </sanitizer>
+      </param>
     </expand>
   </inputs>
   <outputs>

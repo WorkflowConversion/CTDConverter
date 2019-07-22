@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [String Test]-->
-<tool id="echo inFileTest" name="echo inFileTest" version="2.3.0">
+<tool id="echo_inFileTest" name="echo inFileTest" version="2.3.0">
   <description>Input File parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo inFileTest</token>
@@ -161,7 +161,7 @@
     <param name="param_default_optional_oneformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat"/>
     <param name="param_default_mandatory_multformat" type="data" format="txt,txt,txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat"/>
     <param name="param_default_optional_multformat" type="data" format="txt,txt,txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat"/>
-    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat">
+    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -169,7 +169,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat">
+    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -177,7 +177,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_oneformat">
+    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -185,7 +185,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_oneformat">
+    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -193,7 +193,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_list_mandatory_multformat" type="data" format="txt,txt,txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_multformat">
+    <param name="param_list_mandatory_multformat" type="data" format="txt,txt,txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -201,7 +201,7 @@
         </valid>
       </sanitizer>
     </param>
-    <param name="param_list_optional_multformat" type="data" format="txt,txt,txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_multformat">
+    <param name="param_list_optional_multformat" type="data" format="txt,txt,txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -222,7 +222,7 @@
       <param name="param_default_optional_oneformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat_adv"/>
       <param name="param_default_mandatory_multformat_adv" type="data" format="txt,txt,txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat_adv"/>
       <param name="param_default_optional_multformat_adv" type="data" format="txt,txt,txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat_adv"/>
-      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat_adv">
+      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_noformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -230,7 +230,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat_adv">
+      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_noformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -238,7 +238,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_oneformat_adv">
+      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_oneformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -246,7 +246,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_oneformat_adv">
+      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_oneformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -254,7 +254,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_list_mandatory_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_multformat_adv">
+      <param name="param_list_mandatory_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="False" label="input file" help=" (comma separated list)" argument="-list_mandatory_multformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -262,7 +262,7 @@
           </valid>
         </sanitizer>
       </param>
-      <param name="param_list_optional_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_multformat_adv">
+      <param name="param_list_optional_multformat_adv" type="data" format="txt,txt,txt" multiple="true" optional="True" label="input file" help=" (comma separated list)" argument="-list_optional_multformat_adv">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>

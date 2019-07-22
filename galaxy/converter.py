@@ -358,7 +358,7 @@ def create_tool(model):
     initialize the tool
     @param model the ctd model
     """
-    return Element("tool", OrderedDict([("id", model.name), ("name", model.name), ("version", model.version)]))
+    return Element("tool", OrderedDict([("id", model.name.replace(" ","_")), ("name", model.name), ("version", model.version)]))
 
 
 def create_description(tool, model):
@@ -426,11 +426,9 @@ def create_command(tool, model, **kwargs):
                     command += "  $tmp\n"
                     command += "#end if\n"
                 else:
-                    command += "\n#if " + actual_repeat + ":\n"
-                    command += command_line_prefix + "\n"
-                    command += "  #for token in " + actual_repeat + ":\n" 
-                    command += "    '$token." + galaxy_parameter_name + "'\n"
-                    command += "  #end for\n" 
+                    command += "\n#if str(" + actual_parameter + "):\n"
+                    command += "  " + command_line_prefix + "\n"
+                    command += "  '" + actual_parameter + "'\n"
                     command += "#end if\n" 
             # logic for other ITEMs 
             else:
@@ -545,15 +543,15 @@ def create_inputs(tool, model, **kwargs):
         else:
             parent_node = inputs_node
 
-        # for lists we need a repeat tag, execept if
-        # - list of strings with a fixed set of options -> select w multiple=true
-        # - InFiles -> data w multiple=true
-        if param.is_list and\
-           not (param.type is str and param.restrictions is not None) and\
-           param.type is not _InFile:
-            rep_node = add_child_node(parent_node, "repeat")
-            create_repeat_attribute_list(rep_node, param)
-            parent_node = rep_node
+#         # for lists we need a repeat tag, execept if
+#         # - list of strings with a fixed set of options -> select w multiple=true
+#         # - InFiles -> data w multiple=true
+#         if param.is_list and\
+#            not (param.type is str and param.restrictions is not None) and\
+#            param.type is not _InFile:
+#             rep_node = add_child_node(parent_node, "repeat")
+#             create_repeat_attribute_list(rep_node, param)
+#             parent_node = rep_node
 
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
@@ -592,12 +590,17 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     @param param the ctd parameter 
     @param supported_file_formats
     """
+
+    # set the name and a first guess for the type (which will be over written 
+    # in some cases .. see below)
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
                          % {"type": param.type, "name": param.name})
 
+    # ITEMLIST is rendered as text field (even if its integers or floats), an 
+    # exception is files which are treated a bit below
     if param.is_list:
         param_type = "text"
 
@@ -661,7 +664,12 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
                 validator_node = add_child_node(param_node, "validator", OrderedDict([("type", "expression"), ("message", "A value needs to be selected")]))
                 validator_node.text = 'value != "select a value"'
 
-        elif type(param.restrictions) is _NumericRange:
+        # numeric ranges (which appear for int and float ITEMS and ITEMLISTS)
+        # these are reflected by min and max attributes
+        # since item lists become text parameters + validator these don't need these attributes
+        elif type(param.restrictions) is _NumericRange and param_type == "text":
+            pass
+        elif type(param.restrictions) is _NumericRange and param_type != "text":
             if param.type is not int and param.type is not float:
                 raise InvalidModelException("Expected either 'int' or 'float' in the numeric range restriction for "
                                             "parameter [%(name)s], but instead got [%(type)s]" %
@@ -682,13 +690,51 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
 
     if param_type == "text":
-        # add sanitizer nodes, this is needed for special character like "["
-        # which are used for example by FeatureFinderMultiplex
-        sanitizer_node = SubElement(param_node, "sanitizer")
+        # for repeats (which are rendered as text field in the tool form) that are actually 
+        # integer/floats special validation is necessary (try to convert them and check if
+        # in the min max range if a range is given)
+        # in addition (for the convenience of the user) any spaces are removed (due to the
+        # regex only possible next to the commas and at the begin or end)
+        if TYPE_TO_GALAXY_TYPE[param.type] in ["integer", "float"]:
+            message = "a comma separated list of %s values is required" % TYPE_TO_GALAXY_TYPE[param.type]
+            if TYPE_TO_GALAXY_TYPE[param.type] == "integer":
+                expression = "^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$"
+            else:
+                expression = "^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$"
+            validator_node = SubElement(param_node, "validator", OrderedDict([("type", "regex"), ("message", message )]))
+            validator_node.text = CDATA(expression)
 
-        valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
-        add_child_node(valid_node, "remove", OrderedDict([("value", '\'')]))
-        add_child_node(valid_node, "remove", OrderedDict([("value", '"')]))
+            if type(param.restrictions) is _NumericRange and not (param.restrictions.n_min is None and param.restrictions.n_max is None):
+                expression = "len(value.split(',')) == len([_ for _ in value.split(',')"
+                message = "a comma separated list of %s values " % TYPE_TO_GALAXY_TYPE[param.type]
+
+                if not param.restrictions.n_min is None and not param.restrictions.n_max is None:
+                    expression += " if %s <= %s(_) <= %s" % (param.restrictions.n_min, param.type.__name__, param.restrictions.n_max)
+                    message += "in the range %s:%s " % (param.restrictions.n_min, param.restrictions.n_max)
+                elif not param.restrictions.n_min is None:
+                    expression += " if %s <= %s(_)" % (param.restrictions.n_min, param.type.__name__)
+                    message += "in the range %s: " % (param.restrictions.n_min)
+                elif not param.restrictions.n_max is None:
+                    expression += " if %s(_) <= %s" % (param.type.__name__, param.restrictions.n_max)
+                    message += "in the range :%s " % (param.restrictions.n_min)
+                expression += "])\n"
+                message += "is required"
+                validator_node = SubElement(param_node, "validator", OrderedDict([("type", "expression"), ("message", message )]))
+                validator_node.text = CDATA(expression)
+
+            sanitizer_node = SubElement(param_node, "sanitizer")
+            valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
+            SubElement(valid_node, "remove", OrderedDict([("value", ' ')]))
+            mapping_node = SubElement(sanitizer_node, "mapping", OrderedDict([("initial", "none")]))
+            SubElement(mapping_node, "add", OrderedDict([("source", ' '),("target", "")]))
+
+        # add sanitizer nodes to other text params, this is needed for special character like "["
+        # which are used for example by FeatureFinderMultiplex
+        else:
+            sanitizer_node = SubElement(param_node, "sanitizer")
+            valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
+            SubElement(valid_node, "remove", OrderedDict([("value", '\'')]))
+            SubElement(valid_node, "remove", OrderedDict([("value", '"')]))
 
     # check for default value
     if param.default is not None and param.default is not _Null:
@@ -699,7 +745,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # we ASSUME that a list of parameters looks like:
             # $ tool -ignore He Ar Xe
             # meaning, that, for example, Helium, Argon and Xenon will be ignored
-            param_node.attrib["value"] = ' '.join(map(str, param.default))
+            param_node.attrib["value"] = ','.join(map(str, param.default))
 
         elif param_type != "boolean":
             param_node.attrib["value"] = str(param.default)
@@ -710,11 +756,14 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     elif param.type is int or param.type is float:
         param_node.attrib["value"] = ""
 
+    # add label, help, and argument
     label = "%s parameter" % param.name
     help_text = ""
 
     if param.description is not None:
         label, help_text = generate_label_and_help(param.description)
+    if param.is_list and not is_selection_parameter(param):
+        help_text += " (comma separated list)"
 
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text
