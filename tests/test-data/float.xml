@@ -12,70 +12,70 @@
   <expand macro="references"/>
   <command><![CDATA[echo FloatTest
 
--wodefault_mandatory_unrestricted $param_wodefault_mandatory_unrestricted
--default_mandatory_unrestricted $param_default_mandatory_unrestricted
+-wodefault_mandatory_unrestricted '$param_wodefault_mandatory_unrestricted'
+-default_mandatory_unrestricted '$param_default_mandatory_unrestricted'
 #if str($param_wodefault_optional_unrestricted):
-  -wodefault_optional_unrestricted $param_wodefault_optional_unrestricted
+  -wodefault_optional_unrestricted '$param_wodefault_optional_unrestricted'
 #end if
 #if str($param_default_optional_unrestricted):
-  -default_optional_unrestricted $param_default_optional_unrestricted
+  -default_optional_unrestricted '$param_default_optional_unrestricted'
 #end if
--wodefault_mandatory_unrestricted_min $param_wodefault_mandatory_unrestricted_min
--default_mandatory_unrestricted_min $param_default_mandatory_unrestricted_min
+-wodefault_mandatory_unrestricted_min '$param_wodefault_mandatory_unrestricted_min'
+-default_mandatory_unrestricted_min '$param_default_mandatory_unrestricted_min'
 #if str($param_wodefault_optional_unrestricted_min):
-  -wodefault_optional_unrestricted_min $param_wodefault_optional_unrestricted_min
+  -wodefault_optional_unrestricted_min '$param_wodefault_optional_unrestricted_min'
 #end if
 #if str($param_default_optional_unrestricted_min):
-  -default_optional_unrestricted_min $param_default_optional_unrestricted_min
+  -default_optional_unrestricted_min '$param_default_optional_unrestricted_min'
 #end if
--wodefault_mandatory_unrestricted_max $param_wodefault_mandatory_unrestricted_max
--default_mandatory_unrestricted_max $param_default_mandatory_unrestricted_max
+-wodefault_mandatory_unrestricted_max '$param_wodefault_mandatory_unrestricted_max'
+-default_mandatory_unrestricted_max '$param_default_mandatory_unrestricted_max'
 #if str($param_wodefault_optional_unrestricted_max):
-  -wodefault_optional_unrestricted_max $param_wodefault_optional_unrestricted_max
+  -wodefault_optional_unrestricted_max '$param_wodefault_optional_unrestricted_max'
 #end if
 #if str($param_default_optional_unrestricted_max):
-  -default_optional_unrestricted_max $param_default_optional_unrestricted_max
+  -default_optional_unrestricted_max '$param_default_optional_unrestricted_max'
 #end if
--wodefault_mandatory_unrestricted_minmax $param_wodefault_mandatory_unrestricted_minmax
--default_mandatory_unrestricted_minmax $param_default_mandatory_unrestricted_minmax
+-wodefault_mandatory_unrestricted_minmax '$param_wodefault_mandatory_unrestricted_minmax'
+-default_mandatory_unrestricted_minmax '$param_default_mandatory_unrestricted_minmax'
 #if str($param_wodefault_optional_unrestricted_minmax):
-  -wodefault_optional_unrestricted_minmax $param_wodefault_optional_unrestricted_minmax
+  -wodefault_optional_unrestricted_minmax '$param_wodefault_optional_unrestricted_minmax'
 #end if
 #if str($param_default_optional_unrestricted_minmax):
-  -default_optional_unrestricted_minmax $param_default_optional_unrestricted_minmax
+  -default_optional_unrestricted_minmax '$param_default_optional_unrestricted_minmax'
 #end if
 #if $adv_opts.adv_opts_selector=='advanced':
-  -wodefault_mandatory_unrestricted_adv $adv_opts.param_wodefault_mandatory_unrestricted_adv
-  -default_mandatory_unrestricted_adv $adv_opts.param_default_mandatory_unrestricted_adv
+  -wodefault_mandatory_unrestricted_adv '$adv_opts.param_wodefault_mandatory_unrestricted_adv'
+  -default_mandatory_unrestricted_adv '$adv_opts.param_default_mandatory_unrestricted_adv'
   #if str($adv_opts.param_wodefault_optional_unrestricted_adv):
-    -wodefault_optional_unrestricted_adv $adv_opts.param_wodefault_optional_unrestricted_adv
+    -wodefault_optional_unrestricted_adv '$adv_opts.param_wodefault_optional_unrestricted_adv'
   #end if
   #if str($adv_opts.param_default_optional_unrestricted_adv):
-    -default_optional_unrestricted_adv $adv_opts.param_default_optional_unrestricted_adv
+    -default_optional_unrestricted_adv '$adv_opts.param_default_optional_unrestricted_adv'
   #end if
-  -wodefault_mandatory_unrestricted_adv_min $adv_opts.param_wodefault_mandatory_unrestricted_adv_min
-  -default_mandatory_unrestricted_adv_min $adv_opts.param_default_mandatory_unrestricted_adv_min
+  -wodefault_mandatory_unrestricted_adv_min '$adv_opts.param_wodefault_mandatory_unrestricted_adv_min'
+  -default_mandatory_unrestricted_adv_min '$adv_opts.param_default_mandatory_unrestricted_adv_min'
   #if str($adv_opts.param_wodefault_optional_unrestricted_adv_min):
-    -wodefault_optional_unrestricted_adv_min $adv_opts.param_wodefault_optional_unrestricted_adv_min
+    -wodefault_optional_unrestricted_adv_min '$adv_opts.param_wodefault_optional_unrestricted_adv_min'
   #end if
   #if str($adv_opts.param_default_optional_unrestricted_adv_min):
-    -default_optional_unrestricted_adv_min $adv_opts.param_default_optional_unrestricted_adv_min
+    -default_optional_unrestricted_adv_min '$adv_opts.param_default_optional_unrestricted_adv_min'
   #end if
-  -wodefault_mandatory_unrestricted_adv_max $adv_opts.param_wodefault_mandatory_unrestricted_adv_max
-  -default_mandatory_unrestricted_adv_max $adv_opts.param_default_mandatory_unrestricted_adv_max
+  -wodefault_mandatory_unrestricted_adv_max '$adv_opts.param_wodefault_mandatory_unrestricted_adv_max'
+  -default_mandatory_unrestricted_adv_max '$adv_opts.param_default_mandatory_unrestricted_adv_max'
   #if str($adv_opts.param_wodefault_optional_unrestricted_adv_max):
-    -wodefault_optional_unrestricted_adv_max $adv_opts.param_wodefault_optional_unrestricted_adv_max
+    -wodefault_optional_unrestricted_adv_max '$adv_opts.param_wodefault_optional_unrestricted_adv_max'
   #end if
   #if str($adv_opts.param_default_optional_unrestricted_adv_max):
-    -default_optional_unrestricted_adv_max $adv_opts.param_default_optional_unrestricted_adv_max
+    -default_optional_unrestricted_adv_max '$adv_opts.param_default_optional_unrestricted_adv_max'
   #end if
-  -wodefault_mandatory_unrestricted_adv_minmax $adv_opts.param_wodefault_mandatory_unrestricted_adv_minmax
-  -default_mandatory_unrestricted_adv_minmax $adv_opts.param_default_mandatory_unrestricted_adv_minmax
+  -wodefault_mandatory_unrestricted_adv_minmax '$adv_opts.param_wodefault_mandatory_unrestricted_adv_minmax'
+  -default_mandatory_unrestricted_adv_minmax '$adv_opts.param_default_mandatory_unrestricted_adv_minmax'
   #if str($adv_opts.param_wodefault_optional_unrestricted_adv_minmax):
-    -wodefault_optional_unrestricted_adv_minmax $adv_opts.param_wodefault_optional_unrestricted_adv_minmax
+    -wodefault_optional_unrestricted_adv_minmax '$adv_opts.param_wodefault_optional_unrestricted_adv_minmax'
   #end if
   #if str($adv_opts.param_default_optional_unrestricted_adv_minmax):
-    -default_optional_unrestricted_adv_minmax $adv_opts.param_default_optional_unrestricted_adv_minmax
+    -default_optional_unrestricted_adv_minmax '$adv_opts.param_default_optional_unrestricted_adv_minmax'
   #end if
 #end if
 > $param_stdout

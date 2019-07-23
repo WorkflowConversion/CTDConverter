@@ -409,31 +409,14 @@ def create_command(tool, model, **kwargs):
                 actual_parameter = "$%s" % galaxy_parameter_name
 
             # logic for ITEMLISTs
-            if param.is_list:
-                if param.type is _InFile:
-                    command += command_line_prefix + " "
-                    command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + " if _ != None])}\n"
-                elif is_selection_parameter(param):
-                    command += "%s " % command_line_prefix + " "
-                    command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + "])}\n"
-                else:
-                    command += command_line_prefix + " "
-                    command += "'" + actual_parameter + "'\n"
-            # logic for other ITEMs 
+            if param.is_list and (param.type is _InFile or is_selection_parameter(param)):
+                command += command_line_prefix + " "
+                command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + " if _ != None])}\n"
+            elif is_boolean_parameter(param):
+                command += "%s" % actual_parameter + "\n"
             else:
-                # TODO only useful for text fields, integers or floats
-                # not useful for choices, input fields ...
-                if is_selection_parameter(param):
-                    command += "%s " % command_line_prefix
-                    command += "'" + actual_parameter + "'\n"
-                elif is_boolean_parameter(param):
-                    command += "%s" % actual_parameter + "\n"
-                elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
-                    command += "%s " % command_line_prefix
-                    command += "'" + actual_parameter + "'\n"
-                else:
-                    command += "%s " % command_line_prefix
-                    command += actual_parameter + "\n"
+                command += command_line_prefix + " "
+                command += "'" + actual_parameter + "'\n"
             
             # add if statement for mandatory parameters
             # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)

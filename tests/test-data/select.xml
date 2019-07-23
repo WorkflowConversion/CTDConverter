@@ -29,21 +29,21 @@
   -default_optional_many '$param_default_optional_many'
 #end if
 #if $param_list_wodefault_optional:
-  -list_wodefault_optional  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])}
+  -list_wodefault_optional {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional if _ != None])}
 #end if
--list_wodefault_mandatory  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory])}
+-list_wodefault_mandatory {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory if _ != None])}
 #if $param_list_default_optional:
-  -list_default_optional  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional])}
+  -list_default_optional {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional if _ != None])}
 #end if
--list_default_mandatory  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory])}
+-list_default_mandatory {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory if _ != None])}
 #if $param_list_wodefault_optional_many:
-  -list_wodefault_optional_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many])}
+  -list_wodefault_optional_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many if _ != None])}
 #end if
--list_wodefault_mandatory_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many])}
+-list_wodefault_mandatory_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many if _ != None])}
 #if $param_list_default_optional_many:
-  -list_default_optional_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])}
+  -list_default_optional_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many if _ != None])}
 #end if
--list_default_mandatory_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
+-list_default_mandatory_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many if _ != None])}
 #if $adv_opts.adv_opts_selector=='advanced':
   -wodefault_mandatory_adv '$adv_opts.param_wodefault_mandatory_adv'
   -default_mandatory_adv '$adv_opts.param_default_mandatory_adv'
@@ -62,21 +62,21 @@
     -default_optional_many_adv '$adv_opts.param_default_optional_many_adv'
   #end if
   #if $adv_opts.param_list_wodefault_optional_adv:
-    -list_wodefault_optional_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])}
+    -list_wodefault_optional_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv if _ != None])}
   #end if
-  -list_wodefault_mandatory_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])}
+  -list_wodefault_mandatory_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv if _ != None])}
   #if $adv_opts.param_list_default_optional_adv:
-    -list_default_optional_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])}
+    -list_default_optional_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv if _ != None])}
   #end if
-  -list_default_mandatory_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])}
+  -list_default_mandatory_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv if _ != None])}
   #if $adv_opts.param_list_wodefault_optional_many_adv:
-    -list_wodefault_optional_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])}
+    -list_wodefault_optional_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv if _ != None])}
   #end if
-  -list_wodefault_mandatory_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])}
+  -list_wodefault_mandatory_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv if _ != None])}
   #if $adv_opts.param_list_default_optional_many_adv:
-    -list_default_optional_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])}
+    -list_default_optional_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv if _ != None])}
   #end if
-  -list_default_mandatory_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])}
+  -list_default_mandatory_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv if _ != None])}
 #end if
 > $param_stdout
 ]]></command>

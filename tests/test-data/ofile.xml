@@ -12,29 +12,29 @@
   <expand macro="references"/>
   <command><![CDATA[echo outFileTest
 
--wodefault_mandatory_noformat $param_out_wodefault_mandatory_noformat
--default_mandatory_noformat $param_out_default_mandatory_noformat
+-wodefault_mandatory_noformat '$param_out_wodefault_mandatory_noformat'
+-default_mandatory_noformat '$param_out_default_mandatory_noformat'
 #if str($param_wodefault_optional_noformat):
-  -wodefault_optional_noformat $param_out_wodefault_optional_noformat
+  -wodefault_optional_noformat '$param_out_wodefault_optional_noformat'
 #end if
 #if str($param_default_optional_noformat):
-  -default_optional_noformat $param_out_default_optional_noformat
+  -default_optional_noformat '$param_out_default_optional_noformat'
 #end if
--wodefault_mandatory_oneformat $param_out_wodefault_mandatory_oneformat
--default_mandatory_oneformat $param_out_default_mandatory_oneformat
+-wodefault_mandatory_oneformat '$param_out_wodefault_mandatory_oneformat'
+-default_mandatory_oneformat '$param_out_default_mandatory_oneformat'
 #if str($param_wodefault_optional_oneformat):
-  -wodefault_optional_oneformat $param_out_wodefault_optional_oneformat
+  -wodefault_optional_oneformat '$param_out_wodefault_optional_oneformat'
 #end if
 #if str($param_default_optional_oneformat):
-  -default_optional_oneformat $param_out_default_optional_oneformat
+  -default_optional_oneformat '$param_out_default_optional_oneformat'
 #end if
--wodefault_mandatory_multformat $param_out_wodefault_mandatory_multformat
--default_mandatory_multformat $param_out_default_mandatory_multformat
+-wodefault_mandatory_multformat '$param_out_wodefault_mandatory_multformat'
+-default_mandatory_multformat '$param_out_default_mandatory_multformat'
 #if str($param_wodefault_optional_multformat):
-  -wodefault_optional_multformat $param_out_wodefault_optional_multformat
+  -wodefault_optional_multformat '$param_out_wodefault_optional_multformat'
 #end if
 #if str($param_default_optional_multformat):
-  -default_optional_multformat $param_out_default_optional_multformat
+  -default_optional_multformat '$param_out_default_optional_multformat'
 #end if
 -list_mandatory_noformat '$param_out_list_mandatory_noformat'
 #if str($param_list_optional_noformat):
@@ -48,17 +48,17 @@
 #if str($param_list_optional_multformat):
   -list_optional_multformat '$param_out_list_optional_multformat'
 #end if
--mandatory_noformat_adv $adv_opts.param_out_mandatory_noformat_adv
+-mandatory_noformat_adv '$adv_opts.param_out_mandatory_noformat_adv'
 #if str($adv_opts.param_optional_noformat_adv):
-  -optional_noformat_adv $adv_opts.param_out_optional_noformat_adv
+  -optional_noformat_adv '$adv_opts.param_out_optional_noformat_adv'
 #end if
--mandatory_oneformat_adv $adv_opts.param_out_mandatory_oneformat_adv
+-mandatory_oneformat_adv '$adv_opts.param_out_mandatory_oneformat_adv'
 #if str($adv_opts.param_optional_oneformat_adv):
-  -optional_oneformat_adv $adv_opts.param_out_optional_oneformat_adv
+  -optional_oneformat_adv '$adv_opts.param_out_optional_oneformat_adv'
 #end if
--mandatory_multformat_adv $adv_opts.param_out_mandatory_multformat_adv
+-mandatory_multformat_adv '$adv_opts.param_out_mandatory_multformat_adv'
 #if str($adv_opts.param_optional_multformat_adv):
-  -optional_multformat_adv $adv_opts.param_out_optional_multformat_adv
+  -optional_multformat_adv '$adv_opts.param_out_optional_multformat_adv'
 #end if
 ]]></command>
   <inputs>
