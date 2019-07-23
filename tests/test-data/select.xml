@@ -12,151 +12,71 @@
   <expand macro="references"/>
   <command><![CDATA[echo SelectTest
 
-#if $param_wodefault_mandatory:
-  -wodefault_mandatory
-  '$param_wodefault_mandatory'
-#end if
-#if $param_default_mandatory:
-  -default_mandatory
-  '$param_default_mandatory'
-#end if
+-wodefault_mandatory '$param_wodefault_mandatory'
+-default_mandatory '$param_default_mandatory'
 #if $param_wodefault_optional:
-  -wodefault_optional
-  '$param_wodefault_optional'
+  -wodefault_optional '$param_wodefault_optional'
 #end if
 #if $param_default_optional:
-  -default_optional
-  '$param_default_optional'
+  -default_optional '$param_default_optional'
 #end if
-#if $param_wodefault_mandatory_many:
-  -wodefault_mandatory_many
-  '$param_wodefault_mandatory_many'
-#end if
-#if $param_default_mandatory_many:
-  -default_mandatory_many
-  '$param_default_mandatory_many'
-#end if
+-wodefault_mandatory_many '$param_wodefault_mandatory_many'
+-default_mandatory_many '$param_default_mandatory_many'
 #if $param_wodefault_optional_many:
-  -wodefault_optional_many
-  '$param_wodefault_optional_many'
+  -wodefault_optional_many '$param_wodefault_optional_many'
 #end if
 #if $param_default_optional_many:
-  -default_optional_many
-  '$param_default_optional_many'
+  -default_optional_many '$param_default_optional_many'
 #end if
 #if $param_list_wodefault_optional:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])
-  -list_wodefault_optional
-  $tmp
+  -list_wodefault_optional  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])}
 #end if
-#if $param_list_wodefault_mandatory:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory])
-  -list_wodefault_mandatory
-  $tmp
-#end if
+-list_wodefault_mandatory  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory])}
 #if $param_list_default_optional:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_default_optional])
-  -list_default_optional
-  $tmp
+  -list_default_optional  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional])}
 #end if
-#if $param_list_default_mandatory:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory])
-  -list_default_mandatory
-  $tmp
-#end if
+-list_default_mandatory  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory])}
 #if $param_list_wodefault_optional_many:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many])
-  -list_wodefault_optional_many
-  $tmp
+  -list_wodefault_optional_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many])}
 #end if
-#if $param_list_wodefault_mandatory_many:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many])
-  -list_wodefault_mandatory_many
-  $tmp
-#end if
+-list_wodefault_mandatory_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many])}
 #if $param_list_default_optional_many:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])
-  -list_default_optional_many
-  $tmp
+  -list_default_optional_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])}
 #end if
-#if $param_list_default_mandatory_many:
-  #set tmp=' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])
-  -list_default_mandatory_many
-  $tmp
-#end if
+-list_default_mandatory_many  {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
 #if $adv_opts.adv_opts_selector=='advanced':
-  #if $adv_opts.param_wodefault_mandatory_adv:
-    -wodefault_mandatory_adv
-    '$adv_opts.param_wodefault_mandatory_adv'
-  #end if
-  #if $adv_opts.param_default_mandatory_adv:
-    -default_mandatory_adv
-    '$adv_opts.param_default_mandatory_adv'
-  #end if
+  -wodefault_mandatory_adv '$adv_opts.param_wodefault_mandatory_adv'
+  -default_mandatory_adv '$adv_opts.param_default_mandatory_adv'
   #if $adv_opts.param_wodefault_optional_adv:
-    -wodefault_optional_adv
-    '$adv_opts.param_wodefault_optional_adv'
+    -wodefault_optional_adv '$adv_opts.param_wodefault_optional_adv'
   #end if
   #if $adv_opts.param_default_optional_adv:
-    -default_optional_adv
-    '$adv_opts.param_default_optional_adv'
+    -default_optional_adv '$adv_opts.param_default_optional_adv'
   #end if
-  #if $adv_opts.param_wodefault_mandatory_many_adv:
-    -wodefault_mandatory_many_adv
-    '$adv_opts.param_wodefault_mandatory_many_adv'
-  #end if
-  #if $adv_opts.param_default_mandatory_many_adv:
-    -default_mandatory_many_adv
-    '$adv_opts.param_default_mandatory_many_adv'
-  #end if
+  -wodefault_mandatory_many_adv '$adv_opts.param_wodefault_mandatory_many_adv'
+  -default_mandatory_many_adv '$adv_opts.param_default_mandatory_many_adv'
   #if $adv_opts.param_wodefault_optional_many_adv:
-    -wodefault_optional_many_adv
-    '$adv_opts.param_wodefault_optional_many_adv'
+    -wodefault_optional_many_adv '$adv_opts.param_wodefault_optional_many_adv'
   #end if
   #if $adv_opts.param_default_optional_many_adv:
-    -default_optional_many_adv
-    '$adv_opts.param_default_optional_many_adv'
+    -default_optional_many_adv '$adv_opts.param_default_optional_many_adv'
   #end if
   #if $adv_opts.param_list_wodefault_optional_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])
-    -list_wodefault_optional_adv
-    $tmp
+    -list_wodefault_optional_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])}
   #end if
-  #if $adv_opts.param_list_wodefault_mandatory_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])
-    -list_wodefault_mandatory_adv
-    $tmp
-  #end if
+  -list_wodefault_mandatory_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])}
   #if $adv_opts.param_list_default_optional_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])
-    -list_default_optional_adv
-    $tmp
+    -list_default_optional_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])}
   #end if
-  #if $adv_opts.param_list_default_mandatory_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])
-    -list_default_mandatory_adv
-    $tmp
-  #end if
+  -list_default_mandatory_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])}
   #if $adv_opts.param_list_wodefault_optional_many_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])
-    -list_wodefault_optional_many_adv
-    $tmp
+    -list_wodefault_optional_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])}
   #end if
-  #if $adv_opts.param_list_wodefault_mandatory_many_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])
-    -list_wodefault_mandatory_many_adv
-    $tmp
-  #end if
+  -list_wodefault_mandatory_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])}
   #if $adv_opts.param_list_default_optional_many_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])
-    -list_default_optional_many_adv
-    $tmp
+    -list_default_optional_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])}
   #end if
-  #if $adv_opts.param_list_default_mandatory_many_adv:
-    #set tmp=' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])
-    -list_default_mandatory_many_adv
-    $tmp
-  #end if
+  -list_default_mandatory_many_adv  {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])}
 #end if
 > $param_stdout
 ]]></command>

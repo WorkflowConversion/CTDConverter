@@ -325,5 +325,5 @@ def indent(s, indentation="  "):
     @param indentation the desired indentation
     @return indented text
     """
-    return "\n".join([indentation+_ for _ in s.splitlines()])+"\n"
+    return "\n".join([indentation+_ for _ in s.splitlines()])
 

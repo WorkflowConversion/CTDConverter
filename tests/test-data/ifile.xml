@@ -12,223 +12,79 @@
   <expand macro="references"/>
   <command><![CDATA[echo inFileTest
 
-#if str($param_mandatory_noformat):
-  -mandatory_noformat $param_mandatory_noformat
-#end if
+-mandatory_noformat $param_mandatory_noformat
 #if str($param_optional_noformat):
   -optional_noformat $param_optional_noformat
 #end if
-#if str($param_mandatory_oneformat):
-  -mandatory_oneformat $param_mandatory_oneformat
-#end if
+-mandatory_oneformat $param_mandatory_oneformat
 #if str($param_optional_oneformat):
   -optional_oneformat $param_optional_oneformat
 #end if
-#if str($param_mandatory_multformat):
-  -mandatory_multformat $param_mandatory_multformat
-#end if
+-mandatory_multformat $param_mandatory_multformat
 #if str($param_optional_multformat):
   -optional_multformat $param_optional_multformat
 #end if
-#if str($param_default_mandatory_noformat):
-  -default_mandatory_noformat $param_default_mandatory_noformat
-#end if
+-default_mandatory_noformat $param_default_mandatory_noformat
 #if str($param_default_optional_noformat):
   -default_optional_noformat $param_default_optional_noformat
 #end if
-#if str($param_default_mandatory_oneformat):
-  -default_mandatory_oneformat $param_default_mandatory_oneformat
-#end if
+-default_mandatory_oneformat $param_default_mandatory_oneformat
 #if str($param_default_optional_oneformat):
   -default_optional_oneformat $param_default_optional_oneformat
 #end if
-#if str($param_default_mandatory_multformat):
-  -default_mandatory_multformat $param_default_mandatory_multformat
-#end if
+-default_mandatory_multformat $param_default_mandatory_multformat
 #if str($param_default_optional_multformat):
   -default_optional_multformat $param_default_optional_multformat
 #end if
--list_mandatory_noformat
-  #for token in $param_list_mandatory_noformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_optional_noformat
-  #for token in $param_list_optional_noformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_mandatory_oneformat
-  #for token in $param_list_mandatory_oneformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_optional_oneformat
-  #for token in $param_list_optional_oneformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_mandatory_multformat
-  #for token in $param_list_mandatory_multformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_optional_multformat
-  #for token in $param_list_optional_multformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_mandatory_noformat
-  #for token in $param_list_default_mandatory_noformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_optional_noformat
-  #for token in $param_list_default_optional_noformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_mandatory_oneformat
-  #for token in $param_list_default_mandatory_oneformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_optional_oneformat
-  #for token in $param_list_default_optional_oneformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_mandatory_multformat
-  #for token in $param_list_default_mandatory_multformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
--list_default_optional_multformat
-  #for token in $param_list_default_optional_multformat:
-    #if $token
-      '$token'
-    #end if
-  #end for
+-list_mandatory_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_noformat if _ != None])}
+-list_optional_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_noformat if _ != None])}
+-list_mandatory_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_oneformat if _ != None])}
+-list_optional_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_oneformat if _ != None])}
+-list_mandatory_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_multformat if _ != None])}
+-list_optional_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_multformat if _ != None])}
+-list_default_mandatory_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_noformat if _ != None])}
+-list_default_optional_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_noformat if _ != None])}
+-list_default_mandatory_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_oneformat if _ != None])}
+-list_default_optional_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_oneformat if _ != None])}
+-list_default_mandatory_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_multformat if _ != None])}
+-list_default_optional_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_multformat if _ != None])}
 #if $adv_opts.adv_opts_selector=='advanced':
-  #if str($adv_opts.param_mandatory_noformat_adv):
-    -mandatory_noformat_adv $adv_opts.param_mandatory_noformat_adv
-  #end if
+  -mandatory_noformat_adv $adv_opts.param_mandatory_noformat_adv
   #if str($adv_opts.param_optional_noformat_adv):
     -optional_noformat_adv $adv_opts.param_optional_noformat_adv
   #end if
-  #if str($adv_opts.param_mandatory_oneformat_adv):
-    -mandatory_oneformat_adv $adv_opts.param_mandatory_oneformat_adv
-  #end if
+  -mandatory_oneformat_adv $adv_opts.param_mandatory_oneformat_adv
   #if str($adv_opts.param_optional_oneformat_adv):
     -optional_oneformat_adv $adv_opts.param_optional_oneformat_adv
   #end if
-  #if str($adv_opts.param_mandatory_multformat_adv):
-    -mandatory_multformat_adv $adv_opts.param_mandatory_multformat_adv
-  #end if
+  -mandatory_multformat_adv $adv_opts.param_mandatory_multformat_adv
   #if str($adv_opts.param_optional_multformat_adv):
     -optional_multformat_adv $adv_opts.param_optional_multformat_adv
   #end if
-  #if str($adv_opts.param_default_mandatory_noformat_adv):
-    -default_mandatory_noformat_adv $adv_opts.param_default_mandatory_noformat_adv
-  #end if
+  -default_mandatory_noformat_adv $adv_opts.param_default_mandatory_noformat_adv
   #if str($adv_opts.param_default_optional_noformat_adv):
     -default_optional_noformat_adv $adv_opts.param_default_optional_noformat_adv
   #end if
-  #if str($adv_opts.param_default_mandatory_oneformat_adv):
-    -default_mandatory_oneformat_adv $adv_opts.param_default_mandatory_oneformat_adv
-  #end if
+  -default_mandatory_oneformat_adv $adv_opts.param_default_mandatory_oneformat_adv
   #if str($adv_opts.param_default_optional_oneformat_adv):
     -default_optional_oneformat_adv $adv_opts.param_default_optional_oneformat_adv
   #end if
-  #if str($adv_opts.param_default_mandatory_multformat_adv):
-    -default_mandatory_multformat_adv $adv_opts.param_default_mandatory_multformat_adv
-  #end if
+  -default_mandatory_multformat_adv $adv_opts.param_default_mandatory_multformat_adv
   #if str($adv_opts.param_default_optional_multformat_adv):
     -default_optional_multformat_adv $adv_opts.param_default_optional_multformat_adv
   #end if
-  -list_mandatory_noformat_adv
-    #for token in $param_list_mandatory_noformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_optional_noformat_adv
-    #for token in $param_list_optional_noformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_mandatory_oneformat_adv
-    #for token in $param_list_mandatory_oneformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_optional_oneformat_adv
-    #for token in $param_list_optional_oneformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_mandatory_multformat_adv
-    #for token in $param_list_mandatory_multformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_optional_multformat_adv
-    #for token in $param_list_optional_multformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_mandatory_noformat_adv
-    #for token in $param_list_default_mandatory_noformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_optional_noformat_adv
-    #for token in $param_list_default_optional_noformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_mandatory_oneformat_adv
-    #for token in $param_list_default_mandatory_oneformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_optional_oneformat_adv
-    #for token in $param_list_default_optional_oneformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_mandatory_multformat_adv
-    #for token in $param_list_default_mandatory_multformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
-  -list_default_optional_multformat_adv
-    #for token in $param_list_default_optional_multformat_adv:
-      #if $token
-        '$token'
-      #end if
-    #end for
+  -list_mandatory_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_noformat_adv if _ != None])}
+  -list_optional_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_noformat_adv if _ != None])}
+  -list_mandatory_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_oneformat_adv if _ != None])}
+  -list_optional_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_oneformat_adv if _ != None])}
+  -list_mandatory_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_multformat_adv if _ != None])}
+  -list_optional_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_multformat_adv if _ != None])}
+  -list_default_mandatory_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_noformat_adv if _ != None])}
+  -list_default_optional_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_noformat_adv if _ != None])}
+  -list_default_mandatory_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_oneformat_adv if _ != None])}
+  -list_default_optional_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_oneformat_adv if _ != None])}
+  -list_default_mandatory_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_multformat_adv if _ != None])}
+  -list_default_optional_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_multformat_adv if _ != None])}
 #end if
 > $param_stdout
 ]]></command>

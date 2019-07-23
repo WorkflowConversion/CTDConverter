@@ -4,6 +4,7 @@ import os
 import string
 
 from collections import OrderedDict
+import copy
 from string import strip
 from lxml import etree
 from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse
@@ -402,59 +403,55 @@ def create_command(tool, model, **kwargs):
         else:
             # parameter is neither blacklisted nor hardcoded...
             galaxy_parameter_name = get_galaxy_parameter_name(param)
-            repeat_galaxy_parameter_name = get_repeat_galaxy_parameter_name(param)
-            if param.advanced and param.type is not _OutFile:
+            if param.advanced:
                 actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
-                actual_repeat = "$adv_opts.%s" % repeat_galaxy_parameter_name
             else:
                 actual_parameter = "$%s" % galaxy_parameter_name
-                actual_repeat = "$%s" % repeat_galaxy_parameter_name
 
             # logic for ITEMLISTs
             if param.is_list:
                 if param.type is _InFile:
-                    command += command_line_prefix + "\n"
-                    command += "  #for token in $" + galaxy_parameter_name + ":\n" 
-                    command += "    #if $token\n"
-                    command += "      '$token'\n"
-                    command += "    #end if\n"
-                    command += "  #end for\n"
+                    command += command_line_prefix + " "
+                    command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + " if _ != None])}\n"
                 elif is_selection_parameter(param):
-                    command += "#if " + actual_parameter + ":\n"
-                    command += "  #set tmp=' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + "])\n"
-                    command += "  %s\n" % command_line_prefix 
-                    command += "  $tmp\n"
-                    command += "#end if\n"
+                    command += "%s " % command_line_prefix + " "
+                    command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + "])}\n"
                 else:
-                    command += "\n#if str(" + actual_parameter + "):\n"
-                    command += "  " + command_line_prefix + "\n"
-                    command += "  '" + actual_parameter + "'\n"
-                    command += "#end if\n" 
+                    command += command_line_prefix + " "
+                    command += "'" + actual_parameter + "'\n"
             # logic for other ITEMs 
             else:
                 # TODO only useful for text fields, integers or floats
                 # not useful for choices, input fields ...
-
                 if is_selection_parameter(param):
-                    command += "#if " + actual_parameter + ":\n"
-                    command += "  %s\n" % command_line_prefix
-                    command += "  '" + actual_parameter + "'\n"
-                    command += "#end if\n" 
+                    command += "%s " % command_line_prefix
+                    command += "'" + actual_parameter + "'\n"
                 elif is_boolean_parameter(param):
-                    command += "%s\n" % actual_parameter
+                    command += "%s" % actual_parameter + "\n"
                 elif TYPE_TO_GALAXY_TYPE[param.type] is 'text':
-                    command += "#if str(" + actual_parameter + "):\n"
-                    command += "  %s " % command_line_prefix
-                    command += "    '" + actual_parameter + "'\n"
-                    command += "#end if\n" 
+                    command += "%s " % command_line_prefix
+                    command += "'" + actual_parameter + "'\n"
                 else:
-                    command += "#if str(" + actual_parameter + "):\n"
-                    command += "  %s " % command_line_prefix
+                    command += "%s " % command_line_prefix
                     command += actual_parameter + "\n"
-                    command += "#end if\n" 
+            
+            # add if statement for mandatory parameters
+            # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)
+            if not param.required and not is_boolean_parameter(param) and not(param.type is _InFile and param.is_list):
+                if  param.type is _OutFile:
+                    galaxy_parameter_name = get_galaxy_parameter_name(param, True)
+                    if param.advanced:
+                        actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
+                    else:
+                        actual_parameter = "$%s" % galaxy_parameter_name
+                    "param_"+param.name
+                if is_selection_parameter(param):
+                    command = "#if " + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
+                else:
+                    command = "#if str(" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
 
         if param.advanced and param.type is not _OutFile:
-            advanced_command += "%s" % utils.indent(command)
+            advanced_command += "%s\n" % utils.indent(command)
         else:
             final_command += command
 
@@ -493,15 +490,24 @@ def expand_macros(tool, model, **kwargs):
         expand_node.attrib["macro"] = expand_macro
 
 
-def get_galaxy_parameter_name(param):
+def get_galaxy_parameter_name(param, inparam = False):
     """
     get the name of the parameter used in the galaxy tool
-    - prepend param_
+    - prepend param_ or param_out_ (the latter for outputs, except if inparam is True)
     - replace : and - by _
+
+    the idea of inparam is to be used for optional outputs (param_out_x) for
+    which an additional boolean input (param_x) exists
+
     @param param the parameter
+    @param inparam get the name of the corresponding input
     @return the name used for the parameter in the tool form
     """
-    return "param_%s" % utils.extract_param_name(param).replace(":", "_").replace("-", "_")
+    p = utils.extract_param_name(param).replace(":", "_").replace("-", "_")
+    if param.type is _OutFile and not inparam:
+        return "param_out_%s" % p
+    else:
+        return "param_%s" % p
 
 
 def get_input_with_same_restrictions(out_param, model, supported_file_formats):
@@ -535,8 +541,19 @@ def create_inputs(tool, model, **kwargs):
             # let's not use an extra level of indentation and use NOP
             continue
         if param.type is _OutFile:
-            continue
-        if param.advanced:
+            if not param.required:
+                _param = copy.deepcopy(param)
+                _param.type = str
+                _param.restrictions = _Choices("true,false")
+                _param.default = "false"
+                _param.description = "generate output %s (%s)" %(param.name, param.description)
+                _param.is_list = False
+            else:
+                continue
+        else:
+            _param = param
+
+        if _param.advanced:
             if advanced_node is None:
                 advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
             parent_node = advanced_node
@@ -554,33 +571,10 @@ def create_inputs(tool, model, **kwargs):
 #             parent_node = rep_node
 
         param_node = add_child_node(parent_node, "param")
-        create_param_attribute_list(param_node, param, kwargs["supported_file_formats"])
+        create_param_attribute_list(param_node, _param, kwargs["supported_file_formats"])
 
     if not advanced_node is None:
         inputs_node.append(advanced_node)
-
-
-def get_repeat_galaxy_parameter_name(param):
-    """
-    get the name of the repeat that contains the parameter
-    - prepend rep_
-    @param param the parameter
-    @return the name of the repeat
-    """
-    return "rep_" + get_galaxy_parameter_name(param)
-
-
-def create_repeat_attribute_list(rep_node, param):
-    rep_node.attrib["name"] = get_repeat_galaxy_parameter_name(param)
-    if param.required:
-        rep_node.attrib["min"] = "1"
-    else:
-        rep_node.attrib["min"] = "0"
-    # for the ITEMLISTs which have LISTITEM children we only
-    # need one parameter as it is given as a string
-    if param.default is not None and param.default is not _Null:  
-        rep_node.attrib["max"] = "1"
-    rep_node.attrib["title"] = get_galaxy_parameter_name(param)
 
 
 def create_param_attribute_list(param_node, param, supported_file_formats):
@@ -895,8 +889,9 @@ def create_outputs(parent, model, **kwargs):
         if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
             # let's not use an extra level of indentation and use NOP
             continue
-        if param.type is _OutFile:
-            create_output_node(outputs_node, param, model, kwargs["supported_file_formats"])
+        if not param.type is _OutFile:
+            continue
+        create_output_node(outputs_node, param, model, kwargs["supported_file_formats"])
 
     # If there are no outputs defined in the ctd the node will have no children
     # and the stdout will be used as output
@@ -944,8 +939,14 @@ def create_output_node(parent, param, model, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),
                                                                    "name": param.name})
+
     data_node.attrib["format"] = data_format
 
+    if not param.required:
+        filter_node = add_child_node(data_node, "filter") 
+        filter_node.text = get_galaxy_parameter_name(param, True) 
+        if param.advanced:
+            filter_node.text = "advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['" + filter_node.text + "']"
     return data_node
 
 

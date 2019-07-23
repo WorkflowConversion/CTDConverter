@@ -27,7 +27,7 @@
       <ITEMLIST name="list_mandatory_multformat" value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
       <ITEMLIST name="list_optional_multformat"  value="" type="output-file" description="output file" required="false" advanced="false" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
 
-      <!-- advanced (did not find a case of a list, or with a defaul) -->
+      <!-- advanced (did not find a case of a list, or with a default) -->
       <ITEM name="mandatory_noformat_adv"   value="" type="output-file" description="output file" required="true"  advanced="true"/>
       <ITEM name="optional_noformat_adv"    value="" type="output-file" description="output file" required="false" advanced="true"/>
       <ITEM name="mandatory_oneformat_adv"  value="" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext"/>
