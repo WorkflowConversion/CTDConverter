@@ -417,7 +417,7 @@ def create_command(tool, model, **kwargs):
                     command += "  #for token in $" + galaxy_parameter_name + ":\n" 
                     command += "    #if $token\n"
                     command += "      '$token'\n"
-                    command += "    #end if"
+                    command += "    #end if\n"
                     command += "  #end for\n"
                 elif is_selection_parameter(param):
                     command += "#if " + actual_parameter + ":\n"
@@ -762,7 +762,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     if param.description is not None:
         label, help_text = generate_label_and_help(param.description)
-    if param.is_list and not is_selection_parameter(param):
+    if param.is_list and not is_selection_parameter(param) and not param.type is _InFile:
         help_text += " (comma separated list)"
 
     param_node.attrib["label"] = label
