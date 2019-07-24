@@ -10,130 +10,203 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command><![CDATA[echo inFileTest
-
--mandatory_noformat '$param_mandatory_noformat'
+  <command><![CDATA[
+ln -s '$param_mandatory_noformat' '${re.sub('[^\w\-_.]', '_', param_mandatory_noformat.element_identifier)}.${param_mandatory_noformat.ext}' &&
 #if str($param_optional_noformat):
-  -optional_noformat '$param_optional_noformat'
+  ln -s '$param_optional_noformat' '${re.sub('[^\w\-_.]', '_', param_optional_noformat.element_identifier)}.${param_optional_noformat.ext}' &&
 #end if
--mandatory_oneformat '$param_mandatory_oneformat'
+ln -s '$param_mandatory_oneformat' '${re.sub('[^\w\-_.]', '_', param_mandatory_oneformat.element_identifier)}.${param_mandatory_oneformat.ext}' &&
 #if str($param_optional_oneformat):
-  -optional_oneformat '$param_optional_oneformat'
+  ln -s '$param_optional_oneformat' '${re.sub('[^\w\-_.]', '_', param_optional_oneformat.element_identifier)}.${param_optional_oneformat.ext}' &&
 #end if
--mandatory_multformat '$param_mandatory_multformat'
+ln -s '$param_mandatory_multformat' '${re.sub('[^\w\-_.]', '_', param_mandatory_multformat.element_identifier)}.${param_mandatory_multformat.ext}' &&
 #if str($param_optional_multformat):
-  -optional_multformat '$param_optional_multformat'
+  ln -s '$param_optional_multformat' '${re.sub('[^\w\-_.]', '_', param_optional_multformat.element_identifier)}.${param_optional_multformat.ext}' &&
 #end if
--default_mandatory_noformat '$param_default_mandatory_noformat'
+ln -s '$param_default_mandatory_noformat' '${re.sub('[^\w\-_.]', '_', param_default_mandatory_noformat.element_identifier)}.${param_default_mandatory_noformat.ext}' &&
 #if str($param_default_optional_noformat):
-  -default_optional_noformat '$param_default_optional_noformat'
+  ln -s '$param_default_optional_noformat' '${re.sub('[^\w\-_.]', '_', param_default_optional_noformat.element_identifier)}.${param_default_optional_noformat.ext}' &&
 #end if
--default_mandatory_oneformat '$param_default_mandatory_oneformat'
+ln -s '$param_default_mandatory_oneformat' '${re.sub('[^\w\-_.]', '_', param_default_mandatory_oneformat.element_identifier)}.${param_default_mandatory_oneformat.ext}' &&
 #if str($param_default_optional_oneformat):
-  -default_optional_oneformat '$param_default_optional_oneformat'
+  ln -s '$param_default_optional_oneformat' '${re.sub('[^\w\-_.]', '_', param_default_optional_oneformat.element_identifier)}.${param_default_optional_oneformat.ext}' &&
 #end if
--default_mandatory_multformat '$param_default_mandatory_multformat'
+ln -s '$param_default_mandatory_multformat' '${re.sub('[^\w\-_.]', '_', param_default_mandatory_multformat.element_identifier)}.${param_default_mandatory_multformat.ext}' &&
 #if str($param_default_optional_multformat):
-  -default_optional_multformat '$param_default_optional_multformat'
+  ln -s '$param_default_optional_multformat' '${re.sub('[^\w\-_.]', '_', param_default_optional_multformat.element_identifier)}.${param_default_optional_multformat.ext}' &&
 #end if
--list_mandatory_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_noformat if _ != None])}
--list_optional_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_noformat if _ != None])}
--list_mandatory_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_oneformat if _ != None])}
--list_optional_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_oneformat if _ != None])}
--list_mandatory_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_mandatory_multformat if _ != None])}
--list_optional_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_optional_multformat if _ != None])}
--list_default_mandatory_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_noformat if _ != None])}
--list_default_optional_noformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_noformat if _ != None])}
--list_default_mandatory_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_oneformat if _ != None])}
--list_default_optional_oneformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_oneformat if _ != None])}
--list_default_mandatory_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_multformat if _ != None])}
--list_default_optional_multformat {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_multformat if _ != None])}
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_mandatory_noformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_optional_noformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_mandatory_oneformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_optional_oneformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_mandatory_multformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_optional_multformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_mandatory_noformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_optional_noformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_mandatory_oneformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_optional_oneformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_mandatory_multformat if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in param_list_default_optional_multformat if _ != None ]) } && 
+ln -s '$adv_opts.param_mandatory_noformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_noformat_adv.element_identifier)}.${adv_opts.param_mandatory_noformat_adv.ext}' &&
+#if str($adv_opts.param_optional_noformat_adv):
+  ln -s '$adv_opts.param_optional_noformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_noformat_adv.element_identifier)}.${adv_opts.param_optional_noformat_adv.ext}' &&
+#end if
+ln -s '$adv_opts.param_mandatory_oneformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_oneformat_adv.element_identifier)}.${adv_opts.param_mandatory_oneformat_adv.ext}' &&
+#if str($adv_opts.param_optional_oneformat_adv):
+  ln -s '$adv_opts.param_optional_oneformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_oneformat_adv.element_identifier)}.${adv_opts.param_optional_oneformat_adv.ext}' &&
+#end if
+ln -s '$adv_opts.param_mandatory_multformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_multformat_adv.element_identifier)}.${adv_opts.param_mandatory_multformat_adv.ext}' &&
+#if str($adv_opts.param_optional_multformat_adv):
+  ln -s '$adv_opts.param_optional_multformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_multformat_adv.element_identifier)}.${adv_opts.param_optional_multformat_adv.ext}' &&
+#end if
+ln -s '$adv_opts.param_default_mandatory_noformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_noformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_noformat_adv.ext}' &&
+#if str($adv_opts.param_default_optional_noformat_adv):
+  ln -s '$adv_opts.param_default_optional_noformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_noformat_adv.element_identifier)}.${adv_opts.param_default_optional_noformat_adv.ext}' &&
+#end if
+ln -s '$adv_opts.param_default_mandatory_oneformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_oneformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_oneformat_adv.ext}' &&
+#if str($adv_opts.param_default_optional_oneformat_adv):
+  ln -s '$adv_opts.param_default_optional_oneformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_oneformat_adv.element_identifier)}.${adv_opts.param_default_optional_oneformat_adv.ext}' &&
+#end if
+ln -s '$adv_opts.param_default_mandatory_multformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_multformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_multformat_adv.ext}' &&
+#if str($adv_opts.param_default_optional_multformat_adv):
+  ln -s '$adv_opts.param_default_optional_multformat_adv' '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_multformat_adv.element_identifier)}.${adv_opts.param_default_optional_multformat_adv.ext}' &&
+#end if
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_mandatory_noformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_optional_noformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_mandatory_oneformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_optional_oneformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_mandatory_multformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_optional_multformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_mandatory_noformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_optional_noformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_mandatory_oneformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_optional_oneformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_mandatory_multformat_adv if _ != None ]) } && 
+{# ' && '.join([ 'ls -s '%s' '%s.%s'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in adv_opts.param_list_default_optional_multformat_adv if _ != None ]) } && 
+echo inFileTest
+
+-mandatory_noformat '${re.sub('[^\w\-_.]', '_', param_mandatory_noformat.element_identifier)}.${param_mandatory_noformat.ext}'
+#if str($param_optional_noformat):
+  -optional_noformat '${re.sub('[^\w\-_.]', '_', param_optional_noformat.element_identifier)}.${param_optional_noformat.ext}'
+#end if
+-mandatory_oneformat '${re.sub('[^\w\-_.]', '_', param_mandatory_oneformat.element_identifier)}.${param_mandatory_oneformat.ext}'
+#if str($param_optional_oneformat):
+  -optional_oneformat '${re.sub('[^\w\-_.]', '_', param_optional_oneformat.element_identifier)}.${param_optional_oneformat.ext}'
+#end if
+-mandatory_multformat '${re.sub('[^\w\-_.]', '_', param_mandatory_multformat.element_identifier)}.${param_mandatory_multformat.ext}'
+#if str($param_optional_multformat):
+  -optional_multformat '${re.sub('[^\w\-_.]', '_', param_optional_multformat.element_identifier)}.${param_optional_multformat.ext}'
+#end if
+-default_mandatory_noformat '${re.sub('[^\w\-_.]', '_', param_default_mandatory_noformat.element_identifier)}.${param_default_mandatory_noformat.ext}'
+#if str($param_default_optional_noformat):
+  -default_optional_noformat '${re.sub('[^\w\-_.]', '_', param_default_optional_noformat.element_identifier)}.${param_default_optional_noformat.ext}'
+#end if
+-default_mandatory_oneformat '${re.sub('[^\w\-_.]', '_', param_default_mandatory_oneformat.element_identifier)}.${param_default_mandatory_oneformat.ext}'
+#if str($param_default_optional_oneformat):
+  -default_optional_oneformat '${re.sub('[^\w\-_.]', '_', param_default_optional_oneformat.element_identifier)}.${param_default_optional_oneformat.ext}'
+#end if
+-default_mandatory_multformat '${re.sub('[^\w\-_.]', '_', param_default_mandatory_multformat.element_identifier)}.${param_default_mandatory_multformat.ext}'
+#if str($param_default_optional_multformat):
+  -default_optional_multformat '${re.sub('[^\w\-_.]', '_', param_default_optional_multformat.element_identifier)}.${param_default_optional_multformat.ext}'
+#end if
+-list_mandatory_noformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_mandatory_noformat if _ != None])}
+-list_optional_noformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_optional_noformat if _ != None])}
+-list_mandatory_oneformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_mandatory_oneformat if _ != None])}
+-list_optional_oneformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_optional_oneformat if _ != None])}
+-list_mandatory_multformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_mandatory_multformat if _ != None])}
+-list_optional_multformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_optional_multformat if _ != None])}
+-list_default_mandatory_noformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_mandatory_noformat if _ != None])}
+-list_default_optional_noformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_optional_noformat if _ != None])}
+-list_default_mandatory_oneformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_mandatory_oneformat if _ != None])}
+-list_default_optional_oneformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_optional_oneformat if _ != None])}
+-list_default_mandatory_multformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_mandatory_multformat if _ != None])}
+-list_default_optional_multformat {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_list_default_optional_multformat if _ != None])}
 #if $adv_opts.adv_opts_selector=='advanced':
-  -mandatory_noformat_adv '$adv_opts.param_mandatory_noformat_adv'
+  -mandatory_noformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_noformat_adv.element_identifier)}.${adv_opts.param_mandatory_noformat_adv.ext}'
   #if str($adv_opts.param_optional_noformat_adv):
-    -optional_noformat_adv '$adv_opts.param_optional_noformat_adv'
+    -optional_noformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_noformat_adv.element_identifier)}.${adv_opts.param_optional_noformat_adv.ext}'
   #end if
-  -mandatory_oneformat_adv '$adv_opts.param_mandatory_oneformat_adv'
+  -mandatory_oneformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_oneformat_adv.element_identifier)}.${adv_opts.param_mandatory_oneformat_adv.ext}'
   #if str($adv_opts.param_optional_oneformat_adv):
-    -optional_oneformat_adv '$adv_opts.param_optional_oneformat_adv'
+    -optional_oneformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_oneformat_adv.element_identifier)}.${adv_opts.param_optional_oneformat_adv.ext}'
   #end if
-  -mandatory_multformat_adv '$adv_opts.param_mandatory_multformat_adv'
+  -mandatory_multformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_mandatory_multformat_adv.element_identifier)}.${adv_opts.param_mandatory_multformat_adv.ext}'
   #if str($adv_opts.param_optional_multformat_adv):
-    -optional_multformat_adv '$adv_opts.param_optional_multformat_adv'
+    -optional_multformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_optional_multformat_adv.element_identifier)}.${adv_opts.param_optional_multformat_adv.ext}'
   #end if
-  -default_mandatory_noformat_adv '$adv_opts.param_default_mandatory_noformat_adv'
+  -default_mandatory_noformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_noformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_noformat_adv.ext}'
   #if str($adv_opts.param_default_optional_noformat_adv):
-    -default_optional_noformat_adv '$adv_opts.param_default_optional_noformat_adv'
+    -default_optional_noformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_noformat_adv.element_identifier)}.${adv_opts.param_default_optional_noformat_adv.ext}'
   #end if
-  -default_mandatory_oneformat_adv '$adv_opts.param_default_mandatory_oneformat_adv'
+  -default_mandatory_oneformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_oneformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_oneformat_adv.ext}'
   #if str($adv_opts.param_default_optional_oneformat_adv):
-    -default_optional_oneformat_adv '$adv_opts.param_default_optional_oneformat_adv'
+    -default_optional_oneformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_oneformat_adv.element_identifier)}.${adv_opts.param_default_optional_oneformat_adv.ext}'
   #end if
-  -default_mandatory_multformat_adv '$adv_opts.param_default_mandatory_multformat_adv'
+  -default_mandatory_multformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_mandatory_multformat_adv.element_identifier)}.${adv_opts.param_default_mandatory_multformat_adv.ext}'
   #if str($adv_opts.param_default_optional_multformat_adv):
-    -default_optional_multformat_adv '$adv_opts.param_default_optional_multformat_adv'
+    -default_optional_multformat_adv '${re.sub('[^\w\-_.]', '_', adv_opts.param_default_optional_multformat_adv.element_identifier)}.${adv_opts.param_default_optional_multformat_adv.ext}'
   #end if
-  -list_mandatory_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_noformat_adv if _ != None])}
-  -list_optional_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_noformat_adv if _ != None])}
-  -list_mandatory_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_oneformat_adv if _ != None])}
-  -list_optional_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_oneformat_adv if _ != None])}
-  -list_mandatory_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_mandatory_multformat_adv if _ != None])}
-  -list_optional_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_optional_multformat_adv if _ != None])}
-  -list_default_mandatory_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_noformat_adv if _ != None])}
-  -list_default_optional_noformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_noformat_adv if _ != None])}
-  -list_default_mandatory_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_oneformat_adv if _ != None])}
-  -list_default_optional_oneformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_oneformat_adv if _ != None])}
-  -list_default_mandatory_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_multformat_adv if _ != None])}
-  -list_default_optional_multformat_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_multformat_adv if _ != None])}
+  -list_mandatory_noformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_mandatory_noformat_adv if _ != None])}
+  -list_optional_noformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_optional_noformat_adv if _ != None])}
+  -list_mandatory_oneformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_mandatory_oneformat_adv if _ != None])}
+  -list_optional_oneformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_optional_oneformat_adv if _ != None])}
+  -list_mandatory_multformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_mandatory_multformat_adv if _ != None])}
+  -list_optional_multformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_optional_multformat_adv if _ != None])}
+  -list_default_mandatory_noformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_mandatory_noformat_adv if _ != None])}
+  -list_default_optional_noformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_optional_noformat_adv if _ != None])}
+  -list_default_mandatory_oneformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_mandatory_oneformat_adv if _ != None])}
+  -list_default_optional_oneformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_optional_oneformat_adv if _ != None])}
+  -list_default_mandatory_multformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_mandatory_multformat_adv if _ != None])}
+  -list_default_optional_multformat_adv {# ' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $adv_opts.param_list_default_optional_multformat_adv if _ != None])}
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_mandatory_noformat" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_noformat"/>
-    <param name="param_optional_noformat" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_noformat"/>
+    <param name="param_mandatory_noformat" type="data" format="data" optional="False" label="input file" help="" argument="-mandatory_noformat"/>
+    <param name="param_optional_noformat" type="data" format="data" optional="True" label="input file" help="" argument="-optional_noformat"/>
     <param name="param_mandatory_oneformat" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_oneformat"/>
     <param name="param_optional_oneformat" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_oneformat"/>
     <param name="param_mandatory_multformat" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_multformat"/>
     <param name="param_optional_multformat" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_multformat"/>
-    <param name="param_default_mandatory_noformat" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat"/>
-    <param name="param_default_optional_noformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_noformat"/>
+    <param name="param_default_mandatory_noformat" type="data" format="data" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat"/>
+    <param name="param_default_optional_noformat" type="data" format="data" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_noformat"/>
     <param name="param_default_mandatory_oneformat" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_oneformat"/>
     <param name="param_default_optional_oneformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat"/>
     <param name="param_default_mandatory_multformat" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat"/>
     <param name="param_default_optional_multformat" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat"/>
-    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat"/>
-    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat"/>
+    <param name="param_list_mandatory_noformat" type="data" format="data" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat"/>
+    <param name="param_list_optional_noformat" type="data" format="data" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat"/>
     <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_oneformat"/>
     <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_oneformat"/>
     <param name="param_list_mandatory_multformat" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_multformat"/>
     <param name="param_list_optional_multformat" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_multformat"/>
-    <param name="param_list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat"/>
-    <param name="param_list_default_optional_noformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat"/>
+    <param name="param_list_default_mandatory_noformat" type="data" format="data" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat"/>
+    <param name="param_list_default_optional_noformat" type="data" format="data" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat"/>
     <param name="param_list_default_mandatory_oneformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_oneformat"/>
     <param name="param_list_default_optional_oneformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_oneformat"/>
     <param name="param_list_default_mandatory_multformat" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_multformat"/>
     <param name="param_list_default_optional_multformat" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_multformat"/>
     <expand macro="advanced_options">
-      <param name="param_mandatory_noformat_adv" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_noformat_adv"/>
-      <param name="param_optional_noformat_adv" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_noformat_adv"/>
+      <param name="param_mandatory_noformat_adv" type="data" format="data" optional="False" label="input file" help="" argument="-mandatory_noformat_adv"/>
+      <param name="param_optional_noformat_adv" type="data" format="data" optional="True" label="input file" help="" argument="-optional_noformat_adv"/>
       <param name="param_mandatory_oneformat_adv" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_oneformat_adv"/>
       <param name="param_optional_oneformat_adv" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_oneformat_adv"/>
       <param name="param_mandatory_multformat_adv" type="data" format="txt" optional="False" label="input file" help="" argument="-mandatory_multformat_adv"/>
       <param name="param_optional_multformat_adv" type="data" format="txt" optional="True" label="input file" help="" argument="-optional_multformat_adv"/>
-      <param name="param_default_mandatory_noformat_adv" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat_adv"/>
-      <param name="param_default_optional_noformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_noformat_adv"/>
+      <param name="param_default_mandatory_noformat_adv" type="data" format="data" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat_adv"/>
+      <param name="param_default_optional_noformat_adv" type="data" format="data" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_noformat_adv"/>
       <param name="param_default_mandatory_oneformat_adv" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_oneformat_adv"/>
       <param name="param_default_optional_oneformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_oneformat_adv"/>
       <param name="param_default_mandatory_multformat_adv" type="data" format="txt" optional="False" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat_adv"/>
       <param name="param_default_optional_multformat_adv" type="data" format="txt" optional="True" value="test.ext" label="input file" help="" argument="-default_optional_multformat_adv"/>
-      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat_adv"/>
-      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat_adv"/>
+      <param name="param_list_mandatory_noformat_adv" type="data" format="data" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_noformat_adv"/>
+      <param name="param_list_optional_noformat_adv" type="data" format="data" multiple="true" optional="True" label="input file" help="" argument="-list_optional_noformat_adv"/>
       <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_oneformat_adv"/>
       <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_oneformat_adv"/>
       <param name="param_list_mandatory_multformat_adv" type="data" format="txt" multiple="true" optional="False" label="input file" help="" argument="-list_mandatory_multformat_adv"/>
       <param name="param_list_optional_multformat_adv" type="data" format="txt" multiple="true" optional="True" label="input file" help="" argument="-list_optional_multformat_adv"/>
-      <param name="param_list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat_adv"/>
-      <param name="param_list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat_adv"/>
+      <param name="param_list_default_mandatory_noformat_adv" type="data" format="data" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat_adv"/>
+      <param name="param_list_default_optional_noformat_adv" type="data" format="data" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat_adv"/>
       <param name="param_list_default_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_oneformat_adv"/>
       <param name="param_list_default_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="True" value="test.ext" label="input file" help="" argument="-list_default_optional_oneformat_adv"/>
       <param name="param_list_default_mandatory_multformat_adv" type="data" format="txt" multiple="true" optional="False" value="test.ext" label="input file" help="" argument="-list_default_mandatory_multformat_adv"/>

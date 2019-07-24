@@ -2,7 +2,7 @@
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [String Test]-->
 <tool id="echo_FloatTest" name="echo FloatTest" version="2.3.0">
-  <description>Floateger parameter tests</description>
+  <description>Float parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo FloatTest</token>
     <import>macros.xml</import>
@@ -10,7 +10,56 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command><![CDATA[echo FloatTest
+  <command><![CDATA[
+#if str($param_wodefault_optional_unrestricted):
+
+#end if
+#if str($param_default_optional_unrestricted):
+
+#end if
+#if str($adv_opts.param_wodefault_optional_unrestricted_adv):
+
+#end if
+#if str($adv_opts.param_default_optional_unrestricted_adv):
+
+#end if
+#if str($param_wodefault_optional_unrestricted_min):
+
+#end if
+#if str($param_default_optional_unrestricted_min):
+
+#end if
+#if str($adv_opts.param_wodefault_optional_unrestricted_adv_min):
+
+#end if
+#if str($adv_opts.param_default_optional_unrestricted_adv_min):
+
+#end if
+#if str($param_wodefault_optional_unrestricted_max):
+
+#end if
+#if str($param_default_optional_unrestricted_max):
+
+#end if
+#if str($adv_opts.param_wodefault_optional_unrestricted_adv_max):
+
+#end if
+#if str($adv_opts.param_default_optional_unrestricted_adv_max):
+
+#end if
+#if str($param_wodefault_optional_unrestricted_minmax):
+
+#end if
+#if str($param_default_optional_unrestricted_minmax):
+
+#end if
+#if str($adv_opts.param_wodefault_optional_unrestricted_adv_minmax):
+
+#end if
+#if str($adv_opts.param_default_optional_unrestricted_adv_minmax):
+
+#end if
+echo FloatTest
 
 -wodefault_mandatory_unrestricted '$param_wodefault_mandatory_unrestricted'
 -default_mandatory_unrestricted '$param_default_mandatory_unrestricted'
@@ -119,7 +168,7 @@
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
-  <help><![CDATA[Floateger parameter tests.
+  <help><![CDATA[Float parameter tests.
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>

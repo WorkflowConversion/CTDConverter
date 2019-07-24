@@ -10,7 +10,44 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command><![CDATA[echo outFileTest
+  <command><![CDATA[
+#if str($param_wodefault_optional_noformat):
+
+#end if
+#if str($param_default_optional_noformat):
+
+#end if
+#if str($param_wodefault_optional_oneformat):
+
+#end if
+#if str($param_default_optional_oneformat):
+
+#end if
+#if str($param_wodefault_optional_multformat):
+
+#end if
+#if str($param_default_optional_multformat):
+
+#end if
+#if str($param_list_optional_noformat):
+
+#end if
+#if str($param_list_optional_oneformat):
+
+#end if
+#if str($param_list_optional_multformat):
+
+#end if
+#if str($adv_opts.param_optional_noformat_adv):
+
+#end if
+#if str($adv_opts.param_optional_oneformat_adv):
+
+#end if
+#if str($adv_opts.param_optional_multformat_adv):
+
+#end if
+echo outFileTest
 
 -wodefault_mandatory_noformat '$param_out_wodefault_mandatory_noformat'
 -default_mandatory_noformat '$param_out_default_mandatory_noformat'

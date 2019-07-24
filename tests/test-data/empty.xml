@@ -10,7 +10,8 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <expand macro="references"/>
-  <command><![CDATA[echo StringTest
+  <command><![CDATA[
+echo StringTest
 
 > $param_stdout
 ]]></command>

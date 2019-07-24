@@ -379,11 +379,15 @@ def create_command(tool, model, **kwargs):
     @param model the ctd model
     @param kwargs
     """
+
+    # main command
+    final_preprocessing = "\n"
     final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
     advanced_command_end = "#end if"
     advanced_command = ""
+
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     found_output_parameter = False
@@ -391,6 +395,7 @@ def create_command(tool, model, **kwargs):
         if param.type is _OutFile:
             found_output_parameter = True
         command = ""
+        preprocessing = ""
         param_name = utils.extract_param_name(param)
         command_line_prefix = utils.extract_command_line_prefix(param, model)
 
@@ -402,47 +407,60 @@ def create_command(tool, model, **kwargs):
             command += "%s %s\n" % (command_line_prefix, hardcoded_value)
         else:
             # parameter is neither blacklisted nor hardcoded...
-            galaxy_parameter_name = get_galaxy_parameter_name(param)
             if param.advanced:
-                actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
+                actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param)
             else:
-                actual_parameter = "$%s" % galaxy_parameter_name
+                actual_parameter = "%s" % get_galaxy_parameter_name(param)
+
+            # all but bool params need the command line argument (bools have it already in the true/false value)
+            if not is_boolean_parameter(param):
+                command += command_line_prefix + " "
+
+            # preprocessing for file inputs: create a link to id.ext in the input directory
+            if param.type is _InFile:
+                if param.is_list:
+                    preprocessing += "{# ' && '.join([ 'ls -s \'%s\' \'%s.%s\'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in " + actual_parameter + " if _ != None ]) } && \n"
+                    command += "{# ' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ != None])}\n"
+                else:
+                    preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
+                    command += "'${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
 
             # logic for ITEMLISTs
-            if param.is_list and (param.type is _InFile or is_selection_parameter(param)):
-                command += command_line_prefix + " "
-                command += "{# ' '.join([\"'%s'\"%str(_) for _ in " + actual_parameter + " if _ != None])}\n"
+            elif param.is_list and is_selection_parameter(param):
+                command += "{# ' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
             elif is_boolean_parameter(param):
-                command += "%s" % actual_parameter + "\n"
+                command += "$%s" % actual_parameter + "\n"
             else:
-                command += command_line_prefix + " "
-                command += "'" + actual_parameter + "'\n"
+                command += "'$" + actual_parameter + "'\n"
             
-            # add if statement for mandatory parameters
+            # add if statement for mandatory parameters and preprocessing
             # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)
             if not param.required and not is_boolean_parameter(param) and not(param.type is _InFile and param.is_list):
                 if  param.type is _OutFile:
-                    galaxy_parameter_name = get_galaxy_parameter_name(param, True)
                     if param.advanced:
-                        actual_parameter = "$adv_opts.%s" % galaxy_parameter_name
+                        actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param, True)
                     else:
-                        actual_parameter = "$%s" % galaxy_parameter_name
-                    "param_"+param.name
+                        actual_parameter = "%s" % get_galaxy_parameter_name(param, True)
                 if is_selection_parameter(param):
-                    command = "#if " + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
+                    command = "#if $" + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
                 else:
-                    command = "#if str(" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
+                    command = "#if str($" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
+                    preprocessing = "#if str($" + actual_parameter + "):\n" + utils.indent(preprocessing) + "\n#end if\n"
 
         if param.advanced and param.type is not _OutFile:
             advanced_command += "%s\n" % utils.indent(command)
         else:
             final_command += command
 
+        final_preprocessing += preprocessing
+
     if advanced_command:
         final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
 
     if not found_output_parameter:
         final_command += "> $param_stdout\n"
+
+    final_command = final_preprocessing + final_command
 
     command_node = add_child_node(tool, "command")
     command_node.text = CDATA(final_command)
@@ -593,7 +611,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
-        param_format = "txt"
+        param_format = "data"
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
@@ -860,7 +878,9 @@ def create_outputs(parent, model, **kwargs):
     create outputs section of the Galaxy tool
     @param tool the Galaxy tool
     @param model the ctd model
-    @param kwargs
+    @param kwargs 
+      - parameter_hardcoder and
+      - supported_file_formats ()
     """
     outputs_node = add_child_node(parent, "outputs")
     parameter_hardcoder = kwargs["parameter_hardcoder"]
@@ -889,6 +909,11 @@ def create_output_node(parent, param, model, supported_file_formats):
     if data_node.attrib["name"].startswith('param_out_'):
         data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % data_node.attrib["name"][10:]
 
+    # determine format attribute
+    # - default is data
+    # - check if all listed possible formats are supported in Galaxy
+    # - if there is a single one, then take this
+    # - otherwise try to determine an input with the same restrictions and use this as format source
     data_format = "data"
     if param.restrictions is not None:
         if type(param.restrictions) is _FileFormat:
@@ -922,9 +947,9 @@ def create_output_node(parent, param, model, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),
                                                                    "name": param.name})
-
     data_node.attrib["format"] = data_format
 
+    # add filter for optional parameters
     if not param.required:
         filter_node = add_child_node(data_node, "filter") 
         filter_node.text = get_galaxy_parameter_name(param, True) 
