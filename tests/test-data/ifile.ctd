@@ -70,6 +70,7 @@
       <ITEMLIST name="list_optional_oneformat_adv"   type="input-file" description="input file" required="false" advanced="true" supported_formats="*.ext"></ITEMLIST>
       <ITEMLIST name="list_mandatory_multformat_adv" type="input-file" description="input file" required="true" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
       <ITEMLIST name="list_optional_multformat_adv"  type="input-file" description="input file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"></ITEMLIST>
+
       <!-- multiple file inputs w default -->
       <ITEMLIST name="list_default_mandatory_noformat_adv"   type="input-file" description="input file" required="true" advanced="true">
         <LISTITEM value="test.ext"/>

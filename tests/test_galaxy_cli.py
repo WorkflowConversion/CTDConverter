@@ -22,7 +22,7 @@ class GalaxyCliTestCase(unittest.TestCase):
         out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
         #out_file = to_test_data('{}.xml'.format(fileprefix))
 
-        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '-b', 'version']
+        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '-b', 'version', '--test-test']
         print(cmd)
 
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -40,6 +40,22 @@ class GalaxyCliTestCase(unittest.TestCase):
 
         for i in range(0, len(new_l)):
             self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
+        
+        cmd = ['planemo', 'l', out_file]
+        print(cmd)
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, err = popen.communicate()
+        print(output)
+        print(err)
+        self.assertEqual(err, 0)
+
+        cmd = ['planemo', 't', out_file]
+        print(cmd)
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        output, err = popen.communicate()
+        print(output)
+        print(err)
+        self.assertEqual(err, 0)
 
     def test_galaxy_cli_bool_ctd(self):
         self._compare_cli_output('bool')

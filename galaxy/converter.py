@@ -7,7 +7,7 @@ from collections import OrderedDict
 import copy
 from string import strip
 from lxml import etree
-from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse
+from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse, strip_elements
 
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
@@ -72,6 +72,8 @@ def add_specific_args(parser):
                                                          "The macros stdio, requirements and advanced_options are "
                                                          "required. Please see galaxy/macros.xml for an example of a "
                                                          "valid macros file. All defined macros will be imported.")
+    parser.add_argument("--test-test", dest="test_test", action='store_true', default=False, required=False,
+                    help="Generate a simple test for the internal unit tests.")
 
 
 def convert_models(args, parsed_ctds):
@@ -103,7 +105,8 @@ def convert_models(args, parsed_ctds):
                       skip_tools=skip_tools,
                       macros_file_names=args.macros_files,
                       macros_to_expand=macros_to_expand,
-                      parameter_hardcoder=args.parameter_hardcoder)
+                      parameter_hardcoder=args.parameter_hardcoder,
+                      test_test=args.test_test)
 
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
     if args.tool_conf_destination is not None:
@@ -277,8 +280,10 @@ def _convert_internal(parsed_ctds, **kwargs):
             create_description(tool, model)
             expand_macros(tool, model, **kwargs)
             create_command(tool, model, **kwargs)
-            create_inputs(tool, model, **kwargs)
-            create_outputs(tool, model, **kwargs)
+            inputs = create_inputs(tool, model, **kwargs)
+            outputs = create_outputs(tool, model, **kwargs)
+            if kwargs["test_test"]:
+                create_tests(tool, copy.deepcopy(inputs), copy.deepcopy(outputs))
             create_help(tool, model)
 
             # wrap our tool element into a tree to be able to serialize it
@@ -390,10 +395,13 @@ def create_command(tool, model, **kwargs):
 
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
+    found_input_parameter = False
     found_output_parameter = False
     for param in utils.extract_and_flatten_parameters(model):
         if param.type is _OutFile:
             found_output_parameter = True
+        if param.type is _InFile:
+            found_input_parameter = True
         command = ""
         preprocessing = ""
         param_name = utils.extract_param_name(param)
@@ -407,7 +415,7 @@ def create_command(tool, model, **kwargs):
             command += "%s %s\n" % (command_line_prefix, hardcoded_value)
         else:
             # parameter is neither blacklisted nor hardcoded...
-            if param.advanced:
+            if param.advanced and not param.type is _OutFile:
                 actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param)
             else:
                 actual_parameter = "%s" % get_galaxy_parameter_name(param)
@@ -420,14 +428,14 @@ def create_command(tool, model, **kwargs):
             if param.type is _InFile:
                 if param.is_list:
                     preprocessing += "{# ' && '.join([ 'ls -s \'%s\' \'%s.%s\'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in " + actual_parameter + " if _ != None ]) } && \n"
-                    command += "{# ' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ != None])}\n"
+                    command += "${' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ != None])}\n"
                 else:
                     preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
                     command += "'${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
 
             # logic for ITEMLISTs
             elif param.is_list and is_selection_parameter(param):
-                command += "{# ' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
+                command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
             elif is_boolean_parameter(param):
                 command += "$%s" % actual_parameter + "\n"
             else:
@@ -436,7 +444,7 @@ def create_command(tool, model, **kwargs):
             # add if statement for mandatory parameters and preprocessing
             # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)
             if not param.required and not is_boolean_parameter(param) and not(param.type is _InFile and param.is_list):
-                if  param.type is _OutFile:
+                if param.type is _OutFile:
                     if param.advanced:
                         actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param, True)
                     else:
@@ -445,6 +453,7 @@ def create_command(tool, model, **kwargs):
                     command = "#if $" + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
                 else:
                     command = "#if str($" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
+                if param.type is _InFile:
                     preprocessing = "#if str($" + actual_parameter + "):\n" + utils.indent(preprocessing) + "\n#end if\n"
 
         if param.advanced and param.type is not _OutFile:
@@ -461,6 +470,9 @@ def create_command(tool, model, **kwargs):
         final_command += "> $param_stdout\n"
 
     final_command = final_preprocessing + final_command
+
+    if found_input_parameter:
+        final_command = "\n#import re" + final_command
 
     command_node = add_child_node(tool, "command")
     command_node.text = CDATA(final_command)
@@ -527,6 +539,7 @@ def create_inputs(tool, model, **kwargs):
     @param tool the Galaxy tool
     @param model the ctd model
     @param kwargs
+    @return inputs node
     """
     inputs_node = SubElement(tool, "inputs")
 
@@ -561,22 +574,14 @@ def create_inputs(tool, model, **kwargs):
         else:
             parent_node = inputs_node
 
-#         # for lists we need a repeat tag, execept if
-#         # - list of strings with a fixed set of options -> select w multiple=true
-#         # - InFiles -> data w multiple=true
-#         if param.is_list and\
-#            not (param.type is str and param.restrictions is not None) and\
-#            param.type is not _InFile:
-#             rep_node = add_child_node(parent_node, "repeat")
-#             create_repeat_attribute_list(rep_node, param)
-#             parent_node = rep_node
-
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, _param, kwargs["supported_file_formats"])
 
     if not advanced_node is None:
         inputs_node.append(advanced_node)
 
+    return inputs_node
+    
 
 def create_param_attribute_list(param_node, param, supported_file_formats):
     """
@@ -633,9 +638,9 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         param_node.attrib["type"] = param_type
 
     if param_type == "select" and param.default in param.restrictions.choices:
-        param_node.attrib["optional"] = "False"
+        param_node.attrib["optional"] = "false"
     else:
-        param_node.attrib["optional"] = str(not param.required)
+        param_node.attrib["optional"] = str(not param.required).lower()
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None:
@@ -748,7 +753,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             # simple boolean with a default
             if param.default is True:
                 param_node.attrib["checked"] = "true"
-    elif param.type is int or param.type is float:
+    elif param.type is int or param.type is float or param.type is str:
         param_node.attrib["value"] = ""
 
     # add label, help, and argument
@@ -901,6 +906,7 @@ def create_outputs(parent, model, **kwargs):
     if len(outputs_node) == 0:
         add_child_node(outputs_node, "data",
                        OrderedDict([("name", "param_stdout"), ("format", "txt"), ("label", "Output from stdout")]))
+    return outputs_node
 
 
 def create_output_node(parent, param, model, supported_file_formats):
@@ -979,6 +985,76 @@ def create_change_format_node(parent, data_formats, input_ref):
     for data_format in data_formats:
         add_child_node(change_format_node, "when",
                        OrderedDict([("input", input_ref), ("value", data_format), ("format", data_format)]))
+
+
+def create_tests(parent, inputs, outputs):
+    """
+    create tests section of the Galaxy tool
+    @param tool the Galaxy tool
+    @param inputs a copy of the inputs
+    """
+    tests_node = add_child_node(parent, "tests")
+    test_node = add_child_node(tests_node, "test")
+    
+    strip_elements(inputs, "validator", "sanitizer")
+    for node in inputs.iter():
+        if node.tag == "expand":
+            node.tag = "conditional"
+            node.attrib["name"] = "adv_opts"
+            add_child_node(node, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
+        if not "type" in node.attrib:
+            continue
+
+        if (node.attrib["type"] == "select" and "true" in set([_.attrib.get("selected","false") for _ in node])) or\
+           (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
+            node.tag = "delete_node"
+            continue
+
+        # TODO make this optional (ie add aparameter)
+        if node.attrib["optional"] == "true":
+            node.tag = "delete_node"
+            continue
+
+        if node.attrib["type"] == "boolean":
+            node.attrib["value"] = node.attrib["truevalue"]
+        elif node.attrib["type"] == "text" and node.attrib["value"] == "":
+            node.attrib["value"] = "1,2" # use a comma separated list here to cover the repeat (int/float) case 
+        elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
+            node.attrib["value"] = "1"
+        elif node.attrib["type"] == "float" and node.attrib["value"] == "":
+            node.attrib["value"] = "1.0"
+        elif node.attrib["type"] == "select":
+            if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
+                node.attrib["value"] = node[-1].attrib["value"]
+            elif node.attrib.get("multiple", None) == "true":
+                node.attrib["value"] = ",".join([ _.attrib["value"] for _ in node ])
+        elif node.attrib["type"] == "data":
+            if node.attrib.get("multiple", "false") == "true":
+                node.attrib["value"] = "test.ext,test2.ext"
+            else:
+                node.attrib["value"] = "test.ext"
+        for a in set(node.attrib) - set(["name","value","format"]):
+            del node.attrib[a]
+    strip_elements(inputs, "delete_node", "option")
+    for node in inputs:
+        test_node.append(node)
+
+    for node in outputs.iter():
+        if node.tag == "data":
+            node.tag = "output"
+            node.attrib["ftype"] = node.attrib["format"]
+        if len(node) > 0 and node[0].tag == "filter":
+            node.tag = "delete_node"
+        node.attrib["value"] = "outfile.txt"
+        if node.attrib.get("name", None) == "param_stdout":
+            node.attrib["lines_diff"] = "2"
+        for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
+            del node.attrib[a]
+    strip_elements(outputs, "delete_node")
+
+    for node in outputs:
+        test_node.append(node)
+
 
 
 # Shows basic information about the file, such as data ranges and file type.

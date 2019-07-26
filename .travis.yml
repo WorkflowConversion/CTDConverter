@@ -34,7 +34,7 @@ install:
   - python setup.py install
 
   - conda install coverage green codecov
-
+  - conda install -c bioconda planemo
 script:
   - python setup.py test
 

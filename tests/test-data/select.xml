@@ -30,21 +30,21 @@ echo SelectTest
   -default_optional_many '$param_default_optional_many'
 #end if
 #if $param_list_wodefault_optional:
-  -list_wodefault_optional {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])}
+  -list_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])}
 #end if
--list_wodefault_mandatory {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory])}
+-list_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory])}
 #if $param_list_default_optional:
-  -list_default_optional {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional])}
+  -list_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_list_default_optional])}
 #end if
--list_default_mandatory {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory])}
+-list_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory])}
 #if $param_list_wodefault_optional_many:
-  -list_wodefault_optional_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many])}
+  -list_wodefault_optional_many ${' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional_many])}
 #end if
--list_wodefault_mandatory_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many])}
+-list_wodefault_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_mandatory_many])}
 #if $param_list_default_optional_many:
-  -list_default_optional_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])}
+  -list_default_optional_many ${' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])}
 #end if
--list_default_mandatory_many {# ' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
+-list_default_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
 #if $adv_opts.adv_opts_selector=='advanced':
   -wodefault_mandatory_adv '$adv_opts.param_wodefault_mandatory_adv'
   -default_mandatory_adv '$adv_opts.param_default_mandatory_adv'
@@ -63,131 +63,123 @@ echo SelectTest
     -default_optional_many_adv '$adv_opts.param_default_optional_many_adv'
   #end if
   #if $adv_opts.param_list_wodefault_optional_adv:
-    -list_wodefault_optional_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])}
+    -list_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])}
   #end if
-  -list_wodefault_mandatory_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])}
+  -list_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])}
   #if $adv_opts.param_list_default_optional_adv:
-    -list_default_optional_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])}
+    -list_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])}
   #end if
-  -list_default_mandatory_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])}
+  -list_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])}
   #if $adv_opts.param_list_wodefault_optional_many_adv:
-    -list_wodefault_optional_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])}
+    -list_wodefault_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])}
   #end if
-  -list_wodefault_mandatory_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])}
+  -list_wodefault_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])}
   #if $adv_opts.param_list_default_optional_many_adv:
-    -list_default_optional_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])}
+    -list_default_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])}
   #end if
-  -list_default_mandatory_many_adv {# ' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])}
+  -list_default_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])}
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_wodefault_mandatory" display="radio" type="select" optional="False" label="string" help="" argument="-wodefault_mandatory">
-      <option value="select a value">select a value</option>
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
-    </param>
-    <param name="param_default_mandatory" display="radio" type="select" optional="False" label="string" help="" argument="-default_mandatory">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C" selected="true">C</option>
-      <option value="D">D</option>
-    </param>
-    <param name="param_wodefault_optional" display="radio" type="select" optional="True" label="string" help="" argument="-wodefault_optional">
+    <param name="param_wodefault_mandatory" display="radio" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_default_optional" display="radio" type="select" optional="False" label="string" help="" argument="-default_optional">
+    <param name="param_default_mandatory" display="radio" type="select" optional="false" label="string" help="" argument="-default_mandatory">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_wodefault_mandatory_many" type="select" optional="False" label="string" help="" argument="-wodefault_mandatory_many">
-      <option value="select a value">select a value</option>
+    <param name="param_wodefault_optional" display="radio" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
-      <option value="E">E</option>
-      <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_default_mandatory_many" type="select" optional="False" label="string" help="" argument="-default_mandatory_many">
+    <param name="param_default_optional" display="radio" type="select" optional="false" label="string" help="" argument="-default_optional">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
-      <option value="E">E</option>
     </param>
-    <param name="param_wodefault_optional_many" type="select" optional="True" label="string" help="" argument="-wodefault_optional_many">
+    <param name="param_wodefault_mandatory_many" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_default_optional_many" type="select" optional="False" label="string" help="" argument="-default_optional_many">
+    <param name="param_default_mandatory_many" type="select" optional="false" label="string" help="" argument="-default_mandatory_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_wodefault_optional" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_wodefault_optional">
+    <param name="param_wodefault_optional_many" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_many">
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C">C</option>
+      <option value="D">D</option>
+      <option value="E">E</option>
+    </param>
+    <param name="param_default_optional_many" type="select" optional="false" label="string" help="" argument="-default_optional_many">
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C" selected="true">C</option>
+      <option value="D">D</option>
+      <option value="E">E</option>
+    </param>
+    <param name="param_list_wodefault_optional" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_list_wodefault_mandatory" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_wodefault_mandatory">
-      <option value="select a value">select a value</option>
+    <param name="param_list_wodefault_mandatory" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
-      <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_list_default_optional" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_default_optional">
+    <param name="param_list_default_optional" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
     </param>
-    <param name="param_list_default_mandatory" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_default_mandatory">
+    <param name="param_list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
     </param>
-    <param name="param_list_wodefault_optional_many" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_wodefault_optional_many">
+    <param name="param_list_wodefault_optional_many" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_wodefault_mandatory_many" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_wodefault_mandatory_many">
-      <option value="select a value">select a value</option>
+    <param name="param_list_wodefault_mandatory_many" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
-      <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
     </param>
-    <param name="param_list_default_optional_many" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_default_optional_many">
+    <param name="param_list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_default_mandatory_many" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_default_mandatory_many">
+    <param name="param_list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_many">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -195,112 +187,104 @@ echo SelectTest
       <option value="E">E</option>
     </param>
     <expand macro="advanced_options">
-      <param name="param_wodefault_mandatory_adv" display="radio" type="select" optional="False" label="string" help="" argument="-wodefault_mandatory_adv">
-        <option value="select a value">select a value</option>
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-        <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
-      </param>
-      <param name="param_default_mandatory_adv" display="radio" type="select" optional="False" label="string" help="" argument="-default_mandatory_adv">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C" selected="true">C</option>
-        <option value="D">D</option>
-      </param>
-      <param name="param_wodefault_optional_adv" display="radio" type="select" optional="True" label="string" help="" argument="-wodefault_optional_adv">
+      <param name="param_wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_default_optional_adv" display="radio" type="select" optional="False" label="string" help="" argument="-default_optional_adv">
+      <param name="param_default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="" argument="-default_mandatory_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_wodefault_mandatory_many_adv" type="select" optional="False" label="string" help="" argument="-wodefault_mandatory_many_adv">
-        <option value="select a value">select a value</option>
+      <param name="param_wodefault_optional_adv" display="radio" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
-        <option value="E">E</option>
-        <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_default_mandatory_many_adv" type="select" optional="False" label="string" help="" argument="-default_mandatory_many_adv">
+      <param name="param_default_optional_adv" display="radio" type="select" optional="false" label="string" help="" argument="-default_optional_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
-        <option value="E">E</option>
       </param>
-      <param name="param_wodefault_optional_many_adv" type="select" optional="True" label="string" help="" argument="-wodefault_optional_many_adv">
+      <param name="param_wodefault_mandatory_many_adv" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_default_optional_many_adv" type="select" optional="False" label="string" help="" argument="-default_optional_many_adv">
+      <param name="param_default_mandatory_many_adv" type="select" optional="false" label="string" help="" argument="-default_mandatory_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_wodefault_optional_adv" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_wodefault_optional_adv">
+      <param name="param_wodefault_optional_many_adv" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_many_adv">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </param>
+      <param name="param_default_optional_many_adv" type="select" optional="false" label="string" help="" argument="-default_optional_many_adv">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C" selected="true">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+      </param>
+      <param name="param_list_wodefault_optional_adv" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_list_wodefault_mandatory_adv" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_wodefault_mandatory_adv">
-        <option value="select a value">select a value</option>
+      <param name="param_list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
-        <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_list_default_optional_adv" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_default_optional_adv">
+      <param name="param_list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
       </param>
-      <param name="param_list_default_mandatory_adv" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_default_mandatory_adv">
+      <param name="param_list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
       </param>
-      <param name="param_list_wodefault_optional_many_adv" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_wodefault_optional_many_adv">
+      <param name="param_list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_wodefault_mandatory_many_adv">
-        <option value="select a value">select a value</option>
+      <param name="param_list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
-        <validator type="expression" message="A value needs to be selected">value != "select a value"</validator>
       </param>
-      <param name="param_list_default_optional_many_adv" multiple="true" type="select" optional="True" label="string list" help="" argument="-list_default_optional_many_adv">
+      <param name="param_list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_default_mandatory_many_adv" multiple="true" type="select" optional="False" label="string list" help="" argument="-list_default_mandatory_many_adv">
+      <param name="param_list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_many_adv">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -312,6 +296,22 @@ echo SelectTest
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
+  <tests>
+    <test>
+      <param name="param_wodefault_mandatory" value="D"/>
+      <param name="param_wodefault_mandatory_many" value="E"/>
+      <param name="param_list_wodefault_mandatory" value="A,B,C,D"/>
+      <param name="param_list_wodefault_mandatory_many" value="A,B,C,D,E"/>
+      <conditional macro="advanced_options" name="adv_opts">
+        <param name="param_wodefault_mandatory_adv" value="D"/>
+        <param name="param_wodefault_mandatory_many_adv" value="E"/>
+        <param name="param_list_wodefault_mandatory_adv" value="A,B,C,D"/>
+        <param name="param_list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
+        <param name="adv_opts_selector" value="advanced"/>
+      </conditional>
+      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+    </test>
+  </tests>
   <help><![CDATA[Select parameter tests.
 
 

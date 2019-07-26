@@ -19,6 +19,11 @@ echo StringTest
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
+  <tests>
+    <test>
+      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+    </test>
+  </tests>
   <help><![CDATA[String parameter tests.
 
 
