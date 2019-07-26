@@ -523,14 +523,25 @@ def get_galaxy_parameter_name(param, inparam = False):
         return "param_%s" % p
 
 
-def get_input_with_same_restrictions(out_param, model, supported_file_formats):
+def get_input_with_same_restrictions(out_param, model):
+    """
+    get the input parameter that has the same restrictions (ctd file_formats)
+    - input and output must both be lists of both be simple parameters
+    """
+    matching = []
     for param in utils.extract_and_flatten_parameters(model):
-        if param.type is _InFile:
-            if param.restrictions is not None:
-                in_param_formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
-                out_param_formats = get_supported_file_types(out_param.restrictions.formats, supported_file_formats)
-                if in_param_formats == out_param_formats:
-                    return param
+        if not param.type is _InFile or param.restrictions is None:
+            continue
+        if param.is_list != out_param.is_list:
+            continue
+        in_param_formats = param.restrictions.formats
+        out_param_formats = out_param.restrictions.formats
+        if in_param_formats == out_param_formats:
+            matching.append(param)
+    if len(matching) == 1:
+        return matching[0]
+    else:
+        return None
 
 
 def create_inputs(tool, model, **kwargs):
@@ -916,7 +927,12 @@ def create_outputs(parent, model, **kwargs):
 
 
 def create_output_node(parent, param, model, supported_file_formats):
-    data_node = add_child_node(parent, "data")
+
+    if not param.is_list:
+        data_node = add_child_node(parent, "data")
+    else:
+        data_node = add_child_node(parent, "collection")
+
     data_node.attrib["name"] = get_galaxy_parameter_name(param)
     if data_node.attrib["name"].startswith('param_out_'):
         data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % data_node.attrib["name"][10:]
@@ -950,11 +966,16 @@ def create_output_node(parent, param, model, supported_file_formats):
                 # there is not much we can do, other than catching the exception
                 pass
             # if there are more than one output file formats try to take the format from the input parameter
-            if formats:
-                corresponding_input = get_input_with_same_restrictions(param, model, supported_file_formats)
-                if corresponding_input is not None:
-                    data_format = "input"
-                    data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
+            corresponding_input = get_input_with_same_restrictions(param, model)
+            if param.is_list and corresponding_input is not None:
+                data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
+                # data_node.attrib["inherit_format"] = "true"
+                data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
+                data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
+            elif not param.is_list and formats and corresponding_input is not None:
+                data_format = "input"
+                data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
+                data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),

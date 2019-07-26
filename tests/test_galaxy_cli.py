@@ -84,6 +84,9 @@ class GalaxyCliTestCase(unittest.TestCase):
     def test_galaxy_cli_ofile_ctd(self):
         self._compare_cli_output('ofile')
 
+    def test_galaxy_cli_ofile_mult_ctd(self):
+        self._compare_cli_output('ofile-mult')
+
 
 if __name__ == '__main__':
     unittest.main()

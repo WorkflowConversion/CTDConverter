@@ -37,18 +37,6 @@ echo outFileTest
 #if str($param_default_optional_multformat):
   -default_optional_multformat '$param_out_default_optional_multformat'
 #end if
--list_mandatory_noformat '$param_out_list_mandatory_noformat'
-#if str($param_list_optional_noformat):
-  -list_optional_noformat '$param_out_list_optional_noformat'
-#end if
--list_mandatory_oneformat '$param_out_list_mandatory_oneformat'
-#if str($param_list_optional_oneformat):
-  -list_optional_oneformat '$param_out_list_optional_oneformat'
-#end if
--list_mandatory_multformat '$param_out_list_mandatory_multformat'
-#if str($param_list_optional_multformat):
-  -list_optional_multformat '$param_out_list_optional_multformat'
-#end if
 -mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
 #if str($adv_opts.param_optional_noformat_adv):
   -optional_noformat_adv '$param_out_optional_noformat_adv'
@@ -69,9 +57,6 @@ echo outFileTest
     <param name="param_default_optional_oneformat" type="boolean" optional="true" truevalue="-default_optional_oneformat" falsevalue="" checked="false" label="generate output default_optional_oneformat (output file)" help="" argument="-default_optional_oneformat"/>
     <param name="param_wodefault_optional_multformat" type="boolean" optional="true" truevalue="-wodefault_optional_multformat" falsevalue="" checked="false" label="generate output wodefault_optional_multformat (output file)" help="" argument="-wodefault_optional_multformat"/>
     <param name="param_default_optional_multformat" type="boolean" optional="true" truevalue="-default_optional_multformat" falsevalue="" checked="false" label="generate output default_optional_multformat (output file)" help="" argument="-default_optional_multformat"/>
-    <param name="param_list_optional_noformat" type="boolean" optional="true" truevalue="-list_optional_noformat" falsevalue="" checked="false" label="generate output list_optional_noformat (output file)" help="" argument="-list_optional_noformat"/>
-    <param name="param_list_optional_oneformat" type="boolean" optional="true" truevalue="-list_optional_oneformat" falsevalue="" checked="false" label="generate output list_optional_oneformat (output file)" help="" argument="-list_optional_oneformat"/>
-    <param name="param_list_optional_multformat" type="boolean" optional="true" truevalue="-list_optional_multformat" falsevalue="" checked="false" label="generate output list_optional_multformat (output file)" help="" argument="-list_optional_multformat"/>
     <expand macro="advanced_options">
       <param name="param_optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help="" argument="-optional_noformat_adv"/>
       <param name="param_optional_oneformat_adv" type="boolean" optional="true" truevalue="-optional_oneformat_adv" falsevalue="" checked="false" label="generate output optional_oneformat_adv (output file)" help="" argument="-optional_oneformat_adv"/>
@@ -103,18 +88,6 @@ echo outFileTest
     <data name="param_out_default_optional_multformat" label="${tool.name} on ${on_string}: default_optional_multformat" format="txt">
       <filter>param_default_optional_multformat</filter>
     </data>
-    <data name="param_out_list_mandatory_noformat" label="${tool.name} on ${on_string}: list_mandatory_noformat" format="data"/>
-    <data name="param_out_list_optional_noformat" label="${tool.name} on ${on_string}: list_optional_noformat" format="data">
-      <filter>param_list_optional_noformat</filter>
-    </data>
-    <data name="param_out_list_mandatory_oneformat" label="${tool.name} on ${on_string}: list_mandatory_oneformat" format="txt"/>
-    <data name="param_out_list_optional_oneformat" label="${tool.name} on ${on_string}: list_optional_oneformat" format="txt">
-      <filter>param_list_optional_oneformat</filter>
-    </data>
-    <data name="param_out_list_mandatory_multformat" label="${tool.name} on ${on_string}: list_mandatory_multformat" format="txt"/>
-    <data name="param_out_list_optional_multformat" label="${tool.name} on ${on_string}: list_optional_multformat" format="txt">
-      <filter>param_list_optional_multformat</filter>
-    </data>
     <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="data"/>
     <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="data">
       <filter>advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['param_optional_noformat_adv']</filter>
@@ -129,16 +102,13 @@ echo outFileTest
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="24">
+    <test expect_num_outputs="18">
       <param name="param_wodefault_optional_noformat" value=""/>
       <param name="param_default_optional_noformat" value=""/>
       <param name="param_wodefault_optional_oneformat" value=""/>
       <param name="param_default_optional_oneformat" value=""/>
       <param name="param_wodefault_optional_multformat" value=""/>
       <param name="param_default_optional_multformat" value=""/>
-      <param name="param_list_optional_noformat" value=""/>
-      <param name="param_list_optional_oneformat" value=""/>
-      <param name="param_list_optional_multformat" value=""/>
       <conditional macro="advanced_options" name="adv_opts">
         <param name="param_optional_noformat_adv" value=""/>
         <param name="param_optional_oneformat_adv" value=""/>
@@ -151,9 +121,6 @@ echo outFileTest
       <output name="param_out_default_mandatory_oneformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_wodefault_mandatory_multformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_default_mandatory_multformat" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_list_mandatory_noformat" ftype="data" value="outfile.txt"/>
-      <output name="param_out_list_mandatory_oneformat" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_list_mandatory_multformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_mandatory_noformat_adv" ftype="data" value="outfile.txt"/>
       <output name="param_out_mandatory_oneformat_adv" ftype="txt" value="outfile.txt"/>
       <output name="param_out_mandatory_multformat_adv" ftype="txt" value="outfile.txt"/>
