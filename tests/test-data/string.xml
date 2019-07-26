@@ -105,7 +105,7 @@ echo StringTest
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
   <tests>
-    <test>
+    <test expect_num_outputs="1">
       <param name="param_wodefault_mandatory_unrestricted" value="1,2"/>
       <param name="param_default_mandatory_unrestricted" value="default"/>
       <conditional macro="advanced_options" name="adv_opts">

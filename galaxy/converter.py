@@ -427,11 +427,11 @@ def create_command(tool, model, **kwargs):
             # preprocessing for file inputs: create a link to id.ext in the input directory
             if param.type is _InFile:
                 if param.is_list:
-                    preprocessing += "{# ' && '.join([ 'ls -s \'%s\' \'%s.%s\'' % (_, re.sub('[^\w\-_.]', '_', _.element_identifier)}, _.ext) for _ in " + actual_parameter + " if _ != None ]) } && \n"
-                    command += "${' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ != None])}\n"
+                    preprocessing += "${ ' && '.join([ \"ln -s '%s' '%s.%s'\" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $" + actual_parameter + " if _ != None ]) } && \n"
+                    command += "${' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ ])}\n"
                 else:
-                    preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
-                    command += "'${re.sub('[^\w\-_.]', '_', "+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
+                    preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub(\"[^\w\-_.]\", \"_\", $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
+                    command += "'${re.sub('[^\w\-_.]', '_', $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
 
             # logic for ITEMLISTs
             elif param.is_list and is_selection_parameter(param):
@@ -449,12 +449,12 @@ def create_command(tool, model, **kwargs):
                         actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param, True)
                     else:
                         actual_parameter = "%s" % get_galaxy_parameter_name(param, True)
-                if is_selection_parameter(param):
+                if is_selection_parameter(param) or param.type == _InFile:
                     command = "#if $" + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
                 else:
                     command = "#if str($" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
                 if param.type is _InFile:
-                    preprocessing = "#if str($" + actual_parameter + "):\n" + utils.indent(preprocessing) + "\n#end if\n"
+                    preprocessing = "#if $" + actual_parameter + ":\n" + utils.indent(preprocessing) + "\n#end if\n"
 
         if param.advanced and param.type is not _OutFile:
             advanced_command += "%s\n" % utils.indent(command)
@@ -1011,7 +1011,7 @@ def create_tests(parent, inputs, outputs):
             continue
 
         # TODO make this optional (ie add aparameter)
-        if node.attrib["optional"] == "true":
+        if node.attrib["optional"] == "true" and node.attrib["type"]!="boolean":
             node.tag = "delete_node"
             continue
 
@@ -1038,11 +1038,12 @@ def create_tests(parent, inputs, outputs):
     strip_elements(inputs, "delete_node", "option")
     for node in inputs:
         test_node.append(node)
-
+    outputs_cnt = 0
     for node in outputs.iter():
         if node.tag == "data":
             node.tag = "output"
             node.attrib["ftype"] = node.attrib["format"]
+            outputs_cnt += 1
         if len(node) > 0 and node[0].tag == "filter":
             node.tag = "delete_node"
         node.attrib["value"] = "outfile.txt"
@@ -1055,7 +1056,7 @@ def create_tests(parent, inputs, outputs):
     for node in outputs:
         test_node.append(node)
 
-
+    test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
 
 # Shows basic information about the file, such as data ranges and file type.
 def create_help(tool, model):

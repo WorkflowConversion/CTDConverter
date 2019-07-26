@@ -33,8 +33,12 @@ $param_false
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
   <tests>
-    <test>
+    <test expect_num_outputs="1">
+      <param name="param_true" value=""/>
+      <param name="param_false" value="-false"/>
       <conditional macro="advanced_options" name="adv_opts">
+        <param name="param_true_adv" value=""/>
+        <param name="param_false_adv" value="-false_adv"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>

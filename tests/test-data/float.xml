@@ -121,7 +121,7 @@ echo FloatTest
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
   <tests>
-    <test>
+    <test expect_num_outputs="1">
       <param name="param_wodefault_mandatory_unrestricted" value="1.0"/>
       <param name="param_default_mandatory_unrestricted" value="0.0"/>
       <param name="param_wodefault_mandatory_unrestricted_min" value="1.0"/>

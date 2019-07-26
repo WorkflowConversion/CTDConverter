@@ -297,7 +297,7 @@ echo SelectTest
     <data name="param_stdout" format="txt" label="Output from stdout"/>
   </outputs>
   <tests>
-    <test>
+    <test expect_num_outputs="1">
       <param name="param_wodefault_mandatory" value="D"/>
       <param name="param_wodefault_mandatory_many" value="E"/>
       <param name="param_list_wodefault_mandatory" value="A,B,C,D"/>
