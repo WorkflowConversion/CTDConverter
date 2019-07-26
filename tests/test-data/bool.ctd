@@ -11,6 +11,10 @@
       <ITEM name="false"     value="false" type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
       <ITEM name="true_adv"  value="true"  type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
       <ITEM name="false_adv" value="false" type="string" description="bool" required="false" advanced="true"  restrictions="true,false"/>
+      <ITEM name="flag_true"      value="true"  type="bool" description="bool" required="false" advanced="false"/>
+      <ITEM name="flag_false"     value="false" type="bool" description="bool" required="false" advanced="false"/>
+      <ITEM name="flag_true_adv"  value="true"  type="bool" description="bool" required="false" advanced="true"/>
+      <ITEM name="flag_false_adv" value="false" type="bool" description="bool" required="false" advanced="true"/>
     </NODE>
   </NODE>
 </PARAMETERS>

@@ -427,7 +427,7 @@ def create_command(tool, model, **kwargs):
             # preprocessing for file inputs: create a link to id.ext in the input directory
             if param.type is _InFile:
                 if param.is_list:
-                    preprocessing += "${ ' && '.join([ \"ln -s '%s' '%s.%s'\" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $" + actual_parameter + " if _ != None ]) } && \n"
+                    preprocessing += "${ ' && '.join([ \"ln -s '%s' '%s.%s'\" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $" + actual_parameter + " if _ ]) } && \n"
                     command += "${' '.join([\"'%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ ])}\n"
                 else:
                     preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub(\"[^\w\-_.]\", \"_\", $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
@@ -643,7 +643,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         param_node.attrib["optional"] = str(not param.required).lower()
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
-    if param.restrictions is not None:
+    if param.restrictions is not None or param_type == "boolean":
         # it could be either _Choices or _NumericRange, with special case for boolean types
         if param_type == "boolean":
             create_boolean_parameter(param_node, param)
@@ -861,21 +861,27 @@ def create_boolean_parameter(param_node, param):
     # in ctd (1.6.2) bools are strings with restriction true,false 
     # - if the default is false then they are flags
     # - otherwise the true or false value needs to be added (where the true case is unnecessary)
-    choices = get_lowercase_list(param.restrictions.choices)
-    if set(choices) == set(["true","false"]) and param.default == "true":
-        param_node.attrib["truevalue"] = ""
-        param_node.attrib["falsevalue"] = "-%s false" % utils.extract_param_name(param)
-    else: 
+    
+    if param.type == str:
+        choices = get_lowercase_list(param.restrictions.choices)
+        if set(choices) == set(["true","false"]) and param.default == "true":
+            param_node.attrib["truevalue"] = ""
+            param_node.attrib["falsevalue"] = "-%s false" % utils.extract_param_name(param)
+        else: 
+            param_node.attrib["truevalue"] = "-%s" % utils.extract_param_name(param)
+            param_node.attrib["falsevalue"] = ""
+    
+        # set the checked attribute
+        if param.default is not None:
+            checked_value = "false"
+            default = strip(string.lower(param.default))
+            if default == "yes" or default == "true":
+                checked_value = "true"
+            param_node.attrib["checked"] = checked_value
+    else:
         param_node.attrib["truevalue"] = "-%s" % utils.extract_param_name(param)
         param_node.attrib["falsevalue"] = ""
-
-    # set the checked attribute
-    if param.default is not None:
-        checked_value = "false"
-        default = strip(string.lower(param.default))
-        if default == "yes" or default == "true":
-            checked_value = "true"
-        param_node.attrib["checked"] = checked_value
+        param_node.attrib["checked"] = str(param.default).lower()
 
 
 def create_outputs(parent, model, **kwargs):
@@ -1016,7 +1022,10 @@ def create_tests(parent, inputs, outputs):
             continue
 
         if node.attrib["type"] == "boolean":
-            node.attrib["value"] = node.attrib["truevalue"]
+            if node.attrib["checked"] == "true":
+                node.attrib["value"] = node.attrib["truevalue"]
+            else:
+                node.attrib["value"] = node.attrib["falsevalue"]
         elif node.attrib["type"] == "text" and node.attrib["value"] == "":
             node.attrib["value"] = "1,2" # use a comma separated list here to cover the repeat (int/float) case 
         elif node.attrib["type"] == "integer" and node.attrib["value"] == "":

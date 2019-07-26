@@ -130,19 +130,19 @@ echo outFileTest
   </outputs>
   <tests>
     <test expect_num_outputs="24">
-      <param name="param_wodefault_optional_noformat" value="-wodefault_optional_noformat"/>
-      <param name="param_default_optional_noformat" value="-default_optional_noformat"/>
-      <param name="param_wodefault_optional_oneformat" value="-wodefault_optional_oneformat"/>
-      <param name="param_default_optional_oneformat" value="-default_optional_oneformat"/>
-      <param name="param_wodefault_optional_multformat" value="-wodefault_optional_multformat"/>
-      <param name="param_default_optional_multformat" value="-default_optional_multformat"/>
-      <param name="param_list_optional_noformat" value="-list_optional_noformat"/>
-      <param name="param_list_optional_oneformat" value="-list_optional_oneformat"/>
-      <param name="param_list_optional_multformat" value="-list_optional_multformat"/>
+      <param name="param_wodefault_optional_noformat" value=""/>
+      <param name="param_default_optional_noformat" value=""/>
+      <param name="param_wodefault_optional_oneformat" value=""/>
+      <param name="param_default_optional_oneformat" value=""/>
+      <param name="param_wodefault_optional_multformat" value=""/>
+      <param name="param_default_optional_multformat" value=""/>
+      <param name="param_list_optional_noformat" value=""/>
+      <param name="param_list_optional_oneformat" value=""/>
+      <param name="param_list_optional_multformat" value=""/>
       <conditional macro="advanced_options" name="adv_opts">
-        <param name="param_optional_noformat_adv" value="-optional_noformat_adv"/>
-        <param name="param_optional_oneformat_adv" value="-optional_oneformat_adv"/>
-        <param name="param_optional_multformat_adv" value="-optional_multformat_adv"/>
+        <param name="param_optional_noformat_adv" value=""/>
+        <param name="param_optional_oneformat_adv" value=""/>
+        <param name="param_optional_multformat_adv" value=""/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_out_wodefault_mandatory_noformat" ftype="data" value="outfile.txt"/>

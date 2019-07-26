@@ -36,18 +36,18 @@ ln -s '$param_default_mandatory_multformat' '${re.sub("[^\w\-_.]", "_", $param_d
 #if $param_default_optional_multformat:
   ln -s '$param_default_optional_multformat' '${re.sub("[^\w\-_.]", "_", $param_default_optional_multformat.element_identifier)}.${param_default_optional_multformat.ext}' &&
 #end if
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_noformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_noformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_oneformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_oneformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_multformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_multformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_noformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_noformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_oneformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_oneformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_multformat if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_multformat if _ != None ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_noformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_noformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_oneformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_oneformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_mandatory_multformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_optional_multformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_noformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_noformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_oneformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_oneformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_mandatory_multformat if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_list_default_optional_multformat if _ ]) } && 
 ln -s '$adv_opts.param_mandatory_noformat_adv' '${re.sub("[^\w\-_.]", "_", $adv_opts.param_mandatory_noformat_adv.element_identifier)}.${adv_opts.param_mandatory_noformat_adv.ext}' &&
 #if $adv_opts.param_optional_noformat_adv:
   ln -s '$adv_opts.param_optional_noformat_adv' '${re.sub("[^\w\-_.]", "_", $adv_opts.param_optional_noformat_adv.element_identifier)}.${adv_opts.param_optional_noformat_adv.ext}' &&
@@ -72,18 +72,18 @@ ln -s '$adv_opts.param_default_mandatory_multformat_adv' '${re.sub("[^\w\-_.]", 
 #if $adv_opts.param_default_optional_multformat_adv:
   ln -s '$adv_opts.param_default_optional_multformat_adv' '${re.sub("[^\w\-_.]", "_", $adv_opts.param_default_optional_multformat_adv.element_identifier)}.${adv_opts.param_default_optional_multformat_adv.ext}' &&
 #end if
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_noformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_noformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_oneformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_oneformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_multformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_multformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_noformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_noformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_oneformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_oneformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_multformat_adv if _ != None ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_multformat_adv if _ != None ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_noformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_noformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_oneformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_oneformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_mandatory_multformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_optional_multformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_noformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_noformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_oneformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_oneformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_mandatory_multformat_adv if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts.param_list_default_optional_multformat_adv if _ ]) } && 
 echo inFileTest
 
 -mandatory_noformat '${re.sub('[^\w\-_.]', '_', $param_mandatory_noformat.element_identifier)}.${param_mandatory_noformat.ext}'
