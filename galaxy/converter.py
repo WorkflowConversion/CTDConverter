@@ -152,10 +152,10 @@ def parse_macros_files(macros_file_names):
                 else:
                     logger.info("Macro %s found" % name, 1)
                     macros_to_expand.append(name)
-        except ParseError, e:
+        except ParseError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
                                        str(e))
-        except IOError, e:
+        except IOError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " +
                                        str(e))
 
@@ -414,11 +414,18 @@ def create_command(tool, model, **kwargs):
         if hardcoded_value:
             command += "%s %s\n" % (command_line_prefix, hardcoded_value)
         else:
-            # parameter is neither blacklisted nor hardcoded...
+            # in the else branch the parameter is neither blacklisted nor hardcoded...
+
+            # determine the name of the cheetah variable that is used to get the argument 
+            # for the parameter 
+            corresponding_input = None
+            if param.type is _OutFile and param.is_list:
+                corresponding_input = get_input_with_same_restrictions(param, model)
+            
+
+            actual_parameter = get_galaxy_parameter_name(param)
             if param.advanced and not param.type is _OutFile:
-                actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param)
-            else:
-                actual_parameter = "%s" % get_galaxy_parameter_name(param)
+                actual_parameter = "adv_opts." + actual_parameter
 
             # all but bool params need the command line argument (bools have it already in the true/false value)
             if not is_boolean_parameter(param):
@@ -432,7 +439,13 @@ def create_command(tool, model, **kwargs):
                 else:
                     preprocessing += "ln -s '$"+ actual_parameter +"' '${re.sub(\"[^\w\-_.]\", \"_\", $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
                     command += "'${re.sub('[^\w\-_.]', '_', $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
-
+            elif param.type is _OutFile and not corresponding_input is None:
+                preprocessing += "mkdir " + actual_parameter + " && \n"
+                actual_input_parameter = get_galaxy_parameter_name( corresponding_input )
+                if param.is_list:
+                    command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_input_parameter + " if _ ])}\n"
+                else:
+                    command += actual_parameter+"/'${re.sub('[^\w\-_.]', '_', $"+actual_input_parameter+".element_identifier)}.${"+actual_input_parameter+".ext}'\n"
             # logic for ITEMLISTs
             elif param.is_list and is_selection_parameter(param):
                 command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
@@ -968,10 +981,9 @@ def create_output_node(parent, param, model, supported_file_formats):
             # if there are more than one output file formats try to take the format from the input parameter
             corresponding_input = get_input_with_same_restrictions(param, model)
             if param.is_list and corresponding_input is not None:
-                data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
-                # data_node.attrib["inherit_format"] = "true"
-                data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
-                data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
+                # TODO <discover_datasets ="" directory="results/WorkingDirectory/blast" />
+                add_child_node(data_node, "discover_datasets",
+                       OrderedDict([("pattern", "__name_and_ext__"), ("directory", get_galaxy_parameter_name(param))]))
             elif not param.is_list and formats and corresponding_input is not None:
                 data_format = "input"
                 data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)

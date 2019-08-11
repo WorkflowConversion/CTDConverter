@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
+<!--Proposed Tool Section: [Input File Test]-->
+<tool id="echo_outFileTest" name="echo outFileTest" version="2.3.0">
+  <description>Input File parameter tests</description>
+  <macros>
+    <token name="@EXECUTABLE@">echo outFileTest</token>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements"/>
+  <expand macro="stdio"/>
+  <expand macro="references"/>
+  <command><![CDATA[
+#import re
+mkdir param_out_mandatory_mandatoryinput && 
+mkdir param_out_optional_mandatoryinput && 
+mkdir param_out_mandatory_optionalinput && 
+mkdir param_out_optional_optionalinput && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_mandatoryinput if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
+echo outFileTest
+
+-mandatory_mandatoryinput ${' '.join(["'param_out_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+#if str($param_optional_mandatoryinput):
+  -optional_mandatoryinput ${' '.join(["'param_out_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_mandatoryinput if _ ])}
+#end if
+-mandatory_optionalinput ${' '.join(["'param_out_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
+#if str($param_optional_optionalinput):
+  -optional_optionalinput ${' '.join(["'param_out_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
+#end if
+-inp_mandatory_mandatoryinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+-inp_optional_mandatoryinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_mandatoryinput if _ ])}
+-inp_mandatory_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
+-inp_optional_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
+]]></command>
+  <inputs>
+    <param name="param_optional_mandatoryinput" type="boolean" optional="true" truevalue="-optional_mandatoryinput" falsevalue="" checked="false" label="generate output optional_mandatoryinput (output file)" help="" argument="-optional_mandatoryinput"/>
+    <param name="param_optional_optionalinput" type="boolean" optional="true" truevalue="-optional_optionalinput" falsevalue="" checked="false" label="generate output optional_optionalinput (output file)" help="" argument="-optional_optionalinput"/>
+    <param name="param_inp_mandatory_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-inp_mandatory_mandatoryinput"/>
+    <param name="param_inp_optional_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-inp_optional_mandatoryinput"/>
+    <param name="param_inp_mandatory_optionalinput" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-inp_mandatory_optionalinput"/>
+    <param name="param_inp_optional_optionalinput" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-inp_optional_optionalinput"/>
+  </inputs>
+  <outputs>
+    <collection name="param_out_mandatory_mandatoryinput" label="${tool.name} on ${on_string}: mandatory_mandatoryinput" format="txt">
+      <discover_datasets pattern="__name_and_ext__" directory="param_out_mandatory_mandatoryinput"/>
+    </collection>
+    <collection name="param_out_optional_mandatoryinput" label="${tool.name} on ${on_string}: optional_mandatoryinput" format="txt">
+      <discover_datasets pattern="__name_and_ext__" directory="param_out_optional_mandatoryinput"/>
+      <filter>param_optional_mandatoryinput</filter>
+    </collection>
+    <collection name="param_out_mandatory_optionalinput" label="${tool.name} on ${on_string}: mandatory_optionalinput" format="txt">
+      <discover_datasets pattern="__name_and_ext__" directory="param_out_mandatory_optionalinput"/>
+    </collection>
+    <collection name="param_out_optional_optionalinput" label="${tool.name} on ${on_string}: optional_optionalinput" format="txt">
+      <discover_datasets pattern="__name_and_ext__" directory="param_out_optional_optionalinput"/>
+      <filter>param_optional_optionalinput</filter>
+    </collection>
+  </outputs>
+  <tests>
+    <test expect_num_outputs="0">
+      <param name="param_optional_mandatoryinput" value=""/>
+      <param name="param_optional_optionalinput" value=""/>
+      <param name="param_inp_mandatory_mandatoryinput" format="txt" value="test.ext,test2.ext"/>
+      <param name="param_inp_optional_mandatoryinput" format="txt" value="test.ext,test2.ext"/>
+      <collection name="param_out_mandatory_mandatoryinput" value="outfile.txt">
+        <discover_datasets value="outfile.txt"/>
+      </collection>
+      <collection name="param_out_optional_mandatoryinput" value="outfile.txt">
+        <discover_datasets value="outfile.txt"/>
+        <filter value="outfile.txt">param_optional_mandatoryinput</filter>
+      </collection>
+      <collection name="param_out_mandatory_optionalinput" value="outfile.txt">
+        <discover_datasets value="outfile.txt"/>
+      </collection>
+      <collection name="param_out_optional_optionalinput" value="outfile.txt">
+        <discover_datasets value="outfile.txt"/>
+        <filter value="outfile.txt">param_optional_optionalinput</filter>
+      </collection>
+    </test>
+  </tests>
+  <help><![CDATA[Input File parameter tests.
+
+
+For more information, visit http://docs.are/unavailable.html]]></help>
+</tool>
