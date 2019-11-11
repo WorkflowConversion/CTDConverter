@@ -15,8 +15,8 @@ from common.exceptions import ApplicationException, InvalidModelException
 from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
 
 
-TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'data',
-                       _OutFile: 'data', _Choices: 'select'}
+TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'txt',
+                       _OutFile: 'txt', _Choices: 'select'}
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
@@ -286,6 +286,8 @@ def _convert_internal(parsed_ctds, **kwargs):
                 create_tests(tool, copy.deepcopy(inputs), copy.deepcopy(outputs))
             create_help(tool, model)
 
+            move_citations(tool)
+
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
             logger.info("Writing to %s" % utils.get_filename(output_file), 1)
@@ -515,6 +517,14 @@ def expand_macros(tool, model, **kwargs):
         expand_node = add_child_node(tool, "expand")
         expand_node.attrib["macro"] = expand_macro
 
+def move_citations(tool):
+    """
+    move expansions of the citations/references macro to the end of the tool file
+    """
+    for expand in tool.iter('expand'):
+        if expand.attrib["macro"] in ["references", "citations"]:
+            tool.append(expand)
+
 
 def get_galaxy_parameter_name(param, inparam = False):
     """
@@ -640,7 +650,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
         
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
-        param_format = "data"
+        param_format = TYPE_TO_GALAXY_TYPE[_InFile]
         if param.restrictions is not None:
             # join all formats of the file, take mapping from supported_file if available for an entry
             if type(param.restrictions) is _FileFormat:
@@ -945,17 +955,18 @@ def create_output_node(parent, param, model, supported_file_formats):
         data_node = add_child_node(parent, "data")
     else:
         data_node = add_child_node(parent, "collection")
+        data_node.attrib["type"] = "list"
 
     data_node.attrib["name"] = get_galaxy_parameter_name(param)
     if data_node.attrib["name"].startswith('param_out_'):
         data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % data_node.attrib["name"][10:]
 
     # determine format attribute
-    # - default is data
+    # - default is txt
     # - check if all listed possible formats are supported in Galaxy
     # - if there is a single one, then take this
     # - otherwise try to determine an input with the same restrictions and use this as format source
-    data_format = "data"
+    data_format = "txt"
     if param.restrictions is not None:
         if type(param.restrictions) is _FileFormat:
             # set the first data output node to the first file format
@@ -992,7 +1003,9 @@ def create_output_node(parent, param, model, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),
                                                                    "name": param.name})
-    data_node.attrib["format"] = data_format
+    # data output has fomat .. collection output has no format
+    if not param.is_list:
+        data_node.attrib["format"] = data_format
 
     # add filter for optional parameters
     if not param.required:
@@ -1071,11 +1084,13 @@ def create_tests(parent, inputs, outputs):
             elif node.attrib.get("multiple", None) == "true":
                 node.attrib["value"] = ",".join([ _.attrib["value"] for _ in node ])
         elif node.attrib["type"] == "data":
+            node.attrib["ftype"] = node.attrib["format"]
             if node.attrib.get("multiple", "false") == "true":
                 node.attrib["value"] = "test.ext,test2.ext"
             else:
                 node.attrib["value"] = "test.ext"
-        for a in set(node.attrib) - set(["name","value","format"]):
+    for node in inputs.iter():
+        for a in set(node.attrib) - set(["name","value","ftype"]):
             del node.attrib[a]
     strip_elements(inputs, "delete_node", "option")
     for node in inputs:
@@ -1086,14 +1101,17 @@ def create_tests(parent, inputs, outputs):
             node.tag = "output"
             node.attrib["ftype"] = node.attrib["format"]
             outputs_cnt += 1
+        node.attrib["value"] = "outfile.txt"
+        if node.tag == "collection":
+            del node.attrib["value"]
+            node.tag = "output_collection"
         if len(node) > 0 and node[0].tag == "filter":
             node.tag = "delete_node"
-        node.attrib["value"] = "outfile.txt"
         if node.attrib.get("name", None) == "param_stdout":
             node.attrib["lines_diff"] = "2"
         for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
             del node.attrib[a]
-    strip_elements(outputs, "delete_node")
+    strip_elements(outputs, "delete_node", "discover_datasets", "filter")
 
     for node in outputs:
         test_node.append(node)
