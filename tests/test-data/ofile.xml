@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [Input File Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_outFileTest" name="echo outFileTest" version="2.3.0">
   <description>Outut File parameter tests</description>
   <macros>
@@ -52,16 +52,16 @@ echo outFileTest
 #end if
 ]]></command>
   <inputs>
-    <param name="param_wodefault_optional_noformat" type="boolean" optional="true" truevalue="-wodefault_optional_noformat" falsevalue="" checked="false" label="generate output wodefault_optional_noformat (output file)" help="" argument="-wodefault_optional_noformat"/>
-    <param name="param_default_optional_noformat" type="boolean" optional="true" truevalue="-default_optional_noformat" falsevalue="" checked="false" label="generate output default_optional_noformat (output file)" help="" argument="-default_optional_noformat"/>
-    <param name="param_wodefault_optional_oneformat" type="boolean" optional="true" truevalue="-wodefault_optional_oneformat" falsevalue="" checked="false" label="generate output wodefault_optional_oneformat (output file)" help="" argument="-wodefault_optional_oneformat"/>
-    <param name="param_default_optional_oneformat" type="boolean" optional="true" truevalue="-default_optional_oneformat" falsevalue="" checked="false" label="generate output default_optional_oneformat (output file)" help="" argument="-default_optional_oneformat"/>
-    <param name="param_wodefault_optional_multformat" type="boolean" optional="true" truevalue="-wodefault_optional_multformat" falsevalue="" checked="false" label="generate output wodefault_optional_multformat (output file)" help="" argument="-wodefault_optional_multformat"/>
-    <param name="param_default_optional_multformat" type="boolean" optional="true" truevalue="-default_optional_multformat" falsevalue="" checked="false" label="generate output default_optional_multformat (output file)" help="" argument="-default_optional_multformat"/>
+    <param name="param_wodefault_optional_noformat" argument="-wodefault_optional_noformat" type="boolean" optional="true" truevalue="-wodefault_optional_noformat" falsevalue="" checked="false" label="generate output wodefault_optional_noformat (output file)" help=""/>
+    <param name="param_default_optional_noformat" argument="-default_optional_noformat" type="boolean" optional="true" truevalue="-default_optional_noformat" falsevalue="" checked="false" label="generate output default_optional_noformat (output file)" help=""/>
+    <param name="param_wodefault_optional_oneformat" argument="-wodefault_optional_oneformat" type="boolean" optional="true" truevalue="-wodefault_optional_oneformat" falsevalue="" checked="false" label="generate output wodefault_optional_oneformat (output file)" help=""/>
+    <param name="param_default_optional_oneformat" argument="-default_optional_oneformat" type="boolean" optional="true" truevalue="-default_optional_oneformat" falsevalue="" checked="false" label="generate output default_optional_oneformat (output file)" help=""/>
+    <param name="param_wodefault_optional_multformat" argument="-wodefault_optional_multformat" type="boolean" optional="true" truevalue="-wodefault_optional_multformat" falsevalue="" checked="false" label="generate output wodefault_optional_multformat (output file)" help=""/>
+    <param name="param_default_optional_multformat" argument="-default_optional_multformat" type="boolean" optional="true" truevalue="-default_optional_multformat" falsevalue="" checked="false" label="generate output default_optional_multformat (output file)" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help="" argument="-optional_noformat_adv"/>
-      <param name="param_optional_oneformat_adv" type="boolean" optional="true" truevalue="-optional_oneformat_adv" falsevalue="" checked="false" label="generate output optional_oneformat_adv (output file)" help="" argument="-optional_oneformat_adv"/>
-      <param name="param_optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help="" argument="-optional_multformat_adv"/>
+      <param name="param_optional_noformat_adv" argument="-optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help=""/>
+      <param name="param_optional_oneformat_adv" argument="-optional_oneformat_adv" type="boolean" optional="true" truevalue="-optional_oneformat_adv" falsevalue="" checked="false" label="generate output optional_oneformat_adv (output file)" help=""/>
+      <param name="param_optional_multformat_adv" argument="-optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help=""/>
     </expand>
   </inputs>
   <outputs>

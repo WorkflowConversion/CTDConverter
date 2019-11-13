@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [Bool Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_BoolTest" name="echo BoolTest" version="2.3.0">
   <description>Bool parameter tests</description>
   <macros>
@@ -25,15 +25,15 @@ $param_flag_false
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_true" type="boolean" optional="true" truevalue="" falsevalue="-true false" checked="true" label="bool" help="" argument="-true"/>
-    <param name="param_false" type="boolean" optional="true" truevalue="-false" falsevalue="" checked="false" label="bool" help="" argument="-false"/>
-    <param name="param_flag_true" type="boolean" optional="true" truevalue="-flag_true" falsevalue="" checked="true" label="bool" help="" argument="-flag_true"/>
-    <param name="param_flag_false" type="boolean" optional="true" truevalue="-flag_false" falsevalue="" checked="false" label="bool" help="" argument="-flag_false"/>
+    <param name="param_true" argument="-true" type="boolean" optional="true" truevalue="" falsevalue="-true false" checked="true" label="bool" help=""/>
+    <param name="param_false" argument="-false" type="boolean" optional="true" truevalue="-false" falsevalue="" checked="false" label="bool" help=""/>
+    <param name="param_flag_true" argument="-flag_true" type="boolean" optional="true" truevalue="-flag_true" falsevalue="" checked="true" label="bool" help=""/>
+    <param name="param_flag_false" argument="-flag_false" type="boolean" optional="true" truevalue="-flag_false" falsevalue="" checked="false" label="bool" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_true_adv" type="boolean" optional="true" truevalue="" falsevalue="-true_adv false" checked="true" label="bool" help="" argument="-true_adv"/>
-      <param name="param_false_adv" type="boolean" optional="true" truevalue="-false_adv" falsevalue="" checked="false" label="bool" help="" argument="-false_adv"/>
-      <param name="param_flag_true_adv" type="boolean" optional="true" truevalue="-flag_true_adv" falsevalue="" checked="true" label="bool" help="" argument="-flag_true_adv"/>
-      <param name="param_flag_false_adv" type="boolean" optional="true" truevalue="-flag_false_adv" falsevalue="" checked="false" label="bool" help="" argument="-flag_false_adv"/>
+      <param name="param_true_adv" argument="-true_adv" type="boolean" optional="true" truevalue="" falsevalue="-true_adv false" checked="true" label="bool" help=""/>
+      <param name="param_false_adv" argument="-false_adv" type="boolean" optional="true" truevalue="-false_adv" falsevalue="" checked="false" label="bool" help=""/>
+      <param name="param_flag_true_adv" argument="-flag_true_adv" type="boolean" optional="true" truevalue="-flag_true_adv" falsevalue="" checked="true" label="bool" help=""/>
+      <param name="param_flag_false_adv" argument="-flag_false_adv" type="boolean" optional="true" truevalue="-flag_false_adv" falsevalue="" checked="false" label="bool" help=""/>
     </expand>
   </inputs>
   <outputs>

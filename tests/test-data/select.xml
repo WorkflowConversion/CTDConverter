@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [String Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_SelectTest" name="echo SelectTest" version="2.3.0">
   <description>Select parameter tests</description>
   <macros>
@@ -81,104 +81,104 @@ echo SelectTest
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_wodefault_mandatory" display="radio" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory">
+    <param name="param_wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" value="" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_default_mandatory" display="radio" type="select" optional="false" label="string" help="" argument="-default_mandatory">
+    <param name="param_default_mandatory" argument="-default_mandatory" display="radio" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_wodefault_optional" display="radio" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional">
+    <param name="param_wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" value="" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_default_optional" display="radio" type="select" optional="false" label="string" help="" argument="-default_optional">
+    <param name="param_default_optional" argument="-default_optional" display="radio" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_wodefault_mandatory_many" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_many">
+    <param name="param_wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" value="" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_default_mandatory_many" type="select" optional="false" label="string" help="" argument="-default_mandatory_many">
+    <param name="param_default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_wodefault_optional_many" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_many">
+    <param name="param_wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" value="" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_default_optional_many" type="select" optional="false" label="string" help="" argument="-default_optional_many">
+    <param name="param_default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_wodefault_optional" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional">
+    <param name="param_list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_list_wodefault_mandatory" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory">
+    <param name="param_list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
     </param>
-    <param name="param_list_default_optional" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C" selected="true">C</option>
-      <option value="D" selected="true">D</option>
-    </param>
-    <param name="param_list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory">
+    <param name="param_list_default_optional" argument="-list_default_optional" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
     </param>
-    <param name="param_list_wodefault_optional_many" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_many">
+    <param name="param_list_default_mandatory" argument="-list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
+      <option value="A">A</option>
+      <option value="B">B</option>
+      <option value="C" selected="true">C</option>
+      <option value="D" selected="true">D</option>
+    </param>
+    <param name="param_list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_wodefault_mandatory_many" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_many">
+    <param name="param_list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_many">
+    <param name="param_list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
     </param>
-    <param name="param_list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_many">
+    <param name="param_list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -186,104 +186,104 @@ echo SelectTest
       <option value="E">E</option>
     </param>
     <expand macro="adv_opts_macro">
-      <param name="param_wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_adv">
+      <param name="param_wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="" argument="-default_mandatory_adv">
+      <param name="param_default_mandatory_adv" argument="-default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_wodefault_optional_adv" display="radio" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_adv">
+      <param name="param_wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" value="" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_default_optional_adv" display="radio" type="select" optional="false" label="string" help="" argument="-default_optional_adv">
+      <param name="param_default_optional_adv" argument="-default_optional_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_wodefault_mandatory_many_adv" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_many_adv">
+      <param name="param_wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" value="" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_default_mandatory_many_adv" type="select" optional="false" label="string" help="" argument="-default_mandatory_many_adv">
+      <param name="param_default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_wodefault_optional_many_adv" type="select" optional="true" value="" label="string" help="" argument="-wodefault_optional_many_adv">
+      <param name="param_wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" value="" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_default_optional_many_adv" type="select" optional="false" label="string" help="" argument="-default_optional_many_adv">
+      <param name="param_default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_wodefault_optional_adv" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_adv">
+      <param name="param_list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_adv">
+      <param name="param_list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
       </param>
-      <param name="param_list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_adv">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C" selected="true">C</option>
-        <option value="D" selected="true">D</option>
-      </param>
-      <param name="param_list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_adv">
+      <param name="param_list_default_optional_adv" argument="-list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
       </param>
-      <param name="param_list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" value="" label="string list" help="" argument="-list_wodefault_optional_many_adv">
+      <param name="param_list_default_mandatory_adv" argument="-list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C" selected="true">C</option>
+        <option value="D" selected="true">D</option>
+      </param>
+      <param name="param_list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" value="" label="string list" help="" argument="-list_wodefault_mandatory_many_adv">
+      <param name="param_list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="" argument="-list_default_optional_many_adv">
+      <param name="param_list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <option value="E">E</option>
       </param>
-      <param name="param_list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="" argument="-list_default_mandatory_many_adv">
+      <param name="param_list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>

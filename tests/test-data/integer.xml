@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [String Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_IntTest" name="echo IntTest" version="2.3.0">
   <description>Integer parameter tests</description>
   <macros>
@@ -81,39 +81,39 @@ echo IntTest
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_wodefault_mandatory_unrestricted" type="integer" optional="false" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted"/>
-    <param name="param_default_mandatory_unrestricted" type="integer" optional="false" value="0" label="int" help="" argument="-default_mandatory_unrestricted"/>
-    <param name="param_wodefault_optional_unrestricted" type="integer" optional="true" value="" label="int" help="" argument="-wodefault_optional_unrestricted"/>
-    <param name="param_default_optional_unrestricted" type="integer" optional="true" value="0" label="int" help="" argument="-default_optional_unrestricted"/>
-    <param name="param_wodefault_mandatory_unrestricted_min" type="integer" optional="false" min="0" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_min"/>
-    <param name="param_default_mandatory_unrestricted_min" type="integer" optional="false" min="0" value="0" label="int" help="" argument="-default_mandatory_unrestricted_min"/>
-    <param name="param_wodefault_optional_unrestricted_min" type="integer" optional="true" min="0" value="" label="int" help="" argument="-wodefault_optional_unrestricted_min"/>
-    <param name="param_default_optional_unrestricted_min" type="integer" optional="true" min="0" value="0" label="int" help="" argument="-default_optional_unrestricted_min"/>
-    <param name="param_wodefault_mandatory_unrestricted_max" type="integer" optional="false" max="100" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_max"/>
-    <param name="param_default_mandatory_unrestricted_max" type="integer" optional="false" max="100" value="0" label="int" help="" argument="-default_mandatory_unrestricted_max"/>
-    <param name="param_wodefault_optional_unrestricted_max" type="integer" optional="true" max="100" value="" label="int" help="" argument="-wodefault_optional_unrestricted_max"/>
-    <param name="param_default_optional_unrestricted_max" type="integer" optional="true" max="100" value="0" label="int" help="" argument="-default_optional_unrestricted_max"/>
-    <param name="param_wodefault_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_minmax"/>
-    <param name="param_default_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help="" argument="-default_mandatory_unrestricted_minmax"/>
-    <param name="param_wodefault_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="" label="int" help="" argument="-wodefault_optional_unrestricted_minmax"/>
-    <param name="param_default_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help="" argument="-default_optional_unrestricted_minmax"/>
+    <param name="param_wodefault_mandatory_unrestricted" argument="-wodefault_mandatory_unrestricted" type="integer" optional="false" value="" label="int" help=""/>
+    <param name="param_default_mandatory_unrestricted" argument="-default_mandatory_unrestricted" type="integer" optional="false" value="0" label="int" help=""/>
+    <param name="param_wodefault_optional_unrestricted" argument="-wodefault_optional_unrestricted" type="integer" optional="true" value="" label="int" help=""/>
+    <param name="param_default_optional_unrestricted" argument="-default_optional_unrestricted" type="integer" optional="true" value="0" label="int" help=""/>
+    <param name="param_wodefault_mandatory_unrestricted_min" argument="-wodefault_mandatory_unrestricted_min" type="integer" optional="false" min="0" value="" label="int" help=""/>
+    <param name="param_default_mandatory_unrestricted_min" argument="-default_mandatory_unrestricted_min" type="integer" optional="false" min="0" value="0" label="int" help=""/>
+    <param name="param_wodefault_optional_unrestricted_min" argument="-wodefault_optional_unrestricted_min" type="integer" optional="true" min="0" value="" label="int" help=""/>
+    <param name="param_default_optional_unrestricted_min" argument="-default_optional_unrestricted_min" type="integer" optional="true" min="0" value="0" label="int" help=""/>
+    <param name="param_wodefault_mandatory_unrestricted_max" argument="-wodefault_mandatory_unrestricted_max" type="integer" optional="false" max="100" value="" label="int" help=""/>
+    <param name="param_default_mandatory_unrestricted_max" argument="-default_mandatory_unrestricted_max" type="integer" optional="false" max="100" value="0" label="int" help=""/>
+    <param name="param_wodefault_optional_unrestricted_max" argument="-wodefault_optional_unrestricted_max" type="integer" optional="true" max="100" value="" label="int" help=""/>
+    <param name="param_default_optional_unrestricted_max" argument="-default_optional_unrestricted_max" type="integer" optional="true" max="100" value="0" label="int" help=""/>
+    <param name="param_wodefault_mandatory_unrestricted_minmax" argument="-wodefault_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="" label="int" help=""/>
+    <param name="param_default_mandatory_unrestricted_minmax" argument="-default_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help=""/>
+    <param name="param_wodefault_optional_unrestricted_minmax" argument="-wodefault_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="" label="int" help=""/>
+    <param name="param_default_optional_unrestricted_minmax" argument="-default_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_wodefault_mandatory_unrestricted_adv" type="integer" optional="false" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_adv"/>
-      <param name="param_default_mandatory_unrestricted_adv" type="integer" optional="false" value="0" label="int" help="" argument="-default_mandatory_unrestricted_adv"/>
-      <param name="param_wodefault_optional_unrestricted_adv" type="integer" optional="true" value="" label="int" help="" argument="-wodefault_optional_unrestricted_adv"/>
-      <param name="param_default_optional_unrestricted_adv" type="integer" optional="true" value="0" label="int" help="" argument="-default_optional_unrestricted_adv"/>
-      <param name="param_wodefault_mandatory_unrestricted_adv_min" type="integer" optional="false" min="0" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_adv_min"/>
-      <param name="param_default_mandatory_unrestricted_adv_min" type="integer" optional="false" min="0" value="0" label="int" help="" argument="-default_mandatory_unrestricted_adv_min"/>
-      <param name="param_wodefault_optional_unrestricted_adv_min" type="integer" optional="true" min="0" value="" label="int" help="" argument="-wodefault_optional_unrestricted_adv_min"/>
-      <param name="param_default_optional_unrestricted_adv_min" type="integer" optional="true" min="0" value="0" label="int" help="" argument="-default_optional_unrestricted_adv_min"/>
-      <param name="param_wodefault_mandatory_unrestricted_adv_max" type="integer" optional="false" max="100" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_adv_max"/>
-      <param name="param_default_mandatory_unrestricted_adv_max" type="integer" optional="false" max="100" value="0" label="int" help="" argument="-default_mandatory_unrestricted_adv_max"/>
-      <param name="param_wodefault_optional_unrestricted_adv_max" type="integer" optional="true" max="100" value="" label="int" help="" argument="-wodefault_optional_unrestricted_adv_max"/>
-      <param name="param_default_optional_unrestricted_adv_max" type="integer" optional="true" max="100" value="0" label="int" help="" argument="-default_optional_unrestricted_adv_max"/>
-      <param name="param_wodefault_mandatory_unrestricted_adv_minmax" type="integer" optional="false" min="0" max="100" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_adv_minmax"/>
-      <param name="param_default_mandatory_unrestricted_adv_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help="" argument="-default_mandatory_unrestricted_adv_minmax"/>
-      <param name="param_wodefault_optional_unrestricted_adv_minmax" type="integer" optional="true" min="0" max="100" value="" label="int" help="" argument="-wodefault_optional_unrestricted_adv_minmax"/>
-      <param name="param_default_optional_unrestricted_adv_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help="" argument="-default_optional_unrestricted_adv_minmax"/>
+      <param name="param_wodefault_mandatory_unrestricted_adv" argument="-wodefault_mandatory_unrestricted_adv" type="integer" optional="false" value="" label="int" help=""/>
+      <param name="param_default_mandatory_unrestricted_adv" argument="-default_mandatory_unrestricted_adv" type="integer" optional="false" value="0" label="int" help=""/>
+      <param name="param_wodefault_optional_unrestricted_adv" argument="-wodefault_optional_unrestricted_adv" type="integer" optional="true" value="" label="int" help=""/>
+      <param name="param_default_optional_unrestricted_adv" argument="-default_optional_unrestricted_adv" type="integer" optional="true" value="0" label="int" help=""/>
+      <param name="param_wodefault_mandatory_unrestricted_adv_min" argument="-wodefault_mandatory_unrestricted_adv_min" type="integer" optional="false" min="0" value="" label="int" help=""/>
+      <param name="param_default_mandatory_unrestricted_adv_min" argument="-default_mandatory_unrestricted_adv_min" type="integer" optional="false" min="0" value="0" label="int" help=""/>
+      <param name="param_wodefault_optional_unrestricted_adv_min" argument="-wodefault_optional_unrestricted_adv_min" type="integer" optional="true" min="0" value="" label="int" help=""/>
+      <param name="param_default_optional_unrestricted_adv_min" argument="-default_optional_unrestricted_adv_min" type="integer" optional="true" min="0" value="0" label="int" help=""/>
+      <param name="param_wodefault_mandatory_unrestricted_adv_max" argument="-wodefault_mandatory_unrestricted_adv_max" type="integer" optional="false" max="100" value="" label="int" help=""/>
+      <param name="param_default_mandatory_unrestricted_adv_max" argument="-default_mandatory_unrestricted_adv_max" type="integer" optional="false" max="100" value="0" label="int" help=""/>
+      <param name="param_wodefault_optional_unrestricted_adv_max" argument="-wodefault_optional_unrestricted_adv_max" type="integer" optional="true" max="100" value="" label="int" help=""/>
+      <param name="param_default_optional_unrestricted_adv_max" argument="-default_optional_unrestricted_adv_max" type="integer" optional="true" max="100" value="0" label="int" help=""/>
+      <param name="param_wodefault_mandatory_unrestricted_adv_minmax" argument="-wodefault_mandatory_unrestricted_adv_minmax" type="integer" optional="false" min="0" max="100" value="" label="int" help=""/>
+      <param name="param_default_mandatory_unrestricted_adv_minmax" argument="-default_mandatory_unrestricted_adv_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help=""/>
+      <param name="param_wodefault_optional_unrestricted_adv_minmax" argument="-wodefault_optional_unrestricted_adv_minmax" type="integer" optional="true" min="0" max="100" value="" label="int" help=""/>
+      <param name="param_default_optional_unrestricted_adv_minmax" argument="-default_optional_unrestricted_adv_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help=""/>
     </expand>
   </inputs>
   <outputs>

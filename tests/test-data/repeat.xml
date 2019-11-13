@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [String Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_RepeatTest" name="echo RepeatTest" version="2.3.0">
   <description>Repeat parameter tests</description>
   <macros>
@@ -97,7 +97,7 @@ echo RepeatTest
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_string_wodefault_optional" type="text" optional="true" value="" label="string list" help=" (comma separated list)" argument="-string_wodefault_optional">
+    <param name="param_string_wodefault_optional" argument="-string_wodefault_optional" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -105,7 +105,7 @@ echo RepeatTest
         </valid>
       </sanitizer>
     </param>
-    <param name="param_string_wodefault_mandatory" type="text" optional="false" value="" label="string list" help=" (comma separated list)" argument="-string_wodefault_mandatory">
+    <param name="param_string_wodefault_mandatory" argument="-string_wodefault_mandatory" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -113,7 +113,7 @@ echo RepeatTest
         </valid>
       </sanitizer>
     </param>
-    <param name="param_string_default_optional" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_optional">
+    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -121,7 +121,7 @@ echo RepeatTest
         </valid>
       </sanitizer>
     </param>
-    <param name="param_string_default_mandatory" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_mandatory">
+    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)">
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
@@ -129,7 +129,7 @@ echo RepeatTest
         </valid>
       </sanitizer>
     </param>
-    <param name="param_int_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_optional">
+    <param name="param_int_wodefault_optional" argument="-int_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -140,7 +140,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_mandatory">
+    <param name="param_int_wodefault_mandatory" argument="-int_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -151,7 +151,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_optional">
+    <param name="param_int_default_optional" argument="-int_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -162,7 +162,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_mandatory">
+    <param name="param_int_default_mandatory" argument="-int_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -173,7 +173,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_resticted_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_optional">
+    <param name="param_int_resticted_wodefault_optional" argument="-int_resticted_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
 ]]></validator>
@@ -186,7 +186,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_resticted_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_mandatory">
+    <param name="param_int_resticted_wodefault_mandatory" argument="-int_resticted_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
 ]]></validator>
@@ -199,7 +199,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_resticted_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_optional">
+    <param name="param_int_resticted_default_optional" argument="-int_resticted_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
 ]]></validator>
@@ -212,7 +212,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_int_resticted_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_mandatory">
+    <param name="param_int_resticted_default_mandatory" argument="-int_resticted_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
       <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
 ]]></validator>
@@ -225,7 +225,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_optional">
+    <param name="param_double_wodefault_optional" argument="-double_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -236,7 +236,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_mandatory">
+    <param name="param_double_wodefault_mandatory" argument="-double_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -247,7 +247,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_default_optional" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_optional">
+    <param name="param_double_default_optional" argument="-double_default_optional" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -258,7 +258,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_default_mandatory" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_mandatory">
+    <param name="param_double_default_mandatory" argument="-double_default_mandatory" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <sanitizer>
         <valid initial="string.printable">
@@ -269,7 +269,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_resticted_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_optional">
+    <param name="param_double_resticted_wodefault_optional" argument="-double_resticted_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
 ]]></validator>
@@ -282,7 +282,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_resticted_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_mandatory">
+    <param name="param_double_resticted_wodefault_mandatory" argument="-double_resticted_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
 ]]></validator>
@@ -295,7 +295,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_resticted_default_optional" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_optional">
+    <param name="param_double_resticted_default_optional" argument="-double_resticted_default_optional" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
 ]]></validator>
@@ -308,7 +308,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <param name="param_double_resticted_default_mandatory" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_mandatory">
+    <param name="param_double_resticted_default_mandatory" argument="-double_resticted_default_mandatory" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)">
       <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
       <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
 ]]></validator>
@@ -322,7 +322,7 @@ echo RepeatTest
       </sanitizer>
     </param>
     <expand macro="adv_opts_macro">
-      <param name="param_string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (comma separated list)" argument="-string_wodefault_optional_adv">
+      <param name="param_string_wodefault_optional_adv" argument="-string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -330,7 +330,7 @@ echo RepeatTest
           </valid>
         </sanitizer>
       </param>
-      <param name="param_string_wodefault_mandatory_adv" type="text" optional="false" value="" label="string list" help=" (comma separated list)" argument="-string_wodefault_mandatory_adv">
+      <param name="param_string_wodefault_mandatory_adv" argument="-string_wodefault_mandatory_adv" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -338,7 +338,7 @@ echo RepeatTest
           </valid>
         </sanitizer>
       </param>
-      <param name="param_string_default_optional_adv" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_optional_adv">
+      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -346,7 +346,7 @@ echo RepeatTest
           </valid>
         </sanitizer>
       </param>
-      <param name="param_string_default_mandatory_adv" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)" argument="-string_default_mandatory_adv">
+      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)">
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
@@ -354,7 +354,7 @@ echo RepeatTest
           </valid>
         </sanitizer>
       </param>
-      <param name="param_int_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_optional_adv">
+      <param name="param_int_wodefault_optional_adv" argument="-int_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -365,7 +365,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)" argument="-int_wodefault_mandatory_adv">
+      <param name="param_int_wodefault_mandatory_adv" argument="-int_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -376,7 +376,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_optional_adv">
+      <param name="param_int_default_optional_adv" argument="-int_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -387,7 +387,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)" argument="-int_default_mandatory_adv">
+      <param name="param_int_default_mandatory_adv" argument="-int_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -398,7 +398,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_optional_adv">
+      <param name="param_int_resticted_wodefault_optional_adv" argument="-int_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
 ]]></validator>
@@ -411,7 +411,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)" argument="-int_resticted_wodefault_mandatory_adv">
+      <param name="param_int_resticted_wodefault_mandatory_adv" argument="-int_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
 ]]></validator>
@@ -424,7 +424,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_resticted_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_optional_adv">
+      <param name="param_int_resticted_default_optional_adv" argument="-int_resticted_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
 ]]></validator>
@@ -437,7 +437,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_int_resticted_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)" argument="-int_resticted_default_mandatory_adv">
+      <param name="param_int_resticted_default_mandatory_adv" argument="-int_resticted_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
         <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
 ]]></validator>
@@ -450,7 +450,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_optional_adv">
+      <param name="param_double_wodefault_optional_adv" argument="-double_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -461,7 +461,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)" argument="-double_wodefault_mandatory_adv">
+      <param name="param_double_wodefault_mandatory_adv" argument="-double_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -472,7 +472,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_default_optional_adv" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_optional_adv">
+      <param name="param_double_default_optional_adv" argument="-double_default_optional_adv" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -483,7 +483,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_default_mandatory_adv" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)" argument="-double_default_mandatory_adv">
+      <param name="param_double_default_mandatory_adv" argument="-double_default_mandatory_adv" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <sanitizer>
           <valid initial="string.printable">
@@ -494,7 +494,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_optional_adv">
+      <param name="param_double_resticted_wodefault_optional_adv" argument="-double_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
 ]]></validator>
@@ -507,7 +507,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)" argument="-double_resticted_wodefault_mandatory_adv">
+      <param name="param_double_resticted_wodefault_mandatory_adv" argument="-double_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
 ]]></validator>
@@ -520,7 +520,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_resticted_default_optional_adv" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_optional_adv">
+      <param name="param_double_resticted_default_optional_adv" argument="-double_resticted_default_optional_adv" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
 ]]></validator>
@@ -533,7 +533,7 @@ echo RepeatTest
           </mapping>
         </sanitizer>
       </param>
-      <param name="param_double_resticted_default_mandatory_adv" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)" argument="-double_resticted_default_mandatory_adv">
+      <param name="param_double_resticted_default_mandatory_adv" argument="-double_resticted_default_mandatory_adv" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)">
         <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
         <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
 ]]></validator>

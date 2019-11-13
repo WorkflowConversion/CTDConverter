@@ -285,7 +285,7 @@ def _convert_internal(parsed_ctds, **kwargs):
             if kwargs["test_test"]:
                 create_tests(tool, copy.deepcopy(inputs), copy.deepcopy(outputs))
             create_help(tool, model)
-
+            # citations are required to be at the end
             move_citations(tool)
 
             # wrap our tool element into a tree to be able to serialize it
@@ -586,8 +586,10 @@ def create_inputs(tool, model, **kwargs):
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
         if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
-            # let's not use an extra level of indentation and use NOP
             continue
+        # optional outfiles: create an additional bool input which is used to filter for the output
+        # mandatory outpiles: no input node needed
+        # inputs: create the input param
         if param.type is _OutFile:
             if not param.required:
                 _param = copy.deepcopy(param)
@@ -608,9 +610,11 @@ def create_inputs(tool, model, **kwargs):
         else:
             parent_node = inputs_node
 
+        # create the actual param node and fill the attributes
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, _param, kwargs["supported_file_formats"])
 
+    # if there is an advanced section then append it at the end of the inputs
     if not advanced_node is None:
         inputs_node.append(advanced_node)
 
@@ -625,9 +629,10 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     @param supported_file_formats
     """
 
-    # set the name and a first guess for the type (which will be over written 
+    # set the name, argument and a first guess for the type (which will be over written 
     # in some cases .. see below)
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
+    param_node.attrib["argument"] = str(param)
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
@@ -801,7 +806,6 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
 
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text
-    param_node.attrib["argument"] = "-"+param.name
 
 def generate_label_and_help(desc):
     help_text = ""

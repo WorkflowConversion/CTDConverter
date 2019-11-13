@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [multiple Output File Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_MultoutFileTest" name="echo MultoutFileTest" version="2.3.0">
   <description>multiple Output File parameter tests</description>
   <macros>
@@ -35,12 +35,12 @@ echo MultoutFileTest
 -inp_optional_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
 ]]></command>
   <inputs>
-    <param name="param_optional_mandatoryinput" type="boolean" optional="true" truevalue="-optional_mandatoryinput" falsevalue="" checked="false" label="generate output optional_mandatoryinput (output file)" help="" argument="-optional_mandatoryinput"/>
-    <param name="param_optional_optionalinput" type="boolean" optional="true" truevalue="-optional_optionalinput" falsevalue="" checked="false" label="generate output optional_optionalinput (output file)" help="" argument="-optional_optionalinput"/>
-    <param name="param_inp_mandatory_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-inp_mandatory_mandatoryinput"/>
-    <param name="param_inp_optional_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-inp_optional_mandatoryinput"/>
-    <param name="param_inp_mandatory_optionalinput" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help="" argument="-inp_mandatory_optionalinput"/>
-    <param name="param_inp_optional_optionalinput" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help="" argument="-inp_optional_optionalinput"/>
+    <param name="param_optional_mandatoryinput" argument="-optional_mandatoryinput" type="boolean" optional="true" truevalue="-optional_mandatoryinput" falsevalue="" checked="false" label="generate output optional_mandatoryinput (output file)" help=""/>
+    <param name="param_optional_optionalinput" argument="-optional_optionalinput" type="boolean" optional="true" truevalue="-optional_optionalinput" falsevalue="" checked="false" label="generate output optional_optionalinput (output file)" help=""/>
+    <param name="param_inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+    <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+    <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_inp_optional_optionalinput" argument="-inp_optional_optionalinput" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help=""/>
   </inputs>
   <outputs>
     <collection type="list" name="param_out_mandatory_mandatoryinput" label="${tool.name} on ${on_string}: mandatory_mandatoryinput">

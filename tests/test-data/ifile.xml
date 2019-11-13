@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
-<!--Proposed Tool Section: [String Test]-->
+<!--Proposed Tool Section: [Test]-->
 <tool id="echo_inFileTest" name="echo inFileTest" version="2.3.0">
   <description>Input File parameter tests</description>
   <macros>
@@ -162,55 +162,55 @@ echo inFileTest
 > $param_stdout
 ]]></command>
   <inputs>
-    <param name="param_mandatory_noformat" type="data" format="txt" optional="false" label="input file" help="" argument="-mandatory_noformat"/>
-    <param name="param_optional_noformat" type="data" format="txt" optional="true" label="input file" help="" argument="-optional_noformat"/>
-    <param name="param_mandatory_oneformat" type="data" format="txt" optional="false" label="input file" help="" argument="-mandatory_oneformat"/>
-    <param name="param_optional_oneformat" type="data" format="txt" optional="true" label="input file" help="" argument="-optional_oneformat"/>
-    <param name="param_mandatory_multformat" type="data" format="tabular,txt" optional="false" label="input file" help="" argument="-mandatory_multformat"/>
-    <param name="param_optional_multformat" type="data" format="tabular,txt" optional="true" label="input file" help="" argument="-optional_multformat"/>
-    <param name="param_default_mandatory_noformat" type="data" format="txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat"/>
-    <param name="param_default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_noformat"/>
-    <param name="param_default_mandatory_oneformat" type="data" format="txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_oneformat"/>
-    <param name="param_default_optional_oneformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_oneformat"/>
-    <param name="param_default_mandatory_multformat" type="data" format="tabular,txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat"/>
-    <param name="param_default_optional_multformat" type="data" format="tabular,txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_multformat"/>
-    <param name="param_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_noformat"/>
-    <param name="param_list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_noformat"/>
-    <param name="param_list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_oneformat"/>
-    <param name="param_list_optional_oneformat" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_oneformat"/>
-    <param name="param_list_mandatory_multformat" type="data" format="tabular,txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_multformat"/>
-    <param name="param_list_optional_multformat" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_multformat"/>
-    <param name="param_list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat"/>
-    <param name="param_list_default_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat"/>
-    <param name="param_list_default_mandatory_oneformat" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_oneformat"/>
-    <param name="param_list_default_optional_oneformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_oneformat"/>
-    <param name="param_list_default_mandatory_multformat" type="data" format="tabular,txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_multformat"/>
-    <param name="param_list_default_optional_multformat" type="data" format="tabular,txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_multformat"/>
+    <param name="param_mandatory_noformat" argument="-mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=""/>
+    <param name="param_optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" label="input file" help=""/>
+    <param name="param_mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="txt" optional="false" label="input file" help=""/>
+    <param name="param_optional_oneformat" argument="-optional_oneformat" type="data" format="txt" optional="true" label="input file" help=""/>
+    <param name="param_mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,txt" optional="false" label="input file" help=""/>
+    <param name="param_optional_multformat" argument="-optional_multformat" type="data" format="tabular,txt" optional="true" label="input file" help=""/>
+    <param name="param_default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_default_optional_noformat" argument="-default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=""/>
+    <param name="param_default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="txt" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_default_optional_oneformat" argument="-default_optional_oneformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=""/>
+    <param name="param_default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,txt" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_default_optional_multformat" argument="-default_optional_multformat" type="data" format="tabular,txt" optional="true" value="test.ext" label="input file" help=""/>
+    <param name="param_list_mandatory_noformat" argument="-list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+    <param name="param_list_optional_noformat" argument="-list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_list_mandatory_oneformat" argument="-list_mandatory_oneformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+    <param name="param_list_optional_oneformat" argument="-list_optional_oneformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_list_mandatory_multformat" argument="-list_mandatory_multformat" type="data" format="tabular,txt" multiple="true" optional="false" label="input file" help=""/>
+    <param name="param_list_optional_multformat" argument="-list_optional_multformat" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_list_default_mandatory_noformat" argument="-list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_list_default_optional_noformat" argument="-list_default_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
+    <param name="param_list_default_mandatory_oneformat" argument="-list_default_mandatory_oneformat" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_list_default_optional_oneformat" argument="-list_default_optional_oneformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
+    <param name="param_list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tabular,txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+    <param name="param_list_default_optional_multformat" argument="-list_default_optional_multformat" type="data" format="tabular,txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help="" argument="-mandatory_noformat_adv"/>
-      <param name="param_optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help="" argument="-optional_noformat_adv"/>
-      <param name="param_mandatory_oneformat_adv" type="data" format="txt" optional="false" label="input file" help="" argument="-mandatory_oneformat_adv"/>
-      <param name="param_optional_oneformat_adv" type="data" format="txt" optional="true" label="input file" help="" argument="-optional_oneformat_adv"/>
-      <param name="param_mandatory_multformat_adv" type="data" format="tabular,txt" optional="false" label="input file" help="" argument="-mandatory_multformat_adv"/>
-      <param name="param_optional_multformat_adv" type="data" format="tabular,txt" optional="true" label="input file" help="" argument="-optional_multformat_adv"/>
-      <param name="param_default_mandatory_noformat_adv" type="data" format="txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_noformat_adv"/>
-      <param name="param_default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_noformat_adv"/>
-      <param name="param_default_mandatory_oneformat_adv" type="data" format="txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_oneformat_adv"/>
-      <param name="param_default_optional_oneformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_oneformat_adv"/>
-      <param name="param_default_mandatory_multformat_adv" type="data" format="tabular,txt" optional="false" value="test.ext" label="input file" help="" argument="-default_mandatory_multformat_adv"/>
-      <param name="param_default_optional_multformat_adv" type="data" format="tabular,txt" optional="true" value="test.ext" label="input file" help="" argument="-default_optional_multformat_adv"/>
-      <param name="param_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_noformat_adv"/>
-      <param name="param_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_noformat_adv"/>
-      <param name="param_list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_oneformat_adv"/>
-      <param name="param_list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_oneformat_adv"/>
-      <param name="param_list_mandatory_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="false" label="input file" help="" argument="-list_mandatory_multformat_adv"/>
-      <param name="param_list_optional_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help="" argument="-list_optional_multformat_adv"/>
-      <param name="param_list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_noformat_adv"/>
-      <param name="param_list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_noformat_adv"/>
-      <param name="param_list_default_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_oneformat_adv"/>
-      <param name="param_list_default_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_oneformat_adv"/>
-      <param name="param_list_default_mandatory_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="false" value="test.ext" label="input file" help="" argument="-list_default_mandatory_multformat_adv"/>
-      <param name="param_list_default_optional_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="true" value="test.ext" label="input file" help="" argument="-list_default_optional_multformat_adv"/>
+      <param name="param_mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=""/>
+      <param name="param_optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=""/>
+      <param name="param_mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="txt" optional="false" label="input file" help=""/>
+      <param name="param_optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="txt" optional="true" label="input file" help=""/>
+      <param name="param_mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,txt" optional="false" label="input file" help=""/>
+      <param name="param_optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,txt" optional="true" label="input file" help=""/>
+      <param name="param_default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_default_optional_noformat_adv" argument="-default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=""/>
+      <param name="param_default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="txt" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_default_optional_oneformat_adv" argument="-default_optional_oneformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=""/>
+      <param name="param_default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,txt" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tabular,txt" optional="true" value="test.ext" label="input file" help=""/>
+      <param name="param_list_mandatory_noformat_adv" argument="-list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+      <param name="param_list_optional_noformat_adv" argument="-list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=""/>
+      <param name="param_list_mandatory_oneformat_adv" argument="-list_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=""/>
+      <param name="param_list_optional_oneformat_adv" argument="-list_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=""/>
+      <param name="param_list_mandatory_multformat_adv" argument="-list_mandatory_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="false" label="input file" help=""/>
+      <param name="param_list_optional_multformat_adv" argument="-list_optional_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="true" label="input file" help=""/>
+      <param name="param_list_default_mandatory_noformat_adv" argument="-list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_list_default_optional_noformat_adv" argument="-list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
+      <param name="param_list_default_mandatory_oneformat_adv" argument="-list_default_mandatory_oneformat_adv" type="data" format="txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_list_default_optional_oneformat_adv" argument="-list_default_optional_oneformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
+      <param name="param_list_default_mandatory_multformat_adv" argument="-list_default_mandatory_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="false" value="test.ext" label="input file" help=""/>
+      <param name="param_list_default_optional_multformat_adv" argument="-list_default_optional_multformat_adv" type="data" format="tabular,txt" multiple="true" optional="true" value="test.ext" label="input file" help=""/>
     </expand>
   </inputs>
   <outputs>
