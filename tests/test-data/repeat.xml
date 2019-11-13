@@ -7,10 +7,10 @@
     <token name="@EXECUTABLE@">echo RepeatTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
-echo RepeatTest
+@EXECUTABLE@
 
 #if str($param_string_wodefault_optional):
   -string_wodefault_optional '$param_string_wodefault_optional'

@@ -72,6 +72,11 @@ def add_specific_args(parser):
                                                          "The macros stdio, requirements and advanced_options are "
                                                          "required. Please see galaxy/macros.xml for an example of a "
                                                          "valid macros file. All defined macros will be imported.")
+    parser.add_argument("--test-macros", dest="test_macros_files", default=[], nargs="*",
+                    action="append", required=None, help="Import tests from the files given file(s) as macros. "
+                                                         "The macro names must end with the id of the tools")
+    parser.add_argument("--test-macros-prefix", dest="test_macros_prefix", default=[], nargs="*",
+                    action="append", required=None, help="The prefix of the macro name in the corresponding trest macros file")
     parser.add_argument("--test-test", dest="test_test", action='store_true', default=False, required=False,
                     help="Generate a simple test for the internal unit tests.")
 
@@ -87,7 +92,7 @@ def convert_models(args, parsed_ctds):
     validate_and_prepare_args(args)
 
     # extract the names of the macros and check that we have found the ones we need
-    macros_to_expand = parse_macros_files(args.macros_files)
+    macros_to_expand = parse_macros_files(args.macros_files, required_macros=REQUIRED_MACROS, dont_expand=[ADVANCED_OPTIONS_NAME+"macro", "references"])
 
     # parse the given supported file-formats file
     supported_file_formats = parse_file_formats(args.formats_file)
@@ -95,7 +100,6 @@ def convert_models(args, parsed_ctds):
     # parse the skip/required tools files
     skip_tools = parse_tools_list_file(args.skip_tools_file)
     required_tools = parse_tools_list_file(args.required_tools_file)
-    
     _convert_internal(parsed_ctds,
                       supported_file_formats=supported_file_formats,
                       default_executable_path=args.default_executable_path,
@@ -106,7 +110,9 @@ def convert_models(args, parsed_ctds):
                       macros_file_names=args.macros_files,
                       macros_to_expand=macros_to_expand,
                       parameter_hardcoder=args.parameter_hardcoder,
-                      test_test=args.test_test)
+                      test_test=args.test_test,
+                      test_macros_file_names=args.test_macros_files,
+                      test_macros_prefix=args.test_macros_prefix)
 
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
     if args.tool_conf_destination is not None:
@@ -134,11 +140,10 @@ def parse_tools_list_file(tools_list_file):
     return tools_list
 
 
-def parse_macros_files(macros_file_names):
+def parse_macros_files(macros_file_names, required_macros = [], dont_expand=[]):
     """
     """
-    macros_to_expand = list()
-
+    macros_to_expand = set()
     for macros_file_name in macros_file_names:
         try:
             macros_file = open(macros_file_name)
@@ -149,9 +154,9 @@ def parse_macros_files(macros_file_names):
                 if name in macros_to_expand:
                     logger.warning("Macro %s has already been found. Duplicate found in file %s." %
                             (name, macros_file_name), 0)
-                else:
-                    logger.info("Macro %s found" % name, 1)
-                    macros_to_expand.append(name)
+                    continue
+                logger.info("Macro %s found" % name, 1)
+                macros_to_expand.add(name)
         except ParseError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
                                        str(e))
@@ -161,7 +166,7 @@ def parse_macros_files(macros_file_names):
 
     # we depend on "stdio", "requirements" and "advanced_options" to exist on all the given macros files
     missing_needed_macros = []
-    for required_macro in REQUIRED_MACROS:
+    for required_macro in required_macros:
         if required_macro not in macros_to_expand:
             missing_needed_macros.append(required_macro)
 
@@ -170,9 +175,11 @@ def parse_macros_files(macros_file_names):
             "The following required macro(s) were not found in any of the given macros files: %s, "
             "see galaxy/macros.xml for an example of a valid macros file."
             % ", ".join(missing_needed_macros))
+    
+    # remove macros that should not be expanded
+    for m in dont_expand:
+        macros_to_expand.discard(m)
 
-    # we do not need to "expand" the advanced_options macro
-    macros_to_expand.remove(ADVANCED_OPTIONS_NAME+"macro")
     return macros_to_expand
 
 
@@ -226,6 +233,8 @@ def validate_and_prepare_args(args):
 
     # flatten macros_files to make sure that we have a list containing file names and not a list of lists
     utils.flatten_list_of_lists(args, "macros_files")
+    utils.flatten_list_of_lists(args, "test_macros_files")
+    utils.flatten_list_of_lists(args, "test_macros_prefix")
 
     # check that the arguments point to a valid, existing path
     input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files", "formats_file"]
@@ -278,15 +287,19 @@ def _convert_internal(parsed_ctds, **kwargs):
             tool = create_tool(model)
             write_header(tool, model)
             create_description(tool, model)
-            expand_macros(tool, model, **kwargs)
+            import_macros(tool, model, **kwargs)
+            expand_macros(tool, kwargs["macros_to_expand"])
             create_command(tool, model, **kwargs)
             inputs = create_inputs(tool, model, **kwargs)
             outputs = create_outputs(tool, model, **kwargs)
             if kwargs["test_test"]:
-                create_tests(tool, copy.deepcopy(inputs), copy.deepcopy(outputs))
+                create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
+            if kwargs["test_macros_prefix"]:
+                create_tests(tool, test_macros_prefix=kwargs['test_macros_prefix'], name=model.name)
+
             create_help(tool, model)
             # citations are required to be at the end
-            move_citations(tool)
+            expand_macros(tool, ["references"])
 
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
@@ -389,7 +402,7 @@ def create_command(tool, model, **kwargs):
 
     # main command
     final_preprocessing = "\n"
-    final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
+    final_command = "@EXECUTABLE@" + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if ${aon}cond.{aon}selector=='advanced':\n".format(aon=ADVANCED_OPTIONS_NAME)
     advanced_command_end = "#end if"
@@ -494,8 +507,7 @@ def create_command(tool, model, **kwargs):
 
 
 # creates the xml elements needed to import the needed macros files
-# and to "expand" the macros
-def expand_macros(tool, model, **kwargs):
+def import_macros(tool, model, **kwargs):
     """
     @param tool the Galaxy tool
     @param model the ctd model
@@ -507,23 +519,18 @@ def expand_macros(tool, model, **kwargs):
     token_node.text = utils.extract_tool_executable_path(model, kwargs["default_executable_path"])
 
     # add <import> nodes
-    for macro_file_name in kwargs["macros_file_names"]:
+    for macro_file_name in kwargs["macros_file_names"]+kwargs["test_macros_file_names"]:
         macro_file = open(macro_file_name)
         import_node = add_child_node(macros_node, "import")
         # do not add the path of the file, rather, just its basename
         import_node.text = os.path.basename(macro_file.name)
-    # add <expand> nodes
-    for expand_macro in kwargs["macros_to_expand"]:
-        expand_node = add_child_node(tool, "expand")
-        expand_node.attrib["macro"] = expand_macro
 
-def move_citations(tool):
-    """
-    move expansions of the citations/references macro to the end of the tool file
-    """
-    for expand in tool.iter('expand'):
-        if expand.attrib["macro"] in ["references", "citations"]:
-            tool.append(expand)
+# and to "expand" the macros in a node
+def expand_macros(node, macros_to_expand):
+    # add <expand> nodes
+    for expand_macro in macros_to_expand:
+        expand_node = add_child_node(node, "expand")
+        expand_node.attrib["macro"] = expand_macro
 
 
 def get_galaxy_parameter_name(param, inparam = False):
@@ -632,7 +639,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     # set the name, argument and a first guess for the type (which will be over written 
     # in some cases .. see below)
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
-    param_node.attrib["argument"] = str(param)
+    param_node.attrib["argument"] = "-"+param.name
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
@@ -1043,91 +1050,95 @@ def create_change_format_node(parent, data_formats, input_ref):
                        OrderedDict([("input", input_ref), ("value", data_format), ("format", data_format)]))
 
 
-def create_tests(parent, inputs, outputs):
+def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, name=None):
     """
     create tests section of the Galaxy tool
     @param tool the Galaxy tool
     @param inputs a copy of the inputs
     """
     tests_node = add_child_node(parent, "tests")
-    test_node = add_child_node(tests_node, "test")
+
+    if not (inputs is None or outputs is None):
+        test_node = add_child_node(tests_node, "test")
+        strip_elements(inputs, "validator", "sanitizer")
+        for node in inputs.iter():
+            if node.tag == "expand":
+                node.tag = "conditional"
+                node.attrib["name"] = ADVANCED_OPTIONS_NAME+"cond"
+                add_child_node(node, "param", OrderedDict([("name", ADVANCED_OPTIONS_NAME+"selector"), ("value", "advanced")]))
+            if not "type" in node.attrib:
+                continue
     
-    strip_elements(inputs, "validator", "sanitizer")
-    for node in inputs.iter():
-        if node.tag == "expand":
-            node.tag = "conditional"
-            node.attrib["name"] = ADVANCED_OPTIONS_NAME+"cond"
-            add_child_node(node, "param", OrderedDict([("name", ADVANCED_OPTIONS_NAME+"selector"), ("value", "advanced")]))
-        if not "type" in node.attrib:
-            continue
-
-        if (node.attrib["type"] == "select" and "true" in set([_.attrib.get("selected","false") for _ in node])) or\
-           (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
-            node.tag = "delete_node"
-            continue
-
-        # TODO make this optional (ie add aparameter)
-        if node.attrib["optional"] == "true" and node.attrib["type"]!="boolean":
-            node.tag = "delete_node"
-            continue
-
-        if node.attrib["type"] == "boolean":
-            if node.attrib["checked"] == "true":
-                node.attrib["value"] = "true" # node.attrib["truevalue"]
-            else:
-                node.attrib["value"] = "false" # node.attrib["falsevalue"]
-        elif node.attrib["type"] == "text" and node.attrib["value"] == "":
-            node.attrib["value"] = "1,2" # use a comma separated list here to cover the repeat (int/float) case 
-        elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
-            node.attrib["value"] = "1"
-        elif node.attrib["type"] == "float" and node.attrib["value"] == "":
-            node.attrib["value"] = "1.0"
-        elif node.attrib["type"] == "select":
-            if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
-                node.attrib["value"] = node[-1].attrib["value"]
-            elif node.attrib.get("multiple", None) == "true":
-                node.attrib["value"] = ",".join([ _.attrib["value"] for _ in node ])
-        elif node.attrib["type"] == "data":
-            node.attrib["ftype"] = node.attrib["format"].split(',')[0]
-            if node.attrib.get("multiple", "false") == "true":
-                node.attrib["value"] = "test.ext,test2.ext"
-            else:
-                node.attrib["value"] = "test.ext"
-    for node in inputs.iter():
-        for a in set(node.attrib) - set(["name","value","ftype"]):
-            del node.attrib[a]
-    strip_elements(inputs, "delete_node", "option")
-    for node in inputs:
-        test_node.append(node)
-    outputs_cnt = 0
-    for node in outputs.iter():
-        if node.tag == "data" or node.tag == "collection":
-            # assuming that all filters avaluate to false
-            has_filter = False
-            for c in node:
-                if c.tag == "filter":
-                    has_filter = True
-                    break
-            if not has_filter:
-                outputs_cnt += 1
-            else:
+            if (node.attrib["type"] == "select" and "true" in set([_.attrib.get("selected","false") for _ in node])) or\
+               (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
                 node.tag = "delete_node"
-        if node.tag == "data":
-            node.tag = "output"
-            node.attrib["ftype"] = node.attrib["format"]
-            node.attrib["value"] = "outfile.txt"
-        if node.tag == "collection":
-            node.tag = "output_collection"
-        if node.attrib.get("name", None) == "param_stdout":
-            node.attrib["lines_diff"] = "2"
-        for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
-            del node.attrib[a]
-    strip_elements(outputs, "delete_node", "discover_datasets", "filter")
+                continue
+    
+            # TODO make this optional (ie add aparameter)
+            if node.attrib["optional"] == "true" and node.attrib["type"]!="boolean":
+                node.tag = "delete_node"
+                continue
+    
+            if node.attrib["type"] == "boolean":
+                if node.attrib["checked"] == "true":
+                    node.attrib["value"] = "true" # node.attrib["truevalue"]
+                else:
+                    node.attrib["value"] = "false" # node.attrib["falsevalue"]
+            elif node.attrib["type"] == "text" and node.attrib["value"] == "":
+                node.attrib["value"] = "1,2" # use a comma separated list here to cover the repeat (int/float) case 
+            elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
+                node.attrib["value"] = "1"
+            elif node.attrib["type"] == "float" and node.attrib["value"] == "":
+                node.attrib["value"] = "1.0"
+            elif node.attrib["type"] == "select":
+                if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
+                    node.attrib["value"] = node[-1].attrib["value"]
+                elif node.attrib.get("multiple", None) == "true":
+                    node.attrib["value"] = ",".join([ _.attrib["value"] for _ in node ])
+            elif node.attrib["type"] == "data":
+                node.attrib["ftype"] = node.attrib["format"].split(',')[0]
+                if node.attrib.get("multiple", "false") == "true":
+                    node.attrib["value"] = "test.ext,test2.ext"
+                else:
+                    node.attrib["value"] = "test.ext"
+        for node in inputs.iter():
+            for a in set(node.attrib) - set(["name","value","ftype"]):
+                del node.attrib[a]
+        strip_elements(inputs, "delete_node", "option")
+        for node in inputs:
+            test_node.append(node)
 
-    for node in outputs:
-        test_node.append(node)
+        outputs_cnt = 0
+        for node in outputs.iter():
+            if node.tag == "data" or node.tag == "collection":
+                # assuming that all filters avaluate to false
+                has_filter = False
+                for c in node:
+                    if c.tag == "filter":
+                        has_filter = True
+                        break
+                if not has_filter:
+                    outputs_cnt += 1
+                else:
+                    node.tag = "delete_node"
+            if node.tag == "data":
+                node.tag = "output"
+                node.attrib["ftype"] = node.attrib["format"]
+                node.attrib["value"] = "outfile.txt"
+            if node.tag == "collection":
+                node.tag = "output_collection"
+            if node.attrib.get("name", None) == "param_stdout":
+                node.attrib["lines_diff"] = "2"
+            for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
+                del node.attrib[a]
+        strip_elements(outputs, "delete_node", "discover_datasets", "filter")
+    
+        for node in outputs:
+            test_node.append(node)
+        test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
+    elif not (test_macros_prefix is None or name is None):
+        expand_macros(tests_node, [ p + name for p in test_macros_prefix])
 
-    test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
 
 # Shows basic information about the file, such as data ranges and file type.
 def create_help(tool, model):

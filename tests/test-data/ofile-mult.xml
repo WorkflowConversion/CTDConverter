@@ -7,8 +7,8 @@
     <token name="@EXECUTABLE@">echo MultoutFileTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
 #import re
 mkdir param_out_mandatory_mandatoryinput && 
@@ -19,7 +19,7 @@ ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_i
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_mandatoryinput if _ ]) } && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
-echo MultoutFileTest
+@EXECUTABLE@
 
 -mandatory_mandatoryinput ${' '.join(["'param_out_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
 #if str($param_optional_mandatoryinput):

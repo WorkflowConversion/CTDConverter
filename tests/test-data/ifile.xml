@@ -7,8 +7,8 @@
     <token name="@EXECUTABLE@">echo inFileTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
 #import re
 ln -s '$param_mandatory_noformat' '${re.sub("[^\w\-_.]", "_", $param_mandatory_noformat.element_identifier)}.${param_mandatory_noformat.ext}' &&
@@ -83,7 +83,7 @@ ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_i
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts_cond.param_list_default_optional_oneformat_adv if _ ]) } && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts_cond.param_list_default_mandatory_multformat_adv if _ ]) } && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $adv_opts_cond.param_list_default_optional_multformat_adv if _ ]) } && 
-echo inFileTest
+@EXECUTABLE@
 
 -mandatory_noformat '${re.sub('[^\w\-_.]', '_', $param_mandatory_noformat.element_identifier)}.${param_mandatory_noformat.ext}'
 #if $param_optional_noformat:

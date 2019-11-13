@@ -7,10 +7,10 @@
     <token name="@EXECUTABLE@">echo outFileTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
-echo outFileTest
+@EXECUTABLE@
 
 -wodefault_mandatory_noformat '$param_out_wodefault_mandatory_noformat'
 -default_mandatory_noformat '$param_out_default_mandatory_noformat'

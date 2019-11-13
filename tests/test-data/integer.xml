@@ -7,10 +7,10 @@
     <token name="@EXECUTABLE@">echo IntTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
-echo IntTest
+@EXECUTABLE@
 
 -wodefault_mandatory_unrestricted '$param_wodefault_mandatory_unrestricted'
 -default_mandatory_unrestricted '$param_default_mandatory_unrestricted'

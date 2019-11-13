@@ -7,10 +7,10 @@
     <token name="@EXECUTABLE@">echo BoolTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="requirements"/>
   <expand macro="stdio"/>
+  <expand macro="requirements"/>
   <command><![CDATA[
-echo BoolTest
+@EXECUTABLE@
 
 $param_true
 $param_false
