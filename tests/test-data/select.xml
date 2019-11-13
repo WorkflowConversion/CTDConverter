@@ -9,7 +9,6 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo SelectTest
 
@@ -45,39 +44,39 @@ echo SelectTest
   -list_default_optional_many ${' '.join(["'%s'"%str(_) for _ in $param_list_default_optional_many])}
 #end if
 -list_default_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
-#if $adv_opts.adv_opts_selector=='advanced':
-  -wodefault_mandatory_adv '$adv_opts.param_wodefault_mandatory_adv'
-  -default_mandatory_adv '$adv_opts.param_default_mandatory_adv'
-  #if $adv_opts.param_wodefault_optional_adv:
-    -wodefault_optional_adv '$adv_opts.param_wodefault_optional_adv'
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  -wodefault_mandatory_adv '$adv_opts_cond.param_wodefault_mandatory_adv'
+  -default_mandatory_adv '$adv_opts_cond.param_default_mandatory_adv'
+  #if $adv_opts_cond.param_wodefault_optional_adv:
+    -wodefault_optional_adv '$adv_opts_cond.param_wodefault_optional_adv'
   #end if
-  #if $adv_opts.param_default_optional_adv:
-    -default_optional_adv '$adv_opts.param_default_optional_adv'
+  #if $adv_opts_cond.param_default_optional_adv:
+    -default_optional_adv '$adv_opts_cond.param_default_optional_adv'
   #end if
-  -wodefault_mandatory_many_adv '$adv_opts.param_wodefault_mandatory_many_adv'
-  -default_mandatory_many_adv '$adv_opts.param_default_mandatory_many_adv'
-  #if $adv_opts.param_wodefault_optional_many_adv:
-    -wodefault_optional_many_adv '$adv_opts.param_wodefault_optional_many_adv'
+  -wodefault_mandatory_many_adv '$adv_opts_cond.param_wodefault_mandatory_many_adv'
+  -default_mandatory_many_adv '$adv_opts_cond.param_default_mandatory_many_adv'
+  #if $adv_opts_cond.param_wodefault_optional_many_adv:
+    -wodefault_optional_many_adv '$adv_opts_cond.param_wodefault_optional_many_adv'
   #end if
-  #if $adv_opts.param_default_optional_many_adv:
-    -default_optional_many_adv '$adv_opts.param_default_optional_many_adv'
+  #if $adv_opts_cond.param_default_optional_many_adv:
+    -default_optional_many_adv '$adv_opts_cond.param_default_optional_many_adv'
   #end if
-  #if $adv_opts.param_list_wodefault_optional_adv:
-    -list_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_adv])}
+  #if $adv_opts_cond.param_list_wodefault_optional_adv:
+    -list_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_wodefault_optional_adv])}
   #end if
-  -list_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_adv])}
-  #if $adv_opts.param_list_default_optional_adv:
-    -list_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_adv])}
+  -list_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_wodefault_mandatory_adv])}
+  #if $adv_opts_cond.param_list_default_optional_adv:
+    -list_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_default_optional_adv])}
   #end if
-  -list_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_adv])}
-  #if $adv_opts.param_list_wodefault_optional_many_adv:
-    -list_wodefault_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_optional_many_adv])}
+  -list_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_default_mandatory_adv])}
+  #if $adv_opts_cond.param_list_wodefault_optional_many_adv:
+    -list_wodefault_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_wodefault_optional_many_adv])}
   #end if
-  -list_wodefault_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_wodefault_mandatory_many_adv])}
-  #if $adv_opts.param_list_default_optional_many_adv:
-    -list_default_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_optional_many_adv])}
+  -list_wodefault_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_wodefault_mandatory_many_adv])}
+  #if $adv_opts_cond.param_list_default_optional_many_adv:
+    -list_default_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_default_optional_many_adv])}
   #end if
-  -list_default_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts.param_list_default_mandatory_many_adv])}
+  -list_default_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_default_mandatory_many_adv])}
 #end if
 > $param_stdout
 ]]></command>
@@ -186,7 +185,7 @@ echo SelectTest
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
     </param>
-    <expand macro="advanced_options">
+    <expand macro="adv_opts_macro">
       <param name="param_wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="" argument="-wodefault_mandatory_adv">
         <option value="A">A</option>
         <option value="B">B</option>
@@ -302,7 +301,7 @@ echo SelectTest
       <param name="param_wodefault_mandatory_many" value="E"/>
       <param name="param_list_wodefault_mandatory" value="A,B,C,D"/>
       <param name="param_list_wodefault_mandatory_many" value="A,B,C,D,E"/>
-      <conditional macro="advanced_options" name="adv_opts">
+      <conditional name="adv_opts_cond">
         <param name="param_wodefault_mandatory_adv" value="D"/>
         <param name="param_wodefault_mandatory_many_adv" value="E"/>
         <param name="param_list_wodefault_mandatory_adv" value="A,B,C,D"/>
@@ -316,4 +315,5 @@ echo SelectTest
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

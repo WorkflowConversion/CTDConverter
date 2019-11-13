@@ -2,14 +2,13 @@
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Input File Test]-->
 <tool id="echo_outFileTest" name="echo outFileTest" version="2.3.0">
-  <description>Input File parameter tests</description>
+  <description>Outut File parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo outFileTest</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo outFileTest
 
@@ -37,17 +36,19 @@ echo outFileTest
 #if str($param_default_optional_multformat):
   -default_optional_multformat '$param_out_default_optional_multformat'
 #end if
--mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
-#if str($adv_opts.param_optional_noformat_adv):
-  -optional_noformat_adv '$param_out_optional_noformat_adv'
-#end if
--mandatory_oneformat_adv '$param_out_mandatory_oneformat_adv'
-#if str($adv_opts.param_optional_oneformat_adv):
-  -optional_oneformat_adv '$param_out_optional_oneformat_adv'
-#end if
--mandatory_multformat_adv '$param_out_mandatory_multformat_adv'
-#if str($adv_opts.param_optional_multformat_adv):
-  -optional_multformat_adv '$param_out_optional_multformat_adv'
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  -mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
+  #if str($adv_opts_cond.param_optional_noformat_adv):
+    -optional_noformat_adv '$param_out_optional_noformat_adv'
+  #end if
+  -mandatory_oneformat_adv '$param_out_mandatory_oneformat_adv'
+  #if str($adv_opts_cond.param_optional_oneformat_adv):
+    -optional_oneformat_adv '$param_out_optional_oneformat_adv'
+  #end if
+  -mandatory_multformat_adv '$param_out_mandatory_multformat_adv'
+  #if str($adv_opts_cond.param_optional_multformat_adv):
+    -optional_multformat_adv '$param_out_optional_multformat_adv'
+  #end if
 #end if
 ]]></command>
   <inputs>
@@ -57,19 +58,19 @@ echo outFileTest
     <param name="param_default_optional_oneformat" type="boolean" optional="true" truevalue="-default_optional_oneformat" falsevalue="" checked="false" label="generate output default_optional_oneformat (output file)" help="" argument="-default_optional_oneformat"/>
     <param name="param_wodefault_optional_multformat" type="boolean" optional="true" truevalue="-wodefault_optional_multformat" falsevalue="" checked="false" label="generate output wodefault_optional_multformat (output file)" help="" argument="-wodefault_optional_multformat"/>
     <param name="param_default_optional_multformat" type="boolean" optional="true" truevalue="-default_optional_multformat" falsevalue="" checked="false" label="generate output default_optional_multformat (output file)" help="" argument="-default_optional_multformat"/>
-    <expand macro="advanced_options">
+    <expand macro="adv_opts_macro">
       <param name="param_optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help="" argument="-optional_noformat_adv"/>
       <param name="param_optional_oneformat_adv" type="boolean" optional="true" truevalue="-optional_oneformat_adv" falsevalue="" checked="false" label="generate output optional_oneformat_adv (output file)" help="" argument="-optional_oneformat_adv"/>
       <param name="param_optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help="" argument="-optional_multformat_adv"/>
     </expand>
   </inputs>
   <outputs>
-    <data name="param_out_wodefault_mandatory_noformat" label="${tool.name} on ${on_string}: wodefault_mandatory_noformat" format="data"/>
-    <data name="param_out_default_mandatory_noformat" label="${tool.name} on ${on_string}: default_mandatory_noformat" format="data"/>
-    <data name="param_out_wodefault_optional_noformat" label="${tool.name} on ${on_string}: wodefault_optional_noformat" format="data">
+    <data name="param_out_wodefault_mandatory_noformat" label="${tool.name} on ${on_string}: wodefault_mandatory_noformat" format="txt"/>
+    <data name="param_out_default_mandatory_noformat" label="${tool.name} on ${on_string}: default_mandatory_noformat" format="txt"/>
+    <data name="param_out_wodefault_optional_noformat" label="${tool.name} on ${on_string}: wodefault_optional_noformat" format="txt">
       <filter>param_wodefault_optional_noformat</filter>
     </data>
-    <data name="param_out_default_optional_noformat" label="${tool.name} on ${on_string}: default_optional_noformat" format="data">
+    <data name="param_out_default_optional_noformat" label="${tool.name} on ${on_string}: default_optional_noformat" format="txt">
       <filter>param_default_optional_noformat</filter>
     </data>
     <data name="param_out_wodefault_mandatory_oneformat" label="${tool.name} on ${on_string}: wodefault_mandatory_oneformat" format="txt"/>
@@ -80,54 +81,55 @@ echo outFileTest
     <data name="param_out_default_optional_oneformat" label="${tool.name} on ${on_string}: default_optional_oneformat" format="txt">
       <filter>param_default_optional_oneformat</filter>
     </data>
-    <data name="param_out_wodefault_mandatory_multformat" label="${tool.name} on ${on_string}: wodefault_mandatory_multformat" format="txt"/>
-    <data name="param_out_default_mandatory_multformat" label="${tool.name} on ${on_string}: default_mandatory_multformat" format="txt"/>
-    <data name="param_out_wodefault_optional_multformat" label="${tool.name} on ${on_string}: wodefault_optional_multformat" format="txt">
+    <data name="param_out_wodefault_mandatory_multformat" label="${tool.name} on ${on_string}: wodefault_mandatory_multformat" format="tabular"/>
+    <data name="param_out_default_mandatory_multformat" label="${tool.name} on ${on_string}: default_mandatory_multformat" format="tabular"/>
+    <data name="param_out_wodefault_optional_multformat" label="${tool.name} on ${on_string}: wodefault_optional_multformat" format="tabular">
       <filter>param_wodefault_optional_multformat</filter>
     </data>
-    <data name="param_out_default_optional_multformat" label="${tool.name} on ${on_string}: default_optional_multformat" format="txt">
+    <data name="param_out_default_optional_multformat" label="${tool.name} on ${on_string}: default_optional_multformat" format="tabular">
       <filter>param_default_optional_multformat</filter>
     </data>
-    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="data"/>
-    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="data">
-      <filter>advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['param_optional_noformat_adv']</filter>
+    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="txt"/>
+    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="txt">
+      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_noformat_adv']</filter>
     </data>
     <data name="param_out_mandatory_oneformat_adv" label="${tool.name} on ${on_string}: mandatory_oneformat_adv" format="txt"/>
     <data name="param_out_optional_oneformat_adv" label="${tool.name} on ${on_string}: optional_oneformat_adv" format="txt">
-      <filter>advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['param_optional_oneformat_adv']</filter>
+      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_oneformat_adv']</filter>
     </data>
-    <data name="param_out_mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv" format="txt"/>
-    <data name="param_out_optional_multformat_adv" label="${tool.name} on ${on_string}: optional_multformat_adv" format="txt">
-      <filter>advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['param_optional_multformat_adv']</filter>
+    <data name="param_out_mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv" format="tabular"/>
+    <data name="param_out_optional_multformat_adv" label="${tool.name} on ${on_string}: optional_multformat_adv" format="tabular">
+      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_multformat_adv']</filter>
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="18">
-      <param name="param_wodefault_optional_noformat" value=""/>
-      <param name="param_default_optional_noformat" value=""/>
-      <param name="param_wodefault_optional_oneformat" value=""/>
-      <param name="param_default_optional_oneformat" value=""/>
-      <param name="param_wodefault_optional_multformat" value=""/>
-      <param name="param_default_optional_multformat" value=""/>
-      <conditional macro="advanced_options" name="adv_opts">
-        <param name="param_optional_noformat_adv" value=""/>
-        <param name="param_optional_oneformat_adv" value=""/>
-        <param name="param_optional_multformat_adv" value=""/>
+    <test expect_num_outputs="9">
+      <param name="param_wodefault_optional_noformat" value="false"/>
+      <param name="param_default_optional_noformat" value="false"/>
+      <param name="param_wodefault_optional_oneformat" value="false"/>
+      <param name="param_default_optional_oneformat" value="false"/>
+      <param name="param_wodefault_optional_multformat" value="false"/>
+      <param name="param_default_optional_multformat" value="false"/>
+      <conditional name="adv_opts_cond">
+        <param name="param_optional_noformat_adv" value="false"/>
+        <param name="param_optional_oneformat_adv" value="false"/>
+        <param name="param_optional_multformat_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_out_wodefault_mandatory_noformat" ftype="data" value="outfile.txt"/>
-      <output name="param_out_default_mandatory_noformat" ftype="data" value="outfile.txt"/>
+      <output name="param_out_wodefault_mandatory_noformat" ftype="txt" value="outfile.txt"/>
+      <output name="param_out_default_mandatory_noformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_wodefault_mandatory_oneformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_default_mandatory_oneformat" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_wodefault_mandatory_multformat" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_default_mandatory_multformat" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_mandatory_noformat_adv" ftype="data" value="outfile.txt"/>
+      <output name="param_out_wodefault_mandatory_multformat" ftype="tabular" value="outfile.txt"/>
+      <output name="param_out_default_mandatory_multformat" ftype="tabular" value="outfile.txt"/>
+      <output name="param_out_mandatory_noformat_adv" ftype="txt" value="outfile.txt"/>
       <output name="param_out_mandatory_oneformat_adv" ftype="txt" value="outfile.txt"/>
-      <output name="param_out_mandatory_multformat_adv" ftype="txt" value="outfile.txt"/>
+      <output name="param_out_mandatory_multformat_adv" ftype="tabular" value="outfile.txt"/>
     </test>
   </tests>
-  <help><![CDATA[Input File parameter tests.
+  <help><![CDATA[Output File parameter tests.
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

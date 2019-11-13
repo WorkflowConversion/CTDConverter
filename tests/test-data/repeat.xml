@@ -9,7 +9,6 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo RepeatTest
 
@@ -53,47 +52,47 @@ echo RepeatTest
   -double_resticted_default_optional '$param_double_resticted_default_optional'
 #end if
 -double_resticted_default_mandatory '$param_double_resticted_default_mandatory'
-#if $adv_opts.adv_opts_selector=='advanced':
-  #if str($adv_opts.param_string_wodefault_optional_adv):
-    -string_wodefault_optional_adv '$adv_opts.param_string_wodefault_optional_adv'
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  #if str($adv_opts_cond.param_string_wodefault_optional_adv):
+    -string_wodefault_optional_adv '$adv_opts_cond.param_string_wodefault_optional_adv'
   #end if
-  -string_wodefault_mandatory_adv '$adv_opts.param_string_wodefault_mandatory_adv'
-  #if str($adv_opts.param_string_default_optional_adv):
-    -string_default_optional_adv '$adv_opts.param_string_default_optional_adv'
+  -string_wodefault_mandatory_adv '$adv_opts_cond.param_string_wodefault_mandatory_adv'
+  #if str($adv_opts_cond.param_string_default_optional_adv):
+    -string_default_optional_adv '$adv_opts_cond.param_string_default_optional_adv'
   #end if
-  -string_default_mandatory_adv '$adv_opts.param_string_default_mandatory_adv'
-  #if str($adv_opts.param_int_wodefault_optional_adv):
-    -int_wodefault_optional_adv '$adv_opts.param_int_wodefault_optional_adv'
+  -string_default_mandatory_adv '$adv_opts_cond.param_string_default_mandatory_adv'
+  #if str($adv_opts_cond.param_int_wodefault_optional_adv):
+    -int_wodefault_optional_adv '$adv_opts_cond.param_int_wodefault_optional_adv'
   #end if
-  -int_wodefault_mandatory_adv '$adv_opts.param_int_wodefault_mandatory_adv'
-  #if str($adv_opts.param_int_default_optional_adv):
-    -int_default_optional_adv '$adv_opts.param_int_default_optional_adv'
+  -int_wodefault_mandatory_adv '$adv_opts_cond.param_int_wodefault_mandatory_adv'
+  #if str($adv_opts_cond.param_int_default_optional_adv):
+    -int_default_optional_adv '$adv_opts_cond.param_int_default_optional_adv'
   #end if
-  -int_default_mandatory_adv '$adv_opts.param_int_default_mandatory_adv'
-  #if str($adv_opts.param_int_resticted_wodefault_optional_adv):
-    -int_resticted_wodefault_optional_adv '$adv_opts.param_int_resticted_wodefault_optional_adv'
+  -int_default_mandatory_adv '$adv_opts_cond.param_int_default_mandatory_adv'
+  #if str($adv_opts_cond.param_int_resticted_wodefault_optional_adv):
+    -int_resticted_wodefault_optional_adv '$adv_opts_cond.param_int_resticted_wodefault_optional_adv'
   #end if
-  -int_resticted_wodefault_mandatory_adv '$adv_opts.param_int_resticted_wodefault_mandatory_adv'
-  #if str($adv_opts.param_int_resticted_default_optional_adv):
-    -int_resticted_default_optional_adv '$adv_opts.param_int_resticted_default_optional_adv'
+  -int_resticted_wodefault_mandatory_adv '$adv_opts_cond.param_int_resticted_wodefault_mandatory_adv'
+  #if str($adv_opts_cond.param_int_resticted_default_optional_adv):
+    -int_resticted_default_optional_adv '$adv_opts_cond.param_int_resticted_default_optional_adv'
   #end if
-  -int_resticted_default_mandatory_adv '$adv_opts.param_int_resticted_default_mandatory_adv'
-  #if str($adv_opts.param_double_wodefault_optional_adv):
-    -double_wodefault_optional_adv '$adv_opts.param_double_wodefault_optional_adv'
+  -int_resticted_default_mandatory_adv '$adv_opts_cond.param_int_resticted_default_mandatory_adv'
+  #if str($adv_opts_cond.param_double_wodefault_optional_adv):
+    -double_wodefault_optional_adv '$adv_opts_cond.param_double_wodefault_optional_adv'
   #end if
-  -double_wodefault_mandatory_adv '$adv_opts.param_double_wodefault_mandatory_adv'
-  #if str($adv_opts.param_double_default_optional_adv):
-    -double_default_optional_adv '$adv_opts.param_double_default_optional_adv'
+  -double_wodefault_mandatory_adv '$adv_opts_cond.param_double_wodefault_mandatory_adv'
+  #if str($adv_opts_cond.param_double_default_optional_adv):
+    -double_default_optional_adv '$adv_opts_cond.param_double_default_optional_adv'
   #end if
-  -double_default_mandatory_adv '$adv_opts.param_double_default_mandatory_adv'
-  #if str($adv_opts.param_double_resticted_wodefault_optional_adv):
-    -double_resticted_wodefault_optional_adv '$adv_opts.param_double_resticted_wodefault_optional_adv'
+  -double_default_mandatory_adv '$adv_opts_cond.param_double_default_mandatory_adv'
+  #if str($adv_opts_cond.param_double_resticted_wodefault_optional_adv):
+    -double_resticted_wodefault_optional_adv '$adv_opts_cond.param_double_resticted_wodefault_optional_adv'
   #end if
-  -double_resticted_wodefault_mandatory_adv '$adv_opts.param_double_resticted_wodefault_mandatory_adv'
-  #if str($adv_opts.param_double_resticted_default_optional_adv):
-    -double_resticted_default_optional_adv '$adv_opts.param_double_resticted_default_optional_adv'
+  -double_resticted_wodefault_mandatory_adv '$adv_opts_cond.param_double_resticted_wodefault_mandatory_adv'
+  #if str($adv_opts_cond.param_double_resticted_default_optional_adv):
+    -double_resticted_default_optional_adv '$adv_opts_cond.param_double_resticted_default_optional_adv'
   #end if
-  -double_resticted_default_mandatory_adv '$adv_opts.param_double_resticted_default_mandatory_adv'
+  -double_resticted_default_mandatory_adv '$adv_opts_cond.param_double_resticted_default_mandatory_adv'
 #end if
 > $param_stdout
 ]]></command>
@@ -322,7 +321,7 @@ echo RepeatTest
         </mapping>
       </sanitizer>
     </param>
-    <expand macro="advanced_options">
+    <expand macro="adv_opts_macro">
       <param name="param_string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (comma separated list)" argument="-string_wodefault_optional_adv">
         <sanitizer>
           <valid initial="string.printable">
@@ -564,7 +563,7 @@ echo RepeatTest
       <param name="param_double_default_mandatory" value="1.0,2.0"/>
       <param name="param_double_resticted_wodefault_mandatory" value="1,2"/>
       <param name="param_double_resticted_default_mandatory" value="0.3,0.5"/>
-      <conditional macro="advanced_options" name="adv_opts">
+      <conditional name="adv_opts_cond">
         <param name="param_string_wodefault_mandatory_adv" value="1,2"/>
         <param name="param_string_default_mandatory_adv" value="A,B"/>
         <param name="param_int_wodefault_mandatory_adv" value="1,2"/>
@@ -584,4 +583,5 @@ echo RepeatTest
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

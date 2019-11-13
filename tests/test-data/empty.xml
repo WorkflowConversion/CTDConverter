@@ -9,7 +9,6 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo StringTest
 
@@ -28,4 +27,5 @@ echo StringTest
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

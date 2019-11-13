@@ -9,7 +9,6 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo BoolTest
 
@@ -17,11 +16,11 @@ $param_true
 $param_false
 $param_flag_true
 $param_flag_false
-#if $adv_opts.adv_opts_selector=='advanced':
-  $adv_opts.param_true_adv
-  $adv_opts.param_false_adv
-  $adv_opts.param_flag_true_adv
-  $adv_opts.param_flag_false_adv
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  $adv_opts_cond.param_true_adv
+  $adv_opts_cond.param_false_adv
+  $adv_opts_cond.param_flag_true_adv
+  $adv_opts_cond.param_flag_false_adv
 #end if
 > $param_stdout
 ]]></command>
@@ -30,7 +29,7 @@ $param_flag_false
     <param name="param_false" type="boolean" optional="true" truevalue="-false" falsevalue="" checked="false" label="bool" help="" argument="-false"/>
     <param name="param_flag_true" type="boolean" optional="true" truevalue="-flag_true" falsevalue="" checked="true" label="bool" help="" argument="-flag_true"/>
     <param name="param_flag_false" type="boolean" optional="true" truevalue="-flag_false" falsevalue="" checked="false" label="bool" help="" argument="-flag_false"/>
-    <expand macro="advanced_options">
+    <expand macro="adv_opts_macro">
       <param name="param_true_adv" type="boolean" optional="true" truevalue="" falsevalue="-true_adv false" checked="true" label="bool" help="" argument="-true_adv"/>
       <param name="param_false_adv" type="boolean" optional="true" truevalue="-false_adv" falsevalue="" checked="false" label="bool" help="" argument="-false_adv"/>
       <param name="param_flag_true_adv" type="boolean" optional="true" truevalue="-flag_true_adv" falsevalue="" checked="true" label="bool" help="" argument="-flag_true_adv"/>
@@ -42,15 +41,15 @@ $param_flag_false
   </outputs>
   <tests>
     <test expect_num_outputs="1">
-      <param name="param_true" value=""/>
-      <param name="param_false" value=""/>
-      <param name="param_flag_true" value="-flag_true"/>
-      <param name="param_flag_false" value=""/>
-      <conditional macro="advanced_options" name="adv_opts">
-        <param name="param_true_adv" value=""/>
-        <param name="param_false_adv" value=""/>
-        <param name="param_flag_true_adv" value="-flag_true_adv"/>
-        <param name="param_flag_false_adv" value=""/>
+      <param name="param_true" value="true"/>
+      <param name="param_false" value="false"/>
+      <param name="param_flag_true" value="true"/>
+      <param name="param_flag_false" value="false"/>
+      <conditional name="adv_opts_cond">
+        <param name="param_true_adv" value="true"/>
+        <param name="param_false_adv" value="false"/>
+        <param name="param_flag_true_adv" value="true"/>
+        <param name="param_flag_false_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
@@ -60,4 +59,5 @@ $param_flag_false
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

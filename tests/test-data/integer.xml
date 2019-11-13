@@ -9,7 +9,6 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <expand macro="references"/>
   <command><![CDATA[
 echo IntTest
 
@@ -45,38 +44,38 @@ echo IntTest
 #if str($param_default_optional_unrestricted_minmax):
   -default_optional_unrestricted_minmax '$param_default_optional_unrestricted_minmax'
 #end if
-#if $adv_opts.adv_opts_selector=='advanced':
-  -wodefault_mandatory_unrestricted_adv '$adv_opts.param_wodefault_mandatory_unrestricted_adv'
-  -default_mandatory_unrestricted_adv '$adv_opts.param_default_mandatory_unrestricted_adv'
-  #if str($adv_opts.param_wodefault_optional_unrestricted_adv):
-    -wodefault_optional_unrestricted_adv '$adv_opts.param_wodefault_optional_unrestricted_adv'
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  -wodefault_mandatory_unrestricted_adv '$adv_opts_cond.param_wodefault_mandatory_unrestricted_adv'
+  -default_mandatory_unrestricted_adv '$adv_opts_cond.param_default_mandatory_unrestricted_adv'
+  #if str($adv_opts_cond.param_wodefault_optional_unrestricted_adv):
+    -wodefault_optional_unrestricted_adv '$adv_opts_cond.param_wodefault_optional_unrestricted_adv'
   #end if
-  #if str($adv_opts.param_default_optional_unrestricted_adv):
-    -default_optional_unrestricted_adv '$adv_opts.param_default_optional_unrestricted_adv'
+  #if str($adv_opts_cond.param_default_optional_unrestricted_adv):
+    -default_optional_unrestricted_adv '$adv_opts_cond.param_default_optional_unrestricted_adv'
   #end if
-  -wodefault_mandatory_unrestricted_adv_min '$adv_opts.param_wodefault_mandatory_unrestricted_adv_min'
-  -default_mandatory_unrestricted_adv_min '$adv_opts.param_default_mandatory_unrestricted_adv_min'
-  #if str($adv_opts.param_wodefault_optional_unrestricted_adv_min):
-    -wodefault_optional_unrestricted_adv_min '$adv_opts.param_wodefault_optional_unrestricted_adv_min'
+  -wodefault_mandatory_unrestricted_adv_min '$adv_opts_cond.param_wodefault_mandatory_unrestricted_adv_min'
+  -default_mandatory_unrestricted_adv_min '$adv_opts_cond.param_default_mandatory_unrestricted_adv_min'
+  #if str($adv_opts_cond.param_wodefault_optional_unrestricted_adv_min):
+    -wodefault_optional_unrestricted_adv_min '$adv_opts_cond.param_wodefault_optional_unrestricted_adv_min'
   #end if
-  #if str($adv_opts.param_default_optional_unrestricted_adv_min):
-    -default_optional_unrestricted_adv_min '$adv_opts.param_default_optional_unrestricted_adv_min'
+  #if str($adv_opts_cond.param_default_optional_unrestricted_adv_min):
+    -default_optional_unrestricted_adv_min '$adv_opts_cond.param_default_optional_unrestricted_adv_min'
   #end if
-  -wodefault_mandatory_unrestricted_adv_max '$adv_opts.param_wodefault_mandatory_unrestricted_adv_max'
-  -default_mandatory_unrestricted_adv_max '$adv_opts.param_default_mandatory_unrestricted_adv_max'
-  #if str($adv_opts.param_wodefault_optional_unrestricted_adv_max):
-    -wodefault_optional_unrestricted_adv_max '$adv_opts.param_wodefault_optional_unrestricted_adv_max'
+  -wodefault_mandatory_unrestricted_adv_max '$adv_opts_cond.param_wodefault_mandatory_unrestricted_adv_max'
+  -default_mandatory_unrestricted_adv_max '$adv_opts_cond.param_default_mandatory_unrestricted_adv_max'
+  #if str($adv_opts_cond.param_wodefault_optional_unrestricted_adv_max):
+    -wodefault_optional_unrestricted_adv_max '$adv_opts_cond.param_wodefault_optional_unrestricted_adv_max'
   #end if
-  #if str($adv_opts.param_default_optional_unrestricted_adv_max):
-    -default_optional_unrestricted_adv_max '$adv_opts.param_default_optional_unrestricted_adv_max'
+  #if str($adv_opts_cond.param_default_optional_unrestricted_adv_max):
+    -default_optional_unrestricted_adv_max '$adv_opts_cond.param_default_optional_unrestricted_adv_max'
   #end if
-  -wodefault_mandatory_unrestricted_adv_minmax '$adv_opts.param_wodefault_mandatory_unrestricted_adv_minmax'
-  -default_mandatory_unrestricted_adv_minmax '$adv_opts.param_default_mandatory_unrestricted_adv_minmax'
-  #if str($adv_opts.param_wodefault_optional_unrestricted_adv_minmax):
-    -wodefault_optional_unrestricted_adv_minmax '$adv_opts.param_wodefault_optional_unrestricted_adv_minmax'
+  -wodefault_mandatory_unrestricted_adv_minmax '$adv_opts_cond.param_wodefault_mandatory_unrestricted_adv_minmax'
+  -default_mandatory_unrestricted_adv_minmax '$adv_opts_cond.param_default_mandatory_unrestricted_adv_minmax'
+  #if str($adv_opts_cond.param_wodefault_optional_unrestricted_adv_minmax):
+    -wodefault_optional_unrestricted_adv_minmax '$adv_opts_cond.param_wodefault_optional_unrestricted_adv_minmax'
   #end if
-  #if str($adv_opts.param_default_optional_unrestricted_adv_minmax):
-    -default_optional_unrestricted_adv_minmax '$adv_opts.param_default_optional_unrestricted_adv_minmax'
+  #if str($adv_opts_cond.param_default_optional_unrestricted_adv_minmax):
+    -default_optional_unrestricted_adv_minmax '$adv_opts_cond.param_default_optional_unrestricted_adv_minmax'
   #end if
 #end if
 > $param_stdout
@@ -98,7 +97,7 @@ echo IntTest
     <param name="param_default_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help="" argument="-default_mandatory_unrestricted_minmax"/>
     <param name="param_wodefault_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="" label="int" help="" argument="-wodefault_optional_unrestricted_minmax"/>
     <param name="param_default_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help="" argument="-default_optional_unrestricted_minmax"/>
-    <expand macro="advanced_options">
+    <expand macro="adv_opts_macro">
       <param name="param_wodefault_mandatory_unrestricted_adv" type="integer" optional="false" value="" label="int" help="" argument="-wodefault_mandatory_unrestricted_adv"/>
       <param name="param_default_mandatory_unrestricted_adv" type="integer" optional="false" value="0" label="int" help="" argument="-default_mandatory_unrestricted_adv"/>
       <param name="param_wodefault_optional_unrestricted_adv" type="integer" optional="true" value="" label="int" help="" argument="-wodefault_optional_unrestricted_adv"/>
@@ -130,7 +129,7 @@ echo IntTest
       <param name="param_default_mandatory_unrestricted_max" value="0"/>
       <param name="param_wodefault_mandatory_unrestricted_minmax" value="1"/>
       <param name="param_default_mandatory_unrestricted_minmax" value="0"/>
-      <conditional macro="advanced_options" name="adv_opts">
+      <conditional name="adv_opts_cond">
         <param name="param_wodefault_mandatory_unrestricted_adv" value="1"/>
         <param name="param_default_mandatory_unrestricted_adv" value="0"/>
         <param name="param_wodefault_mandatory_unrestricted_adv_min" value="1"/>
@@ -148,4 +147,5 @@ echo IntTest
 
 
 For more information, visit http://docs.are/unavailable.html]]></help>
+  <expand macro="references"/>
 </tool>

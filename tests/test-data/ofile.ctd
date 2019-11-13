@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <tool ctdVersion="1.7" version="2.3.0" name="echo outFileTest" docurl="http://docs.are/unavailable.html" category="Input File Test" >
-<description><![CDATA[Input File parameter tests]]></description>
-<manual><![CDATA[Input File parameter tests.]]></manual>
+<description><![CDATA[Outut File parameter tests]]></description>
+<manual><![CDATA[Output File parameter tests.]]></manual>
 <PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <NODE name="InFileTest" description="In File test.">
+  <NODE name="OutFileTest" description="Out File test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
       <ITEM name="wodefault_mandatory_noformat"   value=""        type="output-file" description="output file" required="true"  advanced="false"/>

@@ -19,9 +19,9 @@ TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boole
                        _OutFile: 'txt', _Choices: 'select'}
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
-ADVANCED_OPTIONS_MACRO_NAME = "advanced_options"
+ADVANCED_OPTIONS_NAME = "adv_opts_"
 
-REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_MACRO_NAME]
+REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_NAME+"macro"]
 
 
 class ExitCode:
@@ -172,7 +172,7 @@ def parse_macros_files(macros_file_names):
             % ", ".join(missing_needed_macros))
 
     # we do not need to "expand" the advanced_options macro
-    macros_to_expand.remove(ADVANCED_OPTIONS_MACRO_NAME)
+    macros_to_expand.remove(ADVANCED_OPTIONS_NAME+"macro")
     return macros_to_expand
 
 
@@ -391,7 +391,7 @@ def create_command(tool, model, **kwargs):
     final_preprocessing = "\n"
     final_command = utils.extract_tool_executable_path(model, kwargs["default_executable_path"]) + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
-    advanced_command_start = "#if $adv_opts.adv_opts_selector=='advanced':\n"
+    advanced_command_start = "#if ${aon}cond.{aon}selector=='advanced':\n".format(aon=ADVANCED_OPTIONS_NAME)
     advanced_command_end = "#end if"
     advanced_command = ""
 
@@ -427,7 +427,7 @@ def create_command(tool, model, **kwargs):
 
             actual_parameter = get_galaxy_parameter_name(param)
             if param.advanced and not param.type is _OutFile:
-                actual_parameter = "adv_opts." + actual_parameter
+                actual_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_parameter
 
             # all but bool params need the command line argument (bools have it already in the true/false value)
             if not is_boolean_parameter(param):
@@ -461,7 +461,7 @@ def create_command(tool, model, **kwargs):
             if not param.required and not is_boolean_parameter(param) and not(param.type is _InFile and param.is_list):
                 if param.type is _OutFile:
                     if param.advanced:
-                        actual_parameter = "adv_opts.%s" % get_galaxy_parameter_name(param, True)
+                        actual_parameter = ADVANCED_OPTIONS_NAME+"cond.%s" % get_galaxy_parameter_name(param, True)
                     else:
                         actual_parameter = "%s" % get_galaxy_parameter_name(param, True)
                 if is_selection_parameter(param) or param.type == _InFile:
@@ -471,7 +471,7 @@ def create_command(tool, model, **kwargs):
                 if param.type is _InFile:
                     preprocessing = "#if $" + actual_parameter + ":\n" + utils.indent(preprocessing) + "\n#end if\n"
 
-        if param.advanced and param.type is not _OutFile:
+        if param.advanced:
             advanced_command += "%s\n" % utils.indent(command)
         else:
             final_command += command
@@ -603,7 +603,7 @@ def create_inputs(tool, model, **kwargs):
 
         if _param.advanced:
             if advanced_node is None:
-                advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_MACRO_NAME)]))
+                advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME+"macro")]))
             parent_node = advanced_node
         else:
             parent_node = inputs_node
@@ -1012,7 +1012,7 @@ def create_output_node(parent, param, model, supported_file_formats):
         filter_node = add_child_node(data_node, "filter") 
         filter_node.text = get_galaxy_parameter_name(param, True) 
         if param.advanced:
-            filter_node.text = "advanced_options['adv_opts_selector'] == 'advanced' and advanced_options['" + filter_node.text + "']"
+            filter_node.text = "{aon}cond['{aon}selector'] == 'advanced' and {aon}cond['".format(aon = ADVANCED_OPTIONS_NAME) + filter_node.text + "']"
     return data_node
 
 
@@ -1052,8 +1052,8 @@ def create_tests(parent, inputs, outputs):
     for node in inputs.iter():
         if node.tag == "expand":
             node.tag = "conditional"
-            node.attrib["name"] = "adv_opts"
-            add_child_node(node, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
+            node.attrib["name"] = ADVANCED_OPTIONS_NAME+"cond"
+            add_child_node(node, "param", OrderedDict([("name", ADVANCED_OPTIONS_NAME+"selector"), ("value", "advanced")]))
         if not "type" in node.attrib:
             continue
 
@@ -1069,9 +1069,9 @@ def create_tests(parent, inputs, outputs):
 
         if node.attrib["type"] == "boolean":
             if node.attrib["checked"] == "true":
-                node.attrib["value"] = node.attrib["truevalue"]
+                node.attrib["value"] = "true" # node.attrib["truevalue"]
             else:
-                node.attrib["value"] = node.attrib["falsevalue"]
+                node.attrib["value"] = "false" # node.attrib["falsevalue"]
         elif node.attrib["type"] == "text" and node.attrib["value"] == "":
             node.attrib["value"] = "1,2" # use a comma separated list here to cover the repeat (int/float) case 
         elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
@@ -1084,7 +1084,7 @@ def create_tests(parent, inputs, outputs):
             elif node.attrib.get("multiple", None) == "true":
                 node.attrib["value"] = ",".join([ _.attrib["value"] for _ in node ])
         elif node.attrib["type"] == "data":
-            node.attrib["ftype"] = node.attrib["format"]
+            node.attrib["ftype"] = node.attrib["format"].split(',')[0]
             if node.attrib.get("multiple", "false") == "true":
                 node.attrib["value"] = "test.ext,test2.ext"
             else:
@@ -1097,16 +1097,23 @@ def create_tests(parent, inputs, outputs):
         test_node.append(node)
     outputs_cnt = 0
     for node in outputs.iter():
+        if node.tag == "data" or node.tag == "collection":
+            # assuming that all filters avaluate to false
+            has_filter = False
+            for c in node:
+                if c.tag == "filter":
+                    has_filter = True
+                    break
+            if not has_filter:
+                outputs_cnt += 1
+            else:
+                node.tag = "delete_node"
         if node.tag == "data":
             node.tag = "output"
             node.attrib["ftype"] = node.attrib["format"]
-            outputs_cnt += 1
-        node.attrib["value"] = "outfile.txt"
+            node.attrib["value"] = "outfile.txt"
         if node.tag == "collection":
-            del node.attrib["value"]
             node.tag = "output_collection"
-        if len(node) > 0 and node[0].tag == "filter":
-            node.tag = "delete_node"
         if node.attrib.get("name", None) == "param_stdout":
             node.attrib["lines_diff"] = "2"
         for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
