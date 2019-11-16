@@ -169,26 +169,27 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
             for line in f:
                 line_number += 1
                 if line is None or not line.strip() or line.strip().startswith("#"):
-                    pass
-                else:
-                    # the third column must not be obtained as a whole, and not split
-                    parsed_hardcoded_parameter = [ _ for _ in line.strip().split("\t") if _ != ""]
-                    # valid lines contain two or three columns
-                    if not (2 <= len(parsed_hardcoded_parameter) <= 3):
-                        warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
-                                "ignored:\n%s" % (line_number, line), 0)
-                        continue
+                    continue
+                # the third column must not be obtained as a whole, and not split
+                parsed_hardcoded_parameter = [ _ for _ in line.strip().split("\t") if _ != ""]
+                # valid lines contain two or three columns
+                if not (2 <= len(parsed_hardcoded_parameter) <= 3):
+                    warning("Invalid line at line number %d of the given hardcoded parameters file. Line will be"
+                            "ignored:\n%s" % (line_number, line), 0)
+                    continue
 
-                    parameter_name = parsed_hardcoded_parameter[0]
-                    hardcoded_value = parsed_hardcoded_parameter[1]
-                    tool_names = None
-                    if len(parsed_hardcoded_parameter) == 3:
-                        tool_names = parsed_hardcoded_parameter[2].split(',')
-                    if tool_names:
-                        for tool_name in tool_names:
-                            parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name.strip())
-                    else:
-                        parameter_hardcoder.register_parameter(parameter_name, hardcoded_value)
+                parameter_name = parsed_hardcoded_parameter[0]
+                hardcoded_value = parsed_hardcoded_parameter[1]
+                if hardcoded_value == "#":
+                    hardcoded_value = ""
+                tool_names = None
+                if len(parsed_hardcoded_parameter) == 3:
+                    tool_names = parsed_hardcoded_parameter[2].split(',')
+                if tool_names:
+                    for tool_name in tool_names:
+                        parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name.strip())
+                else:
+                    parameter_hardcoder.register_parameter(parameter_name, hardcoded_value)
 
     return parameter_hardcoder
 

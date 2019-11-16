@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_IntTest" name="echo IntTest" version="2.3.0">
+<tool id="echo_IntTest" name="echo IntTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Integer parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo IntTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="stdio"/>
   <expand macro="requirements"/>
-  <command><![CDATA[
+  <expand macro="stdio"/>
+  <command detect_errors="aggressive"><![CDATA[
 @EXECUTABLE@
 
 -wodefault_mandatory_unrestricted '$param_wodefault_mandatory_unrestricted'

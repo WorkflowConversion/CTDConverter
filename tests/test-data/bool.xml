@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_BoolTest" name="echo BoolTest" version="2.3.0">
+<tool id="echo_BoolTest" name="echo BoolTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Bool parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo BoolTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="stdio"/>
   <expand macro="requirements"/>
-  <command><![CDATA[
+  <expand macro="stdio"/>
+  <command detect_errors="aggressive"><![CDATA[
 @EXECUTABLE@
 
 $param_true

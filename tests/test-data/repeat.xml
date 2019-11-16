@@ -1,98 +1,98 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_RepeatTest" name="echo RepeatTest" version="2.3.0">
+<tool id="echo_RepeatTest" name="echo RepeatTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Repeat parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">echo RepeatTest</token>
     <import>macros.xml</import>
   </macros>
-  <expand macro="stdio"/>
   <expand macro="requirements"/>
-  <command><![CDATA[
+  <expand macro="stdio"/>
+  <command detect_errors="aggressive"><![CDATA[
 @EXECUTABLE@
 
 #if str($param_string_wodefault_optional):
-  -string_wodefault_optional '$param_string_wodefault_optional'
+  -string_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_optional.split(',')])}
 #end if
--string_wodefault_mandatory '$param_string_wodefault_mandatory'
+-string_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_mandatory.split(',')])}
 #if str($param_string_default_optional):
-  -string_default_optional '$param_string_default_optional'
+  -string_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_default_optional.split(',')])}
 #end if
--string_default_mandatory '$param_string_default_mandatory'
+-string_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_default_mandatory.split(',')])}
 #if str($param_int_wodefault_optional):
-  -int_wodefault_optional '$param_int_wodefault_optional'
+  -int_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_optional.split(',')])}
 #end if
--int_wodefault_mandatory '$param_int_wodefault_mandatory'
+-int_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_mandatory.split(',')])}
 #if str($param_int_default_optional):
-  -int_default_optional '$param_int_default_optional'
+  -int_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_default_optional.split(',')])}
 #end if
--int_default_mandatory '$param_int_default_mandatory'
+-int_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_default_mandatory.split(',')])}
 #if str($param_int_resticted_wodefault_optional):
-  -int_resticted_wodefault_optional '$param_int_resticted_wodefault_optional'
+  -int_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_optional.split(',')])}
 #end if
--int_resticted_wodefault_mandatory '$param_int_resticted_wodefault_mandatory'
+-int_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_mandatory.split(',')])}
 #if str($param_int_resticted_default_optional):
-  -int_resticted_default_optional '$param_int_resticted_default_optional'
+  -int_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_optional.split(',')])}
 #end if
--int_resticted_default_mandatory '$param_int_resticted_default_mandatory'
+-int_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_mandatory.split(',')])}
 #if str($param_double_wodefault_optional):
-  -double_wodefault_optional '$param_double_wodefault_optional'
+  -double_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_optional.split(',')])}
 #end if
--double_wodefault_mandatory '$param_double_wodefault_mandatory'
+-double_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_mandatory.split(',')])}
 #if str($param_double_default_optional):
-  -double_default_optional '$param_double_default_optional'
+  -double_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_default_optional.split(',')])}
 #end if
--double_default_mandatory '$param_double_default_mandatory'
+-double_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_default_mandatory.split(',')])}
 #if str($param_double_resticted_wodefault_optional):
-  -double_resticted_wodefault_optional '$param_double_resticted_wodefault_optional'
+  -double_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_optional.split(',')])}
 #end if
--double_resticted_wodefault_mandatory '$param_double_resticted_wodefault_mandatory'
+-double_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_mandatory.split(',')])}
 #if str($param_double_resticted_default_optional):
-  -double_resticted_default_optional '$param_double_resticted_default_optional'
+  -double_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_optional.split(',')])}
 #end if
--double_resticted_default_mandatory '$param_double_resticted_default_mandatory'
+-double_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_mandatory.split(',')])}
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   #if str($adv_opts_cond.param_string_wodefault_optional_adv):
-    -string_wodefault_optional_adv '$adv_opts_cond.param_string_wodefault_optional_adv'
+    -string_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_optional_adv.split(',')])}
   #end if
-  -string_wodefault_mandatory_adv '$adv_opts_cond.param_string_wodefault_mandatory_adv'
+  -string_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_string_default_optional_adv):
-    -string_default_optional_adv '$adv_opts_cond.param_string_default_optional_adv'
+    -string_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_optional_adv.split(',')])}
   #end if
-  -string_default_mandatory_adv '$adv_opts_cond.param_string_default_mandatory_adv'
+  -string_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_int_wodefault_optional_adv):
-    -int_wodefault_optional_adv '$adv_opts_cond.param_int_wodefault_optional_adv'
+    -int_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_optional_adv.split(',')])}
   #end if
-  -int_wodefault_mandatory_adv '$adv_opts_cond.param_int_wodefault_mandatory_adv'
+  -int_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_int_default_optional_adv):
-    -int_default_optional_adv '$adv_opts_cond.param_int_default_optional_adv'
+    -int_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_optional_adv.split(',')])}
   #end if
-  -int_default_mandatory_adv '$adv_opts_cond.param_int_default_mandatory_adv'
+  -int_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_int_resticted_wodefault_optional_adv):
-    -int_resticted_wodefault_optional_adv '$adv_opts_cond.param_int_resticted_wodefault_optional_adv'
+    -int_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_optional_adv.split(',')])}
   #end if
-  -int_resticted_wodefault_mandatory_adv '$adv_opts_cond.param_int_resticted_wodefault_mandatory_adv'
+  -int_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_int_resticted_default_optional_adv):
-    -int_resticted_default_optional_adv '$adv_opts_cond.param_int_resticted_default_optional_adv'
+    -int_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_optional_adv.split(',')])}
   #end if
-  -int_resticted_default_mandatory_adv '$adv_opts_cond.param_int_resticted_default_mandatory_adv'
+  -int_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_double_wodefault_optional_adv):
-    -double_wodefault_optional_adv '$adv_opts_cond.param_double_wodefault_optional_adv'
+    -double_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_optional_adv.split(',')])}
   #end if
-  -double_wodefault_mandatory_adv '$adv_opts_cond.param_double_wodefault_mandatory_adv'
+  -double_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_double_default_optional_adv):
-    -double_default_optional_adv '$adv_opts_cond.param_double_default_optional_adv'
+    -double_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_optional_adv.split(',')])}
   #end if
-  -double_default_mandatory_adv '$adv_opts_cond.param_double_default_mandatory_adv'
+  -double_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_double_resticted_wodefault_optional_adv):
-    -double_resticted_wodefault_optional_adv '$adv_opts_cond.param_double_resticted_wodefault_optional_adv'
+    -double_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_optional_adv.split(',')])}
   #end if
-  -double_resticted_wodefault_mandatory_adv '$adv_opts_cond.param_double_resticted_wodefault_mandatory_adv'
+  -double_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_mandatory_adv.split(',')])}
   #if str($adv_opts_cond.param_double_resticted_default_optional_adv):
-    -double_resticted_default_optional_adv '$adv_opts_cond.param_double_resticted_default_optional_adv'
+    -double_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_optional_adv.split(',')])}
   #end if
-  -double_resticted_default_mandatory_adv '$adv_opts_cond.param_double_resticted_default_mandatory_adv'
+  -double_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_mandatory_adv.split(',')])}
 #end if
 > $param_stdout
 ]]></command>

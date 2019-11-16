@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # encoding: utf-8
 import os
+import os.path
 import string
 
 from collections import OrderedDict
@@ -79,6 +80,8 @@ def add_specific_args(parser):
                     action="append", required=None, help="The prefix of the macro name in the corresponding trest macros file")
     parser.add_argument("--test-test", dest="test_test", action='store_true', default=False, required=False,
                     help="Generate a simple test for the internal unit tests.")
+    parser.add_argument("--tool-version", dest="tool_version", required=False, default = None,
+                    help="Tool version to use (if not given its extracted from the CTD)")
 
 
 def convert_models(args, parsed_ctds):
@@ -89,10 +92,13 @@ def convert_models(args, parsed_ctds):
     @param parsed_ctds the ctds 
     """
     # validate and prepare the passed arguments
-    validate_and_prepare_args(args)
-
+    validate_and_prepare_args(args, parsed_ctds[0].ctd_model)
+    
     # extract the names of the macros and check that we have found the ones we need
-    macros_to_expand = parse_macros_files(args.macros_files, required_macros=REQUIRED_MACROS, dont_expand=[ADVANCED_OPTIONS_NAME+"macro", "references"])
+    macros_to_expand = parse_macros_files(args.macros_files,
+                                          tool_version=args.tool_version,
+                                          required_macros=REQUIRED_MACROS,
+                                          dont_expand=[ADVANCED_OPTIONS_NAME+"macro", "references"])
 
     # parse the given supported file-formats file
     supported_file_formats = parse_file_formats(args.formats_file)
@@ -112,7 +118,8 @@ def convert_models(args, parsed_ctds):
                       parameter_hardcoder=args.parameter_hardcoder,
                       test_test=args.test_test,
                       test_macros_file_names=args.test_macros_files,
-                      test_macros_prefix=args.test_macros_prefix)
+                      test_macros_prefix=args.test_macros_prefix,
+                      tool_version = args.tool_version)
 
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
     if args.tool_conf_destination is not None:
@@ -140,10 +147,10 @@ def parse_tools_list_file(tools_list_file):
     return tools_list
 
 
-def parse_macros_files(macros_file_names, required_macros = [], dont_expand=[]):
+def parse_macros_files(macros_file_names, tool_version, required_macros = [], dont_expand=[]):
     """
     """
-    macros_to_expand = set()
+    macros_to_expand = []
     for macros_file_name in macros_file_names:
         try:
             macros_file = open(macros_file_name)
@@ -156,13 +163,31 @@ def parse_macros_files(macros_file_names, required_macros = [], dont_expand=[]):
                             (name, macros_file_name), 0)
                     continue
                 logger.info("Macro %s found" % name, 1)
-                macros_to_expand.add(name)
+                macros_to_expand.append(name)
+            bump_galaxy_version = True
+            for xml_element in root.findall("token"):
+                if xml_element.attrib["name"] == "@TOOL_VERSION@":
+                    if tool_version > xml_element.text:
+                        bump_galaxy_version = False
+                    xml_element.text = tool_version
+                if xml_element.attrib["name"] == "@GALAXY_VERSION@":
+                    if bump_galaxy_version:
+                        xml_element.text = str( int(xml_element.text) + 1 )
+                    else:
+                        xml_element.text = "0"
+
+
         except ParseError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
                                        str(e))
         except IOError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " +
                                        str(e))
+        else:
+            macros_file.close()
+    with open(os.path.basename(macros_file_name), "w") as macros_file:
+        tree = ElementTree(root)
+        tree.write(macros_file, encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
     # we depend on "stdio", "requirements" and "advanced_options" to exist on all the given macros files
     missing_needed_macros = []
@@ -178,7 +203,11 @@ def parse_macros_files(macros_file_names, required_macros = [], dont_expand=[]):
     
     # remove macros that should not be expanded
     for m in dont_expand:
-        macros_to_expand.discard(m)
+        try:
+            idx = macros_to_expand.index(m)
+            del macros_to_expand[idx]
+        except ValueError:
+            pass
 
     return macros_to_expand
 
@@ -219,7 +248,7 @@ def parse_file_formats(formats_file):
     return supported_formats
 
 
-def validate_and_prepare_args(args):
+def validate_and_prepare_args(args, model):
     """
     check command line arguments
     @param args command line arguments
@@ -251,8 +280,10 @@ def validate_and_prepare_args(args):
     if not args.macros_files:
         # list is empty, provide the default value
         logger.warning("Using default macros from galaxy/macros.xml", 0)
-        args.macros_files = ["galaxy/macros.xml"]
+        args.macros_files = [os.path.dirname(os.path.abspath( __file__ ))+"/macros.xml"]
 
+    if args.tool_version == None:
+        args.tool_version = model.version
 
 def get_preferred_file_extension():
     """
@@ -304,7 +335,8 @@ def _convert_internal(parsed_ctds, **kwargs):
             # wrap our tool element into a tree to be able to serialize it
             tree = ElementTree(tool)
             logger.info("Writing to %s" % utils.get_filename(output_file), 1)
-            tree.write(open(output_file, 'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
+            with open(output_file, 'w') as fh:
+                tree.write(fh, encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
 
 def write_header(tool, model):
@@ -379,7 +411,8 @@ def create_tool(model):
     initialize the tool
     @param model the ctd model
     """
-    return Element("tool", OrderedDict([("id", model.name.replace(" ","_")), ("name", model.name), ("version", model.version)]))
+
+    return Element("tool", OrderedDict([("id", model.name.replace(" ","_")), ("name", model.name), ("version", "@TOOL_VERSION@+galaxy@GALAXY_VERSION@")]))
 
 
 def create_description(tool, model):
@@ -402,6 +435,7 @@ def create_command(tool, model, **kwargs):
 
     # main command
     final_preprocessing = "\n"
+    advanced_preprocessing = ""
     final_command = "@EXECUTABLE@" + '\n'
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if ${aon}cond.{aon}selector=='advanced':\n".format(aon=ADVANCED_OPTIONS_NAME)
@@ -426,7 +460,7 @@ def create_command(tool, model, **kwargs):
             continue
 
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param_name, model.name)
-        if hardcoded_value:
+        if not hardcoded_value is None:
             command += "%s %s\n" % (command_line_prefix, hardcoded_value)
         else:
             # in the else branch the parameter is neither blacklisted nor hardcoded...
@@ -462,8 +496,10 @@ def create_command(tool, model, **kwargs):
                 else:
                     command += actual_parameter+"/'${re.sub('[^\w\-_.]', '_', $"+actual_input_parameter+".element_identifier)}.${"+actual_input_parameter+".ext}'\n"
             # logic for ITEMLISTs
-            elif param.is_list and is_selection_parameter(param):
+            elif is_selection_parameter(param):
                 command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
+            elif param.is_list :
+                command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + ".split(',')])}\n"
             elif is_boolean_parameter(param):
                 command += "$%s" % actual_parameter + "\n"
             else:
@@ -484,15 +520,18 @@ def create_command(tool, model, **kwargs):
                 if param.type is _InFile:
                     preprocessing = "#if $" + actual_parameter + ":\n" + utils.indent(preprocessing) + "\n#end if\n"
 
-        if param.advanced:
+        if param.advanced and hardcoded_value is None:
             advanced_command += "%s\n" % utils.indent(command)
+            if preprocessing != "":
+                advanced_preprocessing += "%s\n" % utils.indent(preprocessing)
         else:
             final_command += command
-
-        final_preprocessing += preprocessing
+            final_preprocessing += preprocessing
 
     if advanced_command:
         final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
+    if advanced_preprocessing:
+        final_preprocessing += "%s%s%s\n" % (advanced_command_start, advanced_preprocessing, advanced_command_end)
 
     if not found_output_parameter:
         final_command += "> $param_stdout\n"
@@ -503,6 +542,7 @@ def create_command(tool, model, **kwargs):
         final_command = "\n#import re" + final_command
 
     command_node = add_child_node(tool, "command")
+    command_node.attrib["detect_errors"] = "aggressive"
     command_node.text = CDATA(final_command)
 
 
@@ -592,7 +632,7 @@ def create_inputs(tool, model, **kwargs):
     for param in utils.extract_and_flatten_parameters(model):
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
-        if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
+        if param.name in kwargs["blacklisted_parameters"] or not hardcoded_value is None:
             continue
         # optional outfiles: create an additional bool input which is used to filter for the output
         # mandatory outpiles: no input node needed
@@ -1014,8 +1054,9 @@ def create_output_node(parent, param, model, supported_file_formats):
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for output [%(name)s]" % {"type": type(param.restrictions),
                                                                    "name": param.name})
-    # data output has fomat .. collection output has no format
-    if not param.is_list:
+    # data output has fomat (except if fromat_source has been added already)
+    # note .. collection output has no format
+    if not param.is_list and not "format_source" in data_node.attrib:
         data_node.attrib["format"] = data_format
 
     # add filter for optional parameters

@@ -6,7 +6,7 @@
   <NODE name="SelectTest" description="Select test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;SelectTest&apos;">
-      <!-- cases that should be rendered as select -->
+      <!-- cases that should be rendered as select, i.e. ITEM and ITEMLIST with restrictions -->
       <!-- note: such selects do not occur for int/double (for those restrictions="min:max" is used) -->
       <!-- selects allowing a single option -->
       <ITEM name="wodefault_mandatory"     value=""  type="string" description="string" required="true"  advanced="false" restrictions="A,B,C,D"/>
