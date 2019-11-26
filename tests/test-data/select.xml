@@ -12,21 +12,21 @@
   <command detect_errors="aggressive"><![CDATA[
 @EXECUTABLE@
 
--wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_wodefault_mandatory])}
--default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_default_mandatory])}
+-wodefault_mandatory '$param_wodefault_mandatory'
+-default_mandatory '$param_default_mandatory'
 #if $param_wodefault_optional:
-  -wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_wodefault_optional])}
+  -wodefault_optional '$param_wodefault_optional'
 #end if
 #if $param_default_optional:
-  -default_optional ${' '.join(["'%s'"%str(_) for _ in $param_default_optional])}
+  -default_optional '$param_default_optional'
 #end if
--wodefault_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_wodefault_mandatory_many])}
--default_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_default_mandatory_many])}
+-wodefault_mandatory_many '$param_wodefault_mandatory_many'
+-default_mandatory_many '$param_default_mandatory_many'
 #if $param_wodefault_optional_many:
-  -wodefault_optional_many ${' '.join(["'%s'"%str(_) for _ in $param_wodefault_optional_many])}
+  -wodefault_optional_many '$param_wodefault_optional_many'
 #end if
 #if $param_default_optional_many:
-  -default_optional_many ${' '.join(["'%s'"%str(_) for _ in $param_default_optional_many])}
+  -default_optional_many '$param_default_optional_many'
 #end if
 #if $param_list_wodefault_optional:
   -list_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_list_wodefault_optional])}
@@ -45,21 +45,21 @@
 #end if
 -list_default_mandatory_many ${' '.join(["'%s'"%str(_) for _ in $param_list_default_mandatory_many])}
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  -wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_wodefault_mandatory_adv])}
-  -default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_default_mandatory_adv])}
+  -wodefault_mandatory_adv '$adv_opts_cond.param_wodefault_mandatory_adv'
+  -default_mandatory_adv '$adv_opts_cond.param_default_mandatory_adv'
   #if $adv_opts_cond.param_wodefault_optional_adv:
-    -wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_wodefault_optional_adv])}
+    -wodefault_optional_adv '$adv_opts_cond.param_wodefault_optional_adv'
   #end if
   #if $adv_opts_cond.param_default_optional_adv:
-    -default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_default_optional_adv])}
+    -default_optional_adv '$adv_opts_cond.param_default_optional_adv'
   #end if
-  -wodefault_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_wodefault_mandatory_many_adv])}
-  -default_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_default_mandatory_many_adv])}
+  -wodefault_mandatory_many_adv '$adv_opts_cond.param_wodefault_mandatory_many_adv'
+  -default_mandatory_many_adv '$adv_opts_cond.param_default_mandatory_many_adv'
   #if $adv_opts_cond.param_wodefault_optional_many_adv:
-    -wodefault_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_wodefault_optional_many_adv])}
+    -wodefault_optional_many_adv '$adv_opts_cond.param_wodefault_optional_many_adv'
   #end if
   #if $adv_opts_cond.param_default_optional_many_adv:
-    -default_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_default_optional_many_adv])}
+    -default_optional_many_adv '$adv_opts_cond.param_default_optional_many_adv'
   #end if
   #if $adv_opts_cond.param_list_wodefault_optional_adv:
     -list_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_list_wodefault_optional_adv])}
@@ -86,24 +86,44 @@
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_default_mandatory" argument="-default_mandatory" display="radio" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" value="" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_default_optional" argument="-default_optional" display="radio" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" value="" label="string" help="">
       <option value="A">A</option>
@@ -111,6 +131,11 @@
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
@@ -118,6 +143,11 @@
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" value="" label="string" help="">
       <option value="A">A</option>
@@ -125,6 +155,11 @@
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
@@ -132,30 +167,55 @@
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" value="" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_default_optional" argument="-list_default_optional" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_default_mandatory" argument="-list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" value="" label="string list" help="">
       <option value="A">A</option>
@@ -163,6 +223,11 @@
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" value="" label="string list" help="">
       <option value="A">A</option>
@@ -170,6 +235,11 @@
       <option value="C">C</option>
       <option value="D">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
@@ -177,6 +247,11 @@
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <param name="param_list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
@@ -184,6 +259,11 @@
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <option value="E">E</option>
+      <sanitizer>
+        <valid initial="string.printable">
+          <remove value="'"/>
+        </valid>
+      </sanitizer>
     </param>
     <expand macro="adv_opts_macro">
       <param name="param_wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="">
@@ -191,24 +271,44 @@
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_default_mandatory_adv" argument="-default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" value="" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_default_optional_adv" argument="-default_optional_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" value="" label="string" help="">
         <option value="A">A</option>
@@ -216,6 +316,11 @@
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
@@ -223,6 +328,11 @@
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" value="" label="string" help="">
         <option value="A">A</option>
@@ -230,6 +340,11 @@
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
@@ -237,30 +352,55 @@
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_default_optional_adv" argument="-list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_default_mandatory_adv" argument="-list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
         <option value="A">A</option>
@@ -268,6 +408,11 @@
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
         <option value="A">A</option>
@@ -275,6 +420,11 @@
         <option value="C">C</option>
         <option value="D">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
@@ -282,6 +432,11 @@
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
       <param name="param_list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
@@ -289,6 +444,11 @@
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <option value="E">E</option>
+        <sanitizer>
+          <valid initial="string.printable">
+            <remove value="'"/>
+          </valid>
+        </sanitizer>
       </param>
     </expand>
   </inputs>

@@ -83,6 +83,20 @@ def add_specific_args(parser):
     parser.add_argument("--tool-version", dest="tool_version", required=False, default = None,
                     help="Tool version to use (if not given its extracted from the CTD)")
 
+def modify_param_for_galaxy(param):
+    """
+    some parameters need galaxy specific modifications
+    """
+    if param.type is _InFile:
+        #if file default is given (happens for external applications and
+        # files for which the default is taken from share/OpenMS) set the
+        # parm to not required and remove the default (external applications
+        # need to be taken care by hardcoded values and the other cases
+        # are chosen automatically if not specified on the command line)
+        if param.required and not (param.default is None or param.default is _Null):
+            param.required = False
+            param.default = _Null
+    return param
 
 def convert_models(args, parsed_ctds):
     """
@@ -304,8 +318,6 @@ def _convert_internal(parsed_ctds, **kwargs):
     """
     for parsed_ctd in parsed_ctds:
         model = parsed_ctd.ctd_model
-        origin_file = parsed_ctd.input_file
-        output_file = parsed_ctd.suggested_output_file
 
         if kwargs["skip_tools"] is not None and model.name in kwargs["skip_tools"]:
             logger.info("Skipping tool %s" % model.name, 0)
@@ -313,30 +325,32 @@ def _convert_internal(parsed_ctds, **kwargs):
         elif kwargs["required_tools"] is not None and model.name not in kwargs["required_tools"]:
             logger.info("Tool %s is not required, skipping it" % model.name, 0)
             continue
-        else:
-            logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
-            tool = create_tool(model)
-            write_header(tool, model)
-            create_description(tool, model)
-            import_macros(tool, model, **kwargs)
-            expand_macros(tool, kwargs["macros_to_expand"])
-            create_command(tool, model, **kwargs)
-            inputs = create_inputs(tool, model, **kwargs)
-            outputs = create_outputs(tool, model, **kwargs)
-            if kwargs["test_test"]:
-                create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
-            if kwargs["test_macros_prefix"]:
-                create_tests(tool, test_macros_prefix=kwargs['test_macros_prefix'], name=model.name)
 
-            create_help(tool, model)
-            # citations are required to be at the end
-            expand_macros(tool, ["references"])
+        origin_file = parsed_ctd.input_file
+        output_file = parsed_ctd.suggested_output_file
+        logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
+        tool = create_tool(model)
+        write_header(tool, model)
+        create_description(tool, model)
+        import_macros(tool, model, **kwargs)
+        expand_macros(tool, kwargs["macros_to_expand"])
+        create_command(tool, model, **kwargs)
+        inputs = create_inputs(tool, model, **kwargs)
+        outputs = create_outputs(tool, model, **kwargs)
+        if kwargs["test_test"]:
+            create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
+        if kwargs["test_macros_prefix"]:
+            create_tests(tool, test_macros_prefix=kwargs['test_macros_prefix'], name=model.name)
 
-            # wrap our tool element into a tree to be able to serialize it
-            tree = ElementTree(tool)
-            logger.info("Writing to %s" % utils.get_filename(output_file), 1)
-            with open(output_file, 'w') as fh:
-                tree.write(fh, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+        create_help(tool, model)
+        # citations are required to be at the end
+        expand_macros(tool, ["references"])
+
+        # wrap our tool element into a tree to be able to serialize it
+        tree = ElementTree(tool)
+        logger.info("Writing to %s" % utils.get_filename(output_file), 1)
+        with open(output_file, 'w') as fh:
+            tree.write(fh, encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
 
 def write_header(tool, model):
@@ -447,6 +461,7 @@ def create_command(tool, model, **kwargs):
     found_input_parameter = False
     found_output_parameter = False
     for param in utils.extract_and_flatten_parameters(model):
+        param = modify_param_for_galaxy(param)
         if param.type is _OutFile:
             found_output_parameter = True
         if param.type is _InFile:
@@ -470,7 +485,6 @@ def create_command(tool, model, **kwargs):
             corresponding_input = None
             if param.type is _OutFile and param.is_list:
                 corresponding_input = get_input_with_same_restrictions(param, model)
-            
 
             actual_parameter = get_galaxy_parameter_name(param)
             if param.advanced and not param.type is _OutFile:
@@ -496,7 +510,7 @@ def create_command(tool, model, **kwargs):
                 else:
                     command += actual_parameter+"/'${re.sub('[^\w\-_.]', '_', $"+actual_input_parameter+".element_identifier)}.${"+actual_input_parameter+".ext}'\n"
             # logic for ITEMLISTs
-            elif is_selection_parameter(param):
+            elif is_selection_parameter(param) and param.is_list:
                 command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
             elif param.is_list :
                 command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + ".split(',')])}\n"
@@ -507,7 +521,7 @@ def create_command(tool, model, **kwargs):
             
             # add if statement for mandatory parameters and preprocessing
             # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)
-            if not param.required and not is_boolean_parameter(param) and not(param.type is _InFile and param.is_list):
+            if not param.required and not is_boolean_parameter(param): # and not(param.type is _InFile and param.is_list):
                 if param.type is _OutFile:
                     if param.advanced:
                         actual_parameter = ADVANCED_OPTIONS_NAME+"cond.%s" % get_galaxy_parameter_name(param, True)
@@ -627,13 +641,14 @@ def create_inputs(tool, model, **kwargs):
     # some suites (such as OpenMS) need some advanced options when handling inputs
     advanced_node = None
     parameter_hardcoder = kwargs["parameter_hardcoder"]
-
     # treat all non output-file/advanced/blacklisted/hardcoded parameters as inputs
     for param in utils.extract_and_flatten_parameters(model):
+        param = modify_param_for_galaxy(param)
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
         if param.name in kwargs["blacklisted_parameters"] or not hardcoded_value is None:
             continue
+
         # optional outfiles: create an additional bool input which is used to filter for the output
         # mandatory outpiles: no input node needed
         # inputs: create the input param
@@ -679,7 +694,7 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
     # set the name, argument and a first guess for the type (which will be over written 
     # in some cases .. see below)
     param_node.attrib["name"] = get_galaxy_parameter_name(param)
-    param_node.attrib["argument"] = "-"+param.name
+    param_node.attrib["argument"] = "-%s"%utils.extract_param_name(param)
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
@@ -814,17 +829,18 @@ def create_param_attribute_list(param_node, param, supported_file_formats):
             mapping_node = SubElement(sanitizer_node, "mapping", OrderedDict([("initial", "none")]))
             SubElement(mapping_node, "add", OrderedDict([("source", ' '),("target", "")]))
 
-        # add sanitizer nodes to other text params, this is needed for special character like "["
-        # which are used for example by FeatureFinderMultiplex
-        elif not param.type is _InFile:
-            sanitizer_node = SubElement(param_node, "sanitizer")
-            valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
-            SubElement(valid_node, "remove", OrderedDict([("value", '\'')]))
-            SubElement(valid_node, "remove", OrderedDict([("value", '"')]))
+    # add sanitizer nodes to 
+    # - text (only those that are not actually integer selects which are treated above) and 
+    # - select params, 
+    # this is needed for special character like "[" which are used for example by FeatureFinderMultiplex
+    if ((param_type == "text" and not TYPE_TO_GALAXY_TYPE[param.type] in ["integer", "float"]) or is_selection_parameter(param)) and not param.type is _InFile:
+        sanitizer_node = SubElement(param_node, "sanitizer")
+        valid_node = SubElement(sanitizer_node, "valid", OrderedDict([("initial", "string.printable")]))
+        SubElement(valid_node, "remove", OrderedDict([("value", '\'')]))
 
     # check for default value
-    if param.default is not None and param.default is not _Null:
-        # defaults of selects are set via the selected attribute of the options
+    if not (param.default is None or param.default is _Null):
+        # defaults of selects are set via the selected attribute of the options (happens above)
         if param_type == "select":
             pass
         elif type(param.default) is list:
@@ -982,7 +998,7 @@ def create_outputs(parent, model, **kwargs):
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     for param in utils.extract_and_flatten_parameters(model):
-
+        param = modify_param_for_galaxy(param)
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
         if param.name in kwargs["blacklisted_parameters"] or hardcoded_value:
@@ -1100,6 +1116,7 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
     tests_node = add_child_node(parent, "tests")
 
     if not (inputs is None or outputs is None):
+        fidx = 0
         test_node = add_child_node(tests_node, "test")
         strip_elements(inputs, "validator", "sanitizer")
         for node in inputs.iter():
@@ -1139,9 +1156,10 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
             elif node.attrib["type"] == "data":
                 node.attrib["ftype"] = node.attrib["format"].split(',')[0]
                 if node.attrib.get("multiple", "false") == "true":
-                    node.attrib["value"] = "test.ext,test2.ext"
+                    node.attrib["value"] = "{fidx}test.ext,{fidx}test2.ext".format(fidx=fidx)
                 else:
-                    node.attrib["value"] = "test.ext"
+                    node.attrib["value"] = "{fidx}test.ext".format(fidx=fidx)
+                fidx += 1
         for node in inputs.iter():
             for a in set(node.attrib) - set(["name","value","ftype"]):
                 del node.attrib[a]

@@ -17,8 +17,12 @@ mkdir param_out_mandatory_optionalinput &&
 mkdir param_out_optional_optionalinput && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ]) } && 
 ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_mandatoryinput if _ ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
-${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
+#if $param_inp_mandatory_optionalinput:
+  ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
+#end if
+#if $param_inp_optional_optionalinput:
+  ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
+#end if
 @EXECUTABLE@
 
 -mandatory_mandatoryinput ${' '.join(["'param_out_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
@@ -31,8 +35,12 @@ ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_i
 #end if
 -inp_mandatory_mandatoryinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
 -inp_optional_mandatoryinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_mandatoryinput if _ ])}
--inp_mandatory_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
--inp_optional_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
+#if $param_inp_mandatory_optionalinput:
+  -inp_mandatory_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
+#end if
+#if $param_inp_optional_optionalinput:
+  -inp_optional_optionalinput ${' '.join(["'%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
+#end if
 ]]></command>
   <inputs>
     <param name="param_optional_mandatoryinput" argument="-optional_mandatoryinput" type="boolean" optional="true" truevalue="-optional_mandatoryinput" falsevalue="" checked="false" label="generate output optional_mandatoryinput (output file)" help=""/>
@@ -62,8 +70,8 @@ ${ ' && '.join([ "ln -s '%s' '%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_i
     <test expect_num_outputs="2">
       <param name="param_optional_mandatoryinput" value="false"/>
       <param name="param_optional_optionalinput" value="false"/>
-      <param name="param_inp_mandatory_mandatoryinput" ftype="txt" value="test.ext,test2.ext"/>
-      <param name="param_inp_optional_mandatoryinput" ftype="txt" value="test.ext,test2.ext"/>
+      <param name="param_inp_mandatory_mandatoryinput" ftype="txt" value="0test.ext,0test2.ext"/>
+      <param name="param_inp_optional_mandatoryinput" ftype="txt" value="1test.ext,1test2.ext"/>
       <output_collection name="param_out_mandatory_mandatoryinput"/>
       <output_collection name="param_out_mandatory_optionalinput"/>
     </test>

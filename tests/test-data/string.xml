@@ -37,7 +37,6 @@
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
-          <remove value="&quot;"/>
         </valid>
       </sanitizer>
     </param>
@@ -45,7 +44,6 @@
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
-          <remove value="&quot;"/>
         </valid>
       </sanitizer>
     </param>
@@ -53,7 +51,6 @@
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
-          <remove value="&quot;"/>
         </valid>
       </sanitizer>
     </param>
@@ -61,7 +58,6 @@
       <sanitizer>
         <valid initial="string.printable">
           <remove value="'"/>
-          <remove value="&quot;"/>
         </valid>
       </sanitizer>
     </param>
@@ -70,7 +66,6 @@
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
-            <remove value="&quot;"/>
           </valid>
         </sanitizer>
       </param>
@@ -78,7 +73,6 @@
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
-            <remove value="&quot;"/>
           </valid>
         </sanitizer>
       </param>
@@ -86,7 +80,6 @@
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
-            <remove value="&quot;"/>
           </valid>
         </sanitizer>
       </param>
@@ -94,7 +87,6 @@
         <sanitizer>
           <valid initial="string.printable">
             <remove value="'"/>
-            <remove value="&quot;"/>
           </valid>
         </sanitizer>
       </param>
