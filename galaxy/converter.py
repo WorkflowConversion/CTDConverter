@@ -556,7 +556,7 @@ def create_command(tool, model, **kwargs):
         final_command = "\n#import re" + final_command
 
     command_node = add_child_node(tool, "command")
-    command_node.attrib["detect_errors"] = "aggressive"
+    command_node.attrib["detect_errors"] = "exit_code"
     command_node.text = CDATA(final_command)
 
 
