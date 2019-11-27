@@ -959,13 +959,17 @@ def create_boolean_parameter(param_node, param):
     TODO: true and false values can be way more than 'true' and 'false'
         but for that we need CTD support
     """
+
     # in ctd (1.6.2) bools are strings with restriction true,false 
     # - if the default is false then they are flags
     # - otherwise the true or false value needs to be added (where the true case is unnecessary)
-    
+    # A special case are restrictions false,true which are not treated as flags    
     if param.type == str:
         choices = get_lowercase_list(param.restrictions.choices)
-        if set(choices) == set(["true","false"]) and param.default == "true":
+        if choices == ["false", "true"]:
+            param_node.attrib["truevalue"] = "-%s true" % utils.extract_param_name(param)
+            param_node.attrib["falsevalue"] = "-%s false" % utils.extract_param_name(param)
+        elif set(choices) == set(["true","false"]) and param.default == "true":
             param_node.attrib["truevalue"] = ""
             param_node.attrib["falsevalue"] = "-%s false" % utils.extract_param_name(param)
         else: 
