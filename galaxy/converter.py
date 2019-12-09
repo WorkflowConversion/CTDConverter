@@ -511,11 +511,11 @@ def create_command(tool, model, **kwargs):
             if param.type is _InFile:
                 preprocessing += "mkdir %s &&\n" %actual_parameter
                 if param.is_list:
-                    preprocessing += "${ ' && '.join([ \"ln -s '%s' '"+actual_parameter+"/%s.%s'\" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $" + actual_parameter + " if _ ]) } && \n"
-                    command += "${' '.join([\"'"+actual_parameter+"/%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ ])}\n"
+                    preprocessing += "${ ' && '.join([ \"ln -s '%s' '"+actual_parameter+"/%s.%s'\" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_parameter + " if _ ]) } && \n"
+                    command += "${' '.join([\"'"+actual_parameter+"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier),_.ext) for _ in $" + actual_parameter + " if _ ])}\n"
                 else:
-                    preprocessing += "ln -s '$"+ actual_parameter +"' '"+actual_parameter+"/${re.sub(\"[^\w\-_.]\", \"_\", $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
-                    command += "'"+actual_parameter+"/${re.sub('[^\w\-_.]', '_', $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
+                    preprocessing += "ln -s '$"+ actual_parameter +"' '"+actual_parameter+"/${re.sub(\"[^\w\-_]\", \"_\", $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}' &&\n"
+                    command += "'"+actual_parameter+"/${re.sub('[^\w\-_]', '_', $"+actual_parameter+".element_identifier)}.${"+actual_parameter+".ext}'\n"
             elif param.type is _OutFile:
                 # check if there is a parameter that sets the format
                 # if so we add an extension to the generated files which will be used to
@@ -537,9 +537,9 @@ def create_command(tool, model, **kwargs):
                     if corresponding_input.advanced:
                         actual_input_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_input_parameter
                     if type_param is not None:
-                        command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}\n"
+                        command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}\n"
                     else:
-                        command += "${' '.join([\"'"+ actual_parameter +"/%s'\"%(re.sub('[^\w\-_.]', '_', _.element_identifier)) for _ in $" + actual_input_parameter + " if _ ])}\n"
+                        command += "${' '.join([\"'"+ actual_parameter +"/%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $" + actual_input_parameter + " if _ ])}\n"
                 else:
                     if type_param is not None:
                         preprocessing += "mkdir " + actual_parameter + " && \n"
