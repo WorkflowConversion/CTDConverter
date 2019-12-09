@@ -243,7 +243,7 @@ def main(argv=None):
 
 def validate_and_prepare_common_arguments(args):
     # flatten lists of lists to a list containing elements
-    lists_to_flatten = ["input_files", "blacklisted_parameters"]
+    lists_to_flatten = ["input_files"]
     for list_to_flatten in lists_to_flatten:
         utils.flatten_list_of_lists(args, list_to_flatten)
 

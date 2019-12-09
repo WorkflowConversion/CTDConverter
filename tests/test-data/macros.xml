@@ -1,13 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <macros>
+  <token name="@TOOL_VERSION@">2.3</token>
+  <token name="@GALAXY_VERSION@">0</token>
   <xml name="requirements">
     <requirements>
-      <requirement type="package" version="4.4.18">bash</requirement>
+      <requirement type="package" version="@TOOL_VERSION@">openms</requirement>
       <yield/>
     </requirements>
   </xml>
   <xml name="stdio">
     <stdio>
+      <regex match="Could not allocate metaspace" level="fatal_oom" description="Java memory Exception"/>
+      <regex match="Cannot create VM thread" level="fatal_oom" description="Java memory Exception"/>
       <regex match="qUncompress: could not allocate enough memory to uncompress data" level="fatal_oom" description="Java memory Exception"/>
     </stdio>
   </xml>
@@ -27,5 +31,48 @@
         <yield/>
       </when>
     </conditional>
+  </xml>
+
+  <!-- sanitizers and validators -->
+  <xml name="list_string_val">
+    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)"><![CDATA[^ *((?:\"[^\"]*\" +)|(?:[^ \"]+ +))*((?:\"[^\"]*\")|(?:[^ \"]+)) *$]]></validator>
+  </xml>
+  <xml name="list_string_san">
+    <sanitizer>
+      <valid initial="string.printable">
+        <remove value="'"/>
+        <remove value="`"/>
+        <remove value="$"/>
+        <remove value="&lt;"/>
+        <remove value="#"/>
+        <remove value="&amp;"/>
+        <remove value=";"/>
+      </valid>
+    </sanitizer>
+  </xml>
+  <xml name="list_float_valsan">
+    <validator type="regex" message="a space separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+    <yield/>
+    <sanitizer>
+      <valid initial="string.digits">
+        <add value=" "/>
+        <add value="."/>
+        <add value="E"/>
+        <add value="e"/>
+        <add value="+"/>
+        <add value="-"/>
+      </valid>
+    </sanitizer>
+  </xml>
+  <xml name="list_integer_valsan">
+    <validator type="regex" message="a space separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *[+-]?[0-9]+)* *$]]></validator>
+    <yield/>
+    <sanitizer>
+      <valid initial="string.digits">
+        <add value=" "/>
+        <add value="+"/>
+        <add value="-"/>
+      </valid>
+    </sanitizer>
   </xml>
 </macros>

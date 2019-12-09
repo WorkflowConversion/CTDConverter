@@ -7,8 +7,9 @@ from lxml import etree
 from string import strip
 from logger import info, error, warning
 
+from common import logger
 from common.exceptions import ApplicationException
-from CTDopts.CTDopts import CTDModel, ParameterGroup
+from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup
 
 
 MESSAGE_INDENTATION_INCREMENT = 2
@@ -34,7 +35,43 @@ class ParameterHardcoder:
         # XtandemAdapter#adapter -> xtandem.exe
         # adapter -> adapter.exe
         self.separator = "!"
+
+        # hard coded values
         self.parameter_map = {}
+
+        # ctd/xml attributes to overwrite
+        self.attribute_map = {}
+
+        # blacklisted parameters
+        self.blacklist = set()
+    
+    def register_blacklist(self, parameter_name, tool_name):
+        k = self.build_key(parameter_name, tool_name)
+        self.blacklist.add(k)
+    
+    # the most specific value will be returned in case of overlap
+    def get_blacklist(self, parameter_name, tool_name):
+        # look for the value that would apply for all tools
+        if self.build_key(parameter_name, tool_name) in self.blacklist:
+            return True
+        elif parameter_name in self.blacklist:
+            return True
+        else:
+            return False
+
+    def register_attribute(self, parameter_name, attribute, value, tool_name):
+        k = self.build_key(parameter_name, tool_name)
+        if not self.attribute_map.has_key(k):
+            self.attribute_map[k] = {}
+        self.attribute_map[k][attribute] = value
+
+    # the most specific value will be returned in case of overlap
+    def get_hardcoded_attributes(self, parameter_name, tool_name):
+        # look for the value that would apply for all tools
+        try:
+            return self.attribute_map[self.build_key(parameter_name, tool_name)]
+        except KeyError:
+            return self.attribute_map.get(parameter_name, None)
 
     # the most specific value will be returned in case of overlap
     def get_hardcoded_value(self, parameter_name, tool_name):
@@ -99,7 +136,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
         try:
             info("Loading validation schema from %s" % xsd_location, 0)
             schema = etree.XMLSchema(etree.parse(xsd_location))
-        except Exception, e:
+        except Exception as e:
             error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
     else:
         warning("Validation against a schema has not been enabled.", 0)
@@ -126,7 +163,7 @@ def validate_against_schema(ctd_file, schema):
     try:
         parser = etree.XMLParser(schema=schema)
         etree.parse(ctd_file, parser=parser)
-    except etree.XMLSyntaxError, e:
+    except etree.XMLSyntaxError as e:
         raise ApplicationException("Invalid CTD file %s. Reason: %s" % (ctd_file, str(e)))
 
 
@@ -141,10 +178,6 @@ def add_common_parameters(parser, version, last_updated):
     parser.add_argument("-x", "--default-executable-path", dest="default_executable_path",
                         help="Use this executable path when <executablePath> is not present in the CTD",
                         default=None, required=False)
-    parser.add_argument("-b", "--blacklist-parameters", dest="blacklisted_parameters", default=[], nargs="+",
-                        action="append",
-                        help="List of parameters that will be ignored and won't appear on the galaxy stub",
-                        required=False)
     parser.add_argument("-p", "--hardcoded-parameters", dest="hardcoded_parameters", default=None, required=False,
                         help="File containing hardcoded values for the given parameters. Run with '-h' or '--help' "
                              "to see a brief example on the format of this file.")
@@ -169,14 +202,35 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
         data = json.load(fp)
 
     for parameter_name in data:
+        if parameter_name == "#":
+            continue
         for el in data[parameter_name]:
             hardcoded_value = el.get("value", None)
             tool_names = el.get("tools", [None])
             for tool_name in tool_names:
                 if not tool_name is None:
                     tool_name = tool_name.strip()
-                print("register %s %s %s", (parameter_name,hardcoded_value, tool_name))
-                parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name)
+                if hardcoded_value is not None:
+                    if hardcoded_value == '@':
+                        parameter_hardcoder.register_blacklist(parameter_name, tool_name)
+                    else:
+                        parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name)
+                else:
+                    for a in el:
+                        if a in ["tools","value"]:
+                            continue
+                        if el[a] == "output-file":
+                            el[a] = _OutFile
+                        if el[a] == "input-file":
+                            el[a] = _InFile
+
+                        parameter_hardcoder.register_attribute(parameter_name, a, el[a], tool_name)
+    # hard coded values
+    logger.info("parameter_map %s" %parameter_hardcoder.parameter_map)
+    logger.info("attribute_map %s" %parameter_hardcoder.attribute_map)
+    logger.info("blacklist %s" %parameter_hardcoder.blacklist)
+
+
     return parameter_hardcoder
 
 

@@ -9,534 +9,270 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <command detect_errors="aggressive"><![CDATA[
+  <command detect_errors="exit_code"><![CDATA[
 @EXECUTABLE@
 
 #if str($param_string_wodefault_optional):
-  -string_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_optional.split(',')])}
+  -string_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_optional])}
 #end if
--string_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_mandatory.split(',')])}
+-string_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_wodefault_mandatory])}
 #if str($param_string_default_optional):
-  -string_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_default_optional.split(',')])}
+  -string_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_string_default_optional])}
 #end if
--string_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_default_mandatory.split(',')])}
+-string_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_string_default_mandatory])}
 #if str($param_int_wodefault_optional):
-  -int_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_optional.split(',')])}
+  -int_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_optional])}
 #end if
--int_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_mandatory.split(',')])}
+-int_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_wodefault_mandatory])}
 #if str($param_int_default_optional):
-  -int_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_default_optional.split(',')])}
+  -int_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_default_optional])}
 #end if
--int_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_default_mandatory.split(',')])}
+-int_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_default_mandatory])}
 #if str($param_int_resticted_wodefault_optional):
-  -int_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_optional.split(',')])}
+  -int_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_optional])}
 #end if
--int_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_mandatory.split(',')])}
+-int_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_wodefault_mandatory])}
 #if str($param_int_resticted_default_optional):
-  -int_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_optional.split(',')])}
+  -int_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_optional])}
 #end if
--int_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_mandatory.split(',')])}
+-int_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_int_resticted_default_mandatory])}
 #if str($param_double_wodefault_optional):
-  -double_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_optional.split(',')])}
+  -double_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_optional])}
 #end if
--double_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_mandatory.split(',')])}
+-double_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_wodefault_mandatory])}
 #if str($param_double_default_optional):
-  -double_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_default_optional.split(',')])}
+  -double_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_default_optional])}
 #end if
--double_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_default_mandatory.split(',')])}
+-double_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_default_mandatory])}
 #if str($param_double_resticted_wodefault_optional):
-  -double_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_optional.split(',')])}
+  -double_resticted_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_optional])}
 #end if
--double_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_mandatory.split(',')])}
+-double_resticted_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_wodefault_mandatory])}
 #if str($param_double_resticted_default_optional):
-  -double_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_optional.split(',')])}
+  -double_resticted_default_optional ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_optional])}
 #end if
--double_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_mandatory.split(',')])}
+-double_resticted_default_mandatory ${' '.join(["'%s'"%str(_) for _ in $param_double_resticted_default_mandatory])}
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   #if str($adv_opts_cond.param_string_wodefault_optional_adv):
-    -string_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_optional_adv.split(',')])}
+    -string_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_optional_adv])}
   #end if
-  -string_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_mandatory_adv.split(',')])}
+  -string_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_wodefault_mandatory_adv])}
   #if str($adv_opts_cond.param_string_default_optional_adv):
-    -string_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_optional_adv.split(',')])}
+    -string_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_optional_adv])}
   #end if
-  -string_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_mandatory_adv.split(',')])}
+  -string_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_string_default_mandatory_adv])}
   #if str($adv_opts_cond.param_int_wodefault_optional_adv):
-    -int_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_optional_adv.split(',')])}
+    -int_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_optional_adv])}
   #end if
-  -int_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_mandatory_adv.split(',')])}
+  -int_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_wodefault_mandatory_adv])}
   #if str($adv_opts_cond.param_int_default_optional_adv):
-    -int_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_optional_adv.split(',')])}
+    -int_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_optional_adv])}
   #end if
-  -int_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_mandatory_adv.split(',')])}
+  -int_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_default_mandatory_adv])}
   #if str($adv_opts_cond.param_int_resticted_wodefault_optional_adv):
-    -int_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_optional_adv.split(',')])}
+    -int_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_optional_adv])}
   #end if
-  -int_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_mandatory_adv.split(',')])}
+  -int_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_wodefault_mandatory_adv])}
   #if str($adv_opts_cond.param_int_resticted_default_optional_adv):
-    -int_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_optional_adv.split(',')])}
+    -int_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_optional_adv])}
   #end if
-  -int_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_mandatory_adv.split(',')])}
+  -int_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_int_resticted_default_mandatory_adv])}
   #if str($adv_opts_cond.param_double_wodefault_optional_adv):
-    -double_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_optional_adv.split(',')])}
+    -double_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_optional_adv])}
   #end if
-  -double_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_mandatory_adv.split(',')])}
+  -double_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_wodefault_mandatory_adv])}
   #if str($adv_opts_cond.param_double_default_optional_adv):
-    -double_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_optional_adv.split(',')])}
+    -double_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_optional_adv])}
   #end if
-  -double_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_mandatory_adv.split(',')])}
+  -double_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_default_mandatory_adv])}
   #if str($adv_opts_cond.param_double_resticted_wodefault_optional_adv):
-    -double_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_optional_adv.split(',')])}
+    -double_resticted_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_optional_adv])}
   #end if
-  -double_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_mandatory_adv.split(',')])}
+  -double_resticted_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_wodefault_mandatory_adv])}
   #if str($adv_opts_cond.param_double_resticted_default_optional_adv):
-    -double_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_optional_adv.split(',')])}
+    -double_resticted_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_optional_adv])}
   #end if
-  -double_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_mandatory_adv.split(',')])}
+  -double_resticted_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in $adv_opts_cond.param_double_resticted_default_mandatory_adv])}
 #end if
 > $param_stdout
 ]]></command>
   <inputs>
     <param name="param_string_wodefault_optional" argument="-string_wodefault_optional" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-        </valid>
-      </sanitizer>
+      <expand macro="list_string_val"/>
+      <expand macro="list_string_san"/>
     </param>
     <param name="param_string_wodefault_mandatory" argument="-string_wodefault_mandatory" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-        </valid>
-      </sanitizer>
+      <expand macro="list_string_val"/>
+      <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-        </valid>
-      </sanitizer>
+    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="A B" label="string list" help=" (comma separated list)">
+      <expand macro="list_string_val"/>
+      <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)">
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value="'"/>
-        </valid>
-      </sanitizer>
+    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="A B" label="string list" help=" (comma separated list)">
+      <expand macro="list_string_val"/>
+      <expand macro="list_string_san"/>
     </param>
     <param name="param_int_wodefault_optional" argument="-int_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      <expand macro="list_integer_valsan"/>
     </param>
     <param name="param_int_wodefault_mandatory" argument="-int_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_default_optional" argument="-int_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+    <param name="param_int_default_optional" argument="-int_default_optional" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+      <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_default_mandatory" argument="-int_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+    <param name="param_int_default_mandatory" argument="-int_default_mandatory" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+      <expand macro="list_integer_valsan"/>
     </param>
     <param name="param_int_resticted_wodefault_optional" argument="-int_resticted_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+      <expand macro="list_integer_valsan">
+        <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_) <= 100])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
     <param name="param_int_resticted_wodefault_mandatory" argument="-int_resticted_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
+      <expand macro="list_integer_valsan">
+        <validator type="expression" message="a space separated list of integer values in the range 0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_)])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
-    <param name="param_int_resticted_default_optional" argument="-int_resticted_default_optional" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
+    <param name="param_int_resticted_default_optional" argument="-int_resticted_default_optional" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+      <expand macro="list_integer_valsan">
+        <validator type="expression" message="a space separated list of integer values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  int(_) <= 100])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
-    <param name="param_int_resticted_default_mandatory" argument="-int_resticted_default_mandatory" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+    <param name="param_int_resticted_default_mandatory" argument="-int_resticted_default_mandatory" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+      <expand macro="list_integer_valsan">
+        <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_) <= 100])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
     <param name="param_double_wodefault_optional" argument="-double_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      <expand macro="list_float_valsan"/>
     </param>
     <param name="param_double_wodefault_mandatory" argument="-double_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_default_optional" argument="-double_default_optional" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+    <param name="param_double_default_optional" argument="-double_default_optional" type="text" optional="true" value="1.0 2.0" label="double list" help=" (comma separated list)">
+      <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_default_mandatory" argument="-double_default_mandatory" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+    <param name="param_double_default_mandatory" argument="-double_default_mandatory" type="text" optional="false" value="1.0 2.0" label="double list" help=" (comma separated list)">
+      <expand macro="list_float_valsan"/>
     </param>
     <param name="param_double_resticted_wodefault_optional" argument="-double_resticted_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+      <expand macro="list_float_valsan">
+        <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_) <= 1.0])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
     <param name="param_double_resticted_wodefault_mandatory" argument="-double_resticted_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
+      <expand macro="list_float_valsan">
+        <validator type="expression" message="a space separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_)])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
-    <param name="param_double_resticted_default_optional" argument="-double_resticted_default_optional" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
+    <param name="param_double_resticted_default_optional" argument="-double_resticted_default_optional" type="text" optional="true" value="0.3 0.5" label="double list" help=" (comma separated list)">
+      <expand macro="list_float_valsan">
+        <validator type="expression" message="a space separated list of float values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  float(_) <= 1.0])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
-    <param name="param_double_resticted_default_mandatory" argument="-double_resticted_default_mandatory" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)">
-      <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-      <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+    <param name="param_double_resticted_default_mandatory" argument="-double_resticted_default_mandatory" type="text" optional="false" value="0.3 0.5" label="double list" help=" (comma separated list)">
+      <expand macro="list_float_valsan">
+        <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_) <= 1.0])
 ]]></validator>
-      <sanitizer>
-        <valid initial="string.printable">
-          <remove value=" "/>
-        </valid>
-        <mapping initial="none">
-          <add source=" " target=""/>
-        </mapping>
-      </sanitizer>
+      </expand>
     </param>
     <expand macro="adv_opts_macro">
       <param name="param_string_wodefault_optional_adv" argument="-string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-          </valid>
-        </sanitizer>
+        <expand macro="list_string_val"/>
+        <expand macro="list_string_san"/>
       </param>
       <param name="param_string_wodefault_mandatory_adv" argument="-string_wodefault_mandatory_adv" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-          </valid>
-        </sanitizer>
+        <expand macro="list_string_val"/>
+        <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="A,B" label="string list" help=" (comma separated list)">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-          </valid>
-        </sanitizer>
+      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="A B" label="string list" help=" (comma separated list)">
+        <expand macro="list_string_val"/>
+        <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="A,B" label="string list" help=" (comma separated list)">
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value="'"/>
-          </valid>
-        </sanitizer>
+      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="A B" label="string list" help=" (comma separated list)">
+        <expand macro="list_string_val"/>
+        <expand macro="list_string_san"/>
       </param>
       <param name="param_int_wodefault_optional_adv" argument="-int_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        <expand macro="list_integer_valsan"/>
       </param>
       <param name="param_int_wodefault_mandatory_adv" argument="-int_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_default_optional_adv" argument="-int_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+      <param name="param_int_default_optional_adv" argument="-int_default_optional_adv" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+        <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_default_mandatory_adv" argument="-int_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+      <param name="param_int_default_mandatory_adv" argument="-int_default_mandatory_adv" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+        <expand macro="list_integer_valsan"/>
       </param>
       <param name="param_int_resticted_wodefault_optional_adv" argument="-int_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+        <expand macro="list_integer_valsan">
+          <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_) <= 100])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
       <param name="param_int_resticted_wodefault_mandatory_adv" argument="-int_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of integer values in the range 0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_)])
+        <expand macro="list_integer_valsan">
+          <validator type="expression" message="a space separated list of integer values in the range 0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_)])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
-      <param name="param_int_resticted_default_optional_adv" argument="-int_resticted_default_optional_adv" type="text" optional="true" value="1,2" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of integer values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if int(_) <= 100])
+      <param name="param_int_resticted_default_optional_adv" argument="-int_resticted_default_optional_adv" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+        <expand macro="list_integer_valsan">
+          <validator type="expression" message="a space separated list of integer values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  int(_) <= 100])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
-      <param name="param_int_resticted_default_mandatory_adv" argument="-int_resticted_default_mandatory_adv" type="text" optional="false" value="1,2" label="int list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *, *[+-]?[0-9]+)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0 <= int(_) <= 100])
+      <param name="param_int_resticted_default_mandatory_adv" argument="-int_resticted_default_mandatory_adv" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+        <expand macro="list_integer_valsan">
+          <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0 <= int(_) <= 100])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
       <param name="param_double_wodefault_optional_adv" argument="-double_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        <expand macro="list_float_valsan"/>
       </param>
       <param name="param_double_wodefault_mandatory_adv" argument="-double_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_default_optional_adv" argument="-double_default_optional_adv" type="text" optional="true" value="1.0,2.0" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+      <param name="param_double_default_optional_adv" argument="-double_default_optional_adv" type="text" optional="true" value="1.0 2.0" label="double list" help=" (comma separated list)">
+        <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_default_mandatory_adv" argument="-double_default_mandatory_adv" type="text" optional="false" value="1.0,2.0" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+      <param name="param_double_default_mandatory_adv" argument="-double_default_mandatory_adv" type="text" optional="false" value="1.0 2.0" label="double list" help=" (comma separated list)">
+        <expand macro="list_float_valsan"/>
       </param>
       <param name="param_double_resticted_wodefault_optional_adv" argument="-double_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+        <expand macro="list_float_valsan">
+          <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_) <= 1.0])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
       <param name="param_double_resticted_wodefault_mandatory_adv" argument="-double_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_)])
+        <expand macro="list_float_valsan">
+          <validator type="expression" message="a space separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_)])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
-      <param name="param_double_resticted_default_optional_adv" argument="-double_resticted_default_optional_adv" type="text" optional="true" value="0.3,0.5" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of float values in the range :None is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if float(_) <= 1.0])
+      <param name="param_double_resticted_default_optional_adv" argument="-double_resticted_default_optional_adv" type="text" optional="true" value="0.3 0.5" label="double list" help=" (comma separated list)">
+        <expand macro="list_float_valsan">
+          <validator type="expression" message="a space separated list of float values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  float(_) <= 1.0])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
-      <param name="param_double_resticted_default_mandatory_adv" argument="-double_resticted_default_mandatory_adv" type="text" optional="false" value="0.3,0.5" label="double list" help=" (comma separated list)">
-        <validator type="regex" message="a comma separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *, *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
-        <validator type="expression" message="a comma separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(',')) == len([_ for _ in value.split(',') if 0.0 <= float(_) <= 1.0])
+      <param name="param_double_resticted_default_mandatory_adv" argument="-double_resticted_default_mandatory_adv" type="text" optional="false" value="0.3 0.5" label="double list" help=" (comma separated list)">
+        <expand macro="list_float_valsan">
+          <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if _ == ' ' or  0.0 <= float(_) <= 1.0])
 ]]></validator>
-        <sanitizer>
-          <valid initial="string.printable">
-            <remove value=" "/>
-          </valid>
-          <mapping initial="none">
-            <add source=" " target=""/>
-          </mapping>
-        </sanitizer>
+        </expand>
       </param>
     </expand>
   </inputs>
@@ -545,27 +281,27 @@
   </outputs>
   <tests>
     <test expect_num_outputs="1">
-      <param name="param_string_wodefault_mandatory" value="1,2"/>
-      <param name="param_string_default_mandatory" value="A,B"/>
-      <param name="param_int_wodefault_mandatory" value="1,2"/>
-      <param name="param_int_default_mandatory" value="1,2"/>
-      <param name="param_int_resticted_wodefault_mandatory" value="1,2"/>
-      <param name="param_int_resticted_default_mandatory" value="1,2"/>
-      <param name="param_double_wodefault_mandatory" value="1,2"/>
-      <param name="param_double_default_mandatory" value="1.0,2.0"/>
-      <param name="param_double_resticted_wodefault_mandatory" value="1,2"/>
-      <param name="param_double_resticted_default_mandatory" value="0.3,0.5"/>
+      <param name="param_string_wodefault_mandatory" value="1 2"/>
+      <param name="param_string_default_mandatory" value="A B"/>
+      <param name="param_int_wodefault_mandatory" value="1 2"/>
+      <param name="param_int_default_mandatory" value="1 2"/>
+      <param name="param_int_resticted_wodefault_mandatory" value="1 2"/>
+      <param name="param_int_resticted_default_mandatory" value="1 2"/>
+      <param name="param_double_wodefault_mandatory" value="1 2"/>
+      <param name="param_double_default_mandatory" value="1.0 2.0"/>
+      <param name="param_double_resticted_wodefault_mandatory" value="1 2"/>
+      <param name="param_double_resticted_default_mandatory" value="0.3 0.5"/>
       <conditional name="adv_opts_cond">
-        <param name="param_string_wodefault_mandatory_adv" value="1,2"/>
-        <param name="param_string_default_mandatory_adv" value="A,B"/>
-        <param name="param_int_wodefault_mandatory_adv" value="1,2"/>
-        <param name="param_int_default_mandatory_adv" value="1,2"/>
-        <param name="param_int_resticted_wodefault_mandatory_adv" value="1,2"/>
-        <param name="param_int_resticted_default_mandatory_adv" value="1,2"/>
-        <param name="param_double_wodefault_mandatory_adv" value="1,2"/>
-        <param name="param_double_default_mandatory_adv" value="1.0,2.0"/>
-        <param name="param_double_resticted_wodefault_mandatory_adv" value="1,2"/>
-        <param name="param_double_resticted_default_mandatory_adv" value="0.3,0.5"/>
+        <param name="param_string_wodefault_mandatory_adv" value="1 2"/>
+        <param name="param_string_default_mandatory_adv" value="A B"/>
+        <param name="param_int_wodefault_mandatory_adv" value="1 2"/>
+        <param name="param_int_default_mandatory_adv" value="1 2"/>
+        <param name="param_int_resticted_wodefault_mandatory_adv" value="1 2"/>
+        <param name="param_int_resticted_default_mandatory_adv" value="1 2"/>
+        <param name="param_double_wodefault_mandatory_adv" value="1 2"/>
+        <param name="param_double_default_mandatory_adv" value="1.0 2.0"/>
+        <param name="param_double_resticted_wodefault_mandatory_adv" value="1 2"/>
+        <param name="param_double_resticted_default_mandatory_adv" value="0.3 0.5"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
