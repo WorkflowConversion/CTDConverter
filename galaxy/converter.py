@@ -109,16 +109,18 @@ def convert_models(args, parsed_ctds):
     # validate and prepare the passed arguments
     validate_and_prepare_args(args, parsed_ctds[0].ctd_model)
     
+    # parse the given supported file-formats file
+    supported_file_formats = parse_file_formats(args.formats_file)
+    
     # extract the names of the macros and check that we have found the ones we need
     macros_to_expand = parse_macros_files(args.macros_files,
                                           tool_version=args.tool_version,
+                                          supported_file_types=supported_file_formats,
                                           required_macros=REQUIRED_MACROS,
                                           dont_expand=[ADVANCED_OPTIONS_NAME+"macro", "references",
                                                        "list_string_val", "list_string_san",
                                                        "list_float_valsan", "list_integer_valsan"])
 
-    # parse the given supported file-formats file
-    supported_file_formats = parse_file_formats(args.formats_file)
 
     # parse the skip/required tools files
     skip_tools = parse_tools_list_file(args.skip_tools_file)
@@ -163,7 +165,7 @@ def parse_tools_list_file(tools_list_file):
     return tools_list
 
 
-def parse_macros_files(macros_file_names, tool_version, required_macros = [], dont_expand=[]):
+def parse_macros_files(macros_file_names, tool_version, supported_file_types, required_macros = [], dont_expand=[]):
     """
     """
     macros_to_expand = []
@@ -180,19 +182,6 @@ def parse_macros_files(macros_file_names, tool_version, required_macros = [], do
                     continue
                 logger.info("Macro %s found" % name, 1)
                 macros_to_expand.append(name)
-            bump_galaxy_version = True
-            for xml_element in root.findall("token"):
-                if xml_element.attrib["name"] == "@TOOL_VERSION@":
-                    if tool_version > xml_element.text:
-                        bump_galaxy_version = False
-                    xml_element.text = tool_version
-                if xml_element.attrib["name"] == "@GALAXY_VERSION@":
-                    if bump_galaxy_version:
-                        xml_element.text = str(int(xml_element.text) + 1)
-                    else:
-                        xml_element.text = "0"
-
-
         except ParseError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
                                        str(e))
@@ -201,6 +190,41 @@ def parse_macros_files(macros_file_names, tool_version, required_macros = [], do
                                        str(e))
         else:
             macros_file.close()
+
+    tool_ver_tk = root.find("token[@name='@TOOL_VERSION@']")
+    galaxy_ver_tk = root.find("token[@name='@GALAXY_VERSION@']")
+    if tool_ver_tk is None:
+        tool_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@TOOL_VERSION@")]))
+        tool_ver_tk.text = tool_version
+    if galaxy_ver_tk is None:
+        galaxy_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@GALAXY_VERSION@")]))
+        galaxy_ver_tk.text = "0"
+    if tool_version == tool_ver_tk.text:
+        galaxy_ver_tk.text = str(int(galaxy_ver_tk.text) + 1)
+    else:
+        tool_ver_tk.text = tool_version
+        galaxy_ver_tk.text = "0"
+
+    ext_foo = root.find("token[@name='@EXT_FOO@']")
+    if ext_foo is None:
+        ext_foo = add_child_node(root, "token", OrderedDict([("name", "@EXT_FOO@")]))
+
+    o2g = {}
+    g2o = {}
+    for s in supported_file_types:
+        o2g[s] = supported_file_types[s].galaxy_extension
+        if supported_file_types[s].galaxy_extension not in g2o:
+            g2o[supported_file_types[s].galaxy_extension] = s
+    ext_foo.text = CDATA("""#def oms2gxyext(o)
+    #set m=%s
+    #return m[o]
+#end def
+#def gxy2omsext(g)
+    #set m=%s
+    #return m[o]
+#end def
+"""%(str(o2g), str(g2o)))
+
     with open(os.path.basename(macros_file_name), "w") as macros_file:
         tree = ElementTree(root)
         tree.write(macros_file, encoding="UTF-8", xml_declaration=True, pretty_print=True)
@@ -462,13 +486,15 @@ def create_command(tool, model, **kwargs):
     """
 
     # main command
-    final_preprocessing = "\n@QUOTE_FOO@\n"
+    final_preprocessing = "\n@QUOTE_FOO@\n@EXT_FOO@\n"
     advanced_preprocessing = ""
     final_command = "@EXECUTABLE@\n"
     final_command += kwargs["add_to_command_line"] + '\n'
     advanced_command_start = "#if ${aon}cond.{aon}selector=='advanced':\n".format(aon=ADVANCED_OPTIONS_NAME)
     advanced_command_end = "#end if"
     advanced_command = ""
+    final_postprocessing = ""
+    advanced_postprocessing = ""
 
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
@@ -483,6 +509,7 @@ def create_command(tool, model, **kwargs):
             found_input_parameter = True
         command = ""
         preprocessing = ""
+        postprocessing = ""
         param_name = utils.extract_param_name(param)
         command_line_prefix = utils.extract_command_line_prefix(param, model)
 
@@ -502,7 +529,7 @@ def create_command(tool, model, **kwargs):
             # all but bool params need the command line argument (bools have it already in the true/false value)
             if not is_boolean_parameter(param):
                 command += command_line_prefix + " "
-
+            
             # preprocessing for file inputs: 
             # - create a dir with name param.name
             # - create a link to id.ext in this directory
@@ -522,28 +549,43 @@ def create_command(tool, model, **kwargs):
                 # determine the format in the output tag
                 # in all other cases (corresponding input / there is only one allowed format)
                 # the format will be set in the output tag
+                formats = get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[param.type])
                 type_param = get_out_type_param(param, model)
-                if type_param is not None:
-                    type_param_name = get_galaxy_parameter_name(type_param)
-                    if type_param.advanced:
-                        type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
-
                 if param.is_list:
-                    preprocessing += "mkdir " + actual_parameter + " && \n"
                     corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
                     if corresponding_input is None:
                         raise Exception()
                     actual_input_parameter = get_galaxy_parameter_name(corresponding_input)
                     if corresponding_input.advanced:
                         actual_input_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_input_parameter
-                    if type_param is not None:
-                        command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}\n"
-                    else:
-                        command += "${' '.join([\"'"+ actual_parameter +"/%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $" + actual_input_parameter + " if _ ])}\n"
                 else:
-                    if type_param is not None:
+                    actual_input_parameter = None
+
+                if type_param is not None:
+                    type_param_name = get_galaxy_parameter_name(type_param)
+                    if type_param.advanced:
+                        type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+                if len(formats)==1:
+                    if param.is_list:
                         preprocessing += "mkdir " + actual_parameter + " && \n"
-                        command += actual_parameter+"/output.${"+type_param_name+"}'\n"
+                        command += "${' '.join([\"'"+ actual_parameter +"/%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $" + actual_input_parameter + " if _ ])}\n"
+                    else:
+                        command += "'$" +actual_parameter+ "'\n"
+                elif type_param is not None:
+                    if param.is_list:
+                        command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}\n"
+                        postprocessing += "${' '.join([\"mv -n '"+ actual_parameter +"/%(id)s.%(omsext)s' '" +actual_parameter+ "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":"+type_param_name+", \"gext\": oms2gxyext("+type_param_name+")} for _ in $" + actual_input_parameter + " if _ ])}\n"
+                    else:
+                        # 1st create file with openms extension (often required by openms)
+                        # then move it to the actual place specified by the parameter
+                        # the format is then set by the <data> tag using <change_format>
+                        preprocessing += "mkdir " + actual_parameter + " && \n"
+                        command += "'" + actual_parameter+"/output.${"+type_param_name+"}'\n"
+                        postprocessing += "&& mv '" + actual_parameter+"/output.${"+type_param_name+"}' '$" + actual_parameter + "'"
+                else:
+                    if param.is_list:
+                        preprocessing += "mkdir " + actual_parameter + " && \n"
+                        command += "${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _ ])}\n"
                     else:
                         command += "'$" +actual_parameter+ "'\n"
 
@@ -577,19 +619,24 @@ def create_command(tool, model, **kwargs):
             advanced_command += "%s\n" % utils.indent(command)
             if preprocessing != "":
                 advanced_preprocessing += "%s\n" % utils.indent(preprocessing)
+            if postprocessing != "":
+                advanced_postprocessing += "%s\n" % utils.indent(postprocessing)
         else:
             final_command += command
             final_preprocessing += preprocessing
+            final_postprocessing += postprocessing
 
     if advanced_command:
         final_command += "%s%s%s\n" % (advanced_command_start, advanced_command, advanced_command_end)
     if advanced_preprocessing:
         final_preprocessing += "%s%s%s\n" % (advanced_command_start, advanced_preprocessing, advanced_command_end)
+    if advanced_postprocessing:
+        final_postprocessing += "%s%s%s\n" % (advanced_command_start, advanced_postprocessing, advanced_command_end)
 
     if not found_output_parameter:
         final_command += "> $param_stdout\n"
 
-    final_command = final_preprocessing + final_command
+    final_command = final_preprocessing + final_command + final_postprocessing
 
     if found_input_parameter:
         final_command = "\n#import re" + final_command
@@ -714,7 +761,6 @@ def get_input_with_same_restrictions(out_param, model, check_formats):
                     matching.append(param)
             else:
                 matching.append(param)
-    logger.error("gisr %s %s"%(out_param.name, [_.name for _ in matching]))
     if len(matching) == 1:
         return matching[0]
     else:
@@ -782,6 +828,45 @@ def create_inputs(tool, model, **kwargs):
     return inputs_node
     
 
+def get_formats(param, supported_file_formats, default = None):
+    """
+    determine format attribute
+    - check if all listed possible formats are supported in Galaxy
+    - if there is a single one, then take this
+    - otherwise try to determine an input with the same restrictions and use this as format source
+    """
+    formats = set()
+    if param.restrictions is not None:
+        if type(param.restrictions) is _FileFormat:
+            # set the first data output node to the first file format
+
+            # check if there are formats that have not been registered yet...
+            output = list()
+            for format_name in param.restrictions.formats:
+                if format_name not in supported_file_formats.keys():
+                    output.append(str(format_name))
+
+            # warn only if there's about to complain
+            if output:
+                logger.warning("Parameter " + param.name + " has the following unsupported format(s):"
+                              + ','.join(output), 1)
+
+            formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
+        else:
+            raise InvalidModelException("Unrecognized restriction type [%(type)s] "
+                                        "for [%(name)s]" % {"type": type(param.restrictions),
+                                                                   "name": param.name})
+    if len(formats) == 0:
+        if default != None:
+            formats.add(default)
+        else:
+            raise InvalidModelException("No supported formats [%(type)s] "
+                                        "for [%(name)s]" % {"type": type(param.restrictions),
+                                                                   "name": param.name})
+
+    return formats
+
+
 def create_param_attribute_list(param_node, param, model, supported_file_formats):
     """
     get the attributes of input parameters
@@ -816,20 +901,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
-        param_format = TYPE_TO_GALAXY_TYPE[_InFile]
-        if param.restrictions is not None:
-            # join all formats of the file, take mapping from supported_file if available for an entry
-            if type(param.restrictions) is _FileFormat:
-                param_format = ",".join(set([get_supported_file_type(i, supported_file_formats) if
-                                        get_supported_file_type(i, supported_file_formats)
-                                        else i for i in param.restrictions.formats]))
-            else:
-                raise InvalidModelException("Expected 'file type' restrictions for input file [%(name)s], "
-                                            "but instead got [%(type)s]"
-                                            % {"name": param.name, "type": type(param.restrictions)})
-
         param_node.attrib["type"] = "data"
-        param_node.attrib["format"] = param_format 
+        param_node.attrib["format"] = ",".join(get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[_InFile]))
         # in the case of multiple input set multiple flag
         if param.is_list:
             param_node.attrib["multiple"] = "true"
@@ -850,8 +923,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         elif type(param.restrictions) is _Choices:
 
             # if the parameter is used to select the output file type the options need to be replaced with the Galaxy data types
-            if is_out_type_param(param, model):
-                param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
+#             if is_out_type_param(param, model):
+#                 param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
 
             # add a nothing selected option to mandatory options w/o default 
             if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
@@ -886,9 +959,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
             if param.restrictions.n_max is not None:
                 param_node.attrib["max"] = str(param.restrictions.n_max)
         elif type(param.restrictions) is _FileFormat:
-            param_node.attrib["format"] = ','.join(set([get_supported_file_type(i, supported_file_formats) if
-                                            get_supported_file_type(i, supported_file_formats)
-                                            else i for i in param.restrictions.formats]))
+            # has already been handled
+            pass 
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] for parameter [%(name)s]"
                                         % {"type": type(param.restrictions), "name": param.name})
@@ -1128,41 +1200,12 @@ def create_output_node(parent, param, model, supported_file_formats):
     if data_node.attrib["name"].startswith('param_out_'):
         data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % data_node.attrib["name"][10:]
 
-    # determine format attribute
-    # - check if all listed possible formats are supported in Galaxy
-    # - if there is a single one, then take this
-    # - otherwise try to determine an input with the same restrictions and use this as format source
-    formats = set()
-    if param.restrictions is not None:
-        if type(param.restrictions) is _FileFormat:
-            # set the first data output node to the first file format
-
-            # check if there are formats that have not been registered yet...
-            output = list()
-            for format_name in param.restrictions.formats:
-                if not format_name in supported_file_formats.keys():
-                    output.append(str(format_name))
-
-            # warn only if there's about to complain
-            if output:
-                logger.warning("Parameter " + param.name + " has the following unsupported format(s):"
-                              + ','.join(output), 1)
-
-            formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
-            if len(formats) == 0:
-                raise InvalidModelException("No supported formats [%(type)s] "
-                                        "for output [%(name)s]" % {"type": type(param.restrictions),
-                                                                   "name": param.name})
-        else:
-            raise InvalidModelException("Unrecognized restriction type [%(type)s] "
-                                        "for output [%(name)s]" % {"type": type(param.restrictions),
-                                                                   "name": param.name})
-
+    formats = get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[_OutFile])
     type_param = get_out_type_param(param, model)
     corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
 
     # if there is only a single possible output format we set this
-    logger.error("%s %s %s %s %s" %(param.name, formats, type_param, fmt_from_corresponding, corresponding_input))
+#     logger.error("%s %s %s %s %s" %(param.name, formats, type_param, fmt_from_corresponding, corresponding_input))
     if len(formats) == 1:
         discover_node.attrib["format"] = formats.pop()
         if param.is_list:
@@ -1171,17 +1214,22 @@ def create_output_node(parent, param, model, supported_file_formats):
     # then this format was added as file extension on the CLI, now we can discover this
     elif type_param is not None:
         if not param.is_list:
-            discover_node = add_child_node(data_node, "discover_datasets", 
-                                  OrderedDict([("directory", get_galaxy_parameter_name(param))]))
-        discover_node.attrib["pattern"] = "__name_and_ext__"
+            change_node = add_child_node(data_node, "change_format") 
+            for r in type_param.restrictions.choices:
+                f = get_supported_file_type(r, supported_file_formats)
+                #TODO this should not happen for fully specified fileformats file
+                if f is None:
+                    f = r
+                add_child_node(change_node, "when", OrderedDict([("input", get_galaxy_parameter_name(type_param)), ("value", r), ("format", f)]))
+        else:
+            discover_node.attrib["pattern"] = "__name_and_ext__"
     elif corresponding_input is not None:
-        if fmt_from_corresponding:
-            data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
         if param.is_list:
-            discover_node.attrib["pattern"] = "__name__"
-            data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
+            discover_node.attrib["pattern"] = "__name_and_ext__"
+#             data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
             #data_node.attrib["inherit_format"] = "true"
         else:
+            data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
             data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
     else:
         if not param.is_list:
