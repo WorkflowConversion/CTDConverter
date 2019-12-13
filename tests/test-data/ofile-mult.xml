@@ -12,44 +12,40 @@
   <command detect_errors="exit_code"><![CDATA[
 #import re
 @QUOTE_FOO@
+@EXT_FOO@
 mkdir param_out_mandatory_mandatoryinput && 
 mkdir param_out_optional_mandatoryinput && 
 mkdir param_out_mandatory_optionalinput && 
 mkdir param_out_optional_optionalinput && 
 mkdir param_inp_mandatory_mandatoryinput &&
-${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ]) } && 
 mkdir param_inp_optional_mandatoryinput &&
-${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_mandatoryinput if _ ]) } && 
+${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_mandatoryinput if _ ]) } && 
 #if $param_inp_mandatory_optionalinput:
   mkdir param_inp_mandatory_optionalinput &&
-  ${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
+  ${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ]) } && 
 #end if
 #if $param_inp_optional_optionalinput:
   mkdir param_inp_optional_optionalinput &&
-  ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_.]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
+  ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ]) } && 
 #end if
 @EXECUTABLE@
 
--mandatory_mandatoryinput ${' '.join(["'param_out_mandatory_mandatoryinput/%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier)) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+-mandatory_mandatoryinput ${' '.join(["'param_out_mandatory_mandatoryinput/%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
 #if str($param_optional_mandatoryinput):
-  -optional_mandatoryinput ${' '.join(["'param_out_optional_mandatoryinput/%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier)) for _ in $param_inp_optional_mandatoryinput if _ ])}
+  -optional_mandatoryinput ${' '.join(["'param_out_optional_mandatoryinput/%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $param_inp_optional_mandatoryinput if _ ])}
 #end if
--mandatory_optionalinput ${' '.join(["'param_out_mandatory_optionalinput/%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier)) for _ in $param_inp_mandatory_optionalinput if _ ])}
+-mandatory_optionalinput ${' '.join(["'param_out_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
 #if str($param_optional_optionalinput):
-  -optional_optionalinput ${' '.join(["'param_out_optional_optionalinput/%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier)) for _ in $param_inp_optional_optionalinput if _ ])}
+  -optional_optionalinput ${' '.join(["'param_out_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ])}
 #end if
--inp_mandatory_mandatoryinput ${' '.join(["'param_inp_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
--inp_optional_mandatoryinput ${' '.join(["'param_inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_mandatoryinput if _ ])}
+-inp_mandatory_mandatoryinput ${' '.join(["'param_inp_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+-inp_optional_mandatoryinput ${' '.join(["'param_inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_mandatoryinput if _ ])}
 #if $param_inp_mandatory_optionalinput:
-  -inp_mandatory_optionalinput ${' '.join(["'param_inp_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
+  -inp_mandatory_optionalinput ${' '.join(["'param_inp_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),_.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
 #end if
 #if $param_inp_optional_optionalinput:
-  -inp_optional_optionalinput ${' '.join(["'param_inp_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_.]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
-#end if
-#if $adv_opts_cond.adv_opts_selector=='advanced':
-  #if str($adv_opts_cond.param_version):
-    -version '$adv_opts_cond.param_version'
-  #end if
+  -inp_optional_optionalinput ${' '.join(["'param_inp_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),_.ext) for _ in $param_inp_optional_optionalinput if _ ])}
 #end if
 ]]></command>
   <inputs>
@@ -59,12 +55,6 @@ ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re
     <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=""/>
     <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=""/>
     <param name="param_inp_optional_optionalinput" argument="-inp_optional_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=""/>
-    <expand macro="adv_opts_macro">
-      <param name="param_version" argument="-version" type="text" optional="true" value="2.3.0" label="Version of the tool that generated this parameters file" help="">
-        <expand macro="list_string_val"/>
-        <expand macro="list_string_san"/>
-      </param>
-    </expand>
   </inputs>
   <outputs>
     <collection type="list" name="param_out_mandatory_mandatoryinput" label="${tool.name} on ${on_string}: mandatory_mandatoryinput">
@@ -74,11 +64,11 @@ ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re
       <discover_datasets directory="param_out_optional_mandatoryinput" format="tsv" pattern="__name__"/>
       <filter>param_optional_mandatoryinput</filter>
     </collection>
-    <collection type="list" name="param_out_mandatory_optionalinput" label="${tool.name} on ${on_string}: mandatory_optionalinput" format_source="param_inp_mandatory_optionalinput" structured_like="param_inp_mandatory_optionalinput">
-      <discover_datasets directory="param_out_mandatory_optionalinput" pattern="__name__"/>
+    <collection type="list" name="param_out_mandatory_optionalinput" label="${tool.name} on ${on_string}: mandatory_optionalinput">
+      <discover_datasets directory="param_out_mandatory_optionalinput" pattern="__name_and_ext__"/>
     </collection>
-    <collection type="list" name="param_out_optional_optionalinput" label="${tool.name} on ${on_string}: optional_optionalinput" format_source="param_inp_optional_optionalinput" structured_like="param_inp_optional_optionalinput">
-      <discover_datasets directory="param_out_optional_optionalinput" pattern="__name__"/>
+    <collection type="list" name="param_out_optional_optionalinput" label="${tool.name} on ${on_string}: optional_optionalinput">
+      <discover_datasets directory="param_out_optional_optionalinput" pattern="__name_and_ext__"/>
       <filter>param_optional_optionalinput</filter>
     </collection>
   </outputs>
@@ -88,9 +78,6 @@ ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re
       <param name="param_optional_optionalinput" value="false"/>
       <param name="param_inp_mandatory_mandatoryinput" ftype="tsv" value="0test.ext,0test2.ext"/>
       <param name="param_inp_optional_mandatoryinput" ftype="tsv" value="1test.ext,1test2.ext"/>
-      <conditional name="adv_opts_cond">
-        <param name="adv_opts_selector" value="advanced"/>
-      </conditional>
       <output_collection name="param_out_mandatory_mandatoryinput"/>
       <output_collection name="param_out_mandatory_optionalinput"/>
     </test>

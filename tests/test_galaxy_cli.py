@@ -17,12 +17,13 @@ class GalaxyCliTestCase(unittest.TestCase):
         in_pth = to_test_data('{}.ctd'.format(fileprefix))
         macro_pth = to_test_data('macros.xml')
         ftypes_pth = to_test_data('filetypes.txt')
+        hcparam_pth = to_test_data('hardcoded_params.json')
         tmp = tempfile.mkdtemp()
 
         out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
         #out_file = to_test_data('{}.xml'.format(fileprefix))
 
-        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '-b', 'version', '--test-test']
+        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth]
         print(cmd)
 
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

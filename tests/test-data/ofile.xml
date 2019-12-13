@@ -11,6 +11,7 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[
 @QUOTE_FOO@
+@EXT_FOO@
 @EXECUTABLE@
 
 -mandatory_noformat '$param_out_mandatory_noformat'
@@ -26,9 +27,6 @@
   -optional_multformat '$param_out_optional_multformat'
 #end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  #if str($adv_opts_cond.param_version):
-    -version '$adv_opts_cond.param_version'
-  #end if
   -mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
   #if str($adv_opts_cond.param_optional_noformat_adv):
     -optional_noformat_adv '$param_out_optional_noformat_adv'
@@ -48,18 +46,14 @@
     <param name="param_optional_oneformat" argument="-optional_oneformat" type="boolean" optional="true" truevalue="-optional_oneformat" falsevalue="" checked="false" label="generate output optional_oneformat (output file)" help=""/>
     <param name="param_optional_multformat" argument="-optional_multformat" type="boolean" optional="true" truevalue="-optional_multformat" falsevalue="" checked="false" label="generate output optional_multformat (output file)" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_version" argument="-version" type="text" optional="true" value="2.3.0" label="Version of the tool that generated this parameters file" help="">
-        <expand macro="list_string_val"/>
-        <expand macro="list_string_san"/>
-      </param>
       <param name="param_optional_noformat_adv" argument="-optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help=""/>
       <param name="param_optional_oneformat_adv" argument="-optional_oneformat_adv" type="boolean" optional="true" truevalue="-optional_oneformat_adv" falsevalue="" checked="false" label="generate output optional_oneformat_adv (output file)" help=""/>
       <param name="param_optional_multformat_adv" argument="-optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help=""/>
     </expand>
   </inputs>
   <outputs>
-    <data name="param_out_mandatory_noformat" label="${tool.name} on ${on_string}: mandatory_noformat" auto_format="true"/>
-    <data name="param_out_optional_noformat" label="${tool.name} on ${on_string}: optional_noformat" auto_format="true">
+    <data name="param_out_mandatory_noformat" label="${tool.name} on ${on_string}: mandatory_noformat" format="txt"/>
+    <data name="param_out_optional_noformat" label="${tool.name} on ${on_string}: optional_noformat" format="txt">
       <filter>param_optional_noformat</filter>
     </data>
     <data name="param_out_mandatory_oneformat" label="${tool.name} on ${on_string}: mandatory_oneformat" format="tsv"/>
@@ -70,8 +64,8 @@
     <data name="param_out_optional_multformat" label="${tool.name} on ${on_string}: optional_multformat" auto_format="true">
       <filter>param_optional_multformat</filter>
     </data>
-    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" auto_format="true"/>
-    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" auto_format="true">
+    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="txt"/>
+    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="txt">
       <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_noformat_adv']</filter>
     </data>
     <data name="param_out_mandatory_oneformat_adv" label="${tool.name} on ${on_string}: mandatory_oneformat_adv" format="tsv"/>
@@ -94,10 +88,10 @@
         <param name="param_optional_multformat_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_out_mandatory_noformat" value="outfile.txt"/>
+      <output name="param_out_mandatory_noformat" ftype="txt" value="outfile.txt"/>
       <output name="param_out_mandatory_oneformat" ftype="tsv" value="outfile.txt"/>
       <output name="param_out_mandatory_multformat" value="outfile.txt"/>
-      <output name="param_out_mandatory_noformat_adv" value="outfile.txt"/>
+      <output name="param_out_mandatory_noformat_adv" ftype="txt" value="outfile.txt"/>
       <output name="param_out_mandatory_oneformat_adv" ftype="tsv" value="outfile.txt"/>
       <output name="param_out_mandatory_multformat_adv" value="outfile.txt"/>
     </test>

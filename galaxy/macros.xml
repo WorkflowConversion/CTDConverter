@@ -78,4 +78,37 @@
       </valid>
     </sanitizer>
   </xml>
+
+  <!-- helper function to quote space separated strings -->
+  <token name="@QUOTE_FOO@">
+#def quote(s):
+    #set $s = [ _ for _ in $s.split(" ") if _ != "" ]
+    #set $q = False
+    #for $i, $p in enumerate($s):
+        #if $p == "":
+            #continue
+        #end if
+        #if $p.startswith('"'):
+            #set $q = True
+        #end if
+        #if not $q:
+            #set $s[i] = '"%s"'%p
+        #end if
+        #if $p.endswith('"'):
+            #set $q = False
+        #end if
+    #end for
+    #return " ".join($s)
+#end def
+  </token>  
+  
+<token name="@EXT_FOO@"><![CDATA[#def oms2gxyext(o)
+    #set m={'ezt': 'tabular', 'ext': 'tsv', 'eyt': 'tabular', 'ewt': 'tsv'}
+    #return m[o]
+#end def
+#def gxy2omsext(g)
+    #set m={'tabular': 'ezt', 'tsv': 'ext'}
+    #return m[o]
+#end def
+]]></token>
 </macros>

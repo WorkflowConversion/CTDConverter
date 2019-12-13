@@ -600,9 +600,13 @@ def create_command(tool, model, **kwargs):
             else:
                 command += "'$" + actual_parameter + "'\n"
             
-            # add if statement for mandatory parameters and preprocessing
-            # - for optional outputs (param_out_x) the presence of the parameter depends on the additional input (param_x)
-            if not param.required and not is_boolean_parameter(param): # and not(param.type is _InFile and param.is_list):
+            # add if statement for optional parameters and preprocessing
+            # - for optional outputs (param_out_x) the presence of the parameter
+            #   depends on the additional input (param_x) -> need no if
+            # - real string parameters (i.e. ctd type string wo restrictions) also
+            #   need no if (otherwise the empty string could not be provided)
+            if not ( param.required or is_boolean_parameter(param) or (param.type == str and param.restrictions is None)): 
+            # and not(param.type is _InFile and param.is_list):
                 if param.type is _OutFile:
                     if param.advanced:
                         actual_parameter = ADVANCED_OPTIONS_NAME+"cond.%s" % get_galaxy_parameter_name(param, True)
@@ -612,6 +616,7 @@ def create_command(tool, model, **kwargs):
                     command = "#if $" + actual_parameter + ":\n" + utils.indent(command) + "\n#end if\n"
                 else:
                     command = "#if str($" + actual_parameter + "):\n" + utils.indent(command) + "\n#end if\n"
+                # TODO this should be if preprocessing != ""?
                 if param.type is _InFile:
                     preprocessing = "#if $" + actual_parameter + ":\n" + utils.indent(preprocessing) + "\n#end if\n"
 
@@ -665,10 +670,12 @@ def import_macros(tool, model, **kwargs):
         # do not add the path of the file, rather, just its basename
         import_node.text = os.path.basename(macro_file.name)
 
+
 def expand_macro(node, macro):
     expand_node = add_child_node(node, "expand")
     expand_node.attrib["macro"] = macro
     return expand_node
+
 
 # and to "expand" the macros in a node
 def expand_macros(node, macros_to_expand):
@@ -884,7 +891,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
                          % {"type": param.type, "name": param.name})
 
-    # ITEMLIST is rendered as text field (even if its integers or floats), an 
+    # ITEMLIST is rendered as text field (even if its integers or floats), an
     # exception is files which are treated a bit below
     if param.is_list:
         param_type = "text"
@@ -922,7 +929,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
             create_boolean_parameter(param_node, param)
         elif type(param.restrictions) is _Choices:
 
-            # if the parameter is used to select the output file type the options need to be replaced with the Galaxy data types
+            # TODO if the parameter is used to select the output file type the
+            # options need to be replaced with the Galaxy data types
 #             if is_out_type_param(param, model):
 #                 param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
 

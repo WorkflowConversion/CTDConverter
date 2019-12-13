@@ -10,25 +10,19 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[
+@QUOTE_FOO@
+@EXT_FOO@
 @EXECUTABLE@
 
 -wodefault_mandatory_unrestricted '$param_wodefault_mandatory_unrestricted'
 -default_mandatory_unrestricted '$param_default_mandatory_unrestricted'
-#if str($param_wodefault_optional_unrestricted):
-  -wodefault_optional_unrestricted '$param_wodefault_optional_unrestricted'
-#end if
-#if str($param_default_optional_unrestricted):
-  -default_optional_unrestricted '$param_default_optional_unrestricted'
-#end if
+-wodefault_optional_unrestricted '$param_wodefault_optional_unrestricted'
+-default_optional_unrestricted '$param_default_optional_unrestricted'
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -wodefault_mandatory_unrestricted_adv '$adv_opts_cond.param_wodefault_mandatory_unrestricted_adv'
   -default_mandatory_unrestricted_adv '$adv_opts_cond.param_default_mandatory_unrestricted_adv'
-  #if str($adv_opts_cond.param_wodefault_optional_unrestricted_adv):
-    -wodefault_optional_unrestricted_adv '$adv_opts_cond.param_wodefault_optional_unrestricted_adv'
-  #end if
-  #if str($adv_opts_cond.param_default_optional_unrestricted_adv):
-    -default_optional_unrestricted_adv '$adv_opts_cond.param_default_optional_unrestricted_adv'
-  #end if
+  -wodefault_optional_unrestricted_adv '$adv_opts_cond.param_wodefault_optional_unrestricted_adv'
+  -default_optional_unrestricted_adv '$adv_opts_cond.param_default_optional_unrestricted_adv'
 #end if
 > $param_stdout
 ]]></command>

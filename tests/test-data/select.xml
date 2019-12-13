@@ -10,6 +10,8 @@
   <expand macro="requirements"/>
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[
+@QUOTE_FOO@
+@EXT_FOO@
 @EXECUTABLE@
 
 -wodefault_mandatory '$param_wodefault_mandatory'

@@ -12,19 +12,16 @@
   <command detect_errors="exit_code"><![CDATA[
 #import re
 @QUOTE_FOO@
-mkdir param_out_mandatory_noformat && 
-mkdir param_out_optional_noformat && 
+@EXT_FOO@
 mkdir param_out_mandatory_multformat && 
 mkdir param_out_optional_multformat && 
 mkdir param_decoy_input_noformat &&
-ln -s '$param_decoy_input_noformat' 'param_decoy_input_noformat/${re.sub("[^\w\-_.]", "_", $param_decoy_input_noformat.element_identifier)}.${param_decoy_input_noformat.ext}' &&
+ln -s '$param_decoy_input_noformat' 'param_decoy_input_noformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_noformat.element_identifier)}.${param_decoy_input_noformat.ext}' &&
 mkdir param_decoy_input_oneformat &&
-ln -s '$param_decoy_input_oneformat' 'param_decoy_input_oneformat/${re.sub("[^\w\-_.]", "_", $param_decoy_input_oneformat.element_identifier)}.${param_decoy_input_oneformat.ext}' &&
+ln -s '$param_decoy_input_oneformat' 'param_decoy_input_oneformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_oneformat.element_identifier)}.${param_decoy_input_oneformat.ext}' &&
 mkdir param_decoy_input_multformat &&
-ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^\w\-_.]", "_", $param_decoy_input_multformat.element_identifier)}.${param_decoy_input_multformat.ext}' &&
+ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_multformat.element_identifier)}.${param_decoy_input_multformat.ext}' &&
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  mkdir param_out_mandatory_noformat_adv && 
-  mkdir param_out_optional_noformat_adv && 
   mkdir param_out_mandatory_multformat_adv && 
   mkdir param_out_optional_multformat_adv && 
 #end if
@@ -32,57 +29,62 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 
 -mandatory_noformat_type '$param_mandatory_noformat_type'
 -optional_noformat_type '$param_optional_noformat_type'
--mandatory_noformat param_out_mandatory_noformat/output.${param_mandatory_noformat_type}'
+-mandatory_noformat '$param_out_mandatory_noformat'
 #if str($param_optional_noformat):
-  -optional_noformat param_out_optional_noformat/output.${param_optional_noformat_type}'
+  -optional_noformat '$param_out_optional_noformat'
 #end if
 -mandatory_multformat_type '$param_mandatory_multformat_type'
 -optional_multformat_type '$param_optional_multformat_type'
--mandatory_multformat param_out_mandatory_multformat/output.${param_mandatory_multformat_type}'
+-mandatory_multformat 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}'
 #if str($param_optional_multformat):
-  -optional_multformat param_out_optional_multformat/output.${param_optional_multformat_type}'
+  -optional_multformat 'param_out_optional_multformat/output.${param_optional_multformat_type}'
 #end if
--decoy_input_noformat 'param_decoy_input_noformat/${re.sub('[^\w\-_.]', '_', $param_decoy_input_noformat.element_identifier)}.${param_decoy_input_noformat.ext}'
--decoy_input_oneformat 'param_decoy_input_oneformat/${re.sub('[^\w\-_.]', '_', $param_decoy_input_oneformat.element_identifier)}.${param_decoy_input_oneformat.ext}'
--decoy_input_multformat 'param_decoy_input_multformat/${re.sub('[^\w\-_.]', '_', $param_decoy_input_multformat.element_identifier)}.${param_decoy_input_multformat.ext}'
+-decoy_input_noformat 'param_decoy_input_noformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_noformat.element_identifier)}.${param_decoy_input_noformat.ext}'
+-decoy_input_oneformat 'param_decoy_input_oneformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_oneformat.element_identifier)}.${param_decoy_input_oneformat.ext}'
+-decoy_input_multformat 'param_decoy_input_multformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_multformat.element_identifier)}.${param_decoy_input_multformat.ext}'
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  #if str($adv_opts_cond.param_version):
-    -version '$adv_opts_cond.param_version'
-  #end if
   -mandatory_noformat_adv_type '$adv_opts_cond.param_mandatory_noformat_adv_type'
   -optional_noformat_adv_type '$adv_opts_cond.param_optional_noformat_adv_type'
-  -mandatory_noformat_adv param_out_mandatory_noformat_adv/output.${adv_opts_cond.param_mandatory_noformat_adv_type}'
+  -mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
   #if str($adv_opts_cond.param_optional_noformat_adv):
-    -optional_noformat_adv param_out_optional_noformat_adv/output.${adv_opts_cond.param_optional_noformat_adv_type}'
+    -optional_noformat_adv '$param_out_optional_noformat_adv'
   #end if
   -mandatory_multformat_adv_type '$adv_opts_cond.param_mandatory_multformat_adv_type'
   -optional_multformat_adv_type '$adv_opts_cond.param_optional_multformat_adv_type'
-  -mandatory_multformat_adv param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}'
+  -mandatory_multformat_adv 'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}'
   #if str($adv_opts_cond.param_optional_multformat_adv):
-    -optional_multformat_adv param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}'
+    -optional_multformat_adv 'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}'
   #end if
+#end if
+&& mv 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}' '$param_out_mandatory_multformat'&& mv 'param_out_optional_multformat/output.${param_optional_multformat_type}' '$param_out_optional_multformat'#if $adv_opts_cond.adv_opts_selector=='advanced':
+  && mv 'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}' '$param_out_mandatory_multformat_adv'
+  && mv 'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}' '$param_out_optional_multformat_adv'
 #end if
 ]]></command>
   <inputs>
     <param name="param_mandatory_noformat_type" argument="-mandatory_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ext">ext</option>
+      <option value="eyt">eyt</option>
+      <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_noformat_type" argument="-optional_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ext">ext</option>
+      <option value="eyt">eyt</option>
+      <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_noformat" argument="-optional_noformat" type="boolean" optional="true" truevalue="-optional_noformat" falsevalue="" checked="false" label="generate output optional_noformat (output file)" help=""/>
     <param name="param_mandatory_multformat_type" argument="-mandatory_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ext">ext</option>
+      <option value="eyt">eyt</option>
+      <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_multformat_type" argument="-optional_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ext">ext</option>
+      <option value="eyt">eyt</option>
+      <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_multformat" argument="-optional_multformat" type="boolean" optional="true" truevalue="-optional_multformat" falsevalue="" checked="false" label="generate output optional_multformat (output file)" help=""/>
@@ -90,88 +92,110 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
     <param name="param_decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="false" label="input file" help=""/>
     <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_version" argument="-version" type="text" optional="true" value="2.3.0" label="Version of the tool that generated this parameters file" help="">
-        <expand macro="list_string_val"/>
-        <expand macro="list_string_san"/>
-      </param>
       <param name="param_mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ext">ext</option>
+        <option value="eyt">eyt</option>
+        <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_noformat_adv_type" argument="-optional_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ext">ext</option>
+        <option value="eyt">eyt</option>
+        <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_noformat_adv" argument="-optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help=""/>
       <param name="param_mandatory_multformat_adv_type" argument="-mandatory_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ext">ext</option>
+        <option value="eyt">eyt</option>
+        <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_multformat_adv_type" argument="-optional_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ext">ext</option>
+        <option value="eyt">eyt</option>
+        <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_multformat_adv" argument="-optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help=""/>
     </expand>
   </inputs>
   <outputs>
-    <data name="param_out_mandatory_noformat" label="${tool.name} on ${on_string}: mandatory_noformat">
-      <discover_datasets directory="param_out_mandatory_noformat" pattern="__name_and_ext__"/>
-    </data>
-    <data name="param_out_optional_noformat" label="${tool.name} on ${on_string}: optional_noformat">
-      <discover_datasets directory="param_out_optional_noformat" pattern="__name_and_ext__"/>
+    <data name="param_out_mandatory_noformat" label="${tool.name} on ${on_string}: mandatory_noformat" format="txt"/>
+    <data name="param_out_optional_noformat" label="${tool.name} on ${on_string}: optional_noformat" format="txt">
       <filter>param_optional_noformat</filter>
     </data>
     <data name="param_out_mandatory_multformat" label="${tool.name} on ${on_string}: mandatory_multformat">
-      <discover_datasets directory="param_out_mandatory_multformat" pattern="__name_and_ext__"/>
+      <change_format>
+        <when input="param_mandatory_multformat_type" value="ext" format="tsv"/>
+        <when input="param_mandatory_multformat_type" value="eyt" format="tabular"/>
+        <when input="param_mandatory_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
     </data>
     <data name="param_out_optional_multformat" label="${tool.name} on ${on_string}: optional_multformat">
-      <discover_datasets directory="param_out_optional_multformat" pattern="__name_and_ext__"/>
+      <change_format>
+        <when input="param_optional_multformat_type" value="ext" format="tsv"/>
+        <when input="param_optional_multformat_type" value="eyt" format="tabular"/>
+        <when input="param_optional_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>param_optional_multformat</filter>
     </data>
-    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv">
-      <discover_datasets directory="param_out_mandatory_noformat_adv" pattern="__name_and_ext__"/>
-    </data>
-    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv">
-      <discover_datasets directory="param_out_optional_noformat_adv" pattern="__name_and_ext__"/>
+    <data name="param_out_mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="txt"/>
+    <data name="param_out_optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="txt">
       <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_noformat_adv']</filter>
     </data>
     <data name="param_out_mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv">
-      <discover_datasets directory="param_out_mandatory_multformat_adv" pattern="__name_and_ext__"/>
+      <change_format>
+        <when input="param_mandatory_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="param_mandatory_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="param_mandatory_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
     </data>
     <data name="param_out_optional_multformat_adv" label="${tool.name} on ${on_string}: optional_multformat_adv">
-      <discover_datasets directory="param_out_optional_multformat_adv" pattern="__name_and_ext__"/>
+      <change_format>
+        <when input="param_optional_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="param_optional_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="param_optional_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['param_optional_multformat_adv']</filter>
     </data>
   </outputs>
   <tests>
     <test expect_num_outputs="4">
-      <param name="param_mandatory_noformat_type" value="tsv"/>
-      <param name="param_optional_noformat_type" value="tsv"/>
+      <param name="param_mandatory_noformat_type" value="ext"/>
+      <param name="param_optional_noformat_type" value="ext"/>
       <param name="param_optional_noformat" value="false"/>
-      <param name="param_mandatory_multformat_type" value="tsv"/>
-      <param name="param_optional_multformat_type" value="tsv"/>
+      <param name="param_mandatory_multformat_type" value="ext"/>
+      <param name="param_optional_multformat_type" value="ext"/>
       <param name="param_optional_multformat" value="false"/>
       <param name="param_decoy_input_noformat" ftype="txt" value="0test.ext"/>
       <param name="param_decoy_input_oneformat" ftype="tsv" value="1test.ext"/>
       <param name="param_decoy_input_multformat" ftype="tsv" value="2test.ext"/>
       <conditional name="adv_opts_cond">
-        <param name="param_mandatory_noformat_adv_type" value="tsv"/>
-        <param name="param_optional_noformat_adv_type" value="tsv"/>
+        <param name="param_mandatory_noformat_adv_type" value="ext"/>
+        <param name="param_optional_noformat_adv_type" value="ext"/>
         <param name="param_optional_noformat_adv" value="false"/>
-        <param name="param_mandatory_multformat_adv_type" value="tsv"/>
-        <param name="param_optional_multformat_adv_type" value="tsv"/>
+        <param name="param_mandatory_multformat_adv_type" value="ext"/>
+        <param name="param_optional_multformat_adv_type" value="ext"/>
         <param name="param_optional_multformat_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_out_mandatory_noformat" value="outfile.txt"/>
-      <output name="param_out_mandatory_multformat" value="outfile.txt"/>
-      <output name="param_out_mandatory_noformat_adv" value="outfile.txt"/>
-      <output name="param_out_mandatory_multformat_adv" value="outfile.txt"/>
+      <output name="param_out_mandatory_noformat" ftype="txt" value="outfile.txt"/>
+      <output name="param_out_mandatory_multformat" value="outfile.txt">
+        <change_format>
+          <when value="ext"/>
+          <when value="eyt"/>
+          <when value="ezt"/>
+        </change_format>
+      </output>
+      <output name="param_out_mandatory_noformat_adv" ftype="txt" value="outfile.txt"/>
+      <output name="param_out_mandatory_multformat_adv" value="outfile.txt">
+        <change_format>
+          <when value="ext"/>
+          <when value="eyt"/>
+          <when value="ezt"/>
+        </change_format>
+      </output>
     </test>
   </tests>
   <help><![CDATA[Output File parameter tests-typeparam.
