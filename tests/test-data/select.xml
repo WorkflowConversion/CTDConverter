@@ -9,79 +9,108 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <command detect_errors="exit_code"><![CDATA[
-@QUOTE_FOO@
+  <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 @EXECUTABLE@
-
--wodefault_mandatory '$param_wodefault_mandatory'
--default_mandatory '$param_default_mandatory'
-#if $param_wodefault_optional:
-  -wodefault_optional '$param_wodefault_optional'
-#end if
-#if $param_default_optional:
-  -default_optional '$param_default_optional'
-#end if
--wodefault_mandatory_many '$param_wodefault_mandatory_many'
--default_mandatory_many '$param_default_mandatory_many'
-#if $param_wodefault_optional_many:
-  -wodefault_optional_many '$param_wodefault_optional_many'
-#end if
-#if $param_default_optional_many:
-  -default_optional_many '$param_default_optional_many'
-#end if
-#if $param_list_wodefault_optional:
-  -list_wodefault_optional ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_optional).split(',')])}
-#end if
--list_wodefault_mandatory ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_mandatory).split(',')])}
-#if $param_list_default_optional:
-  -list_default_optional ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_optional).split(',')])}
-#end if
--list_default_mandatory ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_mandatory).split(',')])}
-#if $param_list_wodefault_optional_many:
-  -list_wodefault_optional_many ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_optional_many).split(',')])}
-#end if
--list_wodefault_mandatory_many ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_mandatory_many).split(',')])}
-#if $param_list_default_optional_many:
-  -list_default_optional_many ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_optional_many).split(',')])}
-#end if
--list_default_mandatory_many ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_mandatory_many).split(',')])}
+  -wodefault_mandatory
+  '$param_wodefault_mandatory'
+  -default_mandatory
+  '$param_default_mandatory'
+  #if $param_wodefault_optional:
+    -wodefault_optional
+    '$param_wodefault_optional'
+  #end if
+  #if $param_default_optional:
+    -default_optional
+    '$param_default_optional'
+  #end if
+  -wodefault_mandatory_many
+  '$param_wodefault_mandatory_many'
+  -default_mandatory_many
+  '$param_default_mandatory_many'
+  #if $param_wodefault_optional_many:
+    -wodefault_optional_many
+    '$param_wodefault_optional_many'
+  #end if
+  #if $param_default_optional_many:
+    -default_optional_many
+    '$param_default_optional_many'
+  #end if
+  #if $param_list_wodefault_optional:
+    -list_wodefault_optional
+    ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_optional).split(',')])}
+  #end if
+  -list_wodefault_mandatory
+  ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_mandatory).split(',')])}
+  #if $param_list_default_optional:
+    -list_default_optional
+    ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_optional).split(',')])}
+  #end if
+  -list_default_mandatory
+  ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_mandatory).split(',')])}
+  #if $param_list_wodefault_optional_many:
+    -list_wodefault_optional_many
+    ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_optional_many).split(',')])}
+  #end if
+  -list_wodefault_mandatory_many
+  ${' '.join(["'%s'"%str(_) for _ in str($param_list_wodefault_mandatory_many).split(',')])}
+  #if $param_list_default_optional_many:
+    -list_default_optional_many
+    ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_optional_many).split(',')])}
+  #end if
+  -list_default_mandatory_many
+  ${' '.join(["'%s'"%str(_) for _ in str($param_list_default_mandatory_many).split(',')])}
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  -wodefault_mandatory_adv '$adv_opts_cond.param_wodefault_mandatory_adv'
-  -default_mandatory_adv '$adv_opts_cond.param_default_mandatory_adv'
+  -wodefault_mandatory_adv
+  '$adv_opts_cond.param_wodefault_mandatory_adv'
+  -default_mandatory_adv
+  '$adv_opts_cond.param_default_mandatory_adv'
   #if $adv_opts_cond.param_wodefault_optional_adv:
-    -wodefault_optional_adv '$adv_opts_cond.param_wodefault_optional_adv'
+    -wodefault_optional_adv
+    '$adv_opts_cond.param_wodefault_optional_adv'
   #end if
   #if $adv_opts_cond.param_default_optional_adv:
-    -default_optional_adv '$adv_opts_cond.param_default_optional_adv'
+    -default_optional_adv
+    '$adv_opts_cond.param_default_optional_adv'
   #end if
-  -wodefault_mandatory_many_adv '$adv_opts_cond.param_wodefault_mandatory_many_adv'
-  -default_mandatory_many_adv '$adv_opts_cond.param_default_mandatory_many_adv'
+  -wodefault_mandatory_many_adv
+  '$adv_opts_cond.param_wodefault_mandatory_many_adv'
+  -default_mandatory_many_adv
+  '$adv_opts_cond.param_default_mandatory_many_adv'
   #if $adv_opts_cond.param_wodefault_optional_many_adv:
-    -wodefault_optional_many_adv '$adv_opts_cond.param_wodefault_optional_many_adv'
+    -wodefault_optional_many_adv
+    '$adv_opts_cond.param_wodefault_optional_many_adv'
   #end if
   #if $adv_opts_cond.param_default_optional_many_adv:
-    -default_optional_many_adv '$adv_opts_cond.param_default_optional_many_adv'
+    -default_optional_many_adv
+    '$adv_opts_cond.param_default_optional_many_adv'
   #end if
   #if $adv_opts_cond.param_list_wodefault_optional_adv:
-    -list_wodefault_optional_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_adv).split(',')])}
+    -list_wodefault_optional_adv
+    ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_adv).split(',')])}
   #end if
-  -list_wodefault_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_adv).split(',')])}
+  -list_wodefault_mandatory_adv
+  ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_adv).split(',')])}
   #if $adv_opts_cond.param_list_default_optional_adv:
-    -list_default_optional_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_optional_adv).split(',')])}
+    -list_default_optional_adv
+    ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_optional_adv).split(',')])}
   #end if
-  -list_default_mandatory_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_adv).split(',')])}
+  -list_default_mandatory_adv
+  ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_adv).split(',')])}
   #if $adv_opts_cond.param_list_wodefault_optional_many_adv:
-    -list_wodefault_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_many_adv).split(',')])}
+    -list_wodefault_optional_many_adv
+    ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_many_adv).split(',')])}
   #end if
-  -list_wodefault_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_many_adv).split(',')])}
+  -list_wodefault_mandatory_many_adv
+  ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_many_adv).split(',')])}
   #if $adv_opts_cond.param_list_default_optional_many_adv:
-    -list_default_optional_many_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_optional_many_adv).split(',')])}
+    -list_default_optional_many_adv
+    ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_optional_many_adv).split(',')])}
   #end if
-  -list_default_mandatory_many_adv ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_many_adv).split(',')])}
+  -list_default_mandatory_many_adv
+  ${' '.join(["'%s'"%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_many_adv).split(',')])}
 #end if
-> $param_stdout
-]]></command>
+> $param_stdout]]></command>
   <inputs>
     <param name="param_wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" value="" label="string" help="">
       <option value="A">A</option>

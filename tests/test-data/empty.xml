@@ -9,13 +9,10 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <command detect_errors="exit_code"><![CDATA[
-@QUOTE_FOO@
+  <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 @EXECUTABLE@
-
-> $param_stdout
-]]></command>
+> $param_stdout]]></command>
   <inputs/>
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>

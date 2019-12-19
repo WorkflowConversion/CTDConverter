@@ -9,23 +9,20 @@
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <command detect_errors="exit_code"><![CDATA[
-@QUOTE_FOO@
+  <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 @EXECUTABLE@
-
-$param_true
-$param_false
-$param_flag_true
-$param_flag_false
+  $param_true
+  $param_false
+  $param_flag_true
+  $param_flag_false
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   $adv_opts_cond.param_true_adv
   $adv_opts_cond.param_false_adv
   $adv_opts_cond.param_flag_true_adv
   $adv_opts_cond.param_flag_false_adv
 #end if
-> $param_stdout
-]]></command>
+> $param_stdout]]></command>
   <inputs>
     <param name="param_true" argument="-true" type="boolean" optional="true" truevalue="" falsevalue="-true false" checked="true" label="bool" help=""/>
     <param name="param_false" argument="-false" type="boolean" optional="true" truevalue="-false" falsevalue="" checked="false" label="bool" help=""/>

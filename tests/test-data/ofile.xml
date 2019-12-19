@@ -1,46 +1,55 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_outFileTest" name="echo outFileTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="'$__tool_directory__/mock.py'_ofile.ctd" name="'$__tool_directory__/mock.py' ofile.ctd" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Outut File parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">echo outFileTest</token>
+    <token name="@EXECUTABLE@">'$__tool_directory__/mock.py' ofile.ctd</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
   <expand macro="stdio"/>
-  <command detect_errors="exit_code"><![CDATA[
-@QUOTE_FOO@
+  <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 @EXECUTABLE@
-
--mandatory_noformat '$param_out_mandatory_noformat'
-#if str($param_optional_noformat):
-  -optional_noformat '$param_out_optional_noformat'
-#end if
--mandatory_oneformat '$param_out_mandatory_oneformat'
-#if str($param_optional_oneformat):
-  -optional_oneformat '$param_out_optional_oneformat'
-#end if
--mandatory_multformat '$param_out_mandatory_multformat'
-#if str($param_optional_multformat):
-  -optional_multformat '$param_out_optional_multformat'
-#end if
+  -mandatory_noformat
+  '$param_out_mandatory_noformat'
+  #if str($param_optional_noformat):
+    -optional_noformat
+    '$param_out_optional_noformat'
+  #end if
+  -mandatory_oneformat
+  '$param_out_mandatory_oneformat'
+  #if str($param_optional_oneformat):
+    -optional_oneformat
+    '$param_out_optional_oneformat'
+  #end if
+  -mandatory_multformat
+  '$param_out_mandatory_multformat'
+  #if str($param_optional_multformat):
+    -optional_multformat
+    '$param_out_optional_multformat'
+  #end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  -mandatory_noformat_adv '$param_out_mandatory_noformat_adv'
+  -mandatory_noformat_adv
+  '$param_out_mandatory_noformat_adv'
   #if str($adv_opts_cond.param_optional_noformat_adv):
-    -optional_noformat_adv '$param_out_optional_noformat_adv'
+    -optional_noformat_adv
+    '$param_out_optional_noformat_adv'
   #end if
-  -mandatory_oneformat_adv '$param_out_mandatory_oneformat_adv'
+  -mandatory_oneformat_adv
+  '$param_out_mandatory_oneformat_adv'
   #if str($adv_opts_cond.param_optional_oneformat_adv):
-    -optional_oneformat_adv '$param_out_optional_oneformat_adv'
+    -optional_oneformat_adv
+    '$param_out_optional_oneformat_adv'
   #end if
-  -mandatory_multformat_adv '$param_out_mandatory_multformat_adv'
+  -mandatory_multformat_adv
+  '$param_out_mandatory_multformat_adv'
   #if str($adv_opts_cond.param_optional_multformat_adv):
-    -optional_multformat_adv '$param_out_optional_multformat_adv'
+    -optional_multformat_adv
+    '$param_out_optional_multformat_adv'
   #end if
-#end if
-]]></command>
+#end if]]></command>
   <inputs>
     <param name="param_optional_noformat" argument="-optional_noformat" type="boolean" optional="true" truevalue="-optional_noformat" falsevalue="" checked="false" label="generate output optional_noformat (output file)" help=""/>
     <param name="param_optional_oneformat" argument="-optional_oneformat" type="boolean" optional="true" truevalue="-optional_oneformat" falsevalue="" checked="false" label="generate output optional_oneformat (output file)" help=""/>
