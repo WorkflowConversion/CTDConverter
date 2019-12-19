@@ -1,7 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
+<!-- CTD2Galaxy depends on this file and on the stdio, advanced_options macros!
+     You can edit this file to add your own macros, if you so desire, or you can
+     add additional macro files using the m/macros parameter -->
 <macros>
   <token name="@TOOL_VERSION@">2.3.0</token>
-  <token name="@GALAXY_VERSION@">8</token>
+  <token name="@GALAXY_VERSION@">0</token>
   <xml name="requirements">
     <requirements>
       <requirement type="package" version="@TOOL_VERSION@">openms</requirement>
@@ -35,7 +38,7 @@
 
   <!-- sanitizers and validators -->
   <xml name="list_string_val">
-    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)">^ *((?:\"[^\"]*\" +)|(?:[^ \"]+ +))*((?:\"[^\"]*\")|(?:[^ \"]+)) *$</validator>
+    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)"><![CDATA[^ *((?:\'[^\']*\' +)|(?:[^ \']+ +))*((?:\'[^\']*\')|(?:[^ \']+)) *$]]></validator>
   </xml>
   <xml name="list_string_san">
     <sanitizer>
@@ -51,7 +54,7 @@
     </sanitizer>
   </xml>
   <xml name="list_float_valsan">
-    <validator type="regex" message="a space separated list of float values is required">^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$</validator>
+    <validator type="regex" message="a space separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
     <yield/>
     <sanitizer>
       <valid initial="string.digits">
@@ -65,7 +68,7 @@
     </sanitizer>
   </xml>
   <xml name="list_integer_valsan">
-    <validator type="regex" message="a space separated list of integer values is required">^ *[+-]?[0-9]+( *[+-]?[0-9]+)* *$</validator>
+    <validator type="regex" message="a space separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *[+-]?[0-9]+)* *$]]></validator>
     <yield/>
     <sanitizer>
       <valid initial="string.digits">
@@ -83,19 +86,22 @@
     #set $q = False
     #for $i, $p in enumerate($s):
         #if $p == "":
-			#continue
-		#end if
-        #if $p.startswith('"'):
+            #continue
+        #end if
+        #if $p.startswith("'"):
             #set $q = True
-		#end if
+        #end if
+        #if p.startswith('-'):
+            p = "\\" + p
+        #end if
         #if not $q:
-            #set $s[i] = '"%s"'%p
-		#end if
-        #if $p.endswith('"'):
-		    #set $q = False
-		#end if
-	#end for
-	#return " ".join($s)
+            #set $s[i] = "'%s'" % p
+        #end if
+        #if $p.endswith("'"):
+            #set $q = False
+        #end if
+    #end for
+    #return " ".join($s)
 #end def
   </token>
 

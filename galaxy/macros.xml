@@ -38,7 +38,7 @@
 
   <!-- sanitizers and validators -->
   <xml name="list_string_val">
-    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)"><![CDATA[^ *((?:\"[^\"]*\" +)|(?:[^ \"]+ +))*((?:\"[^\"]*\")|(?:[^ \"]+)) *$]]></validator>
+    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)"><![CDATA[^ *((?:\'[^\']*\' +)|(?:[^ \']+ +))*((?:\'[^\']*\')|(?:[^ \']+)) *$]]></validator>
   </xml>
   <xml name="list_string_san">
     <sanitizer>
@@ -88,27 +88,29 @@
         #if $p == "":
             #continue
         #end if
-        #if $p.startswith('"'):
+        #if $p.startswith("'"):
             #set $q = True
         #end if
-        #if not $q:
-            #set $s[i] = '"%s"'%p
+        #if p.startswith('-'):
+            p = "\\" + p
         #end if
-        #if $p.endswith('"'):
+        #if not $q:
+            #set $s[i] = "'%s'" % p
+        #end if
+        #if $p.endswith("'"):
             #set $q = False
         #end if
     #end for
     #return " ".join($s)
 #end def
-  </token>  
-  
+  </token>
+
 <token name="@EXT_FOO@"><![CDATA[#def oms2gxyext(o)
     #set m={'ezt': 'tabular', 'ext': 'tsv', 'eyt': 'tabular', 'ewt': 'tsv'}
     #return m[o]
 #end def
 #def gxy2omsext(g)
-    #set m={'tabular': 'ezt', 'tsv': 'ext'}
-    #return m[o]
+    #set m={'tsv': 'ewt', 'tabular': 'eyt', 'txt': 'txt'}
+    #return m[g]
 #end def
-]]></token>
-</macros>
+]]></token></macros>
