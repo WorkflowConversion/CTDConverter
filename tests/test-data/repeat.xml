@@ -128,180 +128,180 @@
 #end if
 > $param_stdout]]></command>
   <inputs>
-    <param name="param_string_wodefault_optional" argument="-string_wodefault_optional" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
+    <param name="param_string_wodefault_optional" argument="-string_wodefault_optional" type="text" optional="true" value="" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_wodefault_mandatory" argument="-string_wodefault_mandatory" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
+    <param name="param_string_wodefault_mandatory" argument="-string_wodefault_mandatory" type="text" optional="false" value="" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="A B" label="string list" help=" (comma separated list)">
+    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="A B" label="string list" help=" (comma separated list)">
+    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_int_wodefault_optional" argument="-int_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
+    <param name="param_int_wodefault_optional" argument="-int_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_wodefault_mandatory" argument="-int_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
+    <param name="param_int_wodefault_mandatory" argument="-int_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_default_optional" argument="-int_default_optional" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+    <param name="param_int_default_optional" argument="-int_default_optional" type="text" optional="true" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_default_mandatory" argument="-int_default_mandatory" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+    <param name="param_int_default_mandatory" argument="-int_default_mandatory" type="text" optional="false" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan"/>
     </param>
-    <param name="param_int_resticted_wodefault_optional" argument="-int_resticted_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
+    <param name="param_int_resticted_wodefault_optional" argument="-int_resticted_wodefault_optional" type="text" optional="true" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan">
-        <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_) <= 100])
+        <validator type="expression" message="a space separated list of integer values in the range -100:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_) <= 100])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_int_resticted_wodefault_mandatory" argument="-int_resticted_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
+    <param name="param_int_resticted_wodefault_mandatory" argument="-int_resticted_wodefault_mandatory" type="text" optional="false" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan">
-        <validator type="expression" message="a space separated list of integer values in the range 0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_)])
+        <validator type="expression" message="a space separated list of integer values in the range -100: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_)])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_int_resticted_default_optional" argument="-int_resticted_default_optional" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+    <param name="param_int_resticted_default_optional" argument="-int_resticted_default_optional" type="text" optional="true" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan">
         <validator type="expression" message="a space separated list of integer values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  int(_) <= 100])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_int_resticted_default_mandatory" argument="-int_resticted_default_mandatory" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+    <param name="param_int_resticted_default_mandatory" argument="-int_resticted_default_mandatory" type="text" optional="false" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_integer_valsan">
-        <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_) <= 100])
+        <validator type="expression" message="a space separated list of integer values in the range -100:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_) <= 100])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_double_wodefault_optional" argument="-double_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
+    <param name="param_double_wodefault_optional" argument="-double_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_wodefault_mandatory" argument="-double_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
+    <param name="param_double_wodefault_mandatory" argument="-double_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_default_optional" argument="-double_default_optional" type="text" optional="true" value="1.0 2.0" label="double list" help=" (comma separated list)">
+    <param name="param_double_default_optional" argument="-double_default_optional" type="text" optional="true" value="-1.0 2.0" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_default_mandatory" argument="-double_default_mandatory" type="text" optional="false" value="1.0 2.0" label="double list" help=" (comma separated list)">
+    <param name="param_double_default_mandatory" argument="-double_default_mandatory" type="text" optional="false" value="-1.0 2.0" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan"/>
     </param>
-    <param name="param_double_resticted_wodefault_optional" argument="-double_resticted_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
+    <param name="param_double_resticted_wodefault_optional" argument="-double_resticted_wodefault_optional" type="text" optional="true" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan">
-        <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_) <= 1.0])
+        <validator type="expression" message="a space separated list of float values in the range -1.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_) <= 1.0])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_double_resticted_wodefault_mandatory" argument="-double_resticted_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
+    <param name="param_double_resticted_wodefault_mandatory" argument="-double_resticted_wodefault_mandatory" type="text" optional="false" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan">
-        <validator type="expression" message="a space separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_)])
+        <validator type="expression" message="a space separated list of float values in the range -1.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_)])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_double_resticted_default_optional" argument="-double_resticted_default_optional" type="text" optional="true" value="0.3 0.5" label="double list" help=" (comma separated list)">
+    <param name="param_double_resticted_default_optional" argument="-double_resticted_default_optional" type="text" optional="true" value="-0.3 0.5" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan">
         <validator type="expression" message="a space separated list of float values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  float(_) <= 1.0])
 ]]></validator>
       </expand>
     </param>
-    <param name="param_double_resticted_default_mandatory" argument="-double_resticted_default_mandatory" type="text" optional="false" value="0.3 0.5" label="double list" help=" (comma separated list)">
+    <param name="param_double_resticted_default_mandatory" argument="-double_resticted_default_mandatory" type="text" optional="false" value="-0.3 0.5" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_float_valsan">
-        <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_) <= 1.0])
+        <validator type="expression" message="a space separated list of float values in the range -1.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_) <= 1.0])
 ]]></validator>
       </expand>
     </param>
     <expand macro="adv_opts_macro">
-      <param name="param_string_wodefault_optional_adv" argument="-string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (comma separated list)">
+      <param name="param_string_wodefault_optional_adv" argument="-string_wodefault_optional_adv" type="text" optional="true" value="" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_wodefault_mandatory_adv" argument="-string_wodefault_mandatory_adv" type="text" optional="false" value="" label="string list" help=" (comma separated list)">
+      <param name="param_string_wodefault_mandatory_adv" argument="-string_wodefault_mandatory_adv" type="text" optional="false" value="" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="A B" label="string list" help=" (comma separated list)">
+      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="A B" label="string list" help=" (comma separated list)">
+      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_int_wodefault_optional_adv" argument="-int_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
+      <param name="param_int_wodefault_optional_adv" argument="-int_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_wodefault_mandatory_adv" argument="-int_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
+      <param name="param_int_wodefault_mandatory_adv" argument="-int_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_default_optional_adv" argument="-int_default_optional_adv" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+      <param name="param_int_default_optional_adv" argument="-int_default_optional_adv" type="text" optional="true" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_default_mandatory_adv" argument="-int_default_mandatory_adv" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+      <param name="param_int_default_mandatory_adv" argument="-int_default_mandatory_adv" type="text" optional="false" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan"/>
       </param>
-      <param name="param_int_resticted_wodefault_optional_adv" argument="-int_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (comma separated list)">
+      <param name="param_int_resticted_wodefault_optional_adv" argument="-int_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan">
-          <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_) <= 100])
+          <validator type="expression" message="a space separated list of integer values in the range -100:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_) <= 100])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_int_resticted_wodefault_mandatory_adv" argument="-int_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (comma separated list)">
+      <param name="param_int_resticted_wodefault_mandatory_adv" argument="-int_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan">
-          <validator type="expression" message="a space separated list of integer values in the range 0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_)])
+          <validator type="expression" message="a space separated list of integer values in the range -100: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_)])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_int_resticted_default_optional_adv" argument="-int_resticted_default_optional_adv" type="text" optional="true" value="1 2" label="int list" help=" (comma separated list)">
+      <param name="param_int_resticted_default_optional_adv" argument="-int_resticted_default_optional_adv" type="text" optional="true" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan">
           <validator type="expression" message="a space separated list of integer values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  int(_) <= 100])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_int_resticted_default_mandatory_adv" argument="-int_resticted_default_mandatory_adv" type="text" optional="false" value="1 2" label="int list" help=" (comma separated list)">
+      <param name="param_int_resticted_default_mandatory_adv" argument="-int_resticted_default_mandatory_adv" type="text" optional="false" value="-1 2" label="int list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_integer_valsan">
-          <validator type="expression" message="a space separated list of integer values in the range 0:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0 <= int(_) <= 100])
+          <validator type="expression" message="a space separated list of integer values in the range -100:100 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -100 <= int(_) <= 100])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_double_wodefault_optional_adv" argument="-double_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
+      <param name="param_double_wodefault_optional_adv" argument="-double_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_wodefault_mandatory_adv" argument="-double_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
+      <param name="param_double_wodefault_mandatory_adv" argument="-double_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_default_optional_adv" argument="-double_default_optional_adv" type="text" optional="true" value="1.0 2.0" label="double list" help=" (comma separated list)">
+      <param name="param_double_default_optional_adv" argument="-double_default_optional_adv" type="text" optional="true" value="-1.0 2.0" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_default_mandatory_adv" argument="-double_default_mandatory_adv" type="text" optional="false" value="1.0 2.0" label="double list" help=" (comma separated list)">
+      <param name="param_double_default_mandatory_adv" argument="-double_default_mandatory_adv" type="text" optional="false" value="-1.0 2.0" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan"/>
       </param>
-      <param name="param_double_resticted_wodefault_optional_adv" argument="-double_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (comma separated list)">
+      <param name="param_double_resticted_wodefault_optional_adv" argument="-double_resticted_wodefault_optional_adv" type="text" optional="true" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan">
-          <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_) <= 1.0])
+          <validator type="expression" message="a space separated list of float values in the range -1.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_) <= 1.0])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_double_resticted_wodefault_mandatory_adv" argument="-double_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (comma separated list)">
+      <param name="param_double_resticted_wodefault_mandatory_adv" argument="-double_resticted_wodefault_mandatory_adv" type="text" optional="false" value="" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan">
-          <validator type="expression" message="a space separated list of float values in the range 0.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_)])
+          <validator type="expression" message="a space separated list of float values in the range -1.0: is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_)])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_double_resticted_default_optional_adv" argument="-double_resticted_default_optional_adv" type="text" optional="true" value="0.3 0.5" label="double list" help=" (comma separated list)">
+      <param name="param_double_resticted_default_optional_adv" argument="-double_resticted_default_optional_adv" type="text" optional="true" value="-0.3 0.5" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan">
           <validator type="expression" message="a space separated list of float values in the range :None is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  float(_) <= 1.0])
 ]]></validator>
         </expand>
       </param>
-      <param name="param_double_resticted_default_mandatory_adv" argument="-double_resticted_default_mandatory_adv" type="text" optional="false" value="0.3 0.5" label="double list" help=" (comma separated list)">
+      <param name="param_double_resticted_default_mandatory_adv" argument="-double_resticted_default_mandatory_adv" type="text" optional="false" value="-0.3 0.5" label="double list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_float_valsan">
-          <validator type="expression" message="a space separated list of float values in the range 0.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  0.0 <= float(_) <= 1.0])
+          <validator type="expression" message="a space separated list of float values in the range -1.0:1.0 is required"><![CDATA[len(value.split(' ')) == len([_ for _ in value.split(' ') if  -1.0 <= float(_) <= 1.0])
 ]]></validator>
         </expand>
       </param>
@@ -313,26 +313,26 @@
   <tests>
     <test expect_num_outputs="1">
       <param name="param_string_wodefault_mandatory" value="1 2"/>
-      <param name="param_string_default_mandatory" value="A B"/>
+      <param name="param_string_default_mandatory" value="'A A' -B"/>
       <param name="param_int_wodefault_mandatory" value="1 2"/>
-      <param name="param_int_default_mandatory" value="1 2"/>
+      <param name="param_int_default_mandatory" value="-1 2"/>
       <param name="param_int_resticted_wodefault_mandatory" value="1 2"/>
-      <param name="param_int_resticted_default_mandatory" value="1 2"/>
+      <param name="param_int_resticted_default_mandatory" value="-1 2"/>
       <param name="param_double_wodefault_mandatory" value="1 2"/>
-      <param name="param_double_default_mandatory" value="1.0 2.0"/>
+      <param name="param_double_default_mandatory" value="-1.0 2.0"/>
       <param name="param_double_resticted_wodefault_mandatory" value="1 2"/>
-      <param name="param_double_resticted_default_mandatory" value="0.3 0.5"/>
+      <param name="param_double_resticted_default_mandatory" value="-0.3 0.5"/>
       <conditional name="adv_opts_cond">
         <param name="param_string_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_string_default_mandatory_adv" value="A B"/>
+        <param name="param_string_default_mandatory_adv" value="'A A' -B"/>
         <param name="param_int_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_int_default_mandatory_adv" value="1 2"/>
+        <param name="param_int_default_mandatory_adv" value="-1 2"/>
         <param name="param_int_resticted_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_int_resticted_default_mandatory_adv" value="1 2"/>
+        <param name="param_int_resticted_default_mandatory_adv" value="-1 2"/>
         <param name="param_double_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_double_default_mandatory_adv" value="1.0 2.0"/>
+        <param name="param_double_default_mandatory_adv" value="-1.0 2.0"/>
         <param name="param_double_resticted_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_double_resticted_default_mandatory_adv" value="0.3 0.5"/>
+        <param name="param_double_resticted_default_mandatory_adv" value="-0.3 0.5"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>

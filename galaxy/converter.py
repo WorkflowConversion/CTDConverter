@@ -1065,7 +1065,15 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 message += "is required"
                 validator_node = SubElement(valsan, "validator", OrderedDict([("type", "expression"), ("message", message )]))
                 validator_node.text = CDATA(expression)
-
+        else:
+            # add quotes to the default values (only if they include spaces .. then the UI looks nicer)
+            if not (param.default is None or param.default is _Null) and param.type is not _InFile:
+                if type(param.default) is list:
+                    for i, d in enumerate(param.default):
+                        if " " in d:
+                            param.default[i] = "'%s'" %d
+                elif " " in param.default:
+                    param.default = "'%s'" %param.default
     # add sanitizer nodes to 
     # - text (only those that are not actually integer selects which are treated above) and 
     # - select params, 
@@ -1102,7 +1110,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     if param.description is not None:
         label, help_text = generate_label_and_help(param.description)
     if param.is_list and not is_selection_parameter(param) and not param.type is _InFile:
-        help_text += " (comma separated list)"
+        help_text += " (space separated list, in order to allow for spaces in list items surround them by single quotes)"
 
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text

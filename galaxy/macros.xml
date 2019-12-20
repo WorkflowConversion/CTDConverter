@@ -3,8 +3,8 @@
      You can edit this file to add your own macros, if you so desire, or you can
      add additional macro files using the m/macros parameter -->
 <macros>
-  <token name="@TOOL_VERSION@">2.3</token>
-  <token name="@GALAXY_VERSION@">0</token>
+  <token name="@TOOL_VERSION@">2.3.0</token>
+  <token name="@GALAXY_VERSION@">3</token>
   <xml name="requirements">
     <requirements>
       <requirement type="package" version="@TOOL_VERSION@">openms</requirement>
@@ -38,23 +38,24 @@
 
   <!-- sanitizers and validators -->
   <xml name="list_string_val">
-    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)"><![CDATA[^ *((?:\'[^\']*\' +)|(?:[^ \']+ +))*((?:\'[^\']*\')|(?:[^ \']+)) *$]]></validator>
+    <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)">^ *((?:\'[^\']*\' +)|(?:[^ \']+ +))*((?:\'[^\']*\')|(?:[^ \']+)) *$</validator>
   </xml>
   <xml name="list_string_san">
     <sanitizer>
       <valid initial="string.printable">
         <remove value="'"/>
+        <remove value="\"/><!-- otherwise the user could quote the final quote -->
         <remove value="`"/>
         <remove value="$"/>
         <remove value="&lt;"/>
+	<!--<remove value="&amp;"/> removed for MascotAdapterOnline -Mascot_server:export_params which is a URL POST string which can contain & .. could be mapped to &amp; but there is still a & -->
+        <!--<remove value=";"/>-->
         <remove value="#"/>
-        <remove value="&amp;"/>
-        <remove value=";"/>
       </valid>
     </sanitizer>
   </xml>
   <xml name="list_float_valsan">
-    <validator type="regex" message="a space separated list of float values is required"><![CDATA[^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$]]></validator>
+    <validator type="regex" message="a space separated list of float values is required">^ *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?( *[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?)* *$</validator>
     <yield/>
     <sanitizer>
       <valid initial="string.digits">
@@ -68,7 +69,7 @@
     </sanitizer>
   </xml>
   <xml name="list_integer_valsan">
-    <validator type="regex" message="a space separated list of integer values is required"><![CDATA[^ *[+-]?[0-9]+( *[+-]?[0-9]+)* *$]]></validator>
+    <validator type="regex" message="a space separated list of integer values is required">^ *[+-]?[0-9]+( *[+-]?[0-9]+)* *$</validator>
     <yield/>
     <sanitizer>
       <valid initial="string.digits">
