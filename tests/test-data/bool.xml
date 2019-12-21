@@ -11,11 +11,12 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
+#import re
 @EXECUTABLE@
-  $param_true
-  $param_false
-  $param_flag_true
-  $param_flag_false
+$param_true
+$param_false
+$param_flag_true
+$param_flag_false
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   $adv_opts_cond.param_true_adv
   $adv_opts_cond.param_false_adv

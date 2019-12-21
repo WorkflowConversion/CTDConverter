@@ -11,37 +11,72 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
+#import re
+mkdir param_out_mandatory_noformat &&
+ln -s '$param_out_mandatory_noformat' 'param_out_mandatory_noformat/output.${gxy2omsext("txt")}' &&
+#if str($param_optional_noformat):
+  mkdir param_out_optional_noformat &&
+  ln -s '$param_out_optional_noformat' 'param_out_optional_noformat/output.${gxy2omsext("txt")}' &&
+#end if
+mkdir param_out_mandatory_oneformat &&
+ln -s '$param_out_mandatory_oneformat' 'param_out_mandatory_oneformat/output.${gxy2omsext("tsv")}' &&
+#if str($param_optional_oneformat):
+  mkdir param_out_optional_oneformat &&
+  ln -s '$param_out_optional_oneformat' 'param_out_optional_oneformat/output.${gxy2omsext("tsv")}' &&
+#end if
+mkdir param_out_mandatory_multformat &&
+#if str($param_optional_multformat):
+  mkdir param_out_optional_multformat &&
+#end if
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  mkdir param_out_mandatory_noformat_adv &&
+  ln -s '$param_out_mandatory_noformat_adv' 'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}' &&
+  #if str($adv_opts_cond.param_optional_noformat_adv):
+    mkdir param_out_optional_noformat_adv &&
+    ln -s '$param_out_optional_noformat_adv' 'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}' &&
+  #end if
+  mkdir param_out_mandatory_oneformat_adv &&
+  ln -s '$param_out_mandatory_oneformat_adv' 'param_out_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}' &&
+  #if str($adv_opts_cond.param_optional_oneformat_adv):
+    mkdir param_out_optional_oneformat_adv &&
+    ln -s '$param_out_optional_oneformat_adv' 'param_out_optional_oneformat_adv/output.${gxy2omsext("tsv")}' &&
+  #end if
+  mkdir param_out_mandatory_multformat_adv &&
+  #if str($adv_opts_cond.param_optional_multformat_adv):
+    mkdir param_out_optional_multformat_adv &&
+  #end if
+#end if
 @EXECUTABLE@
-  -mandatory_noformat
-  '$param_out_mandatory_noformat'
-  #if str($param_optional_noformat):
-    -optional_noformat
-    '$param_out_optional_noformat'
-  #end if
-  -mandatory_oneformat
-  '$param_out_mandatory_oneformat'
-  #if str($param_optional_oneformat):
-    -optional_oneformat
-    '$param_out_optional_oneformat'
-  #end if
-  -mandatory_multformat
-  '$param_out_mandatory_multformat'
-  #if str($param_optional_multformat):
-    -optional_multformat
-    '$param_out_optional_multformat'
-  #end if
+-mandatory_noformat
+'param_out_mandatory_noformat/output.${gxy2omsext("txt")}'
+#if str($param_optional_noformat):
+  -optional_noformat
+  'param_out_optional_noformat/output.${gxy2omsext("txt")}'
+#end if
+-mandatory_oneformat
+'param_out_mandatory_oneformat/output.${gxy2omsext("tsv")}'
+#if str($param_optional_oneformat):
+  -optional_oneformat
+  'param_out_optional_oneformat/output.${gxy2omsext("tsv")}'
+#end if
+-mandatory_multformat
+'$param_out_mandatory_multformat'
+#if str($param_optional_multformat):
+  -optional_multformat
+  '$param_out_optional_multformat'
+#end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -mandatory_noformat_adv
-  '$param_out_mandatory_noformat_adv'
+  'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}'
   #if str($adv_opts_cond.param_optional_noformat_adv):
     -optional_noformat_adv
-    '$param_out_optional_noformat_adv'
+    'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}'
   #end if
   -mandatory_oneformat_adv
-  '$param_out_mandatory_oneformat_adv'
+  'param_out_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}'
   #if str($adv_opts_cond.param_optional_oneformat_adv):
     -optional_oneformat_adv
-    '$param_out_optional_oneformat_adv'
+    'param_out_optional_oneformat_adv/output.${gxy2omsext("tsv")}'
   #end if
   -mandatory_multformat_adv
   '$param_out_mandatory_multformat_adv'

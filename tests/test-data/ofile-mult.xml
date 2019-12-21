@@ -11,52 +11,56 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
-  mkdir param_out_mandatory_mandatoryinput &&
-  #if str($param_optional_mandatoryinput):
-    mkdir param_out_optional_mandatoryinput &&
-  #end if
-  mkdir param_out_mandatory_optionalinput && 
-  #if str($param_optional_optionalinput):
-    mkdir param_out_optional_optionalinput && 
-  #end if
-  mkdir param_inp_mandatory_mandatoryinput &&
-  ${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_mandatoryinput if _ ]) } &&
-  mkdir param_inp_optional_mandatoryinput &&
-  ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_mandatoryinput if _ ]) } &&
-  #if $param_inp_mandatory_optionalinput:
-    mkdir param_inp_mandatory_optionalinput &&
-    ${ ' && '.join([ "ln -s '%s' 'param_inp_mandatory_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_optionalinput if _ ]) } &&
-  #end if
-  #if $param_inp_optional_optionalinput:
-    mkdir param_inp_optional_optionalinput &&
-    ${ ' && '.join([ "ln -s '%s' 'param_inp_optional_optionalinput/%s.%s'" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_optionalinput if _ ]) } &&
-  #end if
 #import re
+mkdir param_out_mandatory_mandatoryinput &&
+#if str($param_optional_mandatoryinput):
+  mkdir param_out_optional_mandatoryinput &&
+#end if
+mkdir param_out_mandatory_optionalinput &&
+#if str($param_optional_optionalinput):
+  mkdir param_out_optional_optionalinput &&
+#end if
+mkdir param_inp_mandatory_mandatoryinput &&
+${ ' '.join([ "ln -s '%s' 'param_inp_mandatory_mandatoryinput/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_mandatoryinput if _ ]) }
+mkdir param_inp_optional_mandatoryinput &&
+${ ' '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_mandatoryinput if _ ]) }
+#if $param_inp_mandatory_optionalinput:
+  mkdir param_inp_mandatory_optionalinput &&
+  ${ ' '.join([ "ln -s '%s' 'param_inp_mandatory_optionalinput/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_optionalinput if _ ]) }
+#end if
+#if $param_inp_optional_optionalinput:
+  mkdir param_inp_optional_optionalinput &&
+  ${ ' '.join([ "ln -s '%s' 'param_inp_optional_optionalinput/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_optionalinput if _ ]) }
+#end if
 @EXECUTABLE@
-  -mandatory_mandatoryinput
-  ${' '.join(["'param_out_mandatory_mandatoryinput/%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
-  #if str($param_optional_mandatoryinput):
-    -optional_mandatoryinput
-    ${' '.join(["'param_out_optional_mandatoryinput/%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $param_inp_optional_mandatoryinput if _ ])}
-  #end if
-  -mandatory_optionalinput
-  ${' '.join(["'param_out_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
-  #if str($param_optional_optionalinput):
-    -optional_optionalinput
-    ${' '.join(["'param_out_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ])}
-  #end if
-  -inp_mandatory_mandatoryinput
-  ${' '.join(["'param_inp_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
-  -inp_optional_mandatoryinput
-  ${' '.join(["'param_inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_mandatoryinput if _ ])}
-  #if $param_inp_mandatory_optionalinput:
-    -inp_mandatory_optionalinput
-    ${' '.join(["'param_inp_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_optionalinput if _ ])}
-  #end if
-  #if $param_inp_optional_optionalinput:
-    -inp_optional_optionalinput
-    ${' '.join(["'param_inp_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_optionalinput if _ ])}
-  #end if]]></command>
+-mandatory_mandatoryinput
+${' '.join(["'param_out_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+#if str($param_optional_mandatoryinput):
+  -optional_mandatoryinput
+  ${' '.join(["'param_out_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $param_inp_optional_mandatoryinput if _ ])}
+#end if
+-mandatory_optionalinput
+${' '.join(["'param_out_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_mandatory_optionalinput if _ ])}
+#if str($param_optional_optionalinput):
+  -optional_optionalinput
+  ${' '.join(["'param_out_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $param_inp_optional_optionalinput if _ ])}
+#end if
+-inp_mandatory_mandatoryinput
+${' '.join(["'param_inp_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+-inp_optional_mandatoryinput
+${' '.join(["'param_inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_mandatoryinput if _ ])}
+#if $param_inp_mandatory_optionalinput:
+  -inp_mandatory_optionalinput
+  ${' '.join(["'param_inp_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_mandatory_optionalinput if _ ])}
+#end if
+#if $param_inp_optional_optionalinput:
+  -inp_optional_optionalinput
+  ${' '.join(["'param_inp_optional_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_inp_optional_optionalinput if _ ])}
+#end if
+${' '.join(["&& mv -n 'param_out_mandatory_mandatoryinput/%(id)s.%(gext)s' 'param_out_mandatory_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $param_inp_mandatory_mandatoryinput if _ ])}
+#if str($param_optional_mandatoryinput):
+  ${' '.join(["&& mv -n 'param_out_optional_mandatoryinput/%(id)s.%(gext)s' 'param_out_optional_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $param_inp_optional_mandatoryinput if _ ])}
+#end if]]></command>
   <inputs>
     <param name="param_optional_mandatoryinput" argument="-optional_mandatoryinput" type="boolean" optional="true" truevalue="-optional_mandatoryinput" falsevalue="" checked="false" label="generate output optional_mandatoryinput (output file)" help=""/>
     <param name="param_optional_optionalinput" argument="-optional_optionalinput" type="boolean" optional="true" truevalue="-optional_optionalinput" falsevalue="" checked="false" label="generate output optional_optionalinput (output file)" help=""/>

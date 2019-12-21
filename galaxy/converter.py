@@ -556,7 +556,7 @@ def create_command(tool, model, **kwargs):
     final_cmd = OrderedDict([('preprocessing', []), ('command', []), ('postprocessing', [])])
     advanced_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
     
-    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@"])
+    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re"])
     final_cmd['command'].append("@EXECUTABLE@")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
 
@@ -566,14 +566,11 @@ def create_command(tool, model, **kwargs):
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
 
-    found_input_parameter = False
     found_output_parameter = False
     for param in utils.extract_and_flatten_parameters(model):
         param = modify_param_for_galaxy(param)
         if param.type is _OutFile:
             found_output_parameter = True
-        if param.type is _InFile:
-            found_input_parameter = True
         
         param_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
         param_name = utils.extract_param_name(param)
@@ -605,11 +602,11 @@ def create_command(tool, model, **kwargs):
             if param.type is _InFile:
                 param_cmd['preprocessing'].append("mkdir %s &&" %actual_parameter)
                 if param.is_list:
-                    param_cmd['preprocessing'].append("${ ' && '.join([ \"ln -s '%s' '"+actual_parameter+"/%s.%s'\" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $" + actual_parameter + " if _ ]) } &&")
+                    param_cmd['preprocessing'].append("${ ' '.join([ \"ln -s '%s' '"+actual_parameter+"/%s.%s' &&\" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $" + actual_parameter + " if _ ]) }")
                     param_cmd['command'].append("${' '.join([\"'"+actual_parameter+"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $" + actual_parameter + " if _ ])}")
                 else:
                     param_cmd['preprocessing'].append("ln -s '$"+ actual_parameter +"' '"+actual_parameter+"/${re.sub(\"[^\w\-_]\", \"_\", $"+actual_parameter+".element_identifier)}.$gxy2omsext($"+actual_parameter+".ext)' &&")
-                    param_cmd['command'].append("'"+actual_parameter+"/${re.sub('[^\w\-_]', '_', $"+actual_parameter+".element_identifier)}.${gxy2omsext($"+actual_parameter+".ext)}'")
+                    param_cmd['command'].append("'"+actual_parameter+"/${re.sub('[^\w\-_]', '_', $"+actual_parameter+".element_identifier)}.$gxy2omsext($"+actual_parameter+".ext)'")
             elif param.type is _OutFile:
                 # check if there is a parameter that sets the format
                 # if so we add an extension to the generated files which will be used to
@@ -618,10 +615,8 @@ def create_command(tool, model, **kwargs):
                 # the format will be set in the output tag
                 formats = get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[param.type])
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
-                if param.is_list:
-                    corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
-                    if corresponding_input is None:
-                        raise Exception()
+                corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
+                if corresponding_input is not None :
                     actual_input_parameter = get_galaxy_parameter_name(corresponding_input)
                     if corresponding_input.advanced:
                         actual_input_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_input_parameter
@@ -632,28 +627,51 @@ def create_command(tool, model, **kwargs):
                     type_param_name = get_galaxy_parameter_name(type_param)
                     if type_param.advanced:
                         type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+
+                param_cmd['preprocessing'].append("mkdir " + actual_parameter + " &&")
+
+                # if there is only one format (the outoput node sets format using the format attribute of the data/discover node)
+                # - single file: create a link with the oms extension and write through that to the actual file
+                # - lists: write to files with the oms extension and remove the extension afterwards (discovery with __name__)
                 if len(formats)==1:
+                    fmt = formats.pop()
                     if param.is_list:
-                        param_cmd['preprocessing'].append("mkdir " + actual_parameter + " &&")
-                        param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier)) for _ in $" + actual_input_parameter + " if _ ])}")
+                        logger.info("1 fmt + list " + actual_parameter)
+                        param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\""+ fmt +"\")) for _ in $" + actual_input_parameter + " if _ ])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(gext)s' '" +actual_parameter+ "/%(id)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\""+fmt+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        param_cmd['command'].append("'$" +actual_parameter+ "'")
+                        logger.info("1 fmt + dataset " + actual_parameter)
+                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}' &&")
+                        param_cmd['command'].append("'"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}'")
+
+                # if there is a type parameter then we use the type selected by the user
+                # - single: create a link with the oms extension and write through that to the actual file output is treated via change_format
+                # - list: let the command create output files with the oms extensions, postprocessing renames them to the galaxy extensions, output is then discover + __name_and_ext__
                 elif type_param is not None:
                     if param.is_list:
+                        logger.info("type + list " + actual_parameter)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"mv -n '"+ actual_parameter +"/%(id)s.%(omsext)s' '" +actual_parameter+ "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":"+type_param_name+", \"gext\": oms2gxyext("+type_param_name+")} for _ in $" + actual_input_parameter + " if _ ])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(omsext)s' '" +actual_parameter+ "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":"+type_param_name+", \"gext\": oms2gxyext(\""+type_param_name+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
+                        logger.info("type + dataset " + actual_parameter)
                         # 1st create file with openms extension (often required by openms)
                         # then move it to the actual place specified by the parameter
                         # the format is then set by the <data> tag using <change_format>
-                        param_cmd['preprocessing'].append("mkdir " + actual_parameter + " &&")
+                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${"+type_param_name+"}' &&")
                         param_cmd['command'].append("'" + actual_parameter+"/output.${"+type_param_name+"}'")
-                        param_cmd['postprocessing'].append("&& mv '" + actual_parameter+"/output.${"+type_param_name+"}' '$" + actual_parameter + "'")
-                else:
+                elif actual_input_parameter is not None:
                     if param.is_list:
-                        param_cmd['preprocessing'].append("mkdir " + actual_parameter + " && ")
+                        logger.info("actual + list " + actual_parameter)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
+                        logger.info("actual + dataset " + actual_parameter)
+                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${"+actual_input_parameter+".ext}' &&")
+                        param_cmd['command'].append("'" + actual_parameter+"/output.${"+actual_input_parameter+".ext}'")
+                else:
+                    if param.is_list:
+                        raise Exception( "output parameter itemlist %s without corresponding input" )
+                    else:
+                        logger.info("else + dataset " + actual_parameter)
                         param_cmd['command'].append("'$" +actual_parameter+ "'")
 
             # select with multiple = true
@@ -692,22 +710,18 @@ def create_command(tool, model, **kwargs):
             if len(param_cmd[stage]) == 0:
                 continue
             if param.advanced and hardcoded_value is None:
-                advanced_cmd[stage].extend(utils.indent(param_cmd[stage]))
+                advanced_cmd[stage].extend(param_cmd[stage])
             else:
-                final_cmd[stage].extend(utils.indent(param_cmd[stage]))
+                final_cmd[stage].extend(param_cmd[stage])
 
     for stage in advanced_cmd:
         if len(advanced_cmd[stage])==0:
             continue
-        advanced_cmd[stage] = [advanced_command_start] + advanced_cmd[stage] + [advanced_command_end]
+        advanced_cmd[stage] = [advanced_command_start] + utils.indent(advanced_cmd[stage]) + [advanced_command_end]
         final_cmd[stage].extend(advanced_cmd[stage])
 
     if not found_output_parameter:
         final_cmd['command'].append("> $param_stdout")
-
-
-    if found_input_parameter:
-        final_cmd['command'] = ["#import re"] + final_cmd['command']
 
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
@@ -1336,7 +1350,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     return data_node
 
 
-# Get the supported file format for one given format
+# Get the supported file format for one given format (w galaxy extensions)
 def get_supported_file_type(format_name, supported_file_formats):
     if format_name in supported_file_formats.keys():
         return supported_file_formats[format_name].galaxy_extension
@@ -1376,7 +1390,7 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
     if not (inputs is None or outputs is None):
         fidx = 0
         test_node = add_child_node(tests_node, "test")
-        strip_elements(inputs, "validator", "sanitizer" )
+        strip_elements(inputs, "validator", "sanitizer")
         for node in inputs.iter():
             if node.tag == "expand" and node.attrib["macro"]== ADVANCED_OPTIONS_NAME+"macro":
                 node.tag = "conditional"
@@ -1451,7 +1465,7 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 node.attrib["lines_diff"] = "2"
             for a in set(node.attrib) - set(["name","value","ftype", "lines_diff"]):
                 del node.attrib[a]
-        strip_elements(outputs, "delete_node", "discover_datasets", "filter")
+        strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
     
         for node in outputs:
             test_node.append(node)

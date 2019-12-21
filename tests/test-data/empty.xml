@@ -11,6 +11,7 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
+#import re
 @EXECUTABLE@
 > $param_stdout]]></command>
   <inputs/>

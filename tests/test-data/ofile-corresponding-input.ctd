@@ -6,12 +6,10 @@
   <NODE name="OutFileTest-corresponding-input" description="Out File test-corresponding-input.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
 	<NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
-
       <!-- formats: 
       - output without and with multiple formats -> should become output from corresponding input
 	  - output one format should still become format="FORMAT"
 	  -->
-
       <ITEM name="mandatory_noformat"   value=""        type="output-file" description="output file" required="true"  advanced="false"/>
       <ITEM name="optional_noformat"    value=""        type="output-file" description="output file" required="false" advanced="false"/>
       <ITEM name="mandatory_oneformat"  value=""        type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ext"/>
@@ -26,7 +24,6 @@
       <ITEM name="optional_oneformat_adv"   value="" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext"/>
       <ITEM name="mandatory_multformat_adv" value="" type="output-file" description="output file" required="true"  advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
       <ITEM name="optional_multformat_adv"  value="" type="output-file" description="output file" required="false" advanced="true" supported_formats="*.ext,*.eyt,*.ezt"/>
-
 
 	  <!-- corresponding inputs that should be used to determine the format of the outputs -->
       <ITEM name="input_noformat"   value="" type="input-file" description="input file" required="true"  advanced="false" />

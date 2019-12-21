@@ -11,63 +11,64 @@
   <expand macro="stdio"/>
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
+#import re
 @EXECUTABLE@
-  -string_wodefault_optional
-  $quote($param_string_wodefault_optional)
-  -string_wodefault_mandatory
-  $quote($param_string_wodefault_mandatory)
-  -string_default_optional
-  $quote($param_string_default_optional)
-  -string_default_mandatory
-  $quote($param_string_default_mandatory)
-  #if str($param_int_wodefault_optional):
-    -int_wodefault_optional
-    $quote($param_int_wodefault_optional)
-  #end if
-  -int_wodefault_mandatory
-  $quote($param_int_wodefault_mandatory)
-  #if str($param_int_default_optional):
-    -int_default_optional
-    $quote($param_int_default_optional)
-  #end if
-  -int_default_mandatory
-  $quote($param_int_default_mandatory)
-  #if str($param_int_resticted_wodefault_optional):
-    -int_resticted_wodefault_optional
-    $quote($param_int_resticted_wodefault_optional)
-  #end if
-  -int_resticted_wodefault_mandatory
-  $quote($param_int_resticted_wodefault_mandatory)
-  #if str($param_int_resticted_default_optional):
-    -int_resticted_default_optional
-    $quote($param_int_resticted_default_optional)
-  #end if
-  -int_resticted_default_mandatory
-  $quote($param_int_resticted_default_mandatory)
-  #if str($param_double_wodefault_optional):
-    -double_wodefault_optional
-    $quote($param_double_wodefault_optional)
-  #end if
-  -double_wodefault_mandatory
-  $quote($param_double_wodefault_mandatory)
-  #if str($param_double_default_optional):
-    -double_default_optional
-    $quote($param_double_default_optional)
-  #end if
-  -double_default_mandatory
-  $quote($param_double_default_mandatory)
-  #if str($param_double_resticted_wodefault_optional):
-    -double_resticted_wodefault_optional
-    $quote($param_double_resticted_wodefault_optional)
-  #end if
-  -double_resticted_wodefault_mandatory
-  $quote($param_double_resticted_wodefault_mandatory)
-  #if str($param_double_resticted_default_optional):
-    -double_resticted_default_optional
-    $quote($param_double_resticted_default_optional)
-  #end if
-  -double_resticted_default_mandatory
-  $quote($param_double_resticted_default_mandatory)
+-string_wodefault_optional
+$quote($param_string_wodefault_optional)
+-string_wodefault_mandatory
+$quote($param_string_wodefault_mandatory)
+-string_default_optional
+$quote($param_string_default_optional)
+-string_default_mandatory
+$quote($param_string_default_mandatory)
+#if str($param_int_wodefault_optional):
+  -int_wodefault_optional
+  $quote($param_int_wodefault_optional)
+#end if
+-int_wodefault_mandatory
+$quote($param_int_wodefault_mandatory)
+#if str($param_int_default_optional):
+  -int_default_optional
+  $quote($param_int_default_optional)
+#end if
+-int_default_mandatory
+$quote($param_int_default_mandatory)
+#if str($param_int_resticted_wodefault_optional):
+  -int_resticted_wodefault_optional
+  $quote($param_int_resticted_wodefault_optional)
+#end if
+-int_resticted_wodefault_mandatory
+$quote($param_int_resticted_wodefault_mandatory)
+#if str($param_int_resticted_default_optional):
+  -int_resticted_default_optional
+  $quote($param_int_resticted_default_optional)
+#end if
+-int_resticted_default_mandatory
+$quote($param_int_resticted_default_mandatory)
+#if str($param_double_wodefault_optional):
+  -double_wodefault_optional
+  $quote($param_double_wodefault_optional)
+#end if
+-double_wodefault_mandatory
+$quote($param_double_wodefault_mandatory)
+#if str($param_double_default_optional):
+  -double_default_optional
+  $quote($param_double_default_optional)
+#end if
+-double_default_mandatory
+$quote($param_double_default_mandatory)
+#if str($param_double_resticted_wodefault_optional):
+  -double_resticted_wodefault_optional
+  $quote($param_double_resticted_wodefault_optional)
+#end if
+-double_resticted_wodefault_mandatory
+$quote($param_double_resticted_wodefault_mandatory)
+#if str($param_double_resticted_default_optional):
+  -double_resticted_default_optional
+  $quote($param_double_resticted_default_optional)
+#end if
+-double_resticted_default_mandatory
+$quote($param_double_resticted_default_mandatory)
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -string_wodefault_optional_adv
   $quote($adv_opts_cond.param_string_wodefault_optional_adv)

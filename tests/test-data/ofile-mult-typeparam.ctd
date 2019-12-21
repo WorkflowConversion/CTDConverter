@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool ctdVersion="1.7" version="2.3.0" name="'$__tool_directory__/mock.py' ofile-mult-typeparam.ctd" docurl="http://docs.are/unavailable.html" category="Test" >
+<description><![CDATA[multiple Output File parameter tests]]></description>
+<manual><![CDATA[Multiple Output File parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="MultOutFileTest" description="In File test.">
+    <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
+        <!-- tests for multiple outputs 
+           - with corresponding type parameters
+           - for each there is a corresponding input (the number of outputs and inputs will be the same, also format will be matched) 
+        -->
+
+      <!-- multiple outputs (did not find a case with a default) -->
+      <ITEM name="mandatory_mandatoryinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="ewt,ext"/>
+      <ITEMLIST name="mandatory_mandatoryinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ewt,*.ext"></ITEMLIST>
+
+      <ITEM name="mandatory_optionalinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="ewt,ext,eyt"/>
+      <ITEMLIST name="mandatory_optionalinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ewt,*.ext,*.eyt"></ITEMLIST>
+
+      <!-- corresponding inputs (same formats) that are NOT used because of the present type parameters-->
+      <ITEMLIST name="inp_optional_mandatoryinput"   value="" type="input-file" description="input file" required="true" advanced="false" supported_formats="*.ewt,*.ext"></ITEMLIST>
+
+      <ITEMLIST name="inp_mandatory_optionalinput"  value="" type="input-file" description="input file" required="false" advanced="false" supported_formats="*.ewt,*.ext,*.eyt"></ITEMLIST>
+
+
+
+      <!-- TODO these make no sense here since .. maybe if only a single input exists / maybe test explicit assignment by config file-->
+  <!--      <ITEMLIST name="list_mandatory_noformat"   value="" type="output-file" description="output file" required="true"  advanced="false" ></ITEMLIST>
+      <ITEMLIST name="list_optional_noformat"    value="" type="output-file" description="output file" required="false" advanced="false" ></ITEMLIST>
+-->
+    </NODE>
+  </NODE>
+</PARAMETERS>
+</tool>
