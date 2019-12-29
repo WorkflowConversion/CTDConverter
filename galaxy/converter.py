@@ -917,7 +917,7 @@ def create_inputs(tool, model, **kwargs):
             # mandatory outpiles: no input node needed
             # inputs: create the input param
             if not param.required:
-                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"), ("name", get_galaxy_parameter_name(param, True)), ("label", "Generate output %s (%s)" %(param.name, param.description))]))
+                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"), ("name", get_galaxy_parameter_name(param, True)), ("optional", "false"), ("checked", "false"),  ("label", "Generate output %s (%s)" %(param.name, param.description))]))
             
             continue
         
