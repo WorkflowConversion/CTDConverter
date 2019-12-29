@@ -627,51 +627,61 @@ def create_command(tool, model, **kwargs):
                     type_param_name = get_galaxy_parameter_name(type_param)
                     if type_param.advanced:
                         type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+                elif len(formats) > 1 and (corresponding_input == None or not fmt_from_corresponding) and not param.is_list:
+                    type_param_name = get_galaxy_parameter_name(param, True) + "_type"
+                    if param.advanced:
+                        type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+                else:
+                    type_param_name = None
 
                 param_cmd['preprocessing'].append("mkdir " + actual_parameter + " &&")
 
                 # if there is only one format (the outoput node sets format using the format attribute of the data/discover node)
-                # - single file: create a link with the oms extension and write through that to the actual file
+                # - single file: write to temp file with oms extension and move this to the actual result file
                 # - lists: write to files with the oms extension and remove the extension afterwards (discovery with __name__)
                 if len(formats)==1:
                     fmt = formats.pop()
                     if param.is_list:
-                        logger.info("1 fmt + list " + actual_parameter)
+                        logger.info("1 fmt + list %s -> %s" % (actual_parameter, actual_input_parameter))
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\""+ fmt +"\")) for _ in $" + actual_input_parameter + " if _ ])}")
                         param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(gext)s' '" +actual_parameter+ "/%(id)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\""+fmt+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("1 fmt + dataset " + actual_parameter)
-                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}' &&")
+                        logger.info("1 fmt + dataset %s" % actual_parameter)
                         param_cmd['command'].append("'"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}'")
+                        param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}' '$"+actual_parameter+"'")
 
                 # if there is a type parameter then we use the type selected by the user
-                # - single: create a link with the oms extension and write through that to the actual file output is treated via change_format
+                # - single: write to temp file with the oms extension and mv it to the actual file output which is treated via change_format
                 # - list: let the command create output files with the oms extensions, postprocessing renames them to the galaxy extensions, output is then discover + __name_and_ext__
-                elif type_param is not None:
+                elif type_param_name is not None:
                     if param.is_list:
-                        logger.info("type + list " + actual_parameter)
+                        logger.info("type + list %s" %actual_parameter)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}")
                         param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(omsext)s' '" +actual_parameter+ "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":"+type_param_name+", \"gext\": oms2gxyext(\""+type_param_name+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("type + dataset " + actual_parameter)
+                        logger.info("type + dataset %s" %actual_parameter)
                         # 1st create file with openms extension (often required by openms)
                         # then move it to the actual place specified by the parameter
                         # the format is then set by the <data> tag using <change_format>
-                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${"+type_param_name+"}' &&")
                         param_cmd['command'].append("'" + actual_parameter+"/output.${"+type_param_name+"}'")
+                        param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${"+type_param_name+"}' '$"+actual_parameter+"'")
                 elif actual_input_parameter is not None:
                     if param.is_list:
-                        logger.info("actual + list " + actual_parameter)
+                        logger.info("actual + list %s" %actual_parameter)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("actual + dataset " + actual_parameter)
-                        param_cmd['preprocessing'].append("ln -s '$"+actual_parameter+"' '"+actual_parameter+"/output.${"+actual_input_parameter+".ext}' &&")
-                        param_cmd['command'].append("'" + actual_parameter+"/output.${"+actual_input_parameter+".ext}'")
+                        logger.info("actual + dataset %s %s %s" % (actual_parameter, actual_input_parameter, corresponding_input.is_list))
+                        if corresponding_input.is_list:
+                            param_cmd['command'].append("'" + actual_parameter+"/output.${"+actual_input_parameter+"[0].ext}'")
+                            param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${"+actual_input_parameter+"[0].ext}' '$"+actual_parameter+"'")
+                        else:
+                            param_cmd['command'].append("'" + actual_parameter+"/output.${"+actual_input_parameter+".ext}'")
+                            param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${"+actual_input_parameter+".ext}' '$"+actual_parameter+"'")
                 else:
                     if param.is_list:
                         raise Exception( "output parameter itemlist %s without corresponding input" )
                     else:
-                        logger.info("else + dataset " + actual_parameter)
+                        logger.info("else + dataset %s" % actual_parameter)
                         param_cmd['command'].append("'$" +actual_parameter+ "'")
 
             # select with multiple = true
@@ -701,7 +711,7 @@ def create_command(tool, model, **kwargs):
                 for stage in param_cmd:
                     if len(param_cmd[stage]) == 0:
                         continue
-                    if is_selection_parameter(param) or param.type == _InFile:
+                    if is_selection_parameter(param)  or param.type is _OutFile or param.type is _InFile:
                         param_cmd[stage] = ["#if $" + actual_parameter + ":"] + utils.indent(param_cmd[stage]) + ["#end if"]
                     else:
                         param_cmd[stage] = ["#if str($" + actual_parameter + "):"] + utils.indent(param_cmd[stage]) + ["#end if"]
@@ -838,17 +848,23 @@ def get_input_with_same_restrictions(out_param, model, check_formats):
     """
 
     matching = []
-    for param in utils.extract_and_flatten_parameters(model):
-        if not param.type is _InFile:
-            continue
-        if param.is_list == out_param.is_list:
-            if check_formats:
-                if param.restrictions is None and out_param.restrictions is None:
+    
+    for allow_different_type in [False, True]:
+        for param in utils.extract_and_flatten_parameters(model):
+            if not param.type is _InFile:
+                continue
+#             logger.error("%s %s %s %s %s %s" %(out_param.name, param.name,  param.is_list, out_param.is_list, param.restrictions,  out_param.restrictions))
+            if allow_different_type or param.is_list == out_param.is_list:
+                if check_formats:
+                    if param.restrictions is None and out_param.restrictions is None:
+                        matching.append(param)
+                    elif param.restrictions is not None and out_param.restrictions is not None and param.restrictions.formats == out_param.restrictions.formats:
+                        matching.append(param)
+                else:
                     matching.append(param)
-                elif param.restrictions is not None and out_param.restrictions is not None and param.restrictions.formats == out_param.restrictions.formats:
-                    matching.append(param)
-            else:
-                matching.append(param)
+#             logger.error("match %s "%([ _.name for _ in matching]))
+        if len(matching) > 0:
+            break
     if len(matching) == 1:
         return matching[0]
     else:
@@ -876,33 +892,38 @@ def create_inputs(tool, model, **kwargs):
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name) or not hardcoded_value is None:
             continue
-
-        # optional outfiles: create an additional bool input which is used to filter for the output
-        # mandatory outpiles: no input node needed
-        # inputs: create the input param
-        if param.type is _OutFile:
-            if not param.required:
-                _param = copy.deepcopy(param)
-                _param.type = str
-                _param.restrictions = _Choices("true,false")
-                _param.default = "false"
-                _param.description = "generate output %s (%s)" %(param.name, param.description)
-                _param.is_list = False
-            else:
-                continue
-        else:
-            _param = param
-
-        if _param.advanced:
+        
+        if param.advanced:
             if advanced_node is None:
                 advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME+"macro")]))
             parent_node = advanced_node
         else:
             parent_node = inputs_node
 
-        # create the actuayield/l param node and fill the attributes
+        # sometimes special inputs are needed for outfiles: 
+        add_formats = False
+        if param.type is _OutFile:
+            # if there are multiple possible output formats, but no parameter to choose the type or a 
+            # corresponding input then add a selection parameter
+            formats = get_formats(param, kwargs["supported_file_formats"], TYPE_TO_GALAXY_TYPE[_OutFile])
+            type_param = get_out_type_param(param, model, parameter_hardcoder)
+            corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
+            if len(formats) > 1 and type_param is None and (corresponding_input is None or not fmt_from_corresponding) and not param.is_list:
+                fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", get_galaxy_parameter_name(param, True)+"_type"), ("type", "select"), ("optional", "false"), ("label", "File type of output %s (%s)" % (param.name, param.description))]))
+                for f in formats:
+                    option_node = add_child_node(fmt_select, "option", OrderedDict([("value", f)]), f)
+
+            # create an additional bool input which is used to filter for the output
+            # mandatory outpiles: no input node needed
+            # inputs: create the input param
+            if not param.required:
+                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"), ("name", get_galaxy_parameter_name(param, True)), ("label", "Generate output %s (%s)" %(param.name, param.description))]))
+            
+            continue
+        
+        # create the actual param node and fill the attributes
         param_node = add_child_node(parent_node, "param")
-        create_param_attribute_list(param_node, _param, model, kwargs["supported_file_formats"])
+        create_param_attribute_list(param_node, param, model, kwargs["supported_file_formats"])
 
 #         hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name)
 #         if hardcoded_attributes != None:
@@ -1486,7 +1507,7 @@ def create_help(tool, model):
     help_node.text = CDATA(utils.extract_tool_help_text(model))
 
 
-def add_child_node(parent_node, child_node_name, attributes=OrderedDict([])):
+def add_child_node(parent_node, child_node_name, attributes=OrderedDict([]), text=None):
     """
     helper function to add a child node using the given name to the given parent node
     @param parent_node the parent
@@ -1495,4 +1516,6 @@ def add_child_node(parent_node, child_node_name, attributes=OrderedDict([])):
     @return the created child node
     """
     child_node = SubElement(parent_node, child_node_name, attributes)
+    if text is not None:
+        child_node.text = text
     return child_node
