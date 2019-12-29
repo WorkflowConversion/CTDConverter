@@ -13,16 +13,12 @@
 @EXT_FOO@
 #import re
 mkdir param_out_mandatory_noformat &&
-ln -s '$param_out_mandatory_noformat' 'param_out_mandatory_noformat/output.${gxy2omsext("txt")}' &&
-#if str($param_optional_noformat):
+#if $param_optional_noformat:
   mkdir param_out_optional_noformat &&
-  ln -s '$param_out_optional_noformat' 'param_out_optional_noformat/output.${gxy2omsext("txt")}' &&
 #end if
 mkdir param_out_mandatory_multformat &&
-ln -s '$param_out_mandatory_multformat' 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}' &&
-#if str($param_optional_multformat):
+#if $param_optional_multformat:
   mkdir param_out_optional_multformat &&
-  ln -s '$param_out_optional_multformat' 'param_out_optional_multformat/output.${param_optional_multformat_type}' &&
 #end if
 mkdir param_decoy_input_noformat &&
 ln -s '$param_decoy_input_noformat' 'param_decoy_input_noformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_noformat.element_identifier)}.$gxy2omsext($param_decoy_input_noformat.ext)' &&
@@ -32,16 +28,12 @@ mkdir param_decoy_input_multformat &&
 ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_multformat.element_identifier)}.$gxy2omsext($param_decoy_input_multformat.ext)' &&
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   mkdir param_out_mandatory_noformat_adv &&
-  ln -s '$param_out_mandatory_noformat_adv' 'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}' &&
-  #if str($adv_opts_cond.param_optional_noformat_adv):
+  #if $adv_opts_cond.param_optional_noformat_adv:
     mkdir param_out_optional_noformat_adv &&
-    ln -s '$param_out_optional_noformat_adv' 'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}' &&
   #end if
   mkdir param_out_mandatory_multformat_adv &&
-  ln -s '$param_out_mandatory_multformat_adv' 'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}' &&
-  #if str($adv_opts_cond.param_optional_multformat_adv):
+  #if $adv_opts_cond.param_optional_multformat_adv:
     mkdir param_out_optional_multformat_adv &&
-    ln -s '$param_out_optional_multformat_adv' 'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}' &&
   #end if
 #end if
 @EXECUTABLE@
@@ -51,7 +43,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 'param_out_mandatory_noformat/output.${gxy2omsext("txt")}'
 -optional_noformat_type
 '$param_optional_noformat_type'
-#if str($param_optional_noformat):
+#if $param_optional_noformat:
   -optional_noformat
   'param_out_optional_noformat/output.${gxy2omsext("txt")}'
 #end if
@@ -61,7 +53,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}'
 -optional_multformat_type
 '$param_optional_multformat_type'
-#if str($param_optional_multformat):
+#if $param_optional_multformat:
   -optional_multformat
   'param_out_optional_multformat/output.${param_optional_multformat_type}'
 #end if
@@ -78,7 +70,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
   'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}'
   -optional_noformat_adv_type
   '$adv_opts_cond.param_optional_noformat_adv_type'
-  #if str($adv_opts_cond.param_optional_noformat_adv):
+  #if $adv_opts_cond.param_optional_noformat_adv:
     -optional_noformat_adv
     'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}'
   #end if
@@ -88,9 +80,27 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
   'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}'
   -optional_multformat_adv_type
   '$adv_opts_cond.param_optional_multformat_adv_type'
-  #if str($adv_opts_cond.param_optional_multformat_adv):
+  #if $adv_opts_cond.param_optional_multformat_adv:
     -optional_multformat_adv
     'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}'
+  #end if
+#end if
+&& mv 'param_out_mandatory_noformat/output.${gxy2omsext("txt")}' '$param_out_mandatory_noformat'
+#if $param_optional_noformat:
+  && mv 'param_out_optional_noformat/output.${gxy2omsext("txt")}' '$param_out_optional_noformat'
+#end if
+&& mv 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}' '$param_out_mandatory_multformat'
+#if $param_optional_multformat:
+  && mv 'param_out_optional_multformat/output.${param_optional_multformat_type}' '$param_out_optional_multformat'
+#end if
+#if $adv_opts_cond.adv_opts_selector=='advanced':
+  && mv 'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}' '$param_out_mandatory_noformat_adv'
+  #if $adv_opts_cond.param_optional_noformat_adv:
+    && mv 'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}' '$param_out_optional_noformat_adv'
+  #end if
+  && mv 'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}' '$param_out_mandatory_multformat_adv'
+  #if $adv_opts_cond.param_optional_multformat_adv:
+    && mv 'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}' '$param_out_optional_multformat_adv'
   #end if
 #end if]]></command>
   <inputs>
@@ -106,7 +116,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
       <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_optional_noformat" argument="-optional_noformat" type="boolean" optional="true" truevalue="-optional_noformat" falsevalue="" checked="false" label="generate output optional_noformat (output file)" help=""/>
+    <param type="boolean" name="param_optional_noformat" optional="false" checked="false" label="Generate output optional_noformat (output file)"/>
     <param name="param_mandatory_multformat_type" argument="-mandatory_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
       <option value="ext">ext</option>
       <option value="eyt">eyt</option>
@@ -119,7 +129,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
       <option value="ezt">ezt</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_optional_multformat" argument="-optional_multformat" type="boolean" optional="true" truevalue="-optional_multformat" falsevalue="" checked="false" label="generate output optional_multformat (output file)" help=""/>
+    <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
     <param name="param_decoy_input_noformat" argument="-decoy_input_noformat" type="data" format="txt" optional="false" label="input file" help=""/>
     <param name="param_decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="false" label="input file" help=""/>
     <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
@@ -136,7 +146,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
         <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_optional_noformat_adv" argument="-optional_noformat_adv" type="boolean" optional="true" truevalue="-optional_noformat_adv" falsevalue="" checked="false" label="generate output optional_noformat_adv (output file)" help=""/>
+      <param type="boolean" name="param_optional_noformat_adv" optional="false" checked="false" label="Generate output optional_noformat_adv (output file)"/>
       <param name="param_mandatory_multformat_adv_type" argument="-mandatory_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
         <option value="ext">ext</option>
         <option value="eyt">eyt</option>
@@ -149,7 +159,7 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
         <option value="ezt">ezt</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_optional_multformat_adv" argument="-optional_multformat_adv" type="boolean" optional="true" truevalue="-optional_multformat_adv" falsevalue="" checked="false" label="generate output optional_multformat_adv (output file)" help=""/>
+      <param type="boolean" name="param_optional_multformat_adv" optional="false" checked="false" label="Generate output optional_multformat_adv (output file)"/>
     </expand>
   </inputs>
   <outputs>
