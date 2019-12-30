@@ -137,11 +137,11 @@ $quote($param_double_resticted_default_mandatory)
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
+    <param name="param_string_default_optional" argument="-string_default_optional" type="text" optional="true" value="&quot;A A&quot; -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
+    <param name="param_string_default_mandatory" argument="-string_default_mandatory" type="text" optional="false" value="&quot;A A&quot; -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
@@ -226,11 +226,11 @@ $quote($param_double_resticted_default_mandatory)
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
+      <param name="param_string_default_optional_adv" argument="-string_default_optional_adv" type="text" optional="true" value="&quot;A A&quot; -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="'A A' -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
+      <param name="param_string_default_mandatory_adv" argument="-string_default_mandatory_adv" type="text" optional="false" value="&quot;A A&quot; -B" label="string list" help=" (space separated list, in order to allow for spaces in list items surround them by single quotes)">
         <expand macro="list_string_val"/>
         <expand macro="list_string_san"/>
       </param>
@@ -314,7 +314,7 @@ $quote($param_double_resticted_default_mandatory)
   <tests>
     <test expect_num_outputs="1">
       <param name="param_string_wodefault_mandatory" value="1 2"/>
-      <param name="param_string_default_mandatory" value="'A A' -B"/>
+      <param name="param_string_default_mandatory" value="&quot;A A&quot; -B"/>
       <param name="param_int_wodefault_mandatory" value="1 2"/>
       <param name="param_int_default_mandatory" value="-1 2"/>
       <param name="param_int_resticted_wodefault_mandatory" value="1 2"/>
@@ -325,7 +325,7 @@ $quote($param_double_resticted_default_mandatory)
       <param name="param_double_resticted_default_mandatory" value="-0.3 0.5"/>
       <conditional name="adv_opts_cond">
         <param name="param_string_wodefault_mandatory_adv" value="1 2"/>
-        <param name="param_string_default_mandatory_adv" value="'A A' -B"/>
+        <param name="param_string_default_mandatory_adv" value="&quot;A A&quot; -B"/>
         <param name="param_int_wodefault_mandatory_adv" value="1 2"/>
         <param name="param_int_default_mandatory_adv" value="-1 2"/>
         <param name="param_int_resticted_wodefault_mandatory_adv" value="1 2"/>

@@ -22,11 +22,11 @@ ${ ' '.join([ "ln -s '%s' 'param_inp_optional_mandatoryinput/%s.%s' &&" % (_, re
 #end if
 @EXECUTABLE@
 -mandatory_mandatoryinput_type
-'$param_mandatory_mandatoryinput_type'
+"$param_mandatory_mandatoryinput_type"
 -mandatory_mandatoryinput
 ${' '.join(["'param_out_mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $param_inp_optional_mandatoryinput if _ ])}
 -mandatory_optionalinput_type
-'$param_mandatory_optionalinput_type'
+"$param_mandatory_optionalinput_type"
 -mandatory_optionalinput
 ${' '.join(["'param_out_mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), param_mandatory_optionalinput_type) for _ in $param_inp_mandatory_optionalinput if _ ])}
 -inp_optional_mandatoryinput

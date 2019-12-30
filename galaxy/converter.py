@@ -686,14 +686,14 @@ def create_command(tool, model, **kwargs):
 
             # select with multiple = true
             elif is_selection_parameter(param) and param.is_list:
-                param_cmd['command'].append("${' '.join([\"'%s'\"%str(_) for _ in str($" + actual_parameter + ").split(',')])}")
+                param_cmd['command'].append("${' '.join(['\"%s\"'%str(_) for _ in str($" + actual_parameter + ").split(',')])}")
             elif param.is_list:
                 param_cmd['command'].append("$quote($%s" % actual_parameter + ")")
                 #command += "${' '.join([\"'%s'\"%str(_) for _ in $" + actual_parameter + "])}\n"
             elif is_boolean_parameter(param):
                 param_cmd['command'].append("$%s" % actual_parameter + "")
             else:
-                param_cmd['command'].append("'$" + actual_parameter + "'")
+                param_cmd['command'].append('"$' + actual_parameter + '"')
             
             # add if statement for optional parameters and preprocessing
             # - for optional outputs (param_out_x) the presence of the parameter
@@ -1106,9 +1106,9 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 if type(param.default) is list:
                     for i, d in enumerate(param.default):
                         if " " in d:
-                            param.default[i] = "'%s'" %d
+                            param.default[i] = '"%s"' %d
                 elif " " in param.default:
-                    param.default = "'%s'" %param.default
+                    param.default = '"%s"' %param.default
     # add sanitizer nodes to 
     # - text (only those that are not actually integer selects which are treated above) and 
     # - select params, 

@@ -38,21 +38,21 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 #end if
 @EXECUTABLE@
 -mandatory_noformat_type
-'$param_mandatory_noformat_type'
+"$param_mandatory_noformat_type"
 -mandatory_noformat
 'param_out_mandatory_noformat/output.${gxy2omsext("txt")}'
 -optional_noformat_type
-'$param_optional_noformat_type'
+"$param_optional_noformat_type"
 #if $param_optional_noformat:
   -optional_noformat
   'param_out_optional_noformat/output.${gxy2omsext("txt")}'
 #end if
 -mandatory_multformat_type
-'$param_mandatory_multformat_type'
+"$param_mandatory_multformat_type"
 -mandatory_multformat
 'param_out_mandatory_multformat/output.${param_mandatory_multformat_type}'
 -optional_multformat_type
-'$param_optional_multformat_type'
+"$param_optional_multformat_type"
 #if $param_optional_multformat:
   -optional_multformat
   'param_out_optional_multformat/output.${param_optional_multformat_type}'
@@ -65,21 +65,21 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 'param_decoy_input_multformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_multformat.element_identifier)}.$gxy2omsext($param_decoy_input_multformat.ext)'
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -mandatory_noformat_adv_type
-  '$adv_opts_cond.param_mandatory_noformat_adv_type'
+  "$adv_opts_cond.param_mandatory_noformat_adv_type"
   -mandatory_noformat_adv
   'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}'
   -optional_noformat_adv_type
-  '$adv_opts_cond.param_optional_noformat_adv_type'
+  "$adv_opts_cond.param_optional_noformat_adv_type"
   #if $adv_opts_cond.param_optional_noformat_adv:
     -optional_noformat_adv
     'param_out_optional_noformat_adv/output.${gxy2omsext("txt")}'
   #end if
   -mandatory_multformat_adv_type
-  '$adv_opts_cond.param_mandatory_multformat_adv_type'
+  "$adv_opts_cond.param_mandatory_multformat_adv_type"
   -mandatory_multformat_adv
   'param_out_mandatory_multformat_adv/output.${adv_opts_cond.param_mandatory_multformat_adv_type}'
   -optional_multformat_adv_type
-  '$adv_opts_cond.param_optional_multformat_adv_type'
+  "$adv_opts_cond.param_optional_multformat_adv_type"
   #if $adv_opts_cond.param_optional_multformat_adv:
     -optional_multformat_adv
     'param_out_optional_multformat_adv/output.${adv_opts_cond.param_optional_multformat_adv_type}'
