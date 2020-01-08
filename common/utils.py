@@ -225,11 +225,6 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
                             el[a] = _InFile
 
                         parameter_hardcoder.register_attribute(parameter_name, a, el[a], tool_name)
-    # hard coded values
-    logger.info("parameter_map %s" %parameter_hardcoder.parameter_map)
-    logger.info("attribute_map %s" %parameter_hardcoder.attribute_map)
-    logger.info("blacklist %s" %parameter_hardcoder.blacklist)
-
 
     return parameter_hardcoder
 

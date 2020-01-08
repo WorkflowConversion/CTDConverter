@@ -107,24 +107,24 @@ mkdir param_out_mandatory_multformat &&
     <param type="boolean" name="param_optional_noformat" optional="false" checked="false" label="Generate output optional_noformat (output file)"/>
     <param type="boolean" name="param_optional_oneformat" optional="false" checked="false" label="Generate output optional_oneformat (output file)"/>
     <param name="param_mandatory_multformat_type" type="select" optional="false" label="File type of output mandatory_multformat (output file)">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ewt">tsv</option>
+      <option value="eyt">tabular</option>
     </param>
     <param name="param_optional_multformat_type" type="select" optional="false" label="File type of output optional_multformat (output file)">
-      <option value="tsv">tsv</option>
-      <option value="tabular">tabular</option>
+      <option value="ewt">tsv</option>
+      <option value="eyt">tabular</option>
     </param>
     <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
     <expand macro="adv_opts_macro">
       <param type="boolean" name="param_optional_noformat_adv" optional="false" checked="false" label="Generate output optional_noformat_adv (output file)"/>
       <param type="boolean" name="param_optional_oneformat_adv" optional="false" checked="false" label="Generate output optional_oneformat_adv (output file)"/>
       <param name="param_mandatory_multformat_adv_type" type="select" optional="false" label="File type of output mandatory_multformat_adv (output file)">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ewt">tsv</option>
+        <option value="eyt">tabular</option>
       </param>
       <param name="param_optional_multformat_adv_type" type="select" optional="false" label="File type of output optional_multformat_adv (output file)">
-        <option value="tsv">tsv</option>
-        <option value="tabular">tabular</option>
+        <option value="ewt">tsv</option>
+        <option value="eyt">tabular</option>
       </param>
       <param type="boolean" name="param_optional_multformat_adv" optional="false" checked="false" label="Generate output optional_multformat_adv (output file)"/>
     </expand>
@@ -159,14 +159,14 @@ mkdir param_out_mandatory_multformat &&
     <test expect_num_outputs="6">
       <param name="param_optional_noformat" value="false"/>
       <param name="param_optional_oneformat" value="false"/>
-      <param name="param_mandatory_multformat_type" value="tsv"/>
-      <param name="param_optional_multformat_type" value="tsv"/>
+      <param name="param_mandatory_multformat_type" value="ewt"/>
+      <param name="param_optional_multformat_type" value="ewt"/>
       <param name="param_optional_multformat" value="false"/>
       <conditional name="adv_opts_cond">
         <param name="param_optional_noformat_adv" value="false"/>
         <param name="param_optional_oneformat_adv" value="false"/>
-        <param name="param_mandatory_multformat_adv_type" value="tsv"/>
-        <param name="param_optional_multformat_adv_type" value="tsv"/>
+        <param name="param_mandatory_multformat_adv_type" value="ewt"/>
+        <param name="param_optional_multformat_adv_type" value="ewt"/>
         <param name="param_optional_multformat_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>

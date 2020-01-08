@@ -184,46 +184,46 @@ ${ ' '.join([ "ln -s '%s' 'param_list_mandatory_multformat/%s.%s' &&" % (_, re.s
 #end if
 @EXECUTABLE@
 -mandatory_noformat
-'param_mandatory_noformat/${re.sub('[^\w\-_]', '_', $param_mandatory_noformat.element_identifier)}.$gxy2omsext($param_mandatory_noformat.ext)'
+'param_mandatory_noformat/${re.sub("[^\w\-_]", "_", $param_mandatory_noformat.element_identifier)}.$gxy2omsext($param_mandatory_noformat.ext)'
 #if $param_optional_noformat:
   -optional_noformat
-  'param_optional_noformat/${re.sub('[^\w\-_]', '_', $param_optional_noformat.element_identifier)}.$gxy2omsext($param_optional_noformat.ext)'
+  'param_optional_noformat/${re.sub("[^\w\-_]", "_", $param_optional_noformat.element_identifier)}.$gxy2omsext($param_optional_noformat.ext)'
 #end if
 -mandatory_oneformat
-'param_mandatory_oneformat/${re.sub('[^\w\-_]', '_', $param_mandatory_oneformat.element_identifier)}.$gxy2omsext($param_mandatory_oneformat.ext)'
+'param_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $param_mandatory_oneformat.element_identifier)}.$gxy2omsext($param_mandatory_oneformat.ext)'
 #if $param_optional_oneformat:
   -optional_oneformat
-  'param_optional_oneformat/${re.sub('[^\w\-_]', '_', $param_optional_oneformat.element_identifier)}.$gxy2omsext($param_optional_oneformat.ext)'
+  'param_optional_oneformat/${re.sub("[^\w\-_]", "_", $param_optional_oneformat.element_identifier)}.$gxy2omsext($param_optional_oneformat.ext)'
 #end if
 -mandatory_multformat
-'param_mandatory_multformat/${re.sub('[^\w\-_]', '_', $param_mandatory_multformat.element_identifier)}.$gxy2omsext($param_mandatory_multformat.ext)'
+'param_mandatory_multformat/${re.sub("[^\w\-_]", "_", $param_mandatory_multformat.element_identifier)}.$gxy2omsext($param_mandatory_multformat.ext)'
 #if $param_optional_multformat:
   -optional_multformat
-  'param_optional_multformat/${re.sub('[^\w\-_]', '_', $param_optional_multformat.element_identifier)}.$gxy2omsext($param_optional_multformat.ext)'
+  'param_optional_multformat/${re.sub("[^\w\-_]", "_", $param_optional_multformat.element_identifier)}.$gxy2omsext($param_optional_multformat.ext)'
 #end if
 #if $param_default_mandatory_noformat:
   -default_mandatory_noformat
-  'param_default_mandatory_noformat/${re.sub('[^\w\-_]', '_', $param_default_mandatory_noformat.element_identifier)}.$gxy2omsext($param_default_mandatory_noformat.ext)'
+  'param_default_mandatory_noformat/${re.sub("[^\w\-_]", "_", $param_default_mandatory_noformat.element_identifier)}.$gxy2omsext($param_default_mandatory_noformat.ext)'
 #end if
 #if $param_default_optional_noformat:
   -default_optional_noformat
-  'param_default_optional_noformat/${re.sub('[^\w\-_]', '_', $param_default_optional_noformat.element_identifier)}.$gxy2omsext($param_default_optional_noformat.ext)'
+  'param_default_optional_noformat/${re.sub("[^\w\-_]", "_", $param_default_optional_noformat.element_identifier)}.$gxy2omsext($param_default_optional_noformat.ext)'
 #end if
 #if $param_default_mandatory_oneformat:
   -default_mandatory_oneformat
-  'param_default_mandatory_oneformat/${re.sub('[^\w\-_]', '_', $param_default_mandatory_oneformat.element_identifier)}.$gxy2omsext($param_default_mandatory_oneformat.ext)'
+  'param_default_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $param_default_mandatory_oneformat.element_identifier)}.$gxy2omsext($param_default_mandatory_oneformat.ext)'
 #end if
 #if $param_default_optional_oneformat:
   -default_optional_oneformat
-  'param_default_optional_oneformat/${re.sub('[^\w\-_]', '_', $param_default_optional_oneformat.element_identifier)}.$gxy2omsext($param_default_optional_oneformat.ext)'
+  'param_default_optional_oneformat/${re.sub("[^\w\-_]", "_", $param_default_optional_oneformat.element_identifier)}.$gxy2omsext($param_default_optional_oneformat.ext)'
 #end if
 #if $param_default_mandatory_multformat:
   -default_mandatory_multformat
-  'param_default_mandatory_multformat/${re.sub('[^\w\-_]', '_', $param_default_mandatory_multformat.element_identifier)}.$gxy2omsext($param_default_mandatory_multformat.ext)'
+  'param_default_mandatory_multformat/${re.sub("[^\w\-_]", "_", $param_default_mandatory_multformat.element_identifier)}.$gxy2omsext($param_default_mandatory_multformat.ext)'
 #end if
 #if $param_default_optional_multformat:
   -default_optional_multformat
-  'param_default_optional_multformat/${re.sub('[^\w\-_]', '_', $param_default_optional_multformat.element_identifier)}.$gxy2omsext($param_default_optional_multformat.ext)'
+  'param_default_optional_multformat/${re.sub("[^\w\-_]", "_", $param_default_optional_multformat.element_identifier)}.$gxy2omsext($param_default_optional_multformat.ext)'
 #end if
 -list_mandatory_noformat
 ${' '.join(["'param_list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $param_list_mandatory_noformat if _ ])}
@@ -269,46 +269,46 @@ ${' '.join(["'param_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _
 #end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -mandatory_noformat_adv
-  'adv_opts_cond.param_mandatory_noformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_noformat_adv.ext)'
+  'adv_opts_cond.param_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_noformat_adv.ext)'
   #if $adv_opts_cond.param_optional_noformat_adv:
     -optional_noformat_adv
-    'adv_opts_cond.param_optional_noformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_noformat_adv.ext)'
+    'adv_opts_cond.param_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_noformat_adv.ext)'
   #end if
   -mandatory_oneformat_adv
-  'adv_opts_cond.param_mandatory_oneformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_oneformat_adv.ext)'
+  'adv_opts_cond.param_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_oneformat_adv.ext)'
   #if $adv_opts_cond.param_optional_oneformat_adv:
     -optional_oneformat_adv
-    'adv_opts_cond.param_optional_oneformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_oneformat_adv.ext)'
+    'adv_opts_cond.param_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_oneformat_adv.ext)'
   #end if
   -mandatory_multformat_adv
-  'adv_opts_cond.param_mandatory_multformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_multformat_adv.ext)'
+  'adv_opts_cond.param_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_mandatory_multformat_adv.ext)'
   #if $adv_opts_cond.param_optional_multformat_adv:
     -optional_multformat_adv
-    'adv_opts_cond.param_optional_multformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_multformat_adv.ext)'
+    'adv_opts_cond.param_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_optional_multformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_mandatory_noformat_adv:
     -default_mandatory_noformat_adv
-    'adv_opts_cond.param_default_mandatory_noformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_noformat_adv.ext)'
+    'adv_opts_cond.param_default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_noformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_optional_noformat_adv:
     -default_optional_noformat_adv
-    'adv_opts_cond.param_default_optional_noformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_noformat_adv.ext)'
+    'adv_opts_cond.param_default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_noformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_mandatory_oneformat_adv:
     -default_mandatory_oneformat_adv
-    'adv_opts_cond.param_default_mandatory_oneformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_oneformat_adv.ext)'
+    'adv_opts_cond.param_default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_oneformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_optional_oneformat_adv:
     -default_optional_oneformat_adv
-    'adv_opts_cond.param_default_optional_oneformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_oneformat_adv.ext)'
+    'adv_opts_cond.param_default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_oneformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_mandatory_multformat_adv:
     -default_mandatory_multformat_adv
-    'adv_opts_cond.param_default_mandatory_multformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_multformat_adv.ext)'
+    'adv_opts_cond.param_default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_mandatory_multformat_adv.ext)'
   #end if
   #if $adv_opts_cond.param_default_optional_multformat_adv:
     -default_optional_multformat_adv
-    'adv_opts_cond.param_default_optional_multformat_adv/${re.sub('[^\w\-_]', '_', $adv_opts_cond.param_default_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_multformat_adv.ext)'
+    'adv_opts_cond.param_default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.param_default_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.param_default_optional_multformat_adv.ext)'
   #end if
   -list_mandatory_noformat_adv
   ${' '.join(["'adv_opts_cond.param_list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $adv_opts_cond.param_list_mandatory_noformat_adv if _ ])}

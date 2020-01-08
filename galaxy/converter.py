@@ -13,7 +13,7 @@ from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, pars
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
 
-from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
+from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null, CTDTYPE_TO_TYPE
 
 
 # mapping to CTD types to Galaxy types
@@ -206,7 +206,7 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
         galaxy_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@GALAXY_VERSION@")]))
         galaxy_ver_tk.text = "0"
     if tool_version == tool_ver_tk.text:
-        galaxy_ver_tk.text = str(int(galaxy_ver_tk.text) + 1)
+        galaxy_ver_tk.text = str(int(galaxy_ver_tk.text))
     else:
         tool_ver_tk.text = tool_version
         galaxy_ver_tk.text = "0"
@@ -215,12 +215,8 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
     if ext_foo is None:
         ext_foo = add_child_node(root, "token", OrderedDict([("name", "@EXT_FOO@")]))
 
-    o2g = {}
-    g2o = {}
-    for s in supported_file_types:
-        o2g[s] = supported_file_types[s].galaxy_extension
-        if supported_file_types[s].galaxy_extension not in g2o:
-            g2o[supported_file_types[s].galaxy_extension] = s
+    g2o, o2g = get_fileformat_maps(supported_file_types)
+
     # make sure that the backup data type is in the map
     if 'txt' not in g2o:
         g2o['txt'] = 'txt'
@@ -335,6 +331,20 @@ def parse_file_formats(formats_file):
     return supported_formats
 
 
+def get_fileformat_maps(supported_formats):
+    """
+    convenience functions to compute dictionaries mapping 
+    Galaxy data types <-> CTD formats
+    """
+    o2g = {}
+    g2o = {}
+    for s in supported_formats:
+        o2g[s] = supported_formats[s].galaxy_extension
+        if supported_formats[s].galaxy_extension not in g2o:
+            g2o[supported_formats[s].galaxy_extension] = s
+    return g2o, o2g
+
+
 def validate_and_prepare_args(args, model):
     """
     check command line arguments
@@ -411,7 +421,16 @@ def _convert_internal(parsed_ctds, **kwargs):
                 for a in hardcoded_attributes:
                     if not hasattr(param, a):
                         continue
-                    setattr(param, a, hardcoded_attributes[a])
+                    logger.error("%s %s"%(param.name,type(getattr(param, a))) )
+                    if type(getattr(param, a)) is _FileFormat:
+                        setattr(param, a, _FileFormat(str(hardcoded_attributes[a])))
+                    elif type(getattr(param, a)) is _Choices:
+                        logger.error("SET CTD %s %s %s" %(param.name, a, hardcoded_attributes[a]))
+                        setattr(param, a, _Choices(str(hardcoded_attributes[a])))
+                    elif type(getattr(param, a)) is _NumericRange:
+                        raise Exception("Overwriting of Numeric Range not implemented")
+                    else:
+                        setattr(param, a, hardcoded_attributes[a])
                     
         logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
         tool = create_tool(model)
@@ -437,25 +456,6 @@ def _convert_internal(parsed_ctds, **kwargs):
         logger.info("Writing to %s" % utils.get_filename(output_file), 1)
         with open(output_file, 'w') as fh:
             tree.write(fh, encoding="UTF-8", xml_declaration=True, pretty_print=True)
-
-# def create_cio(tool, model, **kwargs):
-#     cnode = add_child_node(tool, "command", OrderedDict([("detect_errors", "exit_code")]))
-#     inode = add_child_node(tool, "inputs")
-#     onode = add_child_node(parent, "outputs")
-#     
-#     parameter_hardcoder = kwargs["parameter_hardcoder"]
-#     for param in utils.extract_and_flatten_parameters(model):
-#         param = modify_param_for_galaxy(param)
-#         # no need to show hardcoded parameters
-#         hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
-# 
-#         if parameter_hardcoder.get_blacklist(param.name, model.name) or hardcoded_value:
-#             continue
-#         if not param.type is _OutFile:
-#             continue
-#         create_output_node(outputs_node, param, model, kwargs["supported_file_formats"])
-# 
-#     return cnode, inode, onode 
 
 
 def write_header(tool, model):
@@ -606,7 +606,7 @@ def create_command(tool, model, **kwargs):
                     param_cmd['command'].append("${' '.join([\"'"+actual_parameter+"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $" + actual_parameter + " if _ ])}")
                 else:
                     param_cmd['preprocessing'].append("ln -s '$"+ actual_parameter +"' '"+actual_parameter+"/${re.sub(\"[^\w\-_]\", \"_\", $"+actual_parameter+".element_identifier)}.$gxy2omsext($"+actual_parameter+".ext)' &&")
-                    param_cmd['command'].append("'"+actual_parameter+"/${re.sub('[^\w\-_]', '_', $"+actual_parameter+".element_identifier)}.$gxy2omsext($"+actual_parameter+".ext)'")
+                    param_cmd['command'].append("'"+actual_parameter+"/${re.sub(\"[^\w\-_]\", \"_\", $"+actual_parameter+".element_identifier)}.$gxy2omsext($"+actual_parameter+".ext)'")
             elif param.type is _OutFile:
                 # check if there is a parameter that sets the format
                 # if so we add an extension to the generated files which will be used to
@@ -642,11 +642,11 @@ def create_command(tool, model, **kwargs):
                 if len(formats)==1:
                     fmt = formats.pop()
                     if param.is_list:
-                        logger.info("1 fmt + list %s -> %s" % (actual_parameter, actual_input_parameter))
+                        logger.info("1 fmt + list %s -> %s" % (actual_parameter, actual_input_parameter), 1)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\""+ fmt +"\")) for _ in $" + actual_input_parameter + " if _ ])}")
                         param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(gext)s' '" +actual_parameter+ "/%(id)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\""+fmt+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("1 fmt + dataset %s" % actual_parameter)
+                        logger.info("1 fmt + dataset %s" % actual_parameter, 1)
                         param_cmd['command'].append("'"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}'")
                         param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${gxy2omsext(\"" + fmt + "\")}' '$"+actual_parameter+"'")
 
@@ -655,11 +655,11 @@ def create_command(tool, model, **kwargs):
                 # - list: let the command create output files with the oms extensions, postprocessing renames them to the galaxy extensions, output is then discover + __name_and_ext__
                 elif type_param_name is not None:
                     if param.is_list:
-                        logger.info("type + list %s" %actual_parameter)
+                        logger.info("type + list %s" %actual_parameter, 1)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), "+type_param_name+") for _ in $" + actual_input_parameter + " if _ ])}")
                         param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '"+ actual_parameter +"/%(id)s.%(omsext)s' '" +actual_parameter+ "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":"+type_param_name+", \"gext\": oms2gxyext(\""+type_param_name+"\")} for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("type + dataset %s" %actual_parameter)
+                        logger.info("type + dataset %s" %actual_parameter, 1)
                         # 1st create file with openms extension (often required by openms)
                         # then move it to the actual place specified by the parameter
                         # the format is then set by the <data> tag using <change_format>
@@ -667,10 +667,10 @@ def create_command(tool, model, **kwargs):
                         param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${"+type_param_name+"}' '$"+actual_parameter+"'")
                 elif actual_input_parameter is not None:
                     if param.is_list:
-                        logger.info("actual + list %s" %actual_parameter)
+                        logger.info("actual + list %s" %actual_parameter, 1)
                         param_cmd['command'].append("${' '.join([\"'"+ actual_parameter +"/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _ ])}")
                     else:
-                        logger.info("actual + dataset %s %s %s" % (actual_parameter, actual_input_parameter, corresponding_input.is_list))
+                        logger.info("actual + dataset %s %s %s" % (actual_parameter, actual_input_parameter, corresponding_input.is_list), 1)
                         if corresponding_input.is_list:
                             param_cmd['command'].append("'" + actual_parameter+"/output.${"+actual_input_parameter+"[0].ext}'")
                             param_cmd['postprocessing'].append("&& mv '"+actual_parameter+"/output.${"+actual_input_parameter+"[0].ext}' '$"+actual_parameter+"'")
@@ -681,7 +681,7 @@ def create_command(tool, model, **kwargs):
                     if param.is_list:
                         raise Exception( "output parameter itemlist %s without corresponding input" )
                     else:
-                        logger.info("else + dataset %s" % actual_parameter)
+                        logger.info("else + dataset %s" % actual_parameter, 1)
                         param_cmd['command'].append("'$" +actual_parameter+ "'")
 
             # select with multiple = true
@@ -910,8 +910,9 @@ def create_inputs(tool, model, **kwargs):
             corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
             if len(formats) > 1 and type_param is None and (corresponding_input is None or not fmt_from_corresponding) and not param.is_list:
                 fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", get_galaxy_parameter_name(param, True)+"_type"), ("type", "select"), ("optional", "false"), ("label", "File type of output %s (%s)" % (param.name, param.description))]))
+                g2o, o2g = get_fileformat_maps(kwargs["supported_file_formats"])
                 for f in formats:
-                    option_node = add_child_node(fmt_select, "option", OrderedDict([("value", f)]), f)
+                    option_node = add_child_node(fmt_select, "option", OrderedDict([("value", g2o[f])]), f)
 
             # create an additional bool input which is used to filter for the output
             # mandatory outpiles: no input node needed
@@ -925,10 +926,10 @@ def create_inputs(tool, model, **kwargs):
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, model, kwargs["supported_file_formats"])
 
-#         hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name)
-#         if hardcoded_attributes != None:
-#             for a in hardcoded_attributes:
-#                 param_node.attrib[a] = str(hardcoded_attributes[a])
+        hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes("param_"+param.name, model.name)
+        if hardcoded_attributes != None:
+            for a in hardcoded_attributes:
+                param_node.attrib[a] = str(hardcoded_attributes[a])
 
     # if there is an advanced section then append it at the end of the inputs
     if not advanced_node is None:
@@ -947,24 +948,22 @@ def get_formats(param, supported_file_formats, default = None):
     formats = set()
     if param.restrictions is not None:
         if type(param.restrictions) is _FileFormat:
-            # set the first data output node to the first file format
-
             # check if there are formats that have not been registered yet...
             output = list()
             for format_name in param.restrictions.formats:
                 if format_name not in supported_file_formats.keys():
                     output.append(str(format_name))
-
             # warn only if there's about to complain
             if output:
                 logger.warning("Parameter " + param.name + " has the following unsupported format(s):"
                               + ','.join(output), 1)
-
+    
             formats = get_supported_file_types(param.restrictions.formats, supported_file_formats)
         else:
             raise InvalidModelException("Unrecognized restriction type [%(type)s] "
                                         "for [%(name)s]" % {"type": type(param.restrictions),
                                                                    "name": param.name})
+
     if len(formats) == 0:
         if default != None:
             formats.add(default)
@@ -983,6 +982,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     @param param the ctd parameter 
     @param supported_file_formats
     """
+
+    g2o, o2g = get_fileformat_maps(supported_file_formats)
 
     # set the name, argument and a first guess for the type (which will be over written 
     # in some cases .. see below)
@@ -1042,7 +1043,10 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
                 option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
-                option_node.text = str(choice)
+                if is_out_type_param(param, model):
+                    option_node.text = o2g[str(choice)]
+                else:
+                    option_node.text = str(choice)
 
                 # preselect the default value
                 if param.default == choice or (type(param.default) is list and choice in param.default):
@@ -1234,16 +1238,16 @@ def create_boolean_parameter(param_node, param):
     """
     creates a galaxy boolean parameter type
     this method assumes that param has restrictions, and that only two restictions are present
-    (either yes/no or true/false)    # first, determine the 'truevalue' and the 'falsevalue'
+    (either yes/no or true/false)
 
     TODO: true and false values can be way more than 'true' and 'false'
         but for that we need CTD support
     """
 
-    # in ctd (1.6.2) bools are strings with restriction true,false 
+    # in ctd (1.6.2) bools are strings with restriction true,false
     # - if the default is false then they are flags
     # - otherwise the true or false value needs to be added (where the true case is unnecessary)
-    # A special case are restrictions false,true which are not treated as flags    
+    # A special case are restrictions false,true which are not treated as flags
     if param.type == str:
         choices = get_lowercase_list(param.restrictions.choices)
         if choices == ["false", "true"]:

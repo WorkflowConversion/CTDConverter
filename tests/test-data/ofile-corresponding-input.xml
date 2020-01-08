@@ -64,11 +64,11 @@ ln -s '$param_input_multformat' 'param_input_multformat/${re.sub("[^\w\-_]", "_"
   'param_out_optional_multformat/output.${param_input_multformat.ext}'
 #end if
 -input_noformat
-'param_input_noformat/${re.sub('[^\w\-_]', '_', $param_input_noformat.element_identifier)}.$gxy2omsext($param_input_noformat.ext)'
+'param_input_noformat/${re.sub("[^\w\-_]", "_", $param_input_noformat.element_identifier)}.$gxy2omsext($param_input_noformat.ext)'
 -input_oneformat
-'param_input_oneformat/${re.sub('[^\w\-_]', '_', $param_input_oneformat.element_identifier)}.$gxy2omsext($param_input_oneformat.ext)'
+'param_input_oneformat/${re.sub("[^\w\-_]", "_", $param_input_oneformat.element_identifier)}.$gxy2omsext($param_input_oneformat.ext)'
 -input_multformat
-'param_input_multformat/${re.sub('[^\w\-_]', '_', $param_input_multformat.element_identifier)}.$gxy2omsext($param_input_multformat.ext)'
+'param_input_multformat/${re.sub("[^\w\-_]", "_", $param_input_multformat.element_identifier)}.$gxy2omsext($param_input_multformat.ext)'
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -mandatory_noformat_adv
   'param_out_mandatory_noformat_adv/output.${gxy2omsext("txt")}'

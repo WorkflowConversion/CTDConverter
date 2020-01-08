@@ -58,11 +58,11 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
   'param_out_optional_multformat/output.${param_optional_multformat_type}'
 #end if
 -decoy_input_noformat
-'param_decoy_input_noformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_noformat.element_identifier)}.$gxy2omsext($param_decoy_input_noformat.ext)'
+'param_decoy_input_noformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_noformat.element_identifier)}.$gxy2omsext($param_decoy_input_noformat.ext)'
 -decoy_input_oneformat
-'param_decoy_input_oneformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_oneformat.element_identifier)}.$gxy2omsext($param_decoy_input_oneformat.ext)'
+'param_decoy_input_oneformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_oneformat.element_identifier)}.$gxy2omsext($param_decoy_input_oneformat.ext)'
 -decoy_input_multformat
-'param_decoy_input_multformat/${re.sub('[^\w\-_]', '_', $param_decoy_input_multformat.element_identifier)}.$gxy2omsext($param_decoy_input_multformat.ext)'
+'param_decoy_input_multformat/${re.sub("[^\w\-_]", "_", $param_decoy_input_multformat.element_identifier)}.$gxy2omsext($param_decoy_input_multformat.ext)'
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   -mandatory_noformat_adv_type
   "$adv_opts_cond.param_mandatory_noformat_adv_type"
@@ -105,28 +105,28 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
 #end if]]></command>
   <inputs>
     <param name="param_mandatory_noformat_type" argument="-mandatory_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">ext</option>
-      <option value="eyt">eyt</option>
-      <option value="ezt">ezt</option>
+      <option value="ext">tsv</option>
+      <option value="eyt">tabular</option>
+      <option value="ezt">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_noformat_type" argument="-optional_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">ext</option>
-      <option value="eyt">eyt</option>
-      <option value="ezt">ezt</option>
+      <option value="ext">tsv</option>
+      <option value="eyt">tabular</option>
+      <option value="ezt">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param type="boolean" name="param_optional_noformat" optional="false" checked="false" label="Generate output optional_noformat (output file)"/>
     <param name="param_mandatory_multformat_type" argument="-mandatory_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">ext</option>
-      <option value="eyt">eyt</option>
-      <option value="ezt">ezt</option>
+      <option value="ext">tsv</option>
+      <option value="eyt">tabular</option>
+      <option value="ezt">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_optional_multformat_type" argument="-optional_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">ext</option>
-      <option value="eyt">eyt</option>
-      <option value="ezt">ezt</option>
+      <option value="ext">tsv</option>
+      <option value="eyt">tabular</option>
+      <option value="ezt">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
@@ -135,28 +135,28 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
     <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
     <expand macro="adv_opts_macro">
       <param name="param_mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">ext</option>
-        <option value="eyt">eyt</option>
-        <option value="ezt">ezt</option>
+        <option value="ext">tsv</option>
+        <option value="eyt">tabular</option>
+        <option value="ezt">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_noformat_adv_type" argument="-optional_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">ext</option>
-        <option value="eyt">eyt</option>
-        <option value="ezt">ezt</option>
+        <option value="ext">tsv</option>
+        <option value="eyt">tabular</option>
+        <option value="ezt">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param type="boolean" name="param_optional_noformat_adv" optional="false" checked="false" label="Generate output optional_noformat_adv (output file)"/>
       <param name="param_mandatory_multformat_adv_type" argument="-mandatory_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">ext</option>
-        <option value="eyt">eyt</option>
-        <option value="ezt">ezt</option>
+        <option value="ext">tsv</option>
+        <option value="eyt">tabular</option>
+        <option value="ezt">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_optional_multformat_adv_type" argument="-optional_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">ext</option>
-        <option value="eyt">eyt</option>
-        <option value="ezt">ezt</option>
+        <option value="ext">tsv</option>
+        <option value="eyt">tabular</option>
+        <option value="ezt">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param type="boolean" name="param_optional_multformat_adv" optional="false" checked="false" label="Generate output optional_multformat_adv (output file)"/>
