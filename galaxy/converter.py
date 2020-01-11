@@ -711,7 +711,10 @@ def create_command(tool, model, **kwargs):
                 for stage in param_cmd:
                     if len(param_cmd[stage]) == 0:
                         continue
-                    if is_selection_parameter(param)  or param.type is _OutFile or param.type is _InFile:
+                    # special case for optional itemlists: for those if no option is selected only the parameter must be specified
+                    if is_selection_parameter(param) and param.is_list and param.required == False:
+                        param_cmd[stage] = [param_cmd[stage][0]] + ["#if $" + actual_parameter + ":"] + utils.indent(param_cmd[stage][1:]) + ["#end if"]
+                    elif is_selection_parameter(param)  or param.type is _OutFile or param.type is _InFile:
                         param_cmd[stage] = ["#if $" + actual_parameter + ":"] + utils.indent(param_cmd[stage]) + ["#end if"]
                     else:
                         param_cmd[stage] = ["#if str($" + actual_parameter + "):"] + utils.indent(param_cmd[stage]) + ["#end if"]
@@ -936,7 +939,13 @@ def create_inputs(tool, model, **kwargs):
         inputs_node.append(advanced_node)
 
     return inputs_node
-    
+
+def is_default(value, param):
+    """
+    check if the value is the default of the param or if the value is in the defaults of param
+    """
+    return param.default == value or (type(param.default) is list and value in param.default)
+
 
 def get_formats(param, supported_file_formats, default = None):
     """
@@ -1049,7 +1058,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                     option_node.text = str(choice)
 
                 # preselect the default value
-                if param.default == choice or (type(param.default) is list and choice in param.default):
+                if is_default(choice, param):
                     option_node.attrib["selected"] = "true"
             # add validator to check that "nothing selected" is not seletcedto mandatory options w/o default
             if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
