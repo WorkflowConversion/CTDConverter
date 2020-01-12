@@ -38,15 +38,15 @@ ${' '.join(["'param_inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_',
 ${' '.join(["&& mv -n 'param_out_mandatory_mandatoryinput/%(id)s.%(gext)s' 'param_out_mandatory_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $param_inp_optional_mandatoryinput if _ ])}
 ${' '.join(["&& mv -n 'param_out_mandatory_optionalinput/%(id)s.%(omsext)s' 'param_out_mandatory_optionalinput/%(id)s.%(gext)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "omsext":param_mandatory_optionalinput_type, "gext": oms2gxyext("param_mandatory_optionalinput_type")} for _ in $param_inp_mandatory_optionalinput if _ ])}]]></command>
   <inputs>
-    <param name="param_mandatory_mandatoryinput_type" argument="-mandatory_mandatoryinput_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ewt">tsv</option>
-      <option value="ext">tsv</option>
+    <param name="param_mandatory_mandatoryinput_type" argument="-mandatory_mandatoryinput_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ewt" selected="false">tsv</option>
+      <option value="ext" selected="false">tsv</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_mandatory_optionalinput_type" argument="-mandatory_optionalinput_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ewt">tsv</option>
-      <option value="ext">tsv</option>
-      <option value="eyt">tabular</option>
+    <param name="param_mandatory_optionalinput_type" argument="-mandatory_optionalinput_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ewt" selected="false">tsv</option>
+      <option value="ext" selected="false">tsv</option>
+      <option value="eyt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=""/>

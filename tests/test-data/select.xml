@@ -113,245 +113,245 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
 #end if
 > $param_stdout]]></command>
   <inputs>
-    <param name="param_wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
+    <param name="param_wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" label="string" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_default_mandatory" argument="-default_mandatory" display="radio" type="select" optional="false" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
-      <option value="D">D</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" value="" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
+    <param name="param_wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" label="string" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_default_optional" argument="-default_optional" display="radio" type="select" optional="false" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
-      <option value="D">D</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" value="" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+    <param name="param_wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" label="string" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" value="" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+    <param name="param_wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" value="" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
+    <param name="param_list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" label="string list" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" value="" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
+    <param name="param_list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_list_default_optional" argument="-list_default_optional" multiple="true" type="select" optional="true" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_list_default_mandatory" argument="-list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" value="" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+    <param name="param_list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" value="" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
-      <option value="C">C</option>
-      <option value="D">D</option>
-      <option value="E">E</option>
+    <param name="param_list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="false">C</option>
+      <option value="D" selected="false">D</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
-      <option value="E">E</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="param_list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
-      <option value="A">A</option>
-      <option value="B">B</option>
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
-      <option value="E">E</option>
+      <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
     <expand macro="adv_opts_macro">
-      <param name="param_wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
+      <param name="param_wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_default_mandatory_adv" argument="-default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
-        <option value="D">D</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" value="" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
+      <param name="param_wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" label="string" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_default_optional_adv" argument="-default_optional_adv" display="radio" type="select" optional="false" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
-        <option value="D">D</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" value="" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+      <param name="param_wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" label="string" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" value="" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+      <param name="param_wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
+      <param name="param_list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
+      <param name="param_list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_list_default_optional_adv" argument="-list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_list_default_mandatory_adv" argument="-list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" value="" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+      <param name="param_list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" value="" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
-        <option value="C">C</option>
-        <option value="D">D</option>
-        <option value="E">E</option>
+      <param name="param_list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="false">C</option>
+        <option value="D" selected="false">D</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
-        <option value="E">E</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
       <param name="param_list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
-        <option value="A">A</option>
-        <option value="B">B</option>
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
-        <option value="E">E</option>
+        <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
     </expand>

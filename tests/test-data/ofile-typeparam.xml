@@ -104,29 +104,29 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
   #end if
 #end if]]></command>
   <inputs>
-    <param name="param_mandatory_noformat_type" argument="-mandatory_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">tsv</option>
-      <option value="eyt">tabular</option>
-      <option value="ezt">tabular</option>
+    <param name="param_mandatory_noformat_type" argument="-mandatory_noformat_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ext" selected="false">tsv</option>
+      <option value="eyt" selected="false">tabular</option>
+      <option value="ezt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_optional_noformat_type" argument="-optional_noformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">tsv</option>
-      <option value="eyt">tabular</option>
-      <option value="ezt">tabular</option>
+    <param name="param_optional_noformat_type" argument="-optional_noformat_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ext" selected="false">tsv</option>
+      <option value="eyt" selected="false">tabular</option>
+      <option value="ezt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param type="boolean" name="param_optional_noformat" optional="false" checked="false" label="Generate output optional_noformat (output file)"/>
-    <param name="param_mandatory_multformat_type" argument="-mandatory_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">tsv</option>
-      <option value="eyt">tabular</option>
-      <option value="ezt">tabular</option>
+    <param name="param_mandatory_multformat_type" argument="-mandatory_multformat_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ext" selected="false">tsv</option>
+      <option value="eyt" selected="false">tabular</option>
+      <option value="ezt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_optional_multformat_type" argument="-optional_multformat_type" display="radio" type="select" optional="false" value="" label="string" help="">
-      <option value="ext">tsv</option>
-      <option value="eyt">tabular</option>
-      <option value="ezt">tabular</option>
+    <param name="param_optional_multformat_type" argument="-optional_multformat_type" display="radio" type="select" optional="false" label="string" help="">
+      <option value="ext" selected="false">tsv</option>
+      <option value="eyt" selected="false">tabular</option>
+      <option value="ezt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
     <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
@@ -134,29 +134,29 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
     <param name="param_decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="false" label="input file" help=""/>
     <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
     <expand macro="adv_opts_macro">
-      <param name="param_mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">tsv</option>
-        <option value="eyt">tabular</option>
-        <option value="ezt">tabular</option>
+      <param name="param_mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
+        <option value="ext" selected="false">tsv</option>
+        <option value="eyt" selected="false">tabular</option>
+        <option value="ezt" selected="false">tabular</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_optional_noformat_adv_type" argument="-optional_noformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">tsv</option>
-        <option value="eyt">tabular</option>
-        <option value="ezt">tabular</option>
+      <param name="param_optional_noformat_adv_type" argument="-optional_noformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
+        <option value="ext" selected="false">tsv</option>
+        <option value="eyt" selected="false">tabular</option>
+        <option value="ezt" selected="false">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param type="boolean" name="param_optional_noformat_adv" optional="false" checked="false" label="Generate output optional_noformat_adv (output file)"/>
-      <param name="param_mandatory_multformat_adv_type" argument="-mandatory_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">tsv</option>
-        <option value="eyt">tabular</option>
-        <option value="ezt">tabular</option>
+      <param name="param_mandatory_multformat_adv_type" argument="-mandatory_multformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
+        <option value="ext" selected="false">tsv</option>
+        <option value="eyt" selected="false">tabular</option>
+        <option value="ezt" selected="false">tabular</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_optional_multformat_adv_type" argument="-optional_multformat_adv_type" display="radio" type="select" optional="false" value="" label="string" help="">
-        <option value="ext">tsv</option>
-        <option value="eyt">tabular</option>
-        <option value="ezt">tabular</option>
+      <param name="param_optional_multformat_adv_type" argument="-optional_multformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
+        <option value="ext" selected="false">tsv</option>
+        <option value="eyt" selected="false">tabular</option>
+        <option value="ezt" selected="false">tabular</option>
         <expand macro="list_string_san"/>
       </param>
       <param type="boolean" name="param_optional_multformat_adv" optional="false" checked="false" label="Generate output optional_multformat_adv (output file)"/>

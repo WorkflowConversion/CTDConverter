@@ -1025,7 +1025,6 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         # in the case of multiple input set multiple flag
         if param.is_list:
             param_node.attrib["multiple"] = "true"
-
     else:
         param_node.attrib["type"] = param_type
 
@@ -1046,9 +1045,9 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
 #             if is_out_type_param(param, model):
 #                 param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
 
-            # add a nothing selected option to mandatory options w/o default 
-            if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
-                param.restrictions.choices.insert(0, "select a value")
+#             # add a nothing selected option to mandatory options w/o default 
+#             if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
+#                 param.restrictions.choices.insert(0, "select a value")
             # create as many <option> elements as restriction values
             for choice in param.restrictions.choices:
                 option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
@@ -1060,6 +1059,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 # preselect the default value
                 if is_default(choice, param):
                     option_node.attrib["selected"] = "true"
+                else:
+                    option_node.attrib["selected"] = "false"
             # add validator to check that "nothing selected" is not seletcedto mandatory options w/o default
             if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
                 validator_node = add_child_node(param_node, "validator", OrderedDict([("type", "expression"), ("message", "A value needs to be selected")]))
@@ -1149,7 +1150,10 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
             if param.default is True:
                 param_node.attrib["checked"] = "true"
     elif param.type is int or param.type is float or param.type is str:
-        param_node.attrib["value"] = ""
+        if param_type == "select":
+            pass
+        else:
+            param_node.attrib["value"] = ""
 
     # add label, help, and argument
     label = "%s parameter" % param.name
