@@ -98,6 +98,6 @@ ${' '.join(["&& mv -n 'param_out_mandatory_mandatoryinput/%(id)s.%(gext)s' 'para
   <help><![CDATA[Multiple Output File parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]></help>
+For more information, visit http://www.openms.de]]></help>
   <expand macro="references"/>
 </tool>

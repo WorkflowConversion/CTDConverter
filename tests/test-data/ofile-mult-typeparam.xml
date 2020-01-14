@@ -72,6 +72,6 @@ ${' '.join(["&& mv -n 'param_out_mandatory_optionalinput/%(id)s.%(omsext)s' 'par
   <help><![CDATA[Multiple Output File parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]></help>
+For more information, visit http://www.openms.de]]></help>
   <expand macro="references"/>
 </tool>

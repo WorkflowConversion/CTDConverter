@@ -241,7 +241,9 @@ def extract_tool_help_text(ctd_model):
     if manual is not None:
         help_text = manual
     if doc_url is not None:
-        help_text = ("" if manual is None else manual) + "\nFor more information, visit %s" % doc_url
+        help_text = ("" if manual is None else manual)
+        if doc_url != "":
+            help_text += "\nFor more information, visit %s" % doc_url
 
     return help_text
 

@@ -432,6 +432,6 @@ ${' '.join(["'param_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _
   <help><![CDATA[Input File parameter tests.
 
 
-For more information, visit http://docs.are/unavailable.html]]></help>
+For more information, visit http://www.openms.de]]></help>
   <expand macro="references"/>
 </tool>

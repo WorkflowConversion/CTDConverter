@@ -179,6 +179,6 @@ ln -s '$param_input_multformat' 'param_input_multformat/${re.sub("[^\w\-_]", "_"
   <help><![CDATA[Output File parameter tests-corresponding-input.
 
 
-For more information, visit http://docs.are/unavailable.html]]></help>
+For more information, visit http://www.openms.de]]></help>
   <expand macro="references"/>
 </tool>
