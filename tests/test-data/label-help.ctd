@@ -6,16 +6,15 @@
   <NODE name="LabelHelpTest" description="String test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
-      <ITEM name="do" value="" type="string" description="label. help." required="true"  advanced="false" />
-      <ITEM name="co" value="" type="string" description="label, help." required="true"  advanced="false" />
-      <ITEM name="qm" value="" type="string" description="label? help." required="true"  advanced="false" />
-	  <ITEM name="ex" value="" type="string" description="label! help." required="true"  advanced="false" />
+      <ITEM name="do" value="" type="string" description="label label label label label label label label. help." required="true"  advanced="false" />
+      <ITEM name="qm" value="" type="string" description="label label label label label label label label? help." required="true"  advanced="false" />
+	  <ITEM name="ex" value="" type="string" description="label label label label label label label label! help." required="true"  advanced="false" />
 	  <!-- dont split at semicolon -->
-      <ITEM name="sc" value="" type="string" description="label &amp; label. help" required="true"  advanced="false" />
-      <ITEM name="coeg" value="" type="string" description="label, e.g. help." required="true"  advanced="false" />
-      <ITEM name="pteg" value="" type="string" description="label (e.g. help)" required="true"  advanced="false" />
-      <ITEM name="coie" value="" type="string" description="label, i.e. help." required="true"  advanced="false" />
-      <ITEM name="ptie" value="" type="string" description="label (i.e. help)" required="true"  advanced="false" />
+      <ITEM name="sc" value="" type="string" description="label label label label label label label label &amp; label. help" required="true"  advanced="false" />
+      <ITEM name="coeg" value="" type="string" description="label label label label label label label label, e.g. help." required="true"  advanced="false" />
+      <ITEM name="pteg" value="" type="string" description="label label label label label label label label (e.g. help)" required="true"  advanced="false" />
+      <ITEM name="coie" value="" type="string" description="label label label label label label label label, i.e. help." required="true"  advanced="false" />
+      <ITEM name="ptie" value="" type="string" description="label label label label label label label label (i.e. help)" required="true"  advanced="false" />
     </NODE>
   </NODE>
 </PARAMETERS>

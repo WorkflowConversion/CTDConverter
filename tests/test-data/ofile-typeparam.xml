@@ -130,9 +130,9 @@ ln -s '$param_decoy_input_multformat' 'param_decoy_input_multformat/${re.sub("[^
       <expand macro="list_string_san"/>
     </param>
     <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
-    <param name="param_decoy_input_noformat" argument="-decoy_input_noformat" type="data" format="txt" optional="false" label="input file" help=""/>
-    <param name="param_decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="false" label="input file" help=""/>
-    <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
+    <param name="param_decoy_input_noformat" argument="-decoy_input_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+    <param name="param_decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+    <param name="param_decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=" select a tsv,tabular data set"/>
     <expand macro="adv_opts_macro">
       <param name="param_mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
         <option value="ext" selected="false">tsv</option>

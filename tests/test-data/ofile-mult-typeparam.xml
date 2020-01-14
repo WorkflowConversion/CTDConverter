@@ -49,8 +49,8 @@ ${' '.join(["&& mv -n 'param_out_mandatory_optionalinput/%(id)s.%(omsext)s' 'par
       <option value="eyt" selected="false">tabular</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=""/>
-    <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
   </inputs>
   <outputs>
     <collection type="list" name="param_out_mandatory_mandatoryinput" label="${tool.name} on ${on_string}: mandatory_mandatoryinput">

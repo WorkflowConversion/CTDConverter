@@ -15,8 +15,6 @@
 @EXECUTABLE@
 -do
 "$param_do"
--co
-"$param_co"
 -qm
 "$param_qm"
 -ex
@@ -33,39 +31,35 @@
 "$param_ptie"
 > $param_stdout]]></command>
   <inputs>
-    <param name="param_do" argument="-do" type="text" optional="false" value="" label="label. help" help="">
+    <param name="param_do" argument="-do" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_co" argument="-co" type="text" optional="false" value="" label="label, help" help="">
+    <param name="param_qm" argument="-qm" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_qm" argument="-qm" type="text" optional="false" value="" label="label? help" help="">
+    <param name="param_ex" argument="-ex" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_ex" argument="-ex" type="text" optional="false" value="" label="label! help" help="">
+    <param name="param_sc" argument="-sc" type="text" optional="false" value="" label="label label label label label label label label &amp; label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_sc" argument="-sc" type="text" optional="false" value="" label="label &amp; label. help" help="">
+    <param name="param_coeg" argument="-coeg" type="text" optional="false" value="" label="label label label label label label label label" help="e.g. help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_coeg" argument="-coeg" type="text" optional="false" value="" label="label, e.g. help" help="">
+    <param name="param_pteg" argument="-pteg" type="text" optional="false" value="" label="label label label label label label label label" help="(e.g. help)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_pteg" argument="-pteg" type="text" optional="false" value="" label="label (e.g. help)" help="">
+    <param name="param_coie" argument="-coie" type="text" optional="false" value="" label="label label label label label label label label" help="i.e. help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_coie" argument="-coie" type="text" optional="false" value="" label="label, i.e. help" help="">
-      <expand macro="list_string_val"/>
-      <expand macro="list_string_san"/>
-    </param>
-    <param name="param_ptie" argument="-ptie" type="text" optional="false" value="" label="label (i.e. help)" help="">
+    <param name="param_ptie" argument="-ptie" type="text" optional="false" value="" label="label label label label label label label label" help="(i.e. help)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
@@ -76,7 +70,6 @@
   <tests>
     <test expect_num_outputs="1">
       <param name="param_do" value="1 2"/>
-      <param name="param_co" value="1 2"/>
       <param name="param_qm" value="1 2"/>
       <param name="param_ex" value="1 2"/>
       <param name="param_sc" value="1 2"/>

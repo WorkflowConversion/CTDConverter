@@ -2,6 +2,7 @@
 # encoding: utf-8
 import os
 import os.path
+import re
 import string
 
 from collections import OrderedDict
@@ -1163,6 +1164,11 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         label, help_text = generate_label_and_help(param.description)
     if param.is_list and not is_selection_parameter(param) and not param.type is _InFile:
         help_text += " (space separated list, in order to allow for spaces in list items surround them by single quotes)"
+    if param.type is _InFile:
+        if param.is_list:
+            help_text += " select %s data sets(s)" % (",".join(get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[_InFile])))
+        else:
+            help_text += " select a %s data set" % (",".join(get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[_InFile])))
 
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text
@@ -1185,32 +1191,39 @@ def generate_label_and_help(desc):
                 first_word.capitalize()
         desc = first_word + " " + rest
     label = desc.decode("utf8")
-    
-    # Try to split the label if it is too long    
+   
+    # split delimiters ".,?!;(" 
     if len(desc) > 50:
-        # find an example and put everything before in the label and the e.g. in the help
-        if desc.find("e.g.") > 1 :
-            label, help_text = desc.split("e.g.",1)
-            help_text = "e.g." + help_text
-        else:
-            # find the end of the first sentence
-            # look for ". " because some labels contain .file or something similar
-            delimiter = ""
-            if desc.find(". ") > 1 and desc.find("? ") > 1:
-                if desc.find(". ") < desc.find("? "):
-                    delimiter = ". "
-                else:
-                    delimiter = "? "
-            elif desc.find(". ") > 1:
-                delimiter = ". "
-            elif desc.find("? ") > 1:
-                delimiter = "? "
-            if delimiter != "":
-                label, help_text = desc.split(delimiter, 1)
+        m = re.search(r"([.?!] |e\.g\.|\(e\.g\.|i\.e\.|\(i\.e\.)", desc)
+        if m is not None:
+            label = desc[:m.start()].rstrip(".?!, ")
+            help_text = desc[m.start():].lstrip(".?!, ")
 
-            # add the question mark back
-            if delimiter == "? ":
-                label += "? "
+#     # Try to split the label if it is too long    
+#     if len(desc) > 50:
+#         # find an example and put everything before in the label and the e.g. in the help
+#         if desc.find("e.g.") > 1 :
+#             label, help_text = desc.split("e.g.",1)
+#             help_text = "e.g." + help_text
+#         else:
+#             # find the end of the first sentence
+#             # look for ". " because some labels contain .file or something similar
+#             delimiter = ""
+#             if desc.find(". ") > 1 and desc.find("? ") > 1:
+#                 if desc.find(". ") < desc.find("? "):
+#                     delimiter = ". "
+#                 else:
+#                     delimiter = "? "
+#             elif desc.find(". ") > 1:
+#                 delimiter = ". "
+#             elif desc.find("? ") > 1:
+#                 delimiter = "? "
+#             if delimiter != "":
+#                 label, help_text = desc.split(delimiter, 1)
+# 
+#             # add the question mark back
+#             if delimiter == "? ":
+#                 label += "? "
     
     # remove all linebreaks
     label = label.rstrip().rstrip('<br>').rstrip()

@@ -64,10 +64,10 @@ ${' '.join(["&& mv -n 'param_out_mandatory_mandatoryinput/%(id)s.%(gext)s' 'para
   <inputs>
     <param type="boolean" name="param_optional_mandatoryinput" optional="false" checked="false" label="Generate output optional_mandatoryinput (output file)"/>
     <param type="boolean" name="param_optional_optionalinput" optional="false" checked="false" label="Generate output optional_optionalinput (output file)"/>
-    <param name="param_inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=""/>
-    <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=""/>
-    <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=""/>
-    <param name="param_inp_optional_optionalinput" argument="-inp_optional_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=""/>
+    <param name="param_inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param name="param_inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param name="param_inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
+    <param name="param_inp_optional_optionalinput" argument="-inp_optional_optionalinput" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
   </inputs>
   <outputs>
     <collection type="list" name="param_out_mandatory_mandatoryinput" label="${tool.name} on ${on_string}: mandatory_mandatoryinput">

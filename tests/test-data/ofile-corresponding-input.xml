@@ -119,9 +119,9 @@ ln -s '$param_input_multformat' 'param_input_multformat/${re.sub("[^\w\-_]", "_"
     <param type="boolean" name="param_optional_noformat" optional="false" checked="false" label="Generate output optional_noformat (output file)"/>
     <param type="boolean" name="param_optional_oneformat" optional="false" checked="false" label="Generate output optional_oneformat (output file)"/>
     <param type="boolean" name="param_optional_multformat" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
-    <param name="param_input_noformat" argument="-input_noformat" type="data" format="txt" optional="false" label="input file" help=""/>
-    <param name="param_input_oneformat" argument="-input_oneformat" type="data" format="tsv" optional="false" label="input file" help=""/>
-    <param name="param_input_multformat" argument="-input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=""/>
+    <param name="param_input_noformat" argument="-input_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+    <param name="param_input_oneformat" argument="-input_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+    <param name="param_input_multformat" argument="-input_multformat" type="data" format="tsv,tabular" optional="false" label="input file" help=" select a tsv,tabular data set"/>
     <expand macro="adv_opts_macro">
       <param type="boolean" name="param_optional_noformat_adv" optional="false" checked="false" label="Generate output optional_noformat_adv (output file)"/>
       <param type="boolean" name="param_optional_oneformat_adv" optional="false" checked="false" label="Generate output optional_oneformat_adv (output file)"/>
