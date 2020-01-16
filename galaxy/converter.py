@@ -14,7 +14,7 @@ from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, pars
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
 
-from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null, CTDTYPE_TO_TYPE
+from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null, CTDTYPE_TO_TYPE, ParameterGroup
 
 
 # mapping to CTD types to Galaxy types
@@ -587,10 +587,7 @@ def create_command(tool, model, **kwargs):
         else:
             # in the else branch the parameter is neither blacklisted nor hardcoded...
 
-            actual_parameter = get_galaxy_parameter_name(param)
-            if param.advanced and not param.type is _OutFile:
-                actual_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_parameter
-
+            actual_parameter = get_galaxy_parameter_path(param)
             # all but bool params need the command line argument (bools have it already in the true/false value)
             if not is_boolean_parameter(param):
                 param_cmd['command'].append(command_line_prefix)
@@ -618,9 +615,7 @@ def create_command(tool, model, **kwargs):
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
                 corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
                 if corresponding_input is not None :
-                    actual_input_parameter = get_galaxy_parameter_name(corresponding_input)
-                    if corresponding_input.advanced:
-                        actual_input_parameter = ADVANCED_OPTIONS_NAME+"cond." + actual_input_parameter
+                    actual_input_parameter = get_galaxy_parameter_path(corresponding_input)
                 else:
                     actual_input_parameter = None
 
@@ -629,9 +624,7 @@ def create_command(tool, model, **kwargs):
                     if type_param.advanced:
                         type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
                 elif len(formats) > 1 and (corresponding_input == None or not fmt_from_corresponding) and not param.is_list:
-                    type_param_name = get_galaxy_parameter_name(param, True) + "_type"
-                    if param.advanced:
-                        type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+                     type_param_name = get_galaxy_parameter_path(param, True) + "_type"
                 else:
                     type_param_name = None
 
@@ -704,10 +697,7 @@ def create_command(tool, model, **kwargs):
             if not ( param.required or is_boolean_parameter(param) or (param.type == str and param.restrictions is None)): 
             # and not(param.type is _InFile and param.is_list):
                 if param.type is _OutFile:
-                    if param.advanced:
-                        actual_parameter = ADVANCED_OPTIONS_NAME+"cond.%s" % get_galaxy_parameter_name(param, True)
-                    else:
-                        actual_parameter = "%s" % get_galaxy_parameter_name(param, True)
+                    actual_parameter = get_galaxy_parameter_path(param, True)
 
                 for stage in param_cmd:
                     if len(param_cmd[stage]) == 0:
@@ -775,6 +765,20 @@ def expand_macros(node, macros_to_expand):
     for expand_macro in macros_to_expand:
         expand_node = add_child_node(node, "expand")
         expand_node.attrib["macro"] = expand_macro
+
+
+def get_galaxy_parameter_path(param, inparam = False):
+    """
+    get the complete cheetah path for a parameter
+    """
+    parameter = get_galaxy_parameter_name(param, inparam)
+    path = utils.extract_param_path(param)
+    if len(path) > 1:
+        return ".".join( [ "section_"+_ for _ in path[:-1]] ) +"."+ parameter
+    elif param.advanced and (not param.type is _OutFile or inparam):
+        return ADVANCED_OPTIONS_NAME+"cond." + parameter
+    else:
+        return parameter
 
 
 def get_galaxy_parameter_name(param, inparam = False):
@@ -884,20 +888,29 @@ def create_inputs(tool, model, **kwargs):
     @return inputs node
     """
     inputs_node = SubElement(tool, "inputs")
+    section_nodes = dict()
+    section_params = dict()
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
     advanced_node = None
     parameter_hardcoder = kwargs["parameter_hardcoder"]
 
     # treat all non output-file/advanced/blacklisted/hardcoded parameters as inputs
-    for param in utils.extract_and_flatten_parameters(model):
+    for param in utils.extract_and_flatten_parameters(model, True):
+        if type(param) is ParameterGroup:
+            section_params[utils.extract_param_name(param)] = param
+            section_nodes[utils.extract_param_name(param)] = Element("section", OrderedDict([("name", "section_"+param.name), ("description", param.description), ("expanded", "false")]))
+            continue
+
         param = modify_param_for_galaxy(param)
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name) or not hardcoded_value is None:
             continue
         
-        if param.advanced:
+        if section_nodes.has_key(utils.extract_param_name(param.parent)):
+            parent_node = section_nodes[utils.extract_param_name(param.parent)]
+        elif param.advanced:
             if advanced_node is None:
                 advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME+"macro")]))
             parent_node = advanced_node
@@ -935,6 +948,11 @@ def create_inputs(tool, model, **kwargs):
             for a in hardcoded_attributes:
                 param_node.attrib[a] = str(hardcoded_attributes[a])
 
+    for sn in section_nodes:
+        if utils.extract_param_name(section_params[sn].parent) in section_nodes:
+            section_nodes[ utils.extract_param_name(section_params[sn].parent) ].append(section_nodes[sn])
+        else:
+            inputs_node.append(section_nodes[sn])
     # if there is an advanced section then append it at the end of the inputs
     if not advanced_node is None:
         inputs_node.append(advanced_node)
@@ -1342,7 +1360,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
         data_node = add_child_node(parent, "collection")
         data_node.attrib["type"] = "list"
         discover_node = add_child_node(data_node, "discover_datasets", 
-                                      OrderedDict([("directory", get_galaxy_parameter_name(param))]))
+                                      OrderedDict([("directory", get_galaxy_parameter_path(param))]))
 
     data_node.attrib["name"] = get_galaxy_parameter_name(param)
     if data_node.attrib["name"].startswith('param_out_'):
@@ -1377,8 +1395,8 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
 #             data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
             #data_node.attrib["inherit_format"] = "true"
         else:
-            data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
-            data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
+            data_node.attrib["format_source"] = get_galaxy_parameter_path(corresponding_input)
+            data_node.attrib["metadata_source"] = get_galaxy_parameter_path(corresponding_input)
     else:
         if not param.is_list:
             data_node.attrib["auto_format"] = "true"

@@ -284,23 +284,56 @@ def extract_tool_executable_path(model, default_executable_path):
     return command
 
 
-def extract_and_flatten_parameters(ctd_model):
-    parameters = []
-    if len(ctd_model.parameters.parameters) > 0:
-        # use this to put parameters that are to be processed
-        # we know that CTDModel has one parent ParameterGroup
-        pending = [ctd_model.parameters]
-        while len(pending) > 0:
-            # take one element from 'pending'
-            parameter = pending.pop()
-            if type(parameter) is not ParameterGroup:
-                parameters.append(parameter)
-            else:
-                # append the first-level children of this ParameterGroup
-                pending.extend(parameter.parameters.values())
-    # returned the reversed list of parameters (as it is now,
-    # we have the last parameter in the CTD as first in the list)
-    return reversed(parameters)
+def _extract_and_flatten_parameters(parameter_group, nodes=False):
+    """
+    get the parameters of a OptionGroup as generator
+    """
+    for parameter in parameter_group.parameters.itervalues():
+        if type(parameter) is not ParameterGroup:
+            yield parameter
+        else:
+            if nodes:
+                yield parameter
+            for p in _extract_and_flatten_parameters(parameter, nodes):
+                yield p
+
+
+def extract_and_flatten_parameters(ctd_model, nodes=False):
+    """
+    get the parameters of a CTD as generator
+    """
+
+    names = [_.name for _ in ctd_model.parameters.parameters.values()]
+    if names == ["version", "1"]:
+        return _extract_and_flatten_parameters(ctd_model.parameters.parameters["1"], nodes)
+    else:
+        return _extract_and_flatten_parameters(ctd_model.parameters, nodes)
+
+#     for parameter in ctd_model.parameters.parameters:
+#         if type(parameter) is not ParameterGroup:
+#             yield parameter
+#         else:
+#             for p in extract_and_flatten_parameters(parameter):
+#                 yield p
+
+# 
+# 
+#     parameters = []
+#     if len(ctd_model.parameters.parameters) > 0:
+#         # use this to put parameters that are to be processed
+#         # we know that CTDModel has one parent ParameterGroup
+#         pending = [ctd_model.parameters]
+#         while len(pending) > 0:
+#             # take one element from 'pending'
+#             parameter = pending.pop()
+#             if type(parameter) is not ParameterGroup:
+#                 parameters.append(parameter)
+#             else:
+#                 # append the first-level children of this ParameterGroup
+#                 pending.extend(parameter.parameters.values())
+#     # returned the reversed list of parameters (as it is now,
+#     # we have the last parameter in the CTD as first in the list)
+#     return reversed(parameters)
 
 
 # some parameters are mapped to command line options, this method helps resolve those mappings, if any
@@ -334,18 +367,21 @@ def _extract_param_cli_name(param, ctd_model):
         return resolve_param_mapping(param, ctd_model)
 
 
-def extract_param_name(param):
-    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+def extract_param_path(param):
     if type(param.parent) == ParameterGroup:
         if not hasattr(param.parent.parent, "parent"):
-            return param.name
+            return [param.name]
         elif not hasattr(param.parent.parent.parent, "parent"):
-            return param.name
+            return [param.name]
         else:
-            return extract_param_name(param.parent) + ":" + param.name
+            return extract_param_path(param.parent) + [ param.name ]
     else:
-        return param.name
+        return [param.name]
 
+
+def extract_param_name(param):
+    # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
+    return ":".join(extract_param_path(param))
 
 def extract_command_line_prefix(param, ctd_model):
     param_name = extract_param_name(param)
