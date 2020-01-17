@@ -898,8 +898,9 @@ def create_inputs(tool, model, **kwargs):
     # treat all non output-file/advanced/blacklisted/hardcoded parameters as inputs
     for param in utils.extract_and_flatten_parameters(model, True):
         if type(param) is ParameterGroup:
+            title, help_text = generate_label_and_help(param.description)
             section_params[utils.extract_param_name(param)] = param
-            section_nodes[utils.extract_param_name(param)] = Element("section", OrderedDict([("name", "section_"+param.name), ("title", param.description), ("expanded", "false")]))
+            section_nodes[utils.extract_param_name(param)] = Element("section", OrderedDict([("name", "section_"+param.name), ("title", title), ("help", help_text), ("expanded", "false")]))
             continue
 
         param = modify_param_for_galaxy(param)
