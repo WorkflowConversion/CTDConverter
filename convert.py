@@ -222,19 +222,19 @@ def main(argv=None):
         print("Interrupted...")
         return 0
 
-    except ApplicationException, e:
+    except ApplicationException as e:
         traceback.print_exc()
         utils.error("CTDConverter could not complete the requested operation.", 0)
         utils.error("Reason: " + e.msg, 0)
         return 1
 
-    except ModelError, e:
+    except ModelError as e:
         traceback.print_exc()
         utils.error("There seems to be a problem with one of your input CTDs.", 0)
         utils.error("Reason: " + e.msg, 0)
         return 1
 
-    except Exception, e:
+    except Exception as e:
         traceback.print_exc()
         utils.error("CTDConverter could not complete the requested operation.", 0)
         utils.error("Reason: " + e.msg, 0)

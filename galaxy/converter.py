@@ -83,6 +83,8 @@ def add_specific_args(parser):
                     action="append", required=None, help="The prefix of the macro name in the corresponding trest macros file")
     parser.add_argument("--test-test", dest="test_test", action='store_true', default=False, required=False,
                     help="Generate a simple test for the internal unit tests.")
+    parser.add_argument("--test-only", dest="test_only", action='store_true', default=False, required=False,
+                    help="Generate only the test section.")
     parser.add_argument("--tool-version", dest="tool_version", required=False, default = None,
                     help="Tool version to use (if not given its extracted from the CTD)")
 
@@ -138,6 +140,7 @@ def convert_models(args, parsed_ctds):
                       macros_to_expand=macros_to_expand,
                       parameter_hardcoder=args.parameter_hardcoder,
                       test_test=args.test_test,
+                      test_only=args.test_only,
                       test_macros_file_names=args.test_macros_files,
                       test_macros_prefix=args.test_macros_prefix,
                       tool_version = args.tool_version)
@@ -146,13 +149,15 @@ def convert_models(args, parsed_ctds):
     
 
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
-    if args.tool_conf_destination is not None:
-        generate_tool_conf(parsed_ctds, args.tool_conf_destination,
-                           args.galaxy_tool_path, args.default_category)
+    # TODO remove tool conf .. deprecated
+#     if args.tool_conf_destination is not None:
+#         generate_tool_conf(parsed_ctds, args.tool_conf_destination,
+#                            args.galaxy_tool_path, args.default_category)
 
+    # TODO remove datatypes_conf generation
     # generate datatypes_conf.xml
-    if args.data_types_destination is not None:
-        generate_data_type_conf(supported_file_formats, args.data_types_destination)
+#     if args.data_types_destination is not None:
+#         generate_data_type_conf(supported_file_formats, args.data_types_destination)
 
 
 def parse_tools_list_file(tools_list_file):
@@ -402,6 +407,16 @@ def _convert_internal(parsed_ctds, **kwargs):
     @return a tuple containing the model, output destination, origin file
     """
 
+    if "test_only" in kwargs and kwargs["test_only"]:
+        for parsed_ctd in parsed_ctds:
+            test = create_test_only(parsed_ctd.ctd_model)
+            tree = ElementTree(test)
+            output_file = parsed_ctd.suggested_output_file
+            logger.info("Writing to %s" % utils.get_filename(output_file), 1)
+            with open(output_file, 'w') as fh:
+                tree.write(fh, encoding="UTF-8", xml_declaration=False, pretty_print=True)
+        return
+
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     for parsed_ctd in parsed_ctds:
         model = parsed_ctd.ctd_model
@@ -423,11 +438,11 @@ def _convert_internal(parsed_ctds, **kwargs):
                 for a in hardcoded_attributes:
                     if not hasattr(param, a):
                         continue
-                    logger.error("%s %s"%(param.name,type(getattr(param, a))) )
+                    # logger.error("%s %s"%(param.name,type(getattr(param, a))) )
                     if type(getattr(param, a)) is _FileFormat:
                         setattr(param, a, _FileFormat(str(hardcoded_attributes[a])))
                     elif type(getattr(param, a)) is _Choices:
-                        logger.error("SET CTD %s %s %s" %(param.name, a, hardcoded_attributes[a]))
+                        # logger.error("SET CTD %s %s %s" %(param.name, a, hardcoded_attributes[a]))
                         setattr(param, a, _Choices(str(hardcoded_attributes[a])))
                     elif type(getattr(param, a)) is _NumericRange:
                         raise Exception("Overwriting of Numeric Range not implemented")
@@ -575,10 +590,18 @@ def create_command(tool, model, **kwargs):
     advanced_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
     
     final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "", "## Preprocessing"])
+
+    # - call the executable with -write_ctd to write the ctd file (with defaults)
+    # - use fill_ctd.py to overwrite the defaults in the ctd file with the
+    #   Galaxy parameters in the JSON file (from inputs config file)
+    #   (note the base name call is only necessary for the CTDconverter tests)
+    # - feed the ctd file to the executable (with -ini)
+    #   note: input and output file parameters are still given on the command line
+    #   - output file parameters are not included in the JSON file 
+    #   - input and output files are accessed through links / files that have the correct extension
     final_cmd['command'].extend(["", "## Main program call"])
-    final_cmd['command'].append("""export PYTHONPATH='$__tool_directory__/CTDopts' &&
-@EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+    final_cmd['command'].append("""@EXECUTABLE@ -write_ctd ./ &&
+python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""") 
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])
@@ -643,11 +666,9 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
                     actual_input_parameter = None
 
                 if type_param is not None:
-                    type_param_name = get_galaxy_parameter_name(type_param)
-                    if type_param.advanced:
-                        type_param_name = ADVANCED_OPTIONS_NAME+"cond." + type_param_name
+                    type_param_name = get_galaxy_parameter_path(type_param)
                 elif len(formats) > 1 and (corresponding_input == None or not fmt_from_corresponding) and not param.is_list:
-                     type_param_name = get_galaxy_parameter_path(param, True) + "_type"
+                     type_param_name = get_galaxy_parameter_path(param, "type")
                 else:
                     type_param_name = None
 
@@ -665,7 +686,7 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
                     else:
                         logger.info("1 fmt + dataset %s" % param.name, 1)
                         param_cmd['command'].append("'"+param.name+"/output.${gxy2omsext(\"" + fmt + "\")}'")
-                        param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${gxy2omsext(\"" + fmt + "\")}' '$out_"+param.name+"'")
+                        param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${gxy2omsext(\"" + fmt + "\")}' '$"+param.name+"'")
 
                 # if there is a type parameter then we use the type selected by the user
                 # - single: write to temp file with the oms extension and mv it to the actual file output which is treated via change_format
@@ -681,7 +702,7 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
                         # then move it to the actual place specified by the parameter
                         # the format is then set by the <data> tag using <change_format>
                         param_cmd['command'].append("'" + param.name+"/output.${"+type_param_name+"}'")
-                        param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+type_param_name+"}' '$out_"+param.name+"'")
+                        param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+type_param_name+"}' '$"+actual_parameter+"'")
                 elif actual_input_parameter is not None:
                     if param.is_list:
                         logger.info("actual + list %s" %param.name, 1)
@@ -690,10 +711,10 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
                         logger.info("actual + dataset %s %s %s" % (param.name, actual_input_parameter, corresponding_input.is_list), 1)
                         if corresponding_input.is_list:
                             param_cmd['command'].append("'" + param.name+"/output.${"+actual_input_parameter+"[0].ext}'")
-                            param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+actual_input_parameter+"[0].ext}' '$out_"+param.name+"'")
+                            param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+actual_input_parameter+"[0].ext}' '$"+actual_parameter+"'")
                         else:
                             param_cmd['command'].append("'" + param.name+"/output.${"+actual_input_parameter+".ext}'")
-                            param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+actual_input_parameter+".ext}' '$out_"+param.name+"'")
+                            param_cmd['postprocessing'].append("&& mv '"+param.name+"/output.${"+actual_input_parameter+".ext}' '$"+actual_parameter+"'")
                 else:
                     if param.is_list:
                         raise Exception( "output parameter itemlist %s without corresponding input" )
@@ -719,19 +740,17 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
             #   need no if (otherwise the empty string could not be provided)
             if not ( param.required or is_boolean_parameter(param) or (param.type == str and param.restrictions is None)): 
             # and not(param.type is _InFile and param.is_list):
-                if param.type is _OutFile:
-                    actual_parameter = get_galaxy_parameter_path(param, True)
-
+                actual_parameter = get_galaxy_parameter_path(param, "FLAG")
                 for stage in param_cmd:
                     if len(param_cmd[stage]) == 0:
                         continue
                     # special case for optional itemlists: for those if no option is selected only the parameter must be specified
                     if is_selection_parameter(param) and param.is_list and param.required == False:
-                        param_cmd[stage] = [param_cmd[stage][0]] + ["#if $" + param.name + ":"] + utils.indent(param_cmd[stage][1:]) + ["#end if"]
-                    elif is_selection_parameter(param)  or param.type is _OutFile or param.type is _InFile:
-                        param_cmd[stage] = ["#if $" + param.name + ":"] + utils.indent(param_cmd[stage]) + ["#end if"]
+                        param_cmd[stage] = [param_cmd[stage][0]] + ["#if $" + actual_parameter + ":"] + utils.indent(param_cmd[stage][1:]) + ["#end if"]
+                    elif is_selection_parameter(param) or param.type is _OutFile or param.type is _InFile:
+                        param_cmd[stage] = ["#if $" + actual_parameter + ":"] + utils.indent(param_cmd[stage]) + ["#end if"]
                     else:
-                        param_cmd[stage] = ["#if str($" + param.name + "):"] + utils.indent(param_cmd[stage]) + ["#end if"]
+                        param_cmd[stage] = ["#if str($" + actual_parameter + "):"] + utils.indent(param_cmd[stage]) + ["#end if"]
 
         for stage in param_cmd:
             if len(param_cmd[stage]) == 0:
@@ -794,37 +813,34 @@ def get_galaxy_parameter_path(param, inparam = False):
     """
     get the complete cheetah path for a parameter
     """
-    parameter = get_galaxy_parameter_name(param, inparam)
+    p = get_galaxy_parameter_name(param, inparam)
     path = utils.extract_param_path(param)
     if len(path) > 1 and (not param.type is _OutFile or inparam):
-        return ".".join( [ "section_"+_ for _ in path[:-1]] ).replace("-", "_") +"."+ parameter
+        return (".".join( [ "section_"+_ for _ in path[:-1]] )+"."+p).replace("-", "_")
     elif param.advanced and (not param.type is _OutFile or inparam):
-        return ADVANCED_OPTIONS_NAME+"cond." + parameter
+        return ADVANCED_OPTIONS_NAME+"cond." + p
     else:
-        return parameter
+        return p
 
 
 def get_galaxy_parameter_name(param, inparam = False):
     """
     get the name of the parameter used in the galaxy tool
-    - prepend param_ or param_out_ (the latter for outputs, except if inparam is True)
     - replace : and - by _
+    - add _FLAG for output parameters if inparam is True
 
-    the idea of inparam is to be used for optional outputs (param_out_x) for
-    which an additional boolean input (param_x) exists
+    the idea of inparam is to be used for optional outputs (out_x) for
+    which an additional boolean input (out_x_FLAG) exists
 
     @param param the parameter
     @param inparam get the name of the corresponding input
     @return the name used for the parameter in the tool form
     """
-    if type(param) is ParameterGroup:
-        return param.name.replace("-", "_")
-    
-    p = utils.extract_param_name(param).replace(":", "_").replace("-", "_")
-    if param.type is _OutFile and not inparam:
-        return "param_out_%s" % p
+    p = param.name.replace("-", "_")
+    if param.type is _OutFile and inparam:
+        return "%s_%s" % (p, inparam)
     else:
-        return "param_%s" % p
+        return "%s" % p
 
 
 def get_out_type_param(out_param, model, parameter_hardcoder):
@@ -836,7 +852,6 @@ def get_out_type_param(out_param, model, parameter_hardcoder):
         return None
 
     for param in utils.extract_and_flatten_parameters(model):
-        
         if param.name == out_param.name + "_type":
             return param
     return None
@@ -962,9 +977,9 @@ def create_inputs(tool, model, **kwargs):
             # mandatory outpiles: no input node needed
             # inputs: create the input param
             if not param.required:
-                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"), ("name", param.name), ("optional", "false"), ("checked", "false"),  ("label", "Generate output %s (%s)" %(param.name, param.description))]))
-            else:
-                add_child_node(parent_node, "param", OrderedDict([("type", "hidden"), ("name", param.name)]))
+                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"), ("name", param.name + "_FLAG"), ("optional", "false"), ("checked", "false"),  ("label", "Generate output %s (%s)" %(param.name, param.description))]))
+#             else:
+#                 add_child_node(parent_node, "param", OrderedDict([("type", "hidden"), ("name", param.name)]))
             continue
         
         # create the actual param node and fill the attributes
@@ -1387,7 +1402,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
         discover_node = add_child_node(data_node, "discover_datasets", 
                                       OrderedDict([("directory", get_galaxy_parameter_path(param))]))
 
-    data_node.attrib["name"] = "out_"+param.name
+    data_node.attrib["name"] = param.name
     data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % param.name
 
     formats = get_formats(param, supported_file_formats, TYPE_TO_GALAXY_TYPE[_OutFile])
@@ -1436,9 +1451,11 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
 
     # add filter for optional parameters
     if not param.required:
-        filter_node = add_child_node(data_node, "filter") 
-        filter_node.text = get_galaxy_parameter_name(param, True) 
-        if param.advanced:
+        filter_node = add_child_node(data_node, "filter")
+        filter_path = utils.extract_param_path(param)
+        filter_path[-1] += "_FLAG"
+        filter_node.text = filter_path[0] + "".join([ '["'+ _ +'"]' for _ in filter_path[1:] ])
+        if len(filter_path) == 1 and param.advanced:
             filter_node.text = "{aon}cond['{aon}selector'] == 'advanced' and {aon}cond['".format(aon = ADVANCED_OPTIONS_NAME) + filter_node.text + "']"
     return data_node
 
@@ -1566,6 +1583,53 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
     elif not (test_macros_prefix is None or name is None):
         expand_macros(tests_node, [ p + name for p in test_macros_prefix])
 
+
+def create_test_only(model, **kwargs):
+
+    parameter_hardcoder = kwargs["parameter_hardcoder"]
+
+    section_nodes = dict()
+    section_params = dict()
+
+    test = Element("test")
+    advanced = None
+
+    for param in utils.extract_and_flatten_parameters(model, True):
+        try:
+            parent = section_nodes[utils.extract_param_name(param.parent)]
+        except KeyError:
+            parent = test
+
+        if section_nodes.has_key(utils.extract_param_name(param.parent)):
+            parent = section_nodes[utils.extract_param_name(param.parent)]
+        elif type(param) is not ParameterGroup and param.advanced:
+            if advanced is None:
+                advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
+                adv_sel = add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
+            parent = advanced
+        else:
+            parent = test
+
+        if type(param) is ParameterGroup:
+            section_params[utils.extract_param_name(param)] = param
+            section_nodes[utils.extract_param_name(param)] = add_child_node(parent, "section", OrderedDict([("name", param.name)]))
+            continue
+        if param.type is _OutFile and not param.required: 
+            nd = add_child_node(parent, "param", OrderedDict([("name", param.name+"_FLAG"),("value", "false")]))
+
+            formats = get_formats(param, kwargs["supported_file_formats"], TYPE_TO_GALAXY_TYPE[_OutFile])
+            type_param = get_out_type_param(param, model, parameter_hardcoder)
+            corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
+            if len(formats) > 1 and type_param is None and (corresponding_input is None or not fmt_from_corresponding) and not param.is_list:
+                fmt_select = add_child_node(parent, "param", OrderedDict([("name", param.name + "_type"), ("value", "")]))
+
+        if param.is_list and type(param.default) is not _Null:
+            value = '"' + '" "'.join(map(str, param.default)) + '"'
+        else:
+            value = str(param.default)
+
+        nd = add_child_node(parent, "param" if param.type is not _OutFile else "output", OrderedDict([("name", param.name),("value", value)]))
+    return test
 
 # Shows basic information about the file, such as data ranges and file type.
 def create_help(tool, model):

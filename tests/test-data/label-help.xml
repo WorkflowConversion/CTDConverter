@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_LabelHelpTest" name="echo LabelHelpTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="label-help" name="label-help" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Lebel Help parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">echo LabelHelpTest</token>
+    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/label-help</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
@@ -12,54 +12,49 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
-@EXECUTABLE@
--do
-"$param_do"
--qm
-"$param_qm"
--ex
-"$param_ex"
--sc
-"$param_sc"
--coeg
-"$param_coeg"
--pteg
-"$param_pteg"
--coie
-"$param_coie"
--ptie
-"$param_ptie"
-> $param_stdout]]></command>
+
+## Preprocessing
+
+## Main program call
+@EXECUTABLE@ -write_ctd ./ &&
+python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+@EXECUTABLE@ -ini @EXECUTABLE@.ctd
+> $param_stdout
+
+## Postprocessing]]></command>
+  <configfiles>
+    <inputs name="args_json" data_style="paths"/>
+  </configfiles>
   <inputs>
-    <param name="param_do" argument="-do" type="text" optional="false" value="" label="label label label label label label label label" help="help">
+    <param name="do" argument="-do" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_qm" argument="-qm" type="text" optional="false" value="" label="label label label label label label label label" help="help">
+    <param name="qm" argument="-qm" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_ex" argument="-ex" type="text" optional="false" value="" label="label label label label label label label label" help="help">
+    <param name="ex" argument="-ex" type="text" optional="false" value="" label="label label label label label label label label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_sc" argument="-sc" type="text" optional="false" value="" label="label label label label label label label label &amp; label" help="help">
+    <param name="sc" argument="-sc" type="text" optional="false" value="" label="label label label label label label label label &amp; label" help="help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_coeg" argument="-coeg" type="text" optional="false" value="" label="label label label label label label label label" help="e.g. help">
+    <param name="coeg" argument="-coeg" type="text" optional="false" value="" label="label label label label label label label label" help="e.g. help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_pteg" argument="-pteg" type="text" optional="false" value="" label="label label label label label label label label" help="(e.g. help)">
+    <param name="pteg" argument="-pteg" type="text" optional="false" value="" label="label label label label label label label label" help="(e.g. help)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_coie" argument="-coie" type="text" optional="false" value="" label="label label label label label label label label" help="i.e. help">
+    <param name="coie" argument="-coie" type="text" optional="false" value="" label="label label label label label label label label" help="i.e. help">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_ptie" argument="-ptie" type="text" optional="false" value="" label="label label label label label label label label" help="(i.e. help)">
+    <param name="ptie" argument="-ptie" type="text" optional="false" value="" label="label label label label label label label label" help="(i.e. help)">
       <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
@@ -69,20 +64,20 @@
   </outputs>
   <tests>
     <test expect_num_outputs="1">
-      <param name="param_do" value="1 2"/>
-      <param name="param_qm" value="1 2"/>
-      <param name="param_ex" value="1 2"/>
-      <param name="param_sc" value="1 2"/>
-      <param name="param_coeg" value="1 2"/>
-      <param name="param_pteg" value="1 2"/>
-      <param name="param_coie" value="1 2"/>
-      <param name="param_ptie" value="1 2"/>
+      <param name="do" value="1 2"/>
+      <param name="qm" value="1 2"/>
+      <param name="ex" value="1 2"/>
+      <param name="sc" value="1 2"/>
+      <param name="coeg" value="1 2"/>
+      <param name="pteg" value="1 2"/>
+      <param name="coie" value="1 2"/>
+      <param name="ptie" value="1 2"/>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Label Help parameter tests.
 
 
-For more information, visit http://www.openms.de]]></help>
+For more information, visit http://www.openms.de/unavailable.html]]></help>
   <expand macro="references"/>
 </tool>

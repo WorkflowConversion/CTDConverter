@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_SelectTest" name="echo SelectTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="select" name="select" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Select parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">echo SelectTest</token>
+    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/select</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
@@ -12,136 +12,49 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
-@EXECUTABLE@
--wodefault_mandatory
-"$param_wodefault_mandatory"
--default_mandatory
-"$param_default_mandatory"
-#if $param_wodefault_optional:
-  -wodefault_optional
-  "$param_wodefault_optional"
-#end if
-#if $param_default_optional:
-  -default_optional
-  "$param_default_optional"
-#end if
--wodefault_mandatory_many
-"$param_wodefault_mandatory_many"
--default_mandatory_many
-"$param_default_mandatory_many"
-#if $param_wodefault_optional_many:
-  -wodefault_optional_many
-  "$param_wodefault_optional_many"
-#end if
-#if $param_default_optional_many:
-  -default_optional_many
-  "$param_default_optional_many"
-#end if
--list_wodefault_optional
-#if $param_list_wodefault_optional:
-  ${' '.join(['"%s"'%str(_) for _ in str($param_list_wodefault_optional).split(',')])}
-#end if
--list_wodefault_mandatory
-${' '.join(['"%s"'%str(_) for _ in str($param_list_wodefault_mandatory).split(',')])}
--list_default_optional
-#if $param_list_default_optional:
-  ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_optional).split(',')])}
-#end if
--list_default_mandatory
-${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory).split(',')])}
--list_wodefault_optional_many
-#if $param_list_wodefault_optional_many:
-  ${' '.join(['"%s"'%str(_) for _ in str($param_list_wodefault_optional_many).split(',')])}
-#end if
--list_wodefault_mandatory_many
-${' '.join(['"%s"'%str(_) for _ in str($param_list_wodefault_mandatory_many).split(',')])}
--list_default_optional_many
-#if $param_list_default_optional_many:
-  ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_optional_many).split(',')])}
-#end if
--list_default_mandatory_many
-${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split(',')])}
-#if $adv_opts_cond.adv_opts_selector=='advanced':
-  -wodefault_mandatory_adv
-  "$adv_opts_cond.param_wodefault_mandatory_adv"
-  -default_mandatory_adv
-  "$adv_opts_cond.param_default_mandatory_adv"
-  #if $adv_opts_cond.param_wodefault_optional_adv:
-    -wodefault_optional_adv
-    "$adv_opts_cond.param_wodefault_optional_adv"
-  #end if
-  #if $adv_opts_cond.param_default_optional_adv:
-    -default_optional_adv
-    "$adv_opts_cond.param_default_optional_adv"
-  #end if
-  -wodefault_mandatory_many_adv
-  "$adv_opts_cond.param_wodefault_mandatory_many_adv"
-  -default_mandatory_many_adv
-  "$adv_opts_cond.param_default_mandatory_many_adv"
-  #if $adv_opts_cond.param_wodefault_optional_many_adv:
-    -wodefault_optional_many_adv
-    "$adv_opts_cond.param_wodefault_optional_many_adv"
-  #end if
-  #if $adv_opts_cond.param_default_optional_many_adv:
-    -default_optional_many_adv
-    "$adv_opts_cond.param_default_optional_many_adv"
-  #end if
-  -list_wodefault_optional_adv
-  #if $adv_opts_cond.param_list_wodefault_optional_adv:
-    ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_adv).split(',')])}
-  #end if
-  -list_wodefault_mandatory_adv
-  ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_adv).split(',')])}
-  -list_default_optional_adv
-  #if $adv_opts_cond.param_list_default_optional_adv:
-    ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_default_optional_adv).split(',')])}
-  #end if
-  -list_default_mandatory_adv
-  ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_adv).split(',')])}
-  -list_wodefault_optional_many_adv
-  #if $adv_opts_cond.param_list_wodefault_optional_many_adv:
-    ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_wodefault_optional_many_adv).split(',')])}
-  #end if
-  -list_wodefault_mandatory_many_adv
-  ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_wodefault_mandatory_many_adv).split(',')])}
-  -list_default_optional_many_adv
-  #if $adv_opts_cond.param_list_default_optional_many_adv:
-    ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_default_optional_many_adv).split(',')])}
-  #end if
-  -list_default_mandatory_many_adv
-  ${' '.join(['"%s"'%str(_) for _ in str($adv_opts_cond.param_list_default_mandatory_many_adv).split(',')])}
-#end if
-> $param_stdout]]></command>
+
+## Preprocessing
+
+## Main program call
+@EXECUTABLE@ -write_ctd ./ &&
+python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+@EXECUTABLE@ -ini @EXECUTABLE@.ctd
+> $param_stdout
+
+## Postprocessing]]></command>
+  <configfiles>
+    <inputs name="args_json" data_style="paths"/>
+  </configfiles>
   <inputs>
-    <param name="param_wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" label="string" help="">
+    <param name="wodefault_mandatory" argument="-wodefault_mandatory" display="radio" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_default_mandatory" argument="-default_mandatory" display="radio" type="select" optional="false" label="string" help="">
+    <param name="default_mandatory" argument="-default_mandatory" display="radio" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" label="string" help="">
+    <param name="wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_default_optional" argument="-default_optional" display="radio" type="select" optional="false" label="string" help="">
+    <param name="default_optional" argument="-default_optional" display="radio" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" label="string" help="">
+    <param name="wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
@@ -149,7 +62,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
+    <param name="default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
@@ -157,7 +70,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
+    <param name="wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
@@ -165,7 +78,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
+    <param name="default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
@@ -173,35 +86,35 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" label="string list" help="">
+    <param name="list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
+    <param name="list_wodefault_mandatory" argument="-list_wodefault_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
       <option value="D" selected="false">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_default_optional" argument="-list_default_optional" multiple="true" type="select" optional="true" label="string list" help="">
-      <option value="A" selected="false">A</option>
-      <option value="B" selected="false">B</option>
-      <option value="C" selected="true">C</option>
-      <option value="D" selected="true">D</option>
-      <expand macro="list_string_san"/>
-    </param>
-    <param name="param_list_default_mandatory" argument="-list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
+    <param name="list_default_optional" argument="-list_default_optional" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+    <param name="list_default_mandatory" argument="-list_default_mandatory" multiple="true" type="select" optional="false" label="string list" help="">
+      <option value="A" selected="false">A</option>
+      <option value="B" selected="false">B</option>
+      <option value="C" selected="true">C</option>
+      <option value="D" selected="true">D</option>
+      <expand macro="list_string_san"/>
+    </param>
+    <param name="list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
@@ -209,7 +122,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
+    <param name="list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="false">C</option>
@@ -217,7 +130,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+    <param name="list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
@@ -225,7 +138,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <option value="E" selected="false">E</option>
       <expand macro="list_string_san"/>
     </param>
-    <param name="param_list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
+    <param name="list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A" selected="false">A</option>
       <option value="B" selected="false">B</option>
       <option value="C" selected="true">C</option>
@@ -234,35 +147,35 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
       <expand macro="list_string_san"/>
     </param>
     <expand macro="adv_opts_macro">
-      <param name="param_wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
+      <param name="wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_default_mandatory_adv" argument="-default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
+      <param name="default_mandatory_adv" argument="-default_mandatory_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" label="string" help="">
+      <param name="wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_default_optional_adv" argument="-default_optional_adv" display="radio" type="select" optional="false" label="string" help="">
+      <param name="default_optional_adv" argument="-default_optional_adv" display="radio" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" label="string" help="">
+      <param name="wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
@@ -270,7 +183,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
+      <param name="default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
@@ -278,7 +191,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
+      <param name="wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
@@ -286,7 +199,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
+      <param name="default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
@@ -294,35 +207,35 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
+      <param name="list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param name="list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
         <option value="D" selected="false">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_default_optional_adv" argument="-list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
-        <option value="A" selected="false">A</option>
-        <option value="B" selected="false">B</option>
-        <option value="C" selected="true">C</option>
-        <option value="D" selected="true">D</option>
-        <expand macro="list_string_san"/>
-      </param>
-      <param name="param_list_default_mandatory_adv" argument="-list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param name="list_default_optional_adv" argument="-list_default_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+      <param name="list_default_mandatory_adv" argument="-list_default_mandatory_adv" multiple="true" type="select" optional="false" label="string list" help="">
+        <option value="A" selected="false">A</option>
+        <option value="B" selected="false">B</option>
+        <option value="C" selected="true">C</option>
+        <option value="D" selected="true">D</option>
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
@@ -330,7 +243,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param name="list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="false">C</option>
@@ -338,7 +251,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+      <param name="list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
@@ -346,7 +259,7 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
         <option value="E" selected="false">E</option>
         <expand macro="list_string_san"/>
       </param>
-      <param name="param_list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param name="list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A" selected="false">A</option>
         <option value="B" selected="false">B</option>
         <option value="C" selected="true">C</option>
@@ -361,15 +274,15 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
   </outputs>
   <tests>
     <test expect_num_outputs="1">
-      <param name="param_wodefault_mandatory" value="A"/>
-      <param name="param_wodefault_mandatory_many" value="A"/>
-      <param name="param_list_wodefault_mandatory" value="A,B,C,D"/>
-      <param name="param_list_wodefault_mandatory_many" value="A,B,C,D,E"/>
+      <param name="wodefault_mandatory" value="A"/>
+      <param name="wodefault_mandatory_many" value="A"/>
+      <param name="list_wodefault_mandatory" value="A,B,C,D"/>
+      <param name="list_wodefault_mandatory_many" value="A,B,C,D,E"/>
       <conditional name="adv_opts_cond">
-        <param name="param_wodefault_mandatory_adv" value="A"/>
-        <param name="param_wodefault_mandatory_many_adv" value="A"/>
-        <param name="param_list_wodefault_mandatory_adv" value="A,B,C,D"/>
-        <param name="param_list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
+        <param name="wodefault_mandatory_adv" value="A"/>
+        <param name="wodefault_mandatory_many_adv" value="A"/>
+        <param name="list_wodefault_mandatory_adv" value="A,B,C,D"/>
+        <param name="list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
@@ -378,6 +291,6 @@ ${' '.join(['"%s"'%str(_) for _ in str($param_list_default_mandatory_many).split
   <help><![CDATA[Select parameter tests.
 
 
-For more information, visit http://www.openms.de]]></help>
+For more information, visit http://www.openms.de/unavailable.html]]></help>
   <expand macro="references"/>
 </tool>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tool ctdVersion="1.7" version="2.3.0" name="echo StringTest" docurl="http://www.openms.de/unavailable.html" category="Test" >
-<description><![CDATA[String parameter tests]]></description>
-<manual><![CDATA[String parameter tests.]]></manual>
+<tool ctdVersion="1.7" version="2.3.0" name="empty" docurl="http://www.openms.de/unavailable.html" category="Test" >
+<description><![CDATA[empty ctd test]]></description>
+<manual><![CDATA[empty ctd test]]></manual>
 <PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-  <NODE name="StringTest" description="String test.">
+  <NODE name="EmptyTest" description="Empty test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
     </NODE>

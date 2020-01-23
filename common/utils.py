@@ -9,7 +9,7 @@ from logger import info, error, warning
 
 from common import logger
 from common.exceptions import ApplicationException
-from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup
+from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup, Parameters, Parameter, ModelTypeError
 
 
 MESSAGE_INDENTATION_INCREMENT = 2
@@ -150,7 +150,20 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
         if is_converting_multiple_ctds:
             output_file = os.path.join(output_file, get_filename_without_suffix(input_ctd) + "." + output_file_extension)
         info("Parsing %s" % input_ctd)
-        parsed_ctds.append(ParsedCTD(CTDModel(from_file=input_ctd), input_ctd, output_file))
+
+        model = None
+        try:
+            model = CTDModel(from_file=input_ctd)
+        except ModelTypeError:
+            pass
+        try:
+            model = Parameters(from_file=input_ctd)
+        except ModelTypeError:
+            pass
+        assert model != None, "Could not parse %s, seems to be no CTD/PARAMS"%(input_ctd)
+            
+
+        parsed_ctds.append(ParsedCTD(model, input_ctd, output_file))
 
     return parsed_ctds
 
@@ -288,13 +301,13 @@ def _extract_and_flatten_parameters(parameter_group, nodes=False):
     """
     get the parameters of a OptionGroup as generator
     """
-    for parameter in parameter_group.parameters.itervalues():
-        if type(parameter) is not ParameterGroup:
+    for parameter in parameter_group.itervalues():
+        if type(parameter) is Parameter:
             yield parameter
         else:
             if nodes:
                 yield parameter
-            for p in _extract_and_flatten_parameters(parameter, nodes):
+            for p in _extract_and_flatten_parameters(parameter.parameters, nodes):
                 yield p
 
 
@@ -302,12 +315,16 @@ def extract_and_flatten_parameters(ctd_model, nodes=False):
     """
     get the parameters of a CTD as generator
     """
-
-    names = [_.name for _ in ctd_model.parameters.parameters.values()]
-    if names == ["version", "1"]:
-        return _extract_and_flatten_parameters(ctd_model.parameters.parameters["1"], nodes)
+    if type(ctd_model) is CTDModel:
+        return _extract_and_flatten_parameters(ctd_model.parameters.parameters, nodes)
     else:
         return _extract_and_flatten_parameters(ctd_model.parameters, nodes)
+
+#     names = [_.name for _ in ctd_model.parameters.values()]
+#     if names == ["version", "1"]:
+#         return _extract_and_flatten_parameters(ctd_model.parameters.parameters["1"], nodes)
+#     else:
+#         return _extract_and_flatten_parameters(ctd_model, nodes)
 
 #     for parameter in ctd_model.parameters.parameters:
 #         if type(parameter) is not ParameterGroup:
@@ -340,7 +357,11 @@ def extract_and_flatten_parameters(ctd_model, nodes=False):
 def resolve_param_mapping(param, ctd_model):
     # go through all mappings and find if the given param appears as a reference name in a mapping element
     param_mapping = None
-    for cli_element in ctd_model.cli:
+    ctd_model_cli = []
+    if hasattr(ctd_model, "cli"):
+        ctd_model_cli = ctd_model.cli
+
+    for cli_element in ctd_model_cli:
         for mapping_element in cli_element.mappings:
             if mapping_element.reference_name == param.name:
                 if param_mapping is not None:
@@ -360,7 +381,7 @@ def _extract_param_cli_name(param, ctd_model):
         elif not hasattr(param.parent.parent.parent, 'parent'):
             return resolve_param_mapping(param, ctd_model)
         else:
-            if ctd_model.cli:
+            if hasattr(ctd_model, "cli") and ctd_model.cli:
                 warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
             return extract_param_name(param.parent) + ":" + resolve_param_mapping(param, ctd_model)
     else:
@@ -368,7 +389,7 @@ def _extract_param_cli_name(param, ctd_model):
 
 
 def extract_param_path(param):
-    if type(param.parent) == ParameterGroup:
+    if type(param.parent) == ParameterGroup or type(param.parent) == Parameters:
         if not hasattr(param.parent.parent, "parent"):
             return [param.name]
         elif not hasattr(param.parent.parent.parent, "parent"):
@@ -382,6 +403,7 @@ def extract_param_path(param):
 def extract_param_name(param):
     # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
     return ":".join(extract_param_path(param))
+
 
 def extract_command_line_prefix(param, ctd_model):
     param_name = extract_param_name(param)

@@ -178,7 +178,19 @@ CTDs can contain an `<executablePath>` element that will be used when executing 
 The following invocation of the converter will use `/opt/suite/bin` as a prefix when providing the executable path in the output files for any input CTD that lacks the `<executablePath>` section:
 
     $ python convert.py [FORMAT] -x /opt/suite/bin ...
-    
+
+### Tests
+
+Tests for Galaxy tools are generated with:
+
+```
+for i in tests/test-data/*ctd
+do
+b=$(basename $i .ctd)
+python2 convert.py galaxy -i tests/test-data/$b.ctd -o tests/test-data/$b.xml -m tests/test-data/macros.xml -f tests/test-data/filetypes.txt --test-test -p tests/test-data/hardcoded_params.json  --tool-version 5.0.011 -x $(pwd)/tests/test-data/
+done
+```
+
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
 [CTDSchema]: https://github.com/WorkflowConversion/CTDSchema

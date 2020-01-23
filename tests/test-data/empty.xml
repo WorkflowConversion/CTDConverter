@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="echo_StringTest" name="echo StringTest" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
-  <description>String parameter tests</description>
+<tool id="empty" name="empty" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+  <description>empty ctd test</description>
   <macros>
-    <token name="@EXECUTABLE@">echo StringTest</token>
+    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/empty</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
@@ -12,8 +12,19 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
-@EXECUTABLE@
-> $param_stdout]]></command>
+
+## Preprocessing
+
+## Main program call
+@EXECUTABLE@ -write_ctd ./ &&
+python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+@EXECUTABLE@ -ini @EXECUTABLE@.ctd
+> $param_stdout
+
+## Postprocessing]]></command>
+  <configfiles>
+    <inputs name="args_json" data_style="paths"/>
+  </configfiles>
   <inputs/>
   <outputs>
     <data name="param_stdout" format="txt" label="Output from stdout"/>
@@ -23,9 +34,9 @@
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
-  <help><![CDATA[String parameter tests.
+  <help><![CDATA[empty ctd test
 
 
-For more information, visit http://www.openms.de]]></help>
+For more information, visit http://www.openms.de/unavailable.html]]></help>
   <expand macro="references"/>
 </tool>

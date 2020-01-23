@@ -1,45 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tool ctdVersion="1.7" version="2.3.0" name="echo FloatTest" docurl="http://www.openms.de/unavailable.html" category="Test" >
+<tool ctdVersion="1.7" version="2.3.0" name="float" docurl="http://www.openms.de/unavailable.html" category="Test" >
 <description><![CDATA[Float parameter tests]]></description>
 <manual><![CDATA[Float parameter tests.]]></manual>
 <PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <NODE name="FloatTest" description="Float test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;FloatTest&apos;">
-      <ITEM name="wodefault_mandatory_unrestricted"     value=""    type="double" description="float" required="true"  advanced="false" />
+<!--      <ITEM name="wodefault_mandatory_unrestricted"     value=""    type="double" description="float" required="true"  advanced="false" />-->
       <ITEM name="default_mandatory_unrestricted"       value="0.0" type="double" description="float" required="true"  advanced="false" />
-      <ITEM name="wodefault_optional_unrestricted"      value=""    type="double" description="float" required="false" advanced="false" />
+<!--      <ITEM name="wodefault_optional_unrestricted"      value=""    type="double" description="float" required="false" advanced="false" />-->
       <ITEM name="default_optional_unrestricted"        value="0.0" type="double" description="float" required="false" advanced="false" />
-      <ITEM name="wodefault_mandatory_unrestricted_adv" value=""    type="double" description="float" required="true"  advanced="true" />
+<!--      <ITEM name="wodefault_mandatory_unrestricted_adv" value=""    type="double" description="float" required="true"  advanced="true" />-->
       <ITEM name="default_mandatory_unrestricted_adv"   value="0.0" type="double" description="float" required="true"  advanced="true" />
-      <ITEM name="wodefault_optional_unrestricted_adv"  value=""    type="double" description="float" required="false" advanced="true" />
+<!--      <ITEM name="wodefault_optional_unrestricted_adv"  value=""    type="double" description="float" required="false" advanced="true" />-->
       <ITEM name="default_optional_unrestricted_adv"    value="0.0" type="double" description="float" required="false" advanced="true" />
 
-      <ITEM name="wodefault_mandatory_unrestricted_min"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_min"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:"/>-->
       <ITEM name="default_mandatory_unrestricted_min"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions="0.0:"/>
-      <ITEM name="wodefault_optional_unrestricted_min"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_min"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:"/>-->
       <ITEM name="default_optional_unrestricted_min"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions="0.0:"/>
-      <ITEM name="wodefault_mandatory_unrestricted_adv_min" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_adv_min" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:"/>-->
       <ITEM name="default_mandatory_unrestricted_adv_min"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions="0.0:"/>
-      <ITEM name="wodefault_optional_unrestricted_adv_min"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_adv_min"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:"/>-->
       <ITEM name="default_optional_unrestricted_adv_min"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions="0.0:"/>
 
-      <ITEM name="wodefault_mandatory_unrestricted_max"     value=""    type="double" description="float" required="true"  advanced="false" restrictions=":100.0"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_max"     value=""    type="double" description="float" required="true"  advanced="false" restrictions=":100.0"/>-->
       <ITEM name="default_mandatory_unrestricted_max"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions=":100.0"/>
-      <ITEM name="wodefault_optional_unrestricted_max"      value=""    type="double" description="float" required="false" advanced="false" restrictions=":100.0"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_max"      value=""    type="double" description="float" required="false" advanced="false" restrictions=":100.0"/>-->
       <ITEM name="default_optional_unrestricted_max"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions=":100.0"/>
-      <ITEM name="wodefault_mandatory_unrestricted_adv_max" value=""    type="double" description="float" required="true"  advanced="true" restrictions=":100.0"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_adv_max" value=""    type="double" description="float" required="true"  advanced="true" restrictions=":100.0"/>-->
       <ITEM name="default_mandatory_unrestricted_adv_max"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions=":100.0"/>
-      <ITEM name="wodefault_optional_unrestricted_adv_max"  value=""    type="double" description="float" required="false" advanced="true" restrictions=":100.0"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_adv_max"  value=""    type="double" description="float" required="false" advanced="true" restrictions=":100.0"/>-->
       <ITEM name="default_optional_unrestricted_adv_max"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions=":100.0"/>
 
-      <ITEM name="wodefault_mandatory_unrestricted_minmax"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:100.0"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_minmax"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:100.0"/>-->
       <ITEM name="default_mandatory_unrestricted_minmax"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions="0.0:100.0"/>
-      <ITEM name="wodefault_optional_unrestricted_minmax"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:100.0"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_minmax"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:100.0"/>-->
       <ITEM name="default_optional_unrestricted_minmax"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions="0.0:100.0"/>
-      <ITEM name="wodefault_mandatory_unrestricted_adv_minmax" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>
+<!--      <ITEM name="wodefault_mandatory_unrestricted_adv_minmax" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>-->
       <ITEM name="default_mandatory_unrestricted_adv_minmax"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>
-      <ITEM name="wodefault_optional_unrestricted_adv_minmax"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>
+<!--      <ITEM name="wodefault_optional_unrestricted_adv_minmax"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>-->
       <ITEM name="default_optional_unrestricted_adv_minmax"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>
     </NODE>
   </NODE>
