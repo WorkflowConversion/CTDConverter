@@ -1045,7 +1045,7 @@ def get_formats(param, supported_file_formats, default=None):
             raise InvalidModelException("No supported formats [%(type)s] "
                                         "for [%(name)s]" % {"type": type(param.restrictions),
                                                             "name": param.name})
-
+    formats = list(formats).sorted()
     return formats
 
 
