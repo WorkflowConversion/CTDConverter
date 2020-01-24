@@ -19,11 +19,11 @@ import sys
 # args = parser.parse_args()
 print(sys.argv)
 
-wd=os.path.dirname(__file__)
-bn=os.path.splitext( os.path.basename(__file__) )[0]
+wd = os.path.dirname(__file__)
+bn = os.path.splitext(os.path.basename(__file__))[0]
 
 if sys.argv[1] == "-write_ctd":
-    shutil.copyfile(os.path.join(wd, bn+".ctd"), os.path.join(sys.argv[2], bn+".ctd"))
+    shutil.copyfile(os.path.join(wd, bn + ".ctd"), os.path.join(sys.argv[2], bn + ".ctd"))
 elif sys.argv[1] == "-ini":
     fparam = {"input": set(), "output": set()}
     with open(sys.argv[2]) as cf:
@@ -40,13 +40,13 @@ elif sys.argv[1] == "-ini":
             if param in fparam["input"] or param in fparam["output"]:
                 if param in fparam["input"]:
                     mode = "r"
-                else: 
+                else:
                     mode = "w"
-    
-                while i+1 < len(sys.argv):
-                    if sys.argv[i+1].startswith("-"):
+
+                while i + 1 < len(sys.argv):
+                    if sys.argv[i + 1].startswith("-"):
                         break
-                    of = open(sys.argv[i+1], mode)
+                    of = open(sys.argv[i + 1], mode)
                     of.close()
                     i += 1
         i += 1

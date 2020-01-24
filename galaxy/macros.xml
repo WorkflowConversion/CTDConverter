@@ -110,7 +110,7 @@
   </token>
 
 <token name="@EXT_FOO@"><![CDATA[#def oms2gxyext(o)
-    #set m={'ezt': 'tabular', 'ext': 'tsv', 'eyt': 'tabular', 'ewt': 'tsv'}
+    #set m={'ewt': 'tsv', 'ext': 'tsv', 'eyt': 'tabular', 'ezt': 'tabular'}
     #return m[o]
 #end def
 #def gxy2omsext(g)

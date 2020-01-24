@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import json
 import ntpath
 import os
 
 from lxml import etree
-from string import strip
-from logger import info, error, warning
 
 from common import logger
 from common.exceptions import ApplicationException
@@ -44,11 +43,11 @@ class ParameterHardcoder:
 
         # blacklisted parameters
         self.blacklist = set()
-    
+
     def register_blacklist(self, parameter_name, tool_name):
         k = self.build_key(parameter_name, tool_name)
         self.blacklist.add(k)
-    
+
     # the most specific value will be returned in case of overlap
     def get_blacklist(self, parameter_name, tool_name):
         # look for the value that would apply for all tools
@@ -61,7 +60,7 @@ class ParameterHardcoder:
 
     def register_attribute(self, parameter_name, attribute, value, tool_name):
         k = self.build_key(parameter_name, tool_name)
-        if not self.attribute_map.has_key(k):
+        if k not in self.attribute_map:
             self.attribute_map[k] = {}
         self.attribute_map[k][attribute] = value
 
@@ -108,9 +107,9 @@ def validate_argument_is_valid_path(args, argument_name):
     if member_value is not None:
         if isinstance(member_value, list):
             for file_name in member_value:
-                paths_to_check.append(strip(str(file_name)))
+                paths_to_check.append(str(file_name).strip())
         else:
-            paths_to_check.append(strip(str(member_value)))
+            paths_to_check.append(str(member_value).strip())
 
         for path_to_check in paths_to_check:
             validate_path_exists(path_to_check)
@@ -134,12 +133,12 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
     schema = None
     if xsd_location is not None:
         try:
-            info("Loading validation schema from %s" % xsd_location, 0)
+            logger.info("Loading validation schema from %s" % xsd_location, 0)
             schema = etree.XMLSchema(etree.parse(xsd_location))
         except Exception as e:
-            error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
+            logger.error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
     else:
-        warning("Validation against a schema has not been enabled.", 0)
+        logger.warning("Validation against a schema has not been enabled.", 0)
 
     for input_ctd in input_ctds:
         if schema is not None:
@@ -149,7 +148,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
         # if multiple inputs are being converted, we need to generate a different output_file for each input
         if is_converting_multiple_ctds:
             output_file = os.path.join(output_file, get_filename_without_suffix(input_ctd) + "." + output_file_extension)
-        info("Parsing %s" % input_ctd)
+        logger.info("Parsing %s" % input_ctd)
 
         model = None
         try:
@@ -160,8 +159,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
             model = Parameters(from_file=input_ctd)
         except ModelTypeError:
             pass
-        assert model != None, "Could not parse %s, seems to be no CTD/PARAMS"%(input_ctd)
-            
+        assert model is not None, "Could not parse %s, seems to be no CTD/PARAMS" % (input_ctd)
 
         parsed_ctds.append(ParsedCTD(model, input_ctd, output_file))
 
@@ -209,8 +207,6 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
     parameter_hardcoder = ParameterHardcoder()
     if hardcoded_parameters_file is None:
         return parameter_hardcoder
-    
-    import json
     with open(hardcoded_parameters_file) as fp:
         data = json.load(fp)
 
@@ -221,7 +217,7 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
             hardcoded_value = el.get("value", None)
             tool_names = el.get("tools", [None])
             for tool_name in tool_names:
-                if not tool_name is None:
+                if tool_name is not None:
                     tool_name = tool_name.strip()
                 if hardcoded_value is not None:
                     if hardcoded_value == '@':
@@ -230,7 +226,7 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
                         parameter_hardcoder.register_parameter(parameter_name, hardcoded_value, tool_name)
                 else:
                     for a in el:
-                        if a in ["tools","value"]:
+                        if a in ["tools", "value"]:
                             continue
                         if el[a] == "output-file":
                             el[a] = _OutFile
@@ -301,7 +297,7 @@ def _extract_and_flatten_parameters(parameter_group, nodes=False):
     """
     get the parameters of a OptionGroup as generator
     """
-    for parameter in parameter_group.itervalues():
+    for parameter in parameter_group.values():
         if type(parameter) is Parameter:
             yield parameter
         else:
@@ -333,8 +329,6 @@ def extract_and_flatten_parameters(ctd_model, nodes=False):
 #             for p in extract_and_flatten_parameters(parameter):
 #                 yield p
 
-# 
-# 
 #     parameters = []
 #     if len(ctd_model.parameters.parameters) > 0:
 #         # use this to put parameters that are to be processed
@@ -365,8 +359,8 @@ def resolve_param_mapping(param, ctd_model):
         for mapping_element in cli_element.mappings:
             if mapping_element.reference_name == param.name:
                 if param_mapping is not None:
-                    warning("The parameter %s has more than one mapping in the <cli> section. "
-                            "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
+                    logger.warning("The parameter %s has more than one mapping in the <cli> section. "
+                                   "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
                 else:
                     param_mapping = cli_element.option_identifier
 
@@ -382,7 +376,7 @@ def _extract_param_cli_name(param, ctd_model):
             return resolve_param_mapping(param, ctd_model)
         else:
             if hasattr(ctd_model, "cli") and ctd_model.cli:
-                warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
+                logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
             return extract_param_name(param.parent) + ":" + resolve_param_mapping(param, ctd_model)
     else:
         return resolve_param_mapping(param, ctd_model)
@@ -395,7 +389,7 @@ def extract_param_path(param):
         elif not hasattr(param.parent.parent.parent, "parent"):
             return [param.name]
         else:
-            return extract_param_path(param.parent) + [ param.name ]
+            return extract_param_path(param.parent) + [param.name]
     else:
         return [param.name]
 
@@ -421,5 +415,4 @@ def indent(s, indentation="  "):
     @param indentation the desired indentation
     @return indented text
     """
-    return [indentation+_ for _ in s]
-
+    return [indentation + _ for _ in s]

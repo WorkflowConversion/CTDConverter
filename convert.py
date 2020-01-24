@@ -16,7 +16,7 @@ program_version = "v%s" % __version__
 program_build_date = str(__updated__)
 program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
 program_short_description = "CTDConverter - A project from the WorkflowConversion family " \
-                                "(https://github.com/WorkflowConversion/CTDConverter)"
+                            "(https://github.com/WorkflowConversion/CTDConverter)"
 program_usage = '''
 USAGE:
 
@@ -173,7 +173,7 @@ def main(argv=None):
     # at this point we cannot parse the arguments, because each converter takes different arguments, meaning each
     # converter will register its own parameters after we've registered the basic ones... we have to do it old school
     if len(argv) < 2:
-        utils.error("Not enough arguments provided")
+        utils.logger.error("Not enough arguments provided")
         print("\nUsage: $ python convert.py [TARGET] [ARGUMENTS]\n\n" +
               "Where:\n" +
               "  target: one of 'cwl' or 'galaxy'\n\n" +
@@ -192,10 +192,10 @@ def main(argv=None):
         print(program_license)
         return 0
     else:
-        utils.error("Unrecognized target engine. Supported targets are 'cwl' and 'galaxy'.")
+        utils.logger.error("Unrecognized target engine. Supported targets are 'cwl' and 'galaxy'.")
         return 1
 
-    utils.info("Using %s converter" % target)
+    utils.logger.info("Using %s converter" % target)
 
     try:
         # Setup argument parser
@@ -224,20 +224,20 @@ def main(argv=None):
 
     except ApplicationException as e:
         traceback.print_exc()
-        utils.error("CTDConverter could not complete the requested operation.", 0)
-        utils.error("Reason: " + e.msg, 0)
+        utils.logger.error("CTDConverter could not complete the requested operation.", 0)
+        utils.logger.error("Reason: " + e.msg, 0)
         return 1
 
     except ModelError as e:
         traceback.print_exc()
-        utils.error("There seems to be a problem with one of your input CTDs.", 0)
-        utils.error("Reason: " + e.msg, 0)
+        utils.logger.error("There seems to be a problem with one of your input CTDs.", 0)
+        utils.logger.error("Reason: " + e.msg, 0)
         return 1
 
     except Exception as e:
         traceback.print_exc()
-        utils.error("CTDConverter could not complete the requested operation.", 0)
-        utils.error("Reason: " + e.msg, 0)
+        utils.logger.error("CTDConverter could not complete the requested operation.", 0)
+        utils.logger.error("Reason: " + e.msg, 0)
         return 2
 
 

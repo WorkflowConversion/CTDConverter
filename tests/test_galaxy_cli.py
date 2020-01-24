@@ -3,13 +3,16 @@ import os
 import subprocess
 import tempfile
 
+
 def to_test_data(*args):
     return os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "test-data", *args))
+
 
 def file2list(pth):
     with open(pth) as f:
         lines = f.readlines()
     return lines
+
 
 class GalaxyCliTestCase(unittest.TestCase):
 
@@ -21,9 +24,9 @@ class GalaxyCliTestCase(unittest.TestCase):
         tmp = tempfile.mkdtemp()
 
         out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
-        #out_file = to_test_data('{}.xml'.format(fileprefix))
+        # out_file = to_test_data('{}.xml'.format(fileprefix))
         my_env = os.environ.copy()
-        my_env["PATH"] = fileprefix+ ":" + my_env["PATH"]
+        my_env["PATH"] = fileprefix + ":" + my_env["PATH"]
         cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth, "--tool-version", "5.0.011"]
         print("cmd %s" % cmd)
 
@@ -42,7 +45,7 @@ class GalaxyCliTestCase(unittest.TestCase):
 
         for i in range(0, len(new_l)):
             self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
-        
+
         cmd = ['planemo', 'l', out_file]
         print("cmd %s" % str(cmd))
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
@@ -97,6 +100,7 @@ class GalaxyCliTestCase(unittest.TestCase):
 
     def test_galaxy_cli_ofile_mult_typeparam_ctd(self):
         self._compare_cli_output('ofile-mult-typeparam')
+
 
 if __name__ == '__main__':
     unittest.main()

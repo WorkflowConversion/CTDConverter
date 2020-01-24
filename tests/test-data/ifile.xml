@@ -64,51 +64,51 @@
 #end if
 #if $list_mandatory_noformat:
   mkdir list_mandatory_noformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _]) }
 #end if
 #if $list_optional_noformat:
   mkdir list_optional_noformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_noformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat if _]) }
 #end if
 #if $list_mandatory_oneformat:
   mkdir list_mandatory_oneformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _]) }
 #end if
 #if $list_optional_oneformat:
   mkdir list_optional_oneformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _]) }
 #end if
 #if $list_mandatory_multformat:
   mkdir list_mandatory_multformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _]) }
 #end if
 #if $list_optional_multformat:
   mkdir list_optional_multformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_multformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat if _]) }
 #end if
 #if $list_default_mandatory_noformat:
   mkdir list_default_mandatory_noformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat if _]) }
 #end if
 #if $list_default_optional_noformat:
   mkdir list_default_optional_noformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_noformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat if _]) }
 #end if
 #if $list_default_mandatory_oneformat:
   mkdir list_default_mandatory_oneformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat if _]) }
 #end if
 #if $list_default_optional_oneformat:
   mkdir list_default_optional_oneformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat if _]) }
 #end if
 #if $list_default_mandatory_multformat:
   mkdir list_default_mandatory_multformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat if _]) }
 #end if
 #if $list_default_optional_multformat:
   mkdir list_default_optional_multformat &&
-  ${ ' '.join([ "ln -s '%s' 'list_default_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _ ]) }
+  ${ ' '.join(["ln -s '%s' 'list_default_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _]) }
 #end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   #if $adv_opts_cond.mandatory_noformat_adv:
@@ -161,51 +161,51 @@
   #end if
   #if $adv_opts_cond.list_mandatory_noformat_adv:
     mkdir list_mandatory_noformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_optional_noformat_adv:
     mkdir list_optional_noformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_mandatory_oneformat_adv:
     mkdir list_mandatory_oneformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_optional_oneformat_adv:
     mkdir list_optional_oneformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_mandatory_multformat_adv:
     mkdir list_mandatory_multformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_optional_multformat_adv:
     mkdir list_optional_multformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_noformat_adv:
     mkdir list_default_mandatory_noformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_noformat_adv:
     mkdir list_default_optional_noformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_oneformat_adv:
     mkdir list_default_mandatory_oneformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_oneformat_adv:
     mkdir list_default_optional_oneformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_multformat_adv:
     mkdir list_default_mandatory_multformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_multformat_adv:
     mkdir list_default_optional_multformat_adv &&
-    ${ ' '.join([ "ln -s '%s' 'list_default_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _ ]) }
+    ${ ' '.join(["ln -s '%s' 'list_default_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _]) }
   #end if
 #end if
 
@@ -263,51 +263,51 @@ python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$arg
 #end if
 #if $list_mandatory_noformat:
   -list_mandatory_noformat
-  ${' '.join(["'list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _ ])}
+  ${' '.join(["'list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _])}
 #end if
 #if $list_optional_noformat:
   -list_optional_noformat
-  ${' '.join(["'list_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_noformat if _ ])}
+  ${' '.join(["'list_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat if _])}
 #end if
 #if $list_mandatory_oneformat:
   -list_mandatory_oneformat
-  ${' '.join(["'list_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _ ])}
+  ${' '.join(["'list_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _])}
 #end if
 #if $list_optional_oneformat:
   -list_optional_oneformat
-  ${' '.join(["'list_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _ ])}
+  ${' '.join(["'list_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _])}
 #end if
 #if $list_mandatory_multformat:
   -list_mandatory_multformat
-  ${' '.join(["'list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _ ])}
+  ${' '.join(["'list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _])}
 #end if
 #if $list_optional_multformat:
   -list_optional_multformat
-  ${' '.join(["'list_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_multformat if _ ])}
+  ${' '.join(["'list_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat if _])}
 #end if
 #if $list_default_mandatory_noformat:
   -list_default_mandatory_noformat
-  ${' '.join(["'list_default_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat if _ ])}
+  ${' '.join(["'list_default_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat if _])}
 #end if
 #if $list_default_optional_noformat:
   -list_default_optional_noformat
-  ${' '.join(["'list_default_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_noformat if _ ])}
+  ${' '.join(["'list_default_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat if _])}
 #end if
 #if $list_default_mandatory_oneformat:
   -list_default_mandatory_oneformat
-  ${' '.join(["'list_default_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat if _ ])}
+  ${' '.join(["'list_default_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat if _])}
 #end if
 #if $list_default_optional_oneformat:
   -list_default_optional_oneformat
-  ${' '.join(["'list_default_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat if _ ])}
+  ${' '.join(["'list_default_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat if _])}
 #end if
 #if $list_default_mandatory_multformat:
   -list_default_mandatory_multformat
-  ${' '.join(["'list_default_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat if _ ])}
+  ${' '.join(["'list_default_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat if _])}
 #end if
 #if $list_default_optional_multformat:
   -list_default_optional_multformat
-  ${' '.join(["'list_default_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _ ])}
+  ${' '.join(["'list_default_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _])}
 #end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
   #if $adv_opts_cond.mandatory_noformat_adv:
@@ -360,51 +360,51 @@ python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$arg
   #end if
   #if $adv_opts_cond.list_mandatory_noformat_adv:
     -list_mandatory_noformat_adv
-    ${' '.join(["'list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _ ])}
+    ${' '.join(["'list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_optional_noformat_adv:
     -list_optional_noformat_adv
-    ${' '.join(["'list_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _ ])}
+    ${' '.join(["'list_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_mandatory_oneformat_adv:
     -list_mandatory_oneformat_adv
-    ${' '.join(["'list_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _ ])}
+    ${' '.join(["'list_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_optional_oneformat_adv:
     -list_optional_oneformat_adv
-    ${' '.join(["'list_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _ ])}
+    ${' '.join(["'list_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_mandatory_multformat_adv:
     -list_mandatory_multformat_adv
-    ${' '.join(["'list_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _ ])}
+    ${' '.join(["'list_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_optional_multformat_adv:
     -list_optional_multformat_adv
-    ${' '.join(["'list_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _ ])}
+    ${' '.join(["'list_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_noformat_adv:
     -list_default_mandatory_noformat_adv
-    ${' '.join(["'list_default_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _ ])}
+    ${' '.join(["'list_default_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_noformat_adv:
     -list_default_optional_noformat_adv
-    ${' '.join(["'list_default_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _ ])}
+    ${' '.join(["'list_default_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_oneformat_adv:
     -list_default_mandatory_oneformat_adv
-    ${' '.join(["'list_default_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _ ])}
+    ${' '.join(["'list_default_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_oneformat_adv:
     -list_default_optional_oneformat_adv
-    ${' '.join(["'list_default_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _ ])}
+    ${' '.join(["'list_default_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_multformat_adv:
     -list_default_mandatory_multformat_adv
-    ${' '.join(["'list_default_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _ ])}
+    ${' '.join(["'list_default_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_multformat_adv:
     -list_default_optional_multformat_adv
-    ${' '.join(["'list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier),$gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _ ])}
+    ${' '.join(["'list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _])}
   #end if
 #end if
 > $param_stdout
