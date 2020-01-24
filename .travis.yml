@@ -1,6 +1,6 @@
 language: python
 python:
-  - "2.7"
+  - "3.6"
 
 install:
   - sudo apt-get update
@@ -12,16 +12,20 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
-  - conda config --set always_yes yes --set changeps1 no
+  - conda config --set always_yes yes --set changeps1 no --set auto_activate_base True
   - conda update -q conda
+  - conda init
+  - source activate 
   - conda info -a
-
-  - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-  - source activate test-environment
+  
+#   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
+#   - source activate test-environment
   - conda config --add channels conda-forge
   - conda config --add channels bioconda
   - conda config --add channels anaconda
   - conda config --add channels workflowconversion
+
+  - conda install python=$TRAVIS_PYTHON_VERSION
   # TODO could be replaced by conda package once it is merged and released
   - git clone -b topic/no-1-2x https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
   - cd $HOME/CTDopts
@@ -33,10 +37,10 @@ install:
   - python setup.py install
 
   - conda install coverage green codecov
-  #- conda install -c bioconda planemo
   - pip install planemo
 script:
-  - python setup.py test
+  - conda info && python setup.py test
+  - planemo l tools/
 
 after_script:
 - python -m codecov
