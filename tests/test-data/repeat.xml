@@ -4,7 +4,7 @@
 <tool id="repeat" name="repeat" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Repeat parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/repeat</token>
+    <token name="@EXECUTABLE@">repeat</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>

@@ -4,7 +4,7 @@
 <tool id="ofile-mult-typeparam" name="ofile-mult-typeparam" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>multiple Output File parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/ofile-mult-typeparam</token>
+    <token name="@EXECUTABLE@">ofile-mult-typeparam</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>

@@ -4,7 +4,7 @@
 <tool id="empty" name="empty" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>empty ctd test</description>
   <macros>
-    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/empty</token>
+    <token name="@EXECUTABLE@">empty</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>

@@ -22,19 +22,20 @@ class GalaxyCliTestCase(unittest.TestCase):
 
         out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
         #out_file = to_test_data('{}.xml'.format(fileprefix))
+        my_env = os.environ.copy()
+        my_env["PATH"] = fileprefix+ ":" + my_env["PATH"]
+        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth, "--tool-version", "5.0.011"]
+        print("cmd %s" % cmd)
 
-        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth]
-        print(cmd)
-
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=my_env)
         output, err = popen.communicate()
-        print(output)
-        print(err)
+        print("out %s" % output)
+        print("err %s" % err)
 
         old_file_pth = to_test_data('{}.xml'.format(fileprefix))
 
-        print(out_file)
-        print(old_file_pth)
+        print("out_file %s" % out_file)
+        print("old_file_path %s" % old_file_pth)
 
         new_l = file2list(out_file)
         old_l = file2list(old_file_pth)
@@ -43,7 +44,7 @@ class GalaxyCliTestCase(unittest.TestCase):
             self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
         
         cmd = ['planemo', 'l', out_file]
-        print(cmd)
+        print("cmd %s" % str(cmd))
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, err = popen.communicate()
         print(output)
@@ -51,7 +52,7 @@ class GalaxyCliTestCase(unittest.TestCase):
         self.assertEqual(err, 0)
 
         cmd = ['planemo', 't', out_file]
-        print(cmd)
+        print(str(cmd))
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         output, err = popen.communicate()
         print(output)

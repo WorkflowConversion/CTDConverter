@@ -4,7 +4,7 @@
 <tool id="float" name="float" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Float parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/float</token>
+    <token name="@EXECUTABLE@">float</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>

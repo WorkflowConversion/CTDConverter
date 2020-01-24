@@ -4,7 +4,7 @@
 <tool id="label-help" name="label-help" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Lebel Help parameter tests</description>
   <macros>
-    <token name="@EXECUTABLE@">/home/berntm/projects/tools-galaxyp/tools/openms/CTDConverter/tests/test-data/label-help</token>
+    <token name="@EXECUTABLE@">label-help</token>
     <import>macros.xml</import>
   </macros>
   <expand macro="requirements"/>
