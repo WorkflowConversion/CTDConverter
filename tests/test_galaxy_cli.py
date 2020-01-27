@@ -78,7 +78,7 @@ class GalaxyCliTestCase(unittest.TestCase):
         self._compare_cli_output('repeat')
 
     def test_galaxy_cli_select_ctd(self):
-        self._compare_cli_output('select')
+        self._compare_cli_output('select_test')
 
     def test_galaxy_cli_string_ctd(self):
         self._compare_cli_output('string')
