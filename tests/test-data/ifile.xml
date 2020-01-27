@@ -418,51 +418,51 @@ python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$arg
     <param name="optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" value="" label="input file" help=" select a txt data set"/>
     <param name="mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
     <param name="optional_oneformat" argument="-optional_oneformat" type="data" format="tsv" optional="true" value="" label="input file" help=" select a tsv data set"/>
-    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tsv,tabular" optional="true" label="input file" help=" select a tsv,tabular data set"/>
-    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tsv,tabular" optional="true" value="" label="input file" help=" select a tsv,tabular data set"/>
+    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tabular,tsv" optional="true" value="" label="input file" help=" select a tabular,tsv data set"/>
     <param name="default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
     <param name="default_optional_noformat" argument="-default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
     <param name="default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
     <param name="default_optional_oneformat" argument="-default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tsv,tabular" optional="true" label="input file" help=" select a tsv,tabular data set"/>
-    <param name="default_optional_multformat" argument="-default_optional_multformat" type="data" format="tsv,tabular" optional="true" value="test.ext" label="input file" help=" select a tsv,tabular data set"/>
+    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="default_optional_multformat" argument="-default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
     <param name="list_mandatory_noformat" argument="-list_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
     <param name="list_optional_noformat" argument="-list_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="" label="input file" help=" select txt data sets(s)"/>
     <param name="list_mandatory_oneformat" argument="-list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
     <param name="list_optional_oneformat" argument="-list_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="" label="input file" help=" select tsv data sets(s)"/>
-    <param name="list_mandatory_multformat" argument="-list_mandatory_multformat" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
-    <param name="list_optional_multformat" argument="-list_optional_multformat" type="data" format="tsv,tabular" multiple="true" optional="true" value="" label="input file" help=" select tsv,tabular data sets(s)"/>
+    <param name="list_mandatory_multformat" argument="-list_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="list_optional_multformat" argument="-list_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="" label="input file" help=" select tabular,tsv data sets(s)"/>
     <param name="list_default_mandatory_noformat" argument="-list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
     <param name="list_default_optional_noformat" argument="-list_default_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
     <param name="list_default_mandatory_oneformat" argument="-list_default_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
     <param name="list_default_optional_oneformat" argument="-list_default_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
-    <param name="list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
-    <param name="list_default_optional_multformat" argument="-list_default_optional_multformat" type="data" format="tsv,tabular" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv,tabular data sets(s)"/>
+    <param name="list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="list_default_optional_multformat" argument="-list_default_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     <expand macro="adv_opts_macro">
       <param name="mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
       <param name="optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" value="" label="input file" help=" select a txt data set"/>
       <param name="mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
       <param name="optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="tsv" optional="true" value="" label="input file" help=" select a tsv data set"/>
-      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tsv,tabular" optional="true" label="input file" help=" select a tsv,tabular data set"/>
-      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tsv,tabular" optional="true" value="" label="input file" help=" select a tsv,tabular data set"/>
+      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="" label="input file" help=" select a tabular,tsv data set"/>
       <param name="default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
       <param name="default_optional_noformat_adv" argument="-default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
       <param name="default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
       <param name="default_optional_oneformat_adv" argument="-default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tsv,tabular" optional="true" label="input file" help=" select a tsv,tabular data set"/>
-      <param name="default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tsv,tabular" optional="true" value="test.ext" label="input file" help=" select a tsv,tabular data set"/>
+      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
       <param name="list_mandatory_noformat_adv" argument="-list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
       <param name="list_optional_noformat_adv" argument="-list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="" label="input file" help=" select txt data sets(s)"/>
       <param name="list_mandatory_oneformat_adv" argument="-list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
       <param name="list_optional_oneformat_adv" argument="-list_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="" label="input file" help=" select tsv data sets(s)"/>
-      <param name="list_mandatory_multformat_adv" argument="-list_mandatory_multformat_adv" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
-      <param name="list_optional_multformat_adv" argument="-list_optional_multformat_adv" type="data" format="tsv,tabular" multiple="true" optional="true" value="" label="input file" help=" select tsv,tabular data sets(s)"/>
+      <param name="list_mandatory_multformat_adv" argument="-list_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="list_optional_multformat_adv" argument="-list_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="list_default_mandatory_noformat_adv" argument="-list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
       <param name="list_default_optional_noformat_adv" argument="-list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
       <param name="list_default_mandatory_oneformat_adv" argument="-list_default_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
       <param name="list_default_optional_oneformat_adv" argument="-list_default_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
-      <param name="list_default_mandatory_multformat_adv" argument="-list_default_mandatory_multformat_adv" type="data" format="tsv,tabular" multiple="true" optional="true" label="input file" help=" select tsv,tabular data sets(s)"/>
-      <param name="list_default_optional_multformat_adv" argument="-list_default_optional_multformat_adv" type="data" format="tsv,tabular" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv,tabular data sets(s)"/>
+      <param name="list_default_mandatory_multformat_adv" argument="-list_default_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="list_default_optional_multformat_adv" argument="-list_default_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     </expand>
   </inputs>
   <outputs>

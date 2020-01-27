@@ -139,7 +139,7 @@ python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$arg
     <param type="boolean" name="optional_multformat_FLAG" optional="false" checked="false" label="Generate output optional_multformat (output file)"/>
     <param name="decoy_input_noformat" argument="-decoy_input_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
     <param name="decoy_input_oneformat" argument="-decoy_input_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-    <param name="decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tsv,tabular" optional="true" label="input file" help=" select a tsv,tabular data set"/>
+    <param name="decoy_input_multformat" argument="-decoy_input_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
     <expand macro="adv_opts_macro">
       <param name="mandatory_noformat_adv_type" argument="-mandatory_noformat_adv_type" display="radio" type="select" optional="false" label="string" help="">
         <option value="ext" selected="false">tsv</option>
