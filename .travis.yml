@@ -40,7 +40,11 @@ install:
   - pip install planemo
 script:
   - conda info && python setup.py test
-  - planemo l tools/
+# TODO fail expected due to 
+# https://github.com/galaxyproject/galaxy/pull/9081 which will be in 20.01 and 
+# empty.xml (no inputs) could be removed and  
+# - planemo l tools/
+  - planemo t tools/
 
 after_script:
 - python -m codecov
