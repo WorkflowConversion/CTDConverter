@@ -596,14 +596,13 @@ def create_command(tool, model, **kwargs):
     # - call the executable with -write_ctd to write the ctd file (with defaults)
     # - use fill_ctd.py to overwrite the defaults in the ctd file with the
     #   Galaxy parameters in the JSON file (from inputs config file)
-    #   (note the base name call is only necessary for the CTDconverter tests)
     # - feed the ctd file to the executable (with -ini)
     #   note: input and output file parameters are still given on the command line
     #   - output file parameters are not included in the JSON file
     #   - input and output files are accessed through links / files that have the correct extension
     final_cmd['command'].extend(["", "## Main program call"])
     final_cmd['command'].append("""@EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])

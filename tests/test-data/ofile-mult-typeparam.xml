@@ -27,7 +27,7 @@ mkdir mandatory_optionalinput &&
 
 ## Main program call
 @EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 -mandatory_mandatoryinput
 ${' '.join(["'mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $inp_optional_mandatoryinput if _])}

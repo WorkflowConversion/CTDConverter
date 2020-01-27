@@ -46,13 +46,6 @@ class GalaxyCliTestCase(unittest.TestCase):
 
         for i in range(0, len(new_l)):
             self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
-        if not os.path.exists("tools"):
-            os.symlink(to_test_data(""), "tools")
-#         if not os.path.isdir("tools"):
-#             os.makedirs("tools")
-#         if not os.path.isfile("tools/macros.xml"):
-#             copyfile(macro_pth, os.path.join("tools", 'macros.xml'))
-#         copyfile(out_file, os.path.join("tools", '{}.xml'.format(fileprefix)))
 #         cmd = ['planemo', 'l', out_file]
 #         print("cmd %s" % str(cmd))
 #         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)

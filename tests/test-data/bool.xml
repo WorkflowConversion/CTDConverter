@@ -17,7 +17,7 @@
 
 ## Main program call
 @EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' "\$(basename "@EXECUTABLE@.ctd")" '$args_json' &&
+python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 > $param_stdout
 

@@ -43,8 +43,11 @@ script:
 # TODO fail expected due to 
 # https://github.com/galaxyproject/galaxy/pull/9081 which will be in 20.01 and 
 # empty.xml (no inputs) could be removed and  
-# - planemo l tools/
-  - planemo t tools/
+# - planemo l tests/test-data/
+
+  # planemo test content of tests/test-data (this is OK, because the previous
+  # tests ensure equality of the xmls that are generated and those in the package)
+  - export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
 
 after_script:
 - python -m codecov
