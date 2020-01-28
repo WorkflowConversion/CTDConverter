@@ -4,43 +4,47 @@ python:
 
 install:
   - sudo apt-get update
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-      wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-    else
-      wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-    fi
-  - bash miniconda.sh -b -p $HOME/miniconda
-  - export PATH="$HOME/miniconda/bin:$PATH"
-  - hash -r
-  - conda config --set always_yes yes --set changeps1 no --set auto_activate_base False
-  - conda update -q conda
-  - conda init
-  - source activate 
-  - conda info -a
-  
-#   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-#   - source activate test-environment
-  - conda config --add channels conda-forge
-  - conda config --add channels bioconda
-  - conda config --add channels anaconda
-  - conda config --add channels workflowconversion
+#   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+#       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
+#     else
+#       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
+#     fi
+#   - bash miniconda.sh -b -p $HOME/miniconda
+#   - export PATH="$HOME/miniconda/bin:$PATH"
+#   - hash -r
+#   - conda config --set always_yes yes --set changeps1 no --set auto_activate_base False
+#   - conda update -q conda
+#   - conda init
+#   - source activate 
+#   - conda info -a
+#   
+# #   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
+# #   - source activate test-environment
+#   - conda config --add channels conda-forge
+#   - conda config --add channels bioconda
+#   - conda config --add channels anaconda
+#   - conda config --add channels workflowconversion
+# 
+#   - conda install python=$TRAVIS_PYTHON_VERSION
+#   # TODO could be replaced by conda package once it is merged and released
+#   - git clone -b topic/no-1-2x https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
+#   - cd $HOME/CTDopts
+#   - python setup.py install 
+#   - conda install -c conda-forge lxml
+#   - conda install -c conda-forge ruamel.yaml 
+#   - conda install libxml2
+#   - cd $TRAVIS_BUILD_DIR
+#   - python setup.py install
+#   - conda install coverage green codecov
 
-  - conda install python=$TRAVIS_PYTHON_VERSION
-  # TODO could be replaced by conda package once it is merged and released
-  - git clone -b topic/no-1-2x https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
-  - cd $HOME/CTDopts
-  - python setup.py install 
-  - conda install -c conda-forge lxml
-  - conda install -c conda-forge ruamel.yaml 
-  - conda install libxml2
+#   - virtualenv .venv
+#   - . .venv/bin/activate
+  - pip install git+https://github.com/bernt-matthias/CTDopts@topic/no-1-2x
+  - pip install lxml ruamel.yaml planemo 
   - cd $TRAVIS_BUILD_DIR
   - python setup.py install
-  - conda install coverage green codecov
-
-  - virtualenv .venv
-  - . .venv/bin/activate && pip install planemo && deactivate
 script:
-  - conda info && python setup.py test
+  - python setup.py test
 # TODO fail expected due to 
 # https://github.com/galaxyproject/galaxy/pull/9081 which will be in 20.01 and 
 # empty.xml (no inputs) could be removed and  
@@ -48,7 +52,7 @@ script:
 
   # planemo test content of tests/test-data (this is OK, because the previous
   # tests ensure equality of the xmls that are generated and those in the package)
-  - conda deactivate &&. .venv/bin/activate && export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
+  - export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
 
 after_script:
 - python -m codecov
