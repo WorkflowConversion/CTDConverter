@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="select_bin" name="select_bin" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="select_test" name="select_test" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
   <description>Select parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">select_test</token>

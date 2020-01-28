@@ -13,8 +13,6 @@
 @EXT_FOO@
 #import re
 
-pip list &&
-
 ## Preprocessing
 
 ## Main program call
