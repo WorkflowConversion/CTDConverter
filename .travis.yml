@@ -12,7 +12,7 @@ install:
   - bash miniconda.sh -b -p $HOME/miniconda
   - export PATH="$HOME/miniconda/bin:$PATH"
   - hash -r
-  - conda config --set always_yes yes --set changeps1 no --set auto_activate_base True
+  - conda config --set always_yes yes --set changeps1 no --set auto_activate_base False
   - conda update -q conda
   - conda init
   - source activate 
@@ -35,9 +35,10 @@ install:
   - conda install libxml2
   - cd $TRAVIS_BUILD_DIR
   - python setup.py install
-
   - conda install coverage green codecov
-  - pip install planemo
+
+  - virtualenv .venv
+  - . .venv/bin/activate && pip install planemo && deactivate
 script:
   - conda info && python setup.py test
 # TODO fail expected due to 
@@ -47,7 +48,7 @@ script:
 
   # planemo test content of tests/test-data (this is OK, because the previous
   # tests ensure equality of the xmls that are generated and those in the package)
-  - export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
+  - conda deactivate &&. .venv/bin/activate && export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
 
 after_script:
 - python -m codecov
