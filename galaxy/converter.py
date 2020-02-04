@@ -99,7 +99,7 @@ def modify_param_for_galaxy(param):
         # parm to not required and remove the default (external applications
         # need to be taken care by hardcoded values and the other cases
         # are chosen automatically if not specified on the command line)
-        if param.required and not (param.default is None or param.default is _Null):
+        if param.required and not (param.default is None or type(param.default) is _Null):
             param.required = False
             param.default = _Null
     return param
@@ -296,9 +296,8 @@ def check_test_macros(test_macros_files, test_macros_prefix, parsed_ctds):
 
         if len(macro_ids - tool_ids):
             logger.warning("Unnecessary macros in %s: %s" % (mf, macro_ids - tool_ids))
-        with open(mf, "w") as macros_file:
-            tree = ElementTree(root)
-            tree.write(macros_file, encoding="UTF-8", xml_declaration=True, pretty_print=True)
+        tree = ElementTree(root)
+        tree.write(mf, encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
 
 def parse_file_formats(formats_file):
@@ -409,12 +408,11 @@ def _convert_internal(parsed_ctds, **kwargs):
 
     if "test_only" in kwargs and kwargs["test_only"]:
         for parsed_ctd in parsed_ctds:
-            test = create_test_only(parsed_ctd.ctd_model)
+            test = create_test_only(parsed_ctd.ctd_model, **kwargs)
             tree = ElementTree(test)
             output_file = parsed_ctd.suggested_output_file
             logger.info("Writing to %s" % utils.get_filename(output_file), 1)
-            with open(output_file, 'w') as fh:
-                tree.write(fh, encoding="UTF-8", xml_declaration=False, pretty_print=True)
+            tree.write(output_file, encoding="UTF-8", xml_declaration=False, pretty_print=True)
         return
 
     parameter_hardcoder = kwargs["parameter_hardcoder"]
@@ -600,9 +598,12 @@ def create_command(tool, model, **kwargs):
     #   note: input and output file parameters are still given on the command line
     #   - output file parameters are not included in the JSON file
     #   - input and output files are accessed through links / files that have the correct extension
+    # TODO remove the PYTHONPATH export CTDopts should come from conda https://github.com/WorkflowConversion/CTDopts/pulls; also python3 -> python?
     final_cmd['command'].extend(["", "## Main program call"])
-    final_cmd['command'].append("""@EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+    final_cmd['command'].append("""
+export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+@EXECUTABLE@ -write_ctd ./ &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])
@@ -739,7 +740,7 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
             #   depends on the additional input (param_x) -> need no if
             # - real string parameters (i.e. ctd type string wo restrictions) also
             #   need no if (otherwise the empty string could not be provided)
-            if not (param.required or is_boolean_parameter(param) or (param.type == str and param.restrictions is None)):
+            if not (param.required or is_boolean_parameter(param) or (param.type is str and param.restrictions is None)):
                 # and not(param.type is _InFile and param.is_list):
                 actual_parameter = get_galaxy_parameter_path(param, "FLAG")
                 for stage in param_cmd:
@@ -1066,7 +1067,6 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
                          % {"type": param.type, "name": param.name})
-
     # ITEMLIST is rendered as text field (even if its integers or floats), an
     # exception is files which are treated a bit below
     if param.is_list:
@@ -1126,7 +1126,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 else:
                     option_node.attrib["selected"] = "false"
             # add validator to check that "nothing selected" is not seletcedto mandatory options w/o default
-            if param_node.attrib["optional"] == "False" and (param.default is None or param.default is _Null):
+            if param_node.attrib["optional"] == "False" and (param.default is None or type(param.default) is _Null):
                 validator_node = add_child_node(param_node, "validator", OrderedDict([("type", "expression"), ("message", "A value needs to be selected")]))
                 validator_node.text = 'value != "select a value"'
 
@@ -1179,7 +1179,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 validator_node.text = CDATA(expression)
         else:
             # add quotes to the default values (only if they include spaces .. then the UI looks nicer)
-            if not (param.default is None or param.default is _Null) and param.type is not _InFile:
+            if not (param.default is None or type(param.default) is _Null) and param.type is not _InFile:
                 if type(param.default) is list:
                     for i, d in enumerate(param.default):
                         if " " in d:
@@ -1196,7 +1196,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         valsan = expand_macro(param_node, "list_string_san")
 
     # check for default value
-    if not (param.default is None or param.default is _Null):
+    if not (param.default is None or type(param.default) is _Null):
         # defaults of selects are set via the selected attribute of the options (happens above)
         if param_type == "select":
             pass
@@ -1535,7 +1535,6 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
                     node.attrib["value"] = node[0].attrib["value"]
                 elif node.attrib.get("multiple", None) == "true":
-                    print(node)
                     node.attrib["value"] = ",".join([_.attrib["value"] for _ in node if "value" in _.attrib])
             elif node.attrib["type"] == "data":
                 node.attrib["ftype"] = node.attrib["format"].split(',')[0]
@@ -1597,6 +1596,10 @@ def create_test_only(model, **kwargs):
     advanced = None
 
     for param in utils.extract_and_flatten_parameters(model, True):
+        # no need to show hardcoded parameters
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
+        if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name) or hardcoded_value is not None:
+            continue
         try:
             parent = section_nodes[utils.extract_param_name(param.parent)]
         except KeyError:
@@ -1617,7 +1620,8 @@ def create_test_only(model, **kwargs):
             section_nodes[utils.extract_param_name(param)] = add_child_node(parent, "section", OrderedDict([("name", param.name)]))
             continue
         if param.type is _OutFile and not param.required:
-            nd = add_child_node(parent, "param", OrderedDict([("name", param.name + "_FLAG"), ("value", "false")]))
+            flag = str(param.default not in ["", [], _Null]).lower()
+            nd = add_child_node(parent, "param", OrderedDict([("name", param.name + "_FLAG"), ("value", flag)]))
 
             formats = get_formats(param, kwargs["supported_file_formats"], TYPE_TO_GALAXY_TYPE[_OutFile])
             type_param = get_out_type_param(param, model, parameter_hardcoder)
@@ -1626,11 +1630,19 @@ def create_test_only(model, **kwargs):
                 fmt_select = add_child_node(parent, "param", OrderedDict([("name", param.name + "_type"), ("value", "")]))
 
         if param.is_list and type(param.default) is not _Null:
-            value = '"' + '" "'.join(map(str, param.default)) + '"'
+            if param.type is _InFile:
+                value = ','.join(map(str, param.default))
+            if param.type is str:
+                value = '"' + '" "'.join(map(str, param.default)) + '"'
+            else:
+                value = ' '.join(map(str, param.default))
         else:
             value = str(param.default)
 
-        nd = add_child_node(parent, "param" if param.type is not _OutFile else "output", OrderedDict([("name", param.name), ("value", value)]))
+        if param.type is not _OutFile:
+            nd = add_child_node(parent, "param", OrderedDict([("name", param.name), ("value", value)]))
+        else:
+            nd = add_child_node(parent, "output", OrderedDict([("name", param.name), ("file", value)]))
     return test
 
 
