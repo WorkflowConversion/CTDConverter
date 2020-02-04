@@ -54,5 +54,5 @@ script:
   # tests ensure equality of the xmls that are generated and those in the package)
   - export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
 
-after_script:
-- python -m codecov
+# after_script:
+# - python -m codecov
