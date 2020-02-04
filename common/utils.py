@@ -370,14 +370,9 @@ def resolve_param_mapping(param, ctd_model):
 def _extract_param_cli_name(param, ctd_model):
     # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
     if type(param.parent) == ParameterGroup:
-        if not hasattr(param.parent.parent, 'parent'):
-            return resolve_param_mapping(param, ctd_model)
-        elif not hasattr(param.parent.parent.parent, 'parent'):
-            return resolve_param_mapping(param, ctd_model)
-        else:
-            if hasattr(ctd_model, "cli") and ctd_model.cli:
-                logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
-            return extract_param_name(param.parent) + ":" + resolve_param_mapping(param, ctd_model)
+        if hasattr(ctd_model, "cli") and ctd_model.cli:
+            logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
+        return ":".join(param.get_lineage(name_only=True)[:-1]) + ":" + resolve_param_mapping(param, ctd_model)
     else:
         return resolve_param_mapping(param, ctd_model)
 
@@ -396,7 +391,7 @@ def extract_param_path(param):
 
 def extract_param_name(param):
     # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
-    return ":".join(extract_param_path(param))
+    return ":".join(param.get_lineage(name_only=True))
 
 
 def extract_command_line_prefix(param, ctd_model):
