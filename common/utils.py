@@ -378,15 +378,16 @@ def _extract_param_cli_name(param, ctd_model):
 
 
 def extract_param_path(param):
-    if type(param.parent) == ParameterGroup or type(param.parent) == Parameters:
-        if not hasattr(param.parent.parent, "parent"):
-            return [param.name]
-        elif not hasattr(param.parent.parent.parent, "parent"):
-            return [param.name]
-        else:
-            return extract_param_path(param.parent) + [param.name]
-    else:
-        return [param.name]
+    return param.get_lineage(name_only=True)
+#     if type(param.parent) == ParameterGroup or type(param.parent) == Parameters:
+#         if not hasattr(param.parent.parent, "parent"):
+#             return [param.name]
+#         elif not hasattr(param.parent.parent.parent, "parent"):
+#             return [param.name]
+#         else:
+#             return extract_param_path(param.parent) + [param.name]
+#     else:
+#         return [param.name]
 
 
 def extract_param_name(param):

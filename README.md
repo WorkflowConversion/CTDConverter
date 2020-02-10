@@ -188,7 +188,7 @@ PATH=$(pwd)/tests/test-data/:$PATH
 for i in tests/test-data/*ctd
 do
 b=$(basename $i .ctd)
-python2 convert.py galaxy -i tests/test-data/$b.ctd -o tests/test-data/$b.xml -m tests/test-data/macros.xml -f tests/test-data/filetypes.txt --test-test -p tests/test-data/hardcoded_params.json  --tool-version 5.0.011
+python convert.py galaxy -i tests/test-data/$b.ctd -o tests/test-data/$b.xml -m tests/test-data/macros.xml -f tests/test-data/filetypes.txt --test-test -p tests/test-data/hardcoded_params.json  --tool-version 5.0.011
 done
 ```
 

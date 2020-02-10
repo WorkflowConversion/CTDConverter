@@ -41,6 +41,46 @@
       <ITEM name="default_mandatory_unrestricted_adv_minmax"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>
 <!--      <ITEM name="wodefault_optional_unrestricted_adv_minmax"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>-->
       <ITEM name="default_optional_unrestricted_adv_minmax"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>
+
+      <!-- same parameters as above in a node -->
+      <NODE name="test_section" description="Test Section">
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted"     value=""    type="double" description="float" required="true"  advanced="false" />-->
+        <ITEM name="sect_default_mandatory_unrestricted"       value="0.0" type="double" description="float" required="true"  advanced="false" />
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted"      value=""    type="double" description="float" required="false" advanced="false" />-->
+        <ITEM name="sect_default_optional_unrestricted"        value="0.0" type="double" description="float" required="false" advanced="false" />
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_adv" value=""    type="double" description="float" required="true"  advanced="true" />-->
+        <ITEM name="sect_default_mandatory_unrestricted_adv"   value="0.0" type="double" description="float" required="true"  advanced="true" />
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_adv"  value=""    type="double" description="float" required="false" advanced="true" />-->
+        <ITEM name="sect_default_optional_unrestricted_adv"    value="0.0" type="double" description="float" required="false" advanced="true" />
+  
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_min"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_min"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions="0.0:"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_min"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:"/>-->
+        <ITEM name="sect_default_optional_unrestricted_min"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions="0.0:"/>
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_adv_min" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_adv_min"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions="0.0:"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_adv_min"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:"/>-->
+        <ITEM name="sect_default_optional_unrestricted_adv_min"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions="0.0:"/>
+  
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_max"     value=""    type="double" description="float" required="true"  advanced="false" restrictions=":100.0"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_max"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions=":100.0"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_max"      value=""    type="double" description="float" required="false" advanced="false" restrictions=":100.0"/>-->
+        <ITEM name="sect_default_optional_unrestricted_max"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions=":100.0"/>
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_adv_max" value=""    type="double" description="float" required="true"  advanced="true" restrictions=":100.0"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_adv_max"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions=":100.0"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_adv_max"  value=""    type="double" description="float" required="false" advanced="true" restrictions=":100.0"/>-->
+        <ITEM name="sect_default_optional_unrestricted_adv_max"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions=":100.0"/>
+  
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_minmax"     value=""    type="double" description="float" required="true"  advanced="false" restrictions="0.0:100.0"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_minmax"       value="0.0" type="double" description="float" required="true"  advanced="false" restrictions="0.0:100.0"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_minmax"      value=""    type="double" description="float" required="false" advanced="false" restrictions="0.0:100.0"/>-->
+        <ITEM name="sect_default_optional_unrestricted_minmax"        value="0.0" type="double" description="float" required="false" advanced="false" restrictions="0.0:100.0"/>
+  <!--      <ITEM name="sect_wodefault_mandatory_unrestricted_adv_minmax" value=""    type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>-->
+        <ITEM name="sect_default_mandatory_unrestricted_adv_minmax"   value="0.0" type="double" description="float" required="true"  advanced="true" restrictions="0.0:100.0"/>
+  <!--      <ITEM name="sect_wodefault_optional_unrestricted_adv_minmax"  value=""    type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>-->
+        <ITEM name="sect_default_optional_unrestricted_adv_minmax"    value="0.0" type="double" description="float" required="false" advanced="true" restrictions="0.0:100.0"/>
+      </NODE>
+
     </NODE>
   </NODE>
 </PARAMETERS>

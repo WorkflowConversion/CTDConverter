@@ -8,6 +8,7 @@ import re
 import shutil
 import sys
 
+from CTDopts.CTDopts import CTDModel, _InFile, _OutFile
 
 # from argparse import ArgumentParser
 # parser = ArgumentParser(prog="mock.py", description="MOCK", add_help=True)
@@ -17,22 +18,23 @@ import sys
 #                     help="Process CTDFILE")
 # parser.add_argument('moreargs', metavar='ARGS', type=str, nargs='*', help='more arguments')
 # args = parser.parse_args()
-print(sys.argv)
 
 wd = os.path.dirname(__file__)
 bn = os.path.splitext(os.path.basename(__file__))[0]
 
 if sys.argv[1] == "-write_ctd":
+    print("CP %s %s" %(os.path.join(wd, bn + ".ctd"), os.path.join(sys.argv[2], bn + ".ctd")))
     shutil.copyfile(os.path.join(wd, bn + ".ctd"), os.path.join(sys.argv[2], bn + ".ctd"))
 elif sys.argv[1] == "-ini":
     fparam = {"input": set(), "output": set()}
-    with open(sys.argv[2]) as cf:
-        for line in cf:
-            m = re.search(r'type="(input|output)-file"', line)
-            if m is not None:
-                n = re.search(r'name="([^"]+)"', line)
-                fparam[m.group(1)].add(n.group(1))
-
+    model = CTDModel(from_file=sys.argv[2])
+    for p in model.get_parameters():
+        cli = ":".join(p.get_lineage(name_only=True))
+        if p.type is _InFile:
+            fparam["input"].add(cli)
+        elif p.type is _OutFile:
+            fparam["output"].add(cli)
+                
     i = 3
     while i < len(sys.argv):
         if sys.argv[i].startswith("-"):
@@ -42,7 +44,6 @@ elif sys.argv[1] == "-ini":
                     mode = "r"
                 else:
                     mode = "w"
-
                 while i + 1 < len(sys.argv):
                     if sys.argv[i + 1].startswith("-"):
                         break

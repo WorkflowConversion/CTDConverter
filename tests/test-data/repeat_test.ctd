@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tool ctdVersion="1.7" version="2.3.0" name="repeat" docurl="http://www.openms.de/unavailable.html" category="Test" >
+<tool ctdVersion="1.7" version="2.3.0" name="repeat_test" docurl="http://www.openms.de/unavailable.html" category="Test" >
 <description><![CDATA[Repeat parameter tests]]></description>
 <manual><![CDATA[Repeat parameter tests.]]></manual>
 <PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -119,6 +119,121 @@
           <LISTITEM value="0.5"/>
       </ITEMLIST>
 
+      <!-- same parameters as above in a node -->
+      <NODE name="test_section" description="Test Section">
+        <ITEMLIST name="sect_string_wodefault_optional"  type="string" description="string list" required="false" advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_string_wodefault_mandatory" type="string" description="string list" required="true"  advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_string_default_optional"    type="string" description="string list" required="false" advanced="false">
+            <LISTITEM value="A A"/>
+            <LISTITEM value="-B"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_string_default_mandatory"   type="string" description="string list" required="true"  advanced="false">
+            <LISTITEM value="A A"/>
+            <LISTITEM value="-B"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_int_wodefault_optional"  type="int" description="int list" required="false" advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_int_wodefault_mandatory" type="int" description="int list" required="true"  advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_int_default_optional"    type="int" description="int list" required="false" advanced="false">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_int_default_mandatory"   type="int" description="int list" required="true"  advanced="false">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_int_resticted_wodefault_optional"  type="int" description="int list" required="false" advanced="false" restrictions="-100:100"></ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_wodefault_mandatory" type="int" description="int list" required="true"  advanced="false" restrictions="-100:"></ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_default_optional"    type="int" description="int list" required="false" advanced="false" restrictions=":100">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_default_mandatory"   type="int" description="int list" required="true"  advanced="false" restrictions="-100:100">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+  
+        <ITEMLIST name="sect_double_wodefault_optional"  type="double" description="double list" required="false" advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_double_wodefault_mandatory" type="double" description="double list" required="true"  advanced="false"></ITEMLIST>
+        <ITEMLIST name="sect_double_default_optional"    type="double" description="double list" required="false" advanced="false">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_double_default_mandatory"   type="double" description="double list" required="true"  advanced="false">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_double_resticted_wodefault_optional"  type="double" description="double list" required="false" advanced="false" restrictions="-1.0:1.0"></ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_wodefault_mandatory" type="double" description="double list" required="true"  advanced="false" restrictions="-1.0:"></ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_default_optional"    type="double" description="double list" required="false" advanced="false" restrictions=":1.0">
+            <LISTITEM value="-0.3"/>
+            <LISTITEM value="0.5"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_default_mandatory"   type="double" description="double list" required="true"  advanced="false" restrictions="-1.0:1.0">
+            <LISTITEM value="-0.3"/>
+            <LISTITEM value="0.5"/>
+        </ITEMLIST>
+  
+        <!-- same as above for advanced options-->
+        <ITEMLIST name="sect_string_wodefault_optional_adv"  type="string" description="string list" required="false" advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_string_wodefault_mandatory_adv" type="string" description="string list" required="true"  advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_string_default_optional_adv"    type="string" description="string list" required="false" advanced="true">
+            <LISTITEM value="A A"/>
+            <LISTITEM value="-B"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_string_default_mandatory_adv"   type="string" description="string list" required="true"  advanced="true">
+            <LISTITEM value="A A"/>
+            <LISTITEM value="-B"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_int_wodefault_optional_adv"  type="int" description="int list" required="false" advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_int_wodefault_mandatory_adv" type="int" description="int list" required="true"  advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_int_default_optional_adv"    type="int" description="int list" required="false" advanced="true">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_int_default_mandatory_adv"   type="int" description="int list" required="true"  advanced="true">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_int_resticted_wodefault_optional_adv"  type="int" description="int list" required="false" advanced="true" restrictions="-100:100"></ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_wodefault_mandatory_adv" type="int" description="int list" required="true"  advanced="true" restrictions="-100:"></ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_default_optional_adv"    type="int" description="int list" required="false" advanced="true" restrictions=":100">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_int_resticted_default_mandatory_adv"   type="int" description="int list" required="true"  advanced="true" restrictions="-100:100">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+  
+        <ITEMLIST name="sect_double_wodefault_optional_adv"  type="double" description="double list" required="false" advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_double_wodefault_mandatory_adv" type="double" description="double list" required="true"  advanced="true"></ITEMLIST>
+        <ITEMLIST name="sect_double_default_optional_adv"    type="double" description="double list" required="false" advanced="true">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_double_default_mandatory_adv"   type="double" description="double list" required="true"  advanced="true">
+            <LISTITEM value="-1"/>
+            <LISTITEM value="2"/>
+        </ITEMLIST>
+  
+        <ITEMLIST name="sect_double_resticted_wodefault_optional_adv"  type="double" description="double list" required="false" advanced="true" restrictions="-1.0:1.0"></ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_wodefault_mandatory_adv" type="double" description="double list" required="true"  advanced="true" restrictions="-1.0:"></ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_default_optional_adv"    type="double" description="double list" required="false" advanced="true" restrictions=":1.0">
+            <LISTITEM value="-0.3"/>
+            <LISTITEM value="0.5"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_double_resticted_default_mandatory_adv"   type="double" description="double list" required="true"  advanced="true" restrictions="-1.0:1.0">
+            <LISTITEM value="-0.3"/>
+            <LISTITEM value="0.5"/>
+        </ITEMLIST>
+      </NODE>
     </NODE>
   </NODE>
 </PARAMETERS>

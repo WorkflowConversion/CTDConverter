@@ -3,7 +3,7 @@ import json
 import operator
 import sys
 
-from CTDopts.CTDopts import CTDModel, _Null, _InFile
+from CTDopts.CTDopts import CTDModel, _Null, _InFile, _NumericRange
 
 
 def getFromDict(dataDict, mapList):
@@ -38,25 +38,16 @@ def qstring2list(qs):
     """
     lst = list()
     qs = qs.split(" ")
-    quoted = False
     for p in qs:
         if p == "":
             continue
-        if not quoted:
-            if p.startswith('"'):
-                p = p[1:]
 
         if p.startswith('"') and p.endswith('"'):
-            p = p[1:-1]
+            lst.append(p[1:-1])
         elif p.startswith('"'):
-            lst.append("")
-            quoted = True
-            p = p[1:]+" "
+            lst.append( p[1:]+" ")
         elif p.endswith('"'):
-            quoted = False
-            p = p[:-1]
-        if quoted:
-            lst[-1] += p
+            lst[-1] += p[:-1]
         else:
             lst.append(p)
     return lst
@@ -77,9 +68,10 @@ model = CTDModel(from_file=input_ctd)
 # - optional data input parameters that have defaults and for which no
 #   value is given are overwritten with the default
 for p in model.get_parameters():
-    if p.is_list and p.restrictions is None:
+    if p.is_list and (p.restrictions is None or type(p.restrictions) is _NumericRange):
         v = getFromDict(args, p.get_lineage(name_only=True))
-        setInDict(args, p.get_lineage(name_only=True), qstring2list(v))
+        if type(v) is str:
+            setInDict(args, p.get_lineage(name_only=True), qstring2list(v))
     if p.type is _InFile and p.default not in [None, _Null]:
         v = getFromDict(args, p.get_lineage(name_only=True))
         if v in [[], ""]:

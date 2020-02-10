@@ -71,6 +71,72 @@
           <LISTITEM value="C"/>
           <LISTITEM value="D"/>
       </ITEMLIST>
+
+      <!-- same parameters as above in a node -->
+      <NODE name="test_section" description="Test Section">
+        <ITEM name="sect_wodefault_mandatory"     value=""  type="string" description="string" required="true"  advanced="false" restrictions="A,B,C,D"/>
+        <ITEM name="sect_default_mandatory"       value="C" type="string" description="string" required="true"  advanced="false" restrictions="A,B,C,D"/>
+        <ITEM name="sect_wodefault_optional"      value=""  type="string" description="string" required="false" advanced="false" restrictions="A,B,C,D"/>
+        <ITEM name="sect_default_optional"        value="C" type="string" description="string" required="false" advanced="false" restrictions="A,B,C,D"/>
+        <!-- more than 4 option should be a select box instead of radio button -->
+        <ITEM name="sect_wodefault_mandatory_many"     value=""  type="string" description="string" required="true"  advanced="false" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_default_mandatory_many"       value="C" type="string" description="string" required="true"  advanced="false" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_wodefault_optional_many"      value=""  type="string" description="string" required="false" advanced="false" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_default_optional_many"        value="C" type="string" description="string" required="false" advanced="false" restrictions="A,B,C,D,E"/>
+  
+        <!-- selects allowing a multiple options -->
+        <ITEMLIST name="sect_list_wodefault_optional"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C,D"></ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_mandatory" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C,D"></ITEMLIST>
+        <ITEMLIST name="sect_list_default_optional"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C,D">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_default_mandatory" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C,D">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_optional_many"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C,D,E"></ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_mandatory_many" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C,D,E"></ITEMLIST>
+        <ITEMLIST name="sect_list_default_optional_many"  type="string" description="string list" required="false" advanced="false" restrictions="A,B,C,D,E">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_default_mandatory_many" type="string" description="string list" required="true"  advanced="false" restrictions="A,B,C,D,E">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+  
+        <!-- advanced options -->
+        <ITEM name="sect_wodefault_mandatory_adv"     value=""  type="string" description="string" required="true"  advanced="true" restrictions="A,B,C,D"/>
+        <ITEM name="sect_default_mandatory_adv"       value="C" type="string" description="string" required="true"  advanced="true" restrictions="A,B,C,D"/>
+        <ITEM name="sect_wodefault_optional_adv"      value=""  type="string" description="string" required="false" advanced="true" restrictions="A,B,C,D"/>
+        <ITEM name="sect_default_optional_adv"        value="C" type="string" description="string" required="false" advanced="true" restrictions="A,B,C,D"/>
+        <ITEM name="sect_wodefault_mandatory_many_adv"     value=""  type="string" description="string" required="true"  advanced="true" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_default_mandatory_many_adv"       value="C" type="string" description="string" required="true"  advanced="true" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_wodefault_optional_many_adv"      value=""  type="string" description="string" required="false" advanced="true" restrictions="A,B,C,D,E"/>
+        <ITEM name="sect_default_optional_many_adv"        value="C" type="string" description="string" required="false" advanced="true" restrictions="A,B,C,D,E"/>
+  
+        <ITEMLIST name="sect_list_wodefault_optional_adv"  type="string" description="string list" required="false" advanced="true" restrictions="A,B,C,D"></ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_mandatory_adv" type="string" description="string list" required="true"  advanced="true" restrictions="A,B,C,D"></ITEMLIST>
+        <ITEMLIST name="sect_list_default_optional_adv"  type="string" description="string list" required="false" advanced="true" restrictions="A,B,C,D">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_default_mandatory_adv" type="string" description="string list" required="true"  advanced="true" restrictions="A,B,C,D">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_optional_many_adv"  type="string" description="string list" required="false" advanced="true" restrictions="A,B,C,D,E"></ITEMLIST>
+        <ITEMLIST name="sect_list_wodefault_mandatory_many_adv" type="string" description="string list" required="true"  advanced="true" restrictions="A,B,C,D,E"></ITEMLIST>
+        <ITEMLIST name="sect_list_default_optional_many_adv"  type="string" description="string list" required="false" advanced="true" restrictions="A,B,C,D,E">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+        <ITEMLIST name="sect_list_default_mandatory_many_adv" type="string" description="string list" required="true"  advanced="true" restrictions="A,B,C,D,E">
+            <LISTITEM value="C"/>
+            <LISTITEM value="D"/>
+        </ITEMLIST>
+      </NODE>
     </NODE>
   </NODE>
 </PARAMETERS>

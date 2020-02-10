@@ -16,8 +16,10 @@
 ## Preprocessing
 
 ## Main program call
+
+export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
 @EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 > $param_stdout
 
@@ -27,35 +29,27 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
   </configfiles>
   <inputs>
     <param name="do" argument="-do" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="qm" argument="-qm" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="ex" argument="-ex" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="sc" argument="-sc" type="text" optional="false" value="" label="label label label label label label label label &amp; label" help="help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="coeg" argument="-coeg" type="text" optional="false" value="" label="label label label label label label label label" help="e.g. help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="pteg" argument="-pteg" type="text" optional="false" value="" label="label label label label label label label label" help="(e.g. help)">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="coie" argument="-coie" type="text" optional="false" value="" label="label label label label label label label label" help="i.e. help">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
     <param name="ptie" argument="-ptie" type="text" optional="false" value="" label="label label label label label label label label" help="(i.e. help)">
-      <expand macro="list_string_val"/>
       <expand macro="list_string_san"/>
     </param>
   </inputs>

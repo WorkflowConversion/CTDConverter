@@ -16,8 +16,10 @@
 ## Preprocessing
 
 ## Main program call
+
+export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
 @EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 > $param_stdout
 
@@ -34,6 +36,24 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <param name="default_optional_unrestricted_max" argument="-default_optional_unrestricted_max" type="integer" optional="true" max="100" value="0" label="int" help=""/>
     <param name="default_mandatory_unrestricted_minmax" argument="-default_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help=""/>
     <param name="default_optional_unrestricted_minmax" argument="-default_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help=""/>
+    <section name="test_section" title="Test Section" help="" expanded="false">
+      <param name="sect_default_mandatory_unrestricted" argument="-test_section:sect_default_mandatory_unrestricted" type="integer" optional="false" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted" argument="-test_section:sect_default_optional_unrestricted" type="integer" optional="true" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_adv" argument="-test_section:sect_default_mandatory_unrestricted_adv" type="integer" optional="false" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_adv" argument="-test_section:sect_default_optional_unrestricted_adv" type="integer" optional="true" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_min" argument="-test_section:sect_default_mandatory_unrestricted_min" type="integer" optional="false" min="0" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_min" argument="-test_section:sect_default_optional_unrestricted_min" type="integer" optional="true" min="0" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_adv_min" argument="-test_section:sect_default_mandatory_unrestricted_adv_min" type="integer" optional="false" min="0" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_adv_min" argument="-test_section:sect_default_optional_unrestricted_adv_min" type="integer" optional="true" min="0" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_max" argument="-test_section:sect_default_mandatory_unrestricted_max" type="integer" optional="false" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_max" argument="-test_section:sect_default_optional_unrestricted_max" type="integer" optional="true" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_adv_max" argument="-test_section:sect_default_mandatory_unrestricted_adv_max" type="integer" optional="false" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_adv_max" argument="-test_section:sect_default_optional_unrestricted_adv_max" type="integer" optional="true" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_minmax" argument="-test_section:sect_default_mandatory_unrestricted_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_minmax" argument="-test_section:sect_default_optional_unrestricted_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_mandatory_unrestricted_adv_minmax" argument="-test_section:sect_default_mandatory_unrestricted_adv_minmax" type="integer" optional="false" min="0" max="100" value="0" label="int" help=""/>
+      <param name="sect_default_optional_unrestricted_adv_minmax" argument="-test_section:sect_default_optional_unrestricted_adv_minmax" type="integer" optional="true" min="0" max="100" value="0" label="int" help=""/>
+    </section>
     <expand macro="adv_opts_macro">
       <param name="default_mandatory_unrestricted_adv" argument="-default_mandatory_unrestricted_adv" type="integer" optional="false" value="0" label="int" help=""/>
       <param name="default_optional_unrestricted_adv" argument="-default_optional_unrestricted_adv" type="integer" optional="true" value="0" label="int" help=""/>
@@ -54,6 +74,16 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <param name="default_mandatory_unrestricted_min" value="0"/>
       <param name="default_mandatory_unrestricted_max" value="0"/>
       <param name="default_mandatory_unrestricted_minmax" value="0"/>
+      <section name="test_section">
+        <param name="sect_default_mandatory_unrestricted" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_adv" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_min" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_adv_min" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_max" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_adv_max" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_minmax" value="0"/>
+        <param name="sect_default_mandatory_unrestricted_adv_minmax" value="0"/>
+      </section>
       <conditional name="adv_opts_cond">
         <param name="default_mandatory_unrestricted_adv" value="0"/>
         <param name="default_mandatory_unrestricted_adv_min" value="0"/>

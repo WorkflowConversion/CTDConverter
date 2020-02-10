@@ -14,26 +14,20 @@
 #import re
 
 ## Preprocessing
-#if $mandatory_noformat:
-  mkdir mandatory_noformat &&
-  ln -s '$mandatory_noformat' 'mandatory_noformat/${re.sub("[^\w\-_]", "_", $mandatory_noformat.element_identifier)}.$gxy2omsext($mandatory_noformat.ext)' &&
-#end if
+mkdir mandatory_noformat &&
+ln -s '$mandatory_noformat' 'mandatory_noformat/${re.sub("[^\w\-_]", "_", $mandatory_noformat.element_identifier)}.$gxy2omsext($mandatory_noformat.ext)' &&
 #if $optional_noformat:
   mkdir optional_noformat &&
   ln -s '$optional_noformat' 'optional_noformat/${re.sub("[^\w\-_]", "_", $optional_noformat.element_identifier)}.$gxy2omsext($optional_noformat.ext)' &&
 #end if
-#if $mandatory_oneformat:
-  mkdir mandatory_oneformat &&
-  ln -s '$mandatory_oneformat' 'mandatory_oneformat/${re.sub("[^\w\-_]", "_", $mandatory_oneformat.element_identifier)}.$gxy2omsext($mandatory_oneformat.ext)' &&
-#end if
+mkdir mandatory_oneformat &&
+ln -s '$mandatory_oneformat' 'mandatory_oneformat/${re.sub("[^\w\-_]", "_", $mandatory_oneformat.element_identifier)}.$gxy2omsext($mandatory_oneformat.ext)' &&
 #if $optional_oneformat:
   mkdir optional_oneformat &&
   ln -s '$optional_oneformat' 'optional_oneformat/${re.sub("[^\w\-_]", "_", $optional_oneformat.element_identifier)}.$gxy2omsext($optional_oneformat.ext)' &&
 #end if
-#if $mandatory_multformat:
-  mkdir mandatory_multformat &&
-  ln -s '$mandatory_multformat' 'mandatory_multformat/${re.sub("[^\w\-_]", "_", $mandatory_multformat.element_identifier)}.$gxy2omsext($mandatory_multformat.ext)' &&
-#end if
+mkdir mandatory_multformat &&
+ln -s '$mandatory_multformat' 'mandatory_multformat/${re.sub("[^\w\-_]", "_", $mandatory_multformat.element_identifier)}.$gxy2omsext($mandatory_multformat.ext)' &&
 #if $optional_multformat:
   mkdir optional_multformat &&
   ln -s '$optional_multformat' 'optional_multformat/${re.sub("[^\w\-_]", "_", $optional_multformat.element_identifier)}.$gxy2omsext($optional_multformat.ext)' &&
@@ -62,26 +56,20 @@
   mkdir default_optional_multformat &&
   ln -s '$default_optional_multformat' 'default_optional_multformat/${re.sub("[^\w\-_]", "_", $default_optional_multformat.element_identifier)}.$gxy2omsext($default_optional_multformat.ext)' &&
 #end if
-#if $list_mandatory_noformat:
-  mkdir list_mandatory_noformat &&
-  ${ ' '.join(["ln -s '%s' 'list_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _]) }
-#end if
+mkdir list_mandatory_noformat &&
+${ ' '.join(["ln -s '%s' 'list_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _]) }
 #if $list_optional_noformat:
   mkdir list_optional_noformat &&
   ${ ' '.join(["ln -s '%s' 'list_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat if _]) }
 #end if
-#if $list_mandatory_oneformat:
-  mkdir list_mandatory_oneformat &&
-  ${ ' '.join(["ln -s '%s' 'list_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _]) }
-#end if
+mkdir list_mandatory_oneformat &&
+${ ' '.join(["ln -s '%s' 'list_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _]) }
 #if $list_optional_oneformat:
   mkdir list_optional_oneformat &&
   ${ ' '.join(["ln -s '%s' 'list_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _]) }
 #end if
-#if $list_mandatory_multformat:
-  mkdir list_mandatory_multformat &&
-  ${ ' '.join(["ln -s '%s' 'list_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _]) }
-#end if
+mkdir list_mandatory_multformat &&
+${ ' '.join(["ln -s '%s' 'list_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _]) }
 #if $list_optional_multformat:
   mkdir list_optional_multformat &&
   ${ ' '.join(["ln -s '%s' 'list_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat if _]) }
@@ -110,129 +98,281 @@
   mkdir list_default_optional_multformat &&
   ${ ' '.join(["ln -s '%s' 'list_default_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _]) }
 #end if
+mkdir test_section.sect_mandatory_noformat &&
+ln -s '$test_section.sect_mandatory_noformat' 'test_section.sect_mandatory_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_noformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_noformat.ext)' &&
+#if $test_section.sect_optional_noformat:
+  mkdir test_section.sect_optional_noformat &&
+  ln -s '$test_section.sect_optional_noformat' 'test_section.sect_optional_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_noformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_noformat.ext)' &&
+#end if
+mkdir test_section.sect_mandatory_oneformat &&
+ln -s '$test_section.sect_mandatory_oneformat' 'test_section.sect_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_oneformat.ext)' &&
+#if $test_section.sect_optional_oneformat:
+  mkdir test_section.sect_optional_oneformat &&
+  ln -s '$test_section.sect_optional_oneformat' 'test_section.sect_optional_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_oneformat.ext)' &&
+#end if
+mkdir test_section.sect_mandatory_multformat &&
+ln -s '$test_section.sect_mandatory_multformat' 'test_section.sect_mandatory_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_multformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_multformat.ext)' &&
+#if $test_section.sect_optional_multformat:
+  mkdir test_section.sect_optional_multformat &&
+  ln -s '$test_section.sect_optional_multformat' 'test_section.sect_optional_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_multformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_multformat.ext)' &&
+#end if
+#if $test_section.sect_default_mandatory_noformat:
+  mkdir test_section.sect_default_mandatory_noformat &&
+  ln -s '$test_section.sect_default_mandatory_noformat' 'test_section.sect_default_mandatory_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_noformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_noformat.ext)' &&
+#end if
+#if $test_section.sect_default_optional_noformat:
+  mkdir test_section.sect_default_optional_noformat &&
+  ln -s '$test_section.sect_default_optional_noformat' 'test_section.sect_default_optional_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_noformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_noformat.ext)' &&
+#end if
+#if $test_section.sect_default_mandatory_oneformat:
+  mkdir test_section.sect_default_mandatory_oneformat &&
+  ln -s '$test_section.sect_default_mandatory_oneformat' 'test_section.sect_default_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_oneformat.ext)' &&
+#end if
+#if $test_section.sect_default_optional_oneformat:
+  mkdir test_section.sect_default_optional_oneformat &&
+  ln -s '$test_section.sect_default_optional_oneformat' 'test_section.sect_default_optional_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_oneformat.ext)' &&
+#end if
+#if $test_section.sect_default_mandatory_multformat:
+  mkdir test_section.sect_default_mandatory_multformat &&
+  ln -s '$test_section.sect_default_mandatory_multformat' 'test_section.sect_default_mandatory_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_multformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_multformat.ext)' &&
+#end if
+#if $test_section.sect_default_optional_multformat:
+  mkdir test_section.sect_default_optional_multformat &&
+  ln -s '$test_section.sect_default_optional_multformat' 'test_section.sect_default_optional_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_multformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_multformat.ext)' &&
+#end if
+mkdir test_section.sect_list_mandatory_noformat &&
+${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_noformat if _]) }
+#if $test_section.sect_list_optional_noformat:
+  mkdir test_section.sect_list_optional_noformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_noformat if _]) }
+#end if
+mkdir test_section.sect_list_mandatory_oneformat &&
+${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_oneformat if _]) }
+#if $test_section.sect_list_optional_oneformat:
+  mkdir test_section.sect_list_optional_oneformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_oneformat if _]) }
+#end if
+mkdir test_section.sect_list_mandatory_multformat &&
+${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_multformat if _]) }
+#if $test_section.sect_list_optional_multformat:
+  mkdir test_section.sect_list_optional_multformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_multformat if _]) }
+#end if
+#if $test_section.sect_list_default_mandatory_noformat:
+  mkdir test_section.sect_list_default_mandatory_noformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_noformat if _]) }
+#end if
+#if $test_section.sect_list_default_optional_noformat:
+  mkdir test_section.sect_list_default_optional_noformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_noformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_noformat if _]) }
+#end if
+#if $test_section.sect_list_default_mandatory_oneformat:
+  mkdir test_section.sect_list_default_mandatory_oneformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_oneformat if _]) }
+#end if
+#if $test_section.sect_list_default_optional_oneformat:
+  mkdir test_section.sect_list_default_optional_oneformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_oneformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_oneformat if _]) }
+#end if
+#if $test_section.sect_list_default_mandatory_multformat:
+  mkdir test_section.sect_list_default_mandatory_multformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_multformat if _]) }
+#end if
+#if $test_section.sect_list_default_optional_multformat:
+  mkdir test_section.sect_list_default_optional_multformat &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_multformat/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_multformat if _]) }
+#end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  #if $adv_opts_cond.mandatory_noformat_adv:
-    mkdir mandatory_noformat_adv &&
-    ln -s '$mandatory_noformat_adv' 'mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_noformat_adv.element_identifier)}.$gxy2omsext($mandatory_noformat_adv.ext)' &&
-  #end if
+  mkdir adv_opts_cond.mandatory_noformat_adv &&
+  ln -s '$adv_opts_cond.mandatory_noformat_adv' 'adv_opts_cond.mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_noformat_adv.ext)' &&
   #if $adv_opts_cond.optional_noformat_adv:
-    mkdir optional_noformat_adv &&
-    ln -s '$optional_noformat_adv' 'optional_noformat_adv/${re.sub("[^\w\-_]", "_", $optional_noformat_adv.element_identifier)}.$gxy2omsext($optional_noformat_adv.ext)' &&
+    mkdir adv_opts_cond.optional_noformat_adv &&
+    ln -s '$adv_opts_cond.optional_noformat_adv' 'adv_opts_cond.optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_noformat_adv.ext)' &&
   #end if
-  #if $adv_opts_cond.mandatory_oneformat_adv:
-    mkdir mandatory_oneformat_adv &&
-    ln -s '$mandatory_oneformat_adv' 'mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($mandatory_oneformat_adv.ext)' &&
-  #end if
+  mkdir adv_opts_cond.mandatory_oneformat_adv &&
+  ln -s '$adv_opts_cond.mandatory_oneformat_adv' 'adv_opts_cond.mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_oneformat_adv.ext)' &&
   #if $adv_opts_cond.optional_oneformat_adv:
-    mkdir optional_oneformat_adv &&
-    ln -s '$optional_oneformat_adv' 'optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $optional_oneformat_adv.element_identifier)}.$gxy2omsext($optional_oneformat_adv.ext)' &&
+    mkdir adv_opts_cond.optional_oneformat_adv &&
+    ln -s '$adv_opts_cond.optional_oneformat_adv' 'adv_opts_cond.optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_oneformat_adv.ext)' &&
   #end if
-  #if $adv_opts_cond.mandatory_multformat_adv:
-    mkdir mandatory_multformat_adv &&
-    ln -s '$mandatory_multformat_adv' 'mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_multformat_adv.element_identifier)}.$gxy2omsext($mandatory_multformat_adv.ext)' &&
-  #end if
+  mkdir adv_opts_cond.mandatory_multformat_adv &&
+  ln -s '$adv_opts_cond.mandatory_multformat_adv' 'adv_opts_cond.mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_multformat_adv.ext)' &&
   #if $adv_opts_cond.optional_multformat_adv:
-    mkdir optional_multformat_adv &&
-    ln -s '$optional_multformat_adv' 'optional_multformat_adv/${re.sub("[^\w\-_]", "_", $optional_multformat_adv.element_identifier)}.$gxy2omsext($optional_multformat_adv.ext)' &&
+    mkdir adv_opts_cond.optional_multformat_adv &&
+    ln -s '$adv_opts_cond.optional_multformat_adv' 'adv_opts_cond.optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_multformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_mandatory_noformat_adv:
-    mkdir default_mandatory_noformat_adv &&
-    ln -s '$default_mandatory_noformat_adv' 'default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_noformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_mandatory_noformat_adv &&
+    ln -s '$adv_opts_cond.default_mandatory_noformat_adv' 'adv_opts_cond.default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_noformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_optional_noformat_adv:
-    mkdir default_optional_noformat_adv &&
-    ln -s '$default_optional_noformat_adv' 'default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_noformat_adv.element_identifier)}.$gxy2omsext($default_optional_noformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_optional_noformat_adv &&
+    ln -s '$adv_opts_cond.default_optional_noformat_adv' 'adv_opts_cond.default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_noformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_mandatory_oneformat_adv:
-    mkdir default_mandatory_oneformat_adv &&
-    ln -s '$default_mandatory_oneformat_adv' 'default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_oneformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_mandatory_oneformat_adv &&
+    ln -s '$adv_opts_cond.default_mandatory_oneformat_adv' 'adv_opts_cond.default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_oneformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_optional_oneformat_adv:
-    mkdir default_optional_oneformat_adv &&
-    ln -s '$default_optional_oneformat_adv' 'default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($default_optional_oneformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_optional_oneformat_adv &&
+    ln -s '$adv_opts_cond.default_optional_oneformat_adv' 'adv_opts_cond.default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_oneformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_mandatory_multformat_adv:
-    mkdir default_mandatory_multformat_adv &&
-    ln -s '$default_mandatory_multformat_adv' 'default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_multformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_mandatory_multformat_adv &&
+    ln -s '$adv_opts_cond.default_mandatory_multformat_adv' 'adv_opts_cond.default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_multformat_adv.ext)' &&
   #end if
   #if $adv_opts_cond.default_optional_multformat_adv:
-    mkdir default_optional_multformat_adv &&
-    ln -s '$default_optional_multformat_adv' 'default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_multformat_adv.element_identifier)}.$gxy2omsext($default_optional_multformat_adv.ext)' &&
+    mkdir adv_opts_cond.default_optional_multformat_adv &&
+    ln -s '$adv_opts_cond.default_optional_multformat_adv' 'adv_opts_cond.default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_multformat_adv.ext)' &&
   #end if
-  #if $adv_opts_cond.list_mandatory_noformat_adv:
-    mkdir list_mandatory_noformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _]) }
-  #end if
+  mkdir adv_opts_cond.list_mandatory_noformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_noformat_adv if _]) }
   #if $adv_opts_cond.list_optional_noformat_adv:
-    mkdir list_optional_noformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _]) }
+    mkdir adv_opts_cond.list_optional_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_noformat_adv if _]) }
   #end if
-  #if $adv_opts_cond.list_mandatory_oneformat_adv:
-    mkdir list_mandatory_oneformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _]) }
-  #end if
+  mkdir adv_opts_cond.list_mandatory_oneformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_oneformat_adv if _]) }
   #if $adv_opts_cond.list_optional_oneformat_adv:
-    mkdir list_optional_oneformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _]) }
+    mkdir adv_opts_cond.list_optional_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_oneformat_adv if _]) }
   #end if
-  #if $adv_opts_cond.list_mandatory_multformat_adv:
-    mkdir list_mandatory_multformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _]) }
-  #end if
+  mkdir adv_opts_cond.list_mandatory_multformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_multformat_adv if _]) }
   #if $adv_opts_cond.list_optional_multformat_adv:
-    mkdir list_optional_multformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _]) }
+    mkdir adv_opts_cond.list_optional_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_multformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_noformat_adv:
-    mkdir list_default_mandatory_noformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_mandatory_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_noformat_adv:
-    mkdir list_default_optional_noformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_optional_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_noformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_oneformat_adv:
-    mkdir list_default_mandatory_oneformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_mandatory_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_oneformat_adv:
-    mkdir list_default_optional_oneformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_optional_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_oneformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_mandatory_multformat_adv:
-    mkdir list_default_mandatory_multformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_mandatory_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_multformat_adv if _]) }
   #end if
   #if $adv_opts_cond.list_default_optional_multformat_adv:
-    mkdir list_default_optional_multformat_adv &&
-    ${ ' '.join(["ln -s '%s' 'list_default_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _]) }
+    mkdir adv_opts_cond.list_default_optional_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'adv_opts_cond.list_default_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_multformat_adv if _]) }
+  #end if
+  mkdir test_section.sect_mandatory_noformat_adv &&
+  ln -s '$test_section.sect_mandatory_noformat_adv' 'test_section.sect_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_noformat_adv.ext)' &&
+  #if $test_section.sect_optional_noformat_adv:
+    mkdir test_section.sect_optional_noformat_adv &&
+    ln -s '$test_section.sect_optional_noformat_adv' 'test_section.sect_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_noformat_adv.ext)' &&
+  #end if
+  mkdir test_section.sect_mandatory_oneformat_adv &&
+  ln -s '$test_section.sect_mandatory_oneformat_adv' 'test_section.sect_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_oneformat_adv.ext)' &&
+  #if $test_section.sect_optional_oneformat_adv:
+    mkdir test_section.sect_optional_oneformat_adv &&
+    ln -s '$test_section.sect_optional_oneformat_adv' 'test_section.sect_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_oneformat_adv.ext)' &&
+  #end if
+  mkdir test_section.sect_mandatory_multformat_adv &&
+  ln -s '$test_section.sect_mandatory_multformat_adv' 'test_section.sect_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_multformat_adv.ext)' &&
+  #if $test_section.sect_optional_multformat_adv:
+    mkdir test_section.sect_optional_multformat_adv &&
+    ln -s '$test_section.sect_optional_multformat_adv' 'test_section.sect_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_multformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_mandatory_noformat_adv:
+    mkdir test_section.sect_default_mandatory_noformat_adv &&
+    ln -s '$test_section.sect_default_mandatory_noformat_adv' 'test_section.sect_default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_noformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_optional_noformat_adv:
+    mkdir test_section.sect_default_optional_noformat_adv &&
+    ln -s '$test_section.sect_default_optional_noformat_adv' 'test_section.sect_default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_noformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_mandatory_oneformat_adv:
+    mkdir test_section.sect_default_mandatory_oneformat_adv &&
+    ln -s '$test_section.sect_default_mandatory_oneformat_adv' 'test_section.sect_default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_oneformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_optional_oneformat_adv:
+    mkdir test_section.sect_default_optional_oneformat_adv &&
+    ln -s '$test_section.sect_default_optional_oneformat_adv' 'test_section.sect_default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_oneformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_mandatory_multformat_adv:
+    mkdir test_section.sect_default_mandatory_multformat_adv &&
+    ln -s '$test_section.sect_default_mandatory_multformat_adv' 'test_section.sect_default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_multformat_adv.ext)' &&
+  #end if
+  #if $test_section.sect_default_optional_multformat_adv:
+    mkdir test_section.sect_default_optional_multformat_adv &&
+    ln -s '$test_section.sect_default_optional_multformat_adv' 'test_section.sect_default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_multformat_adv.ext)' &&
+  #end if
+  mkdir test_section.sect_list_mandatory_noformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_noformat_adv if _]) }
+  #if $test_section.sect_list_optional_noformat_adv:
+    mkdir test_section.sect_list_optional_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_noformat_adv if _]) }
+  #end if
+  mkdir test_section.sect_list_mandatory_oneformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_oneformat_adv if _]) }
+  #if $test_section.sect_list_optional_oneformat_adv:
+    mkdir test_section.sect_list_optional_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_oneformat_adv if _]) }
+  #end if
+  mkdir test_section.sect_list_mandatory_multformat_adv &&
+  ${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_multformat_adv if _]) }
+  #if $test_section.sect_list_optional_multformat_adv:
+    mkdir test_section.sect_list_optional_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_multformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_mandatory_noformat_adv:
+    mkdir test_section.sect_list_default_mandatory_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_noformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_optional_noformat_adv:
+    mkdir test_section.sect_list_default_optional_noformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_noformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_noformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_mandatory_oneformat_adv:
+    mkdir test_section.sect_list_default_mandatory_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_oneformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_optional_oneformat_adv:
+    mkdir test_section.sect_list_default_optional_oneformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_oneformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_oneformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_mandatory_multformat_adv:
+    mkdir test_section.sect_list_default_mandatory_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_mandatory_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_multformat_adv if _]) }
+  #end if
+  #if $test_section.sect_list_default_optional_multformat_adv:
+    mkdir test_section.sect_list_default_optional_multformat_adv &&
+    ${ ' '.join(["ln -s '%s' 'test_section.sect_list_default_optional_multformat_adv/%s.%s' &&" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_multformat_adv if _]) }
   #end if
 #end if
 
 ## Main program call
+
+export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
 @EXECUTABLE@ -write_ctd ./ &&
-python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
-#if $mandatory_noformat:
-  -mandatory_noformat
-  'mandatory_noformat/${re.sub("[^\w\-_]", "_", $mandatory_noformat.element_identifier)}.$gxy2omsext($mandatory_noformat.ext)'
-#end if
+-mandatory_noformat
+'mandatory_noformat/${re.sub("[^\w\-_]", "_", $mandatory_noformat.element_identifier)}.$gxy2omsext($mandatory_noformat.ext)'
 #if $optional_noformat:
   -optional_noformat
   'optional_noformat/${re.sub("[^\w\-_]", "_", $optional_noformat.element_identifier)}.$gxy2omsext($optional_noformat.ext)'
 #end if
-#if $mandatory_oneformat:
-  -mandatory_oneformat
-  'mandatory_oneformat/${re.sub("[^\w\-_]", "_", $mandatory_oneformat.element_identifier)}.$gxy2omsext($mandatory_oneformat.ext)'
-#end if
+-mandatory_oneformat
+'mandatory_oneformat/${re.sub("[^\w\-_]", "_", $mandatory_oneformat.element_identifier)}.$gxy2omsext($mandatory_oneformat.ext)'
 #if $optional_oneformat:
   -optional_oneformat
   'optional_oneformat/${re.sub("[^\w\-_]", "_", $optional_oneformat.element_identifier)}.$gxy2omsext($optional_oneformat.ext)'
 #end if
-#if $mandatory_multformat:
-  -mandatory_multformat
-  'mandatory_multformat/${re.sub("[^\w\-_]", "_", $mandatory_multformat.element_identifier)}.$gxy2omsext($mandatory_multformat.ext)'
-#end if
+-mandatory_multformat
+'mandatory_multformat/${re.sub("[^\w\-_]", "_", $mandatory_multformat.element_identifier)}.$gxy2omsext($mandatory_multformat.ext)'
 #if $optional_multformat:
   -optional_multformat
   'optional_multformat/${re.sub("[^\w\-_]", "_", $optional_multformat.element_identifier)}.$gxy2omsext($optional_multformat.ext)'
@@ -261,26 +401,20 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
   -default_optional_multformat
   'default_optional_multformat/${re.sub("[^\w\-_]", "_", $default_optional_multformat.element_identifier)}.$gxy2omsext($default_optional_multformat.ext)'
 #end if
-#if $list_mandatory_noformat:
-  -list_mandatory_noformat
-  ${' '.join(["'list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _])}
-#end if
+-list_mandatory_noformat
+${' '.join(["'list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat if _])}
 #if $list_optional_noformat:
   -list_optional_noformat
   ${' '.join(["'list_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat if _])}
 #end if
-#if $list_mandatory_oneformat:
-  -list_mandatory_oneformat
-  ${' '.join(["'list_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _])}
-#end if
+-list_mandatory_oneformat
+${' '.join(["'list_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat if _])}
 #if $list_optional_oneformat:
   -list_optional_oneformat
   ${' '.join(["'list_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat if _])}
 #end if
-#if $list_mandatory_multformat:
-  -list_mandatory_multformat
-  ${' '.join(["'list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _])}
-#end if
+-list_mandatory_multformat
+${' '.join(["'list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat if _])}
 #if $list_optional_multformat:
   -list_optional_multformat
   ${' '.join(["'list_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat if _])}
@@ -309,102 +443,258 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
   -list_default_optional_multformat
   ${' '.join(["'list_default_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat if _])}
 #end if
+-test_section:sect_mandatory_noformat
+'test_section.sect_mandatory_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_noformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_noformat.ext)'
+#if $test_section.sect_optional_noformat:
+  -test_section:sect_optional_noformat
+  'test_section.sect_optional_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_noformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_noformat.ext)'
+#end if
+-test_section:sect_mandatory_oneformat
+'test_section.sect_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_oneformat.ext)'
+#if $test_section.sect_optional_oneformat:
+  -test_section:sect_optional_oneformat
+  'test_section.sect_optional_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_oneformat.ext)'
+#end if
+-test_section:sect_mandatory_multformat
+'test_section.sect_mandatory_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_multformat.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_multformat.ext)'
+#if $test_section.sect_optional_multformat:
+  -test_section:sect_optional_multformat
+  'test_section.sect_optional_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_multformat.element_identifier)}.$gxy2omsext($test_section.sect_optional_multformat.ext)'
+#end if
+#if $test_section.sect_default_mandatory_noformat:
+  -test_section:sect_default_mandatory_noformat
+  'test_section.sect_default_mandatory_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_noformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_noformat.ext)'
+#end if
+#if $test_section.sect_default_optional_noformat:
+  -test_section:sect_default_optional_noformat
+  'test_section.sect_default_optional_noformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_noformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_noformat.ext)'
+#end if
+#if $test_section.sect_default_mandatory_oneformat:
+  -test_section:sect_default_mandatory_oneformat
+  'test_section.sect_default_mandatory_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_oneformat.ext)'
+#end if
+#if $test_section.sect_default_optional_oneformat:
+  -test_section:sect_default_optional_oneformat
+  'test_section.sect_default_optional_oneformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_oneformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_oneformat.ext)'
+#end if
+#if $test_section.sect_default_mandatory_multformat:
+  -test_section:sect_default_mandatory_multformat
+  'test_section.sect_default_mandatory_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_multformat.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_multformat.ext)'
+#end if
+#if $test_section.sect_default_optional_multformat:
+  -test_section:sect_default_optional_multformat
+  'test_section.sect_default_optional_multformat/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_multformat.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_multformat.ext)'
+#end if
+-test_section:sect_list_mandatory_noformat
+${' '.join(["'test_section.sect_list_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_noformat if _])}
+#if $test_section.sect_list_optional_noformat:
+  -test_section:sect_list_optional_noformat
+  ${' '.join(["'test_section.sect_list_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_noformat if _])}
+#end if
+-test_section:sect_list_mandatory_oneformat
+${' '.join(["'test_section.sect_list_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_oneformat if _])}
+#if $test_section.sect_list_optional_oneformat:
+  -test_section:sect_list_optional_oneformat
+  ${' '.join(["'test_section.sect_list_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_oneformat if _])}
+#end if
+-test_section:sect_list_mandatory_multformat
+${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_multformat if _])}
+#if $test_section.sect_list_optional_multformat:
+  -test_section:sect_list_optional_multformat
+  ${' '.join(["'test_section.sect_list_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_multformat if _])}
+#end if
+#if $test_section.sect_list_default_mandatory_noformat:
+  -test_section:sect_list_default_mandatory_noformat
+  ${' '.join(["'test_section.sect_list_default_mandatory_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_noformat if _])}
+#end if
+#if $test_section.sect_list_default_optional_noformat:
+  -test_section:sect_list_default_optional_noformat
+  ${' '.join(["'test_section.sect_list_default_optional_noformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_noformat if _])}
+#end if
+#if $test_section.sect_list_default_mandatory_oneformat:
+  -test_section:sect_list_default_mandatory_oneformat
+  ${' '.join(["'test_section.sect_list_default_mandatory_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_oneformat if _])}
+#end if
+#if $test_section.sect_list_default_optional_oneformat:
+  -test_section:sect_list_default_optional_oneformat
+  ${' '.join(["'test_section.sect_list_default_optional_oneformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_oneformat if _])}
+#end if
+#if $test_section.sect_list_default_mandatory_multformat:
+  -test_section:sect_list_default_mandatory_multformat
+  ${' '.join(["'test_section.sect_list_default_mandatory_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_multformat if _])}
+#end if
+#if $test_section.sect_list_default_optional_multformat:
+  -test_section:sect_list_default_optional_multformat
+  ${' '.join(["'test_section.sect_list_default_optional_multformat/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_multformat if _])}
+#end if
 #if $adv_opts_cond.adv_opts_selector=='advanced':
-  #if $adv_opts_cond.mandatory_noformat_adv:
-    -mandatory_noformat_adv
-    'mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_noformat_adv.element_identifier)}.$gxy2omsext($mandatory_noformat_adv.ext)'
-  #end if
+  -mandatory_noformat_adv
+  'adv_opts_cond.mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_noformat_adv.ext)'
   #if $adv_opts_cond.optional_noformat_adv:
     -optional_noformat_adv
-    'optional_noformat_adv/${re.sub("[^\w\-_]", "_", $optional_noformat_adv.element_identifier)}.$gxy2omsext($optional_noformat_adv.ext)'
+    'adv_opts_cond.optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_noformat_adv.ext)'
   #end if
-  #if $adv_opts_cond.mandatory_oneformat_adv:
-    -mandatory_oneformat_adv
-    'mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($mandatory_oneformat_adv.ext)'
-  #end if
+  -mandatory_oneformat_adv
+  'adv_opts_cond.mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_oneformat_adv.ext)'
   #if $adv_opts_cond.optional_oneformat_adv:
     -optional_oneformat_adv
-    'optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $optional_oneformat_adv.element_identifier)}.$gxy2omsext($optional_oneformat_adv.ext)'
+    'adv_opts_cond.optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_oneformat_adv.ext)'
   #end if
-  #if $adv_opts_cond.mandatory_multformat_adv:
-    -mandatory_multformat_adv
-    'mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $mandatory_multformat_adv.element_identifier)}.$gxy2omsext($mandatory_multformat_adv.ext)'
-  #end if
+  -mandatory_multformat_adv
+  'adv_opts_cond.mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.mandatory_multformat_adv.ext)'
   #if $adv_opts_cond.optional_multformat_adv:
     -optional_multformat_adv
-    'optional_multformat_adv/${re.sub("[^\w\-_]", "_", $optional_multformat_adv.element_identifier)}.$gxy2omsext($optional_multformat_adv.ext)'
+    'adv_opts_cond.optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.optional_multformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_mandatory_noformat_adv:
     -default_mandatory_noformat_adv
-    'default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_noformat_adv.ext)'
+    'adv_opts_cond.default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_noformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_optional_noformat_adv:
     -default_optional_noformat_adv
-    'default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_noformat_adv.element_identifier)}.$gxy2omsext($default_optional_noformat_adv.ext)'
+    'adv_opts_cond.default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_noformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_noformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_mandatory_oneformat_adv:
     -default_mandatory_oneformat_adv
-    'default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_oneformat_adv.ext)'
+    'adv_opts_cond.default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_oneformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_optional_oneformat_adv:
     -default_optional_oneformat_adv
-    'default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($default_optional_oneformat_adv.ext)'
+    'adv_opts_cond.default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_oneformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_mandatory_multformat_adv:
     -default_mandatory_multformat_adv
-    'default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($default_mandatory_multformat_adv.ext)'
+    'adv_opts_cond.default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_mandatory_multformat_adv.ext)'
   #end if
   #if $adv_opts_cond.default_optional_multformat_adv:
     -default_optional_multformat_adv
-    'default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $default_optional_multformat_adv.element_identifier)}.$gxy2omsext($default_optional_multformat_adv.ext)'
+    'adv_opts_cond.default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $adv_opts_cond.default_optional_multformat_adv.element_identifier)}.$gxy2omsext($adv_opts_cond.default_optional_multformat_adv.ext)'
   #end if
-  #if $adv_opts_cond.list_mandatory_noformat_adv:
-    -list_mandatory_noformat_adv
-    ${' '.join(["'list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_noformat_adv if _])}
-  #end if
+  -list_mandatory_noformat_adv
+  ${' '.join(["'adv_opts_cond.list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_noformat_adv if _])}
   #if $adv_opts_cond.list_optional_noformat_adv:
     -list_optional_noformat_adv
-    ${' '.join(["'list_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_noformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_noformat_adv if _])}
   #end if
-  #if $adv_opts_cond.list_mandatory_oneformat_adv:
-    -list_mandatory_oneformat_adv
-    ${' '.join(["'list_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_oneformat_adv if _])}
-  #end if
+  -list_mandatory_oneformat_adv
+  ${' '.join(["'adv_opts_cond.list_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_oneformat_adv if _])}
   #if $adv_opts_cond.list_optional_oneformat_adv:
     -list_optional_oneformat_adv
-    ${' '.join(["'list_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_oneformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_oneformat_adv if _])}
   #end if
-  #if $adv_opts_cond.list_mandatory_multformat_adv:
-    -list_mandatory_multformat_adv
-    ${' '.join(["'list_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_mandatory_multformat_adv if _])}
-  #end if
+  -list_mandatory_multformat_adv
+  ${' '.join(["'adv_opts_cond.list_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_mandatory_multformat_adv if _])}
   #if $adv_opts_cond.list_optional_multformat_adv:
     -list_optional_multformat_adv
-    ${' '.join(["'list_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_optional_multformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_optional_multformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_noformat_adv:
     -list_default_mandatory_noformat_adv
-    ${' '.join(["'list_default_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_noformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_noformat_adv:
     -list_default_optional_noformat_adv
-    ${' '.join(["'list_default_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_noformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_noformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_oneformat_adv:
     -list_default_mandatory_oneformat_adv
-    ${' '.join(["'list_default_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_oneformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_oneformat_adv:
     -list_default_optional_oneformat_adv
-    ${' '.join(["'list_default_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_oneformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_oneformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_mandatory_multformat_adv:
     -list_default_mandatory_multformat_adv
-    ${' '.join(["'list_default_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_mandatory_multformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_mandatory_multformat_adv if _])}
   #end if
   #if $adv_opts_cond.list_default_optional_multformat_adv:
     -list_default_optional_multformat_adv
-    ${' '.join(["'list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $list_default_optional_multformat_adv if _])}
+    ${' '.join(["'adv_opts_cond.list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $adv_opts_cond.list_default_optional_multformat_adv if _])}
+  #end if
+  -test_section:sect_mandatory_noformat_adv
+  'test_section.sect_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_noformat_adv.ext)'
+  #if $test_section.sect_optional_noformat_adv:
+    -test_section:sect_optional_noformat_adv
+    'test_section.sect_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_noformat_adv.ext)'
+  #end if
+  -test_section:sect_mandatory_oneformat_adv
+  'test_section.sect_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_oneformat_adv.ext)'
+  #if $test_section.sect_optional_oneformat_adv:
+    -test_section:sect_optional_oneformat_adv
+    'test_section.sect_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_oneformat_adv.ext)'
+  #end if
+  -test_section:sect_mandatory_multformat_adv
+  'test_section.sect_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_mandatory_multformat_adv.ext)'
+  #if $test_section.sect_optional_multformat_adv:
+    -test_section:sect_optional_multformat_adv
+    'test_section.sect_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_optional_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_optional_multformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_mandatory_noformat_adv:
+    -test_section:sect_default_mandatory_noformat_adv
+    'test_section.sect_default_mandatory_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_noformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_optional_noformat_adv:
+    -test_section:sect_default_optional_noformat_adv
+    'test_section.sect_default_optional_noformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_noformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_noformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_mandatory_oneformat_adv:
+    -test_section:sect_default_mandatory_oneformat_adv
+    'test_section.sect_default_mandatory_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_oneformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_optional_oneformat_adv:
+    -test_section:sect_default_optional_oneformat_adv
+    'test_section.sect_default_optional_oneformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_oneformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_oneformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_mandatory_multformat_adv:
+    -test_section:sect_default_mandatory_multformat_adv
+    'test_section.sect_default_mandatory_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_mandatory_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_mandatory_multformat_adv.ext)'
+  #end if
+  #if $test_section.sect_default_optional_multformat_adv:
+    -test_section:sect_default_optional_multformat_adv
+    'test_section.sect_default_optional_multformat_adv/${re.sub("[^\w\-_]", "_", $test_section.sect_default_optional_multformat_adv.element_identifier)}.$gxy2omsext($test_section.sect_default_optional_multformat_adv.ext)'
+  #end if
+  -test_section:sect_list_mandatory_noformat_adv
+  ${' '.join(["'test_section.sect_list_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_noformat_adv if _])}
+  #if $test_section.sect_list_optional_noformat_adv:
+    -test_section:sect_list_optional_noformat_adv
+    ${' '.join(["'test_section.sect_list_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_noformat_adv if _])}
+  #end if
+  -test_section:sect_list_mandatory_oneformat_adv
+  ${' '.join(["'test_section.sect_list_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_oneformat_adv if _])}
+  #if $test_section.sect_list_optional_oneformat_adv:
+    -test_section:sect_list_optional_oneformat_adv
+    ${' '.join(["'test_section.sect_list_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_oneformat_adv if _])}
+  #end if
+  -test_section:sect_list_mandatory_multformat_adv
+  ${' '.join(["'test_section.sect_list_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_mandatory_multformat_adv if _])}
+  #if $test_section.sect_list_optional_multformat_adv:
+    -test_section:sect_list_optional_multformat_adv
+    ${' '.join(["'test_section.sect_list_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_optional_multformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_mandatory_noformat_adv:
+    -test_section:sect_list_default_mandatory_noformat_adv
+    ${' '.join(["'test_section.sect_list_default_mandatory_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_noformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_optional_noformat_adv:
+    -test_section:sect_list_default_optional_noformat_adv
+    ${' '.join(["'test_section.sect_list_default_optional_noformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_noformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_mandatory_oneformat_adv:
+    -test_section:sect_list_default_mandatory_oneformat_adv
+    ${' '.join(["'test_section.sect_list_default_mandatory_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_oneformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_optional_oneformat_adv:
+    -test_section:sect_list_default_optional_oneformat_adv
+    ${' '.join(["'test_section.sect_list_default_optional_oneformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_oneformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_mandatory_multformat_adv:
+    -test_section:sect_list_default_mandatory_multformat_adv
+    ${' '.join(["'test_section.sect_list_default_mandatory_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_mandatory_multformat_adv if _])}
+  #end if
+  #if $test_section.sect_list_default_optional_multformat_adv:
+    -test_section:sect_list_default_optional_multformat_adv
+    ${' '.join(["'test_section.sect_list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_multformat_adv if _])}
   #end if
 #end if
 > $param_stdout
@@ -414,54 +704,104 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param name="mandatory_noformat" argument="-mandatory_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-    <param name="optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" value="" label="input file" help=" select a txt data set"/>
-    <param name="mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-    <param name="optional_oneformat" argument="-optional_oneformat" type="data" format="tsv" optional="true" value="" label="input file" help=" select a tsv data set"/>
-    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tabular,tsv" optional="true" value="" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+    <param name="mandatory_noformat" argument="-mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+    <param name="optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+    <param name="mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+    <param name="optional_oneformat" argument="-optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
     <param name="default_optional_noformat" argument="-default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-    <param name="default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+    <param name="default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
     <param name="default_optional_oneformat" argument="-default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
     <param name="default_optional_multformat" argument="-default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="list_mandatory_noformat" argument="-list_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
-    <param name="list_optional_noformat" argument="-list_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="" label="input file" help=" select txt data sets(s)"/>
-    <param name="list_mandatory_oneformat" argument="-list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
-    <param name="list_optional_oneformat" argument="-list_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="" label="input file" help=" select tsv data sets(s)"/>
-    <param name="list_mandatory_multformat" argument="-list_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
-    <param name="list_optional_multformat" argument="-list_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="" label="input file" help=" select tabular,tsv data sets(s)"/>
-    <param name="list_default_mandatory_noformat" argument="-list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+    <param name="list_mandatory_noformat" argument="-list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
+    <param name="list_optional_noformat" argument="-list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+    <param name="list_mandatory_oneformat" argument="-list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param name="list_optional_oneformat" argument="-list_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+    <param name="list_mandatory_multformat" argument="-list_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="list_optional_multformat" argument="-list_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="list_default_mandatory_noformat" argument="-list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
     <param name="list_default_optional_noformat" argument="-list_default_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
-    <param name="list_default_mandatory_oneformat" argument="-list_default_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+    <param name="list_default_mandatory_oneformat" argument="-list_default_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
     <param name="list_default_optional_oneformat" argument="-list_default_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
-    <param name="list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
     <param name="list_default_optional_multformat" argument="-list_default_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <section name="test_section" title="Test Section" help="" expanded="false">
+      <param name="sect_mandatory_noformat" argument="-test_section:sect_mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+      <param name="sect_optional_noformat" argument="-test_section:sect_optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+      <param name="sect_mandatory_oneformat" argument="-test_section:sect_mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+      <param name="sect_optional_oneformat" argument="-test_section:sect_optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+      <param name="sect_mandatory_multformat" argument="-test_section:sect_mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_optional_multformat" argument="-test_section:sect_optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_default_mandatory_noformat" argument="-test_section:sect_default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
+      <param name="sect_default_optional_noformat" argument="-test_section:sect_default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
+      <param name="sect_default_mandatory_oneformat" argument="-test_section:sect_default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
+      <param name="sect_default_optional_oneformat" argument="-test_section:sect_default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
+      <param name="sect_default_mandatory_multformat" argument="-test_section:sect_default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_default_optional_multformat" argument="-test_section:sect_default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_list_mandatory_noformat" argument="-test_section:sect_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_optional_noformat" argument="-test_section:sect_list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_mandatory_oneformat" argument="-test_section:sect_list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_optional_oneformat" argument="-test_section:sect_list_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_mandatory_multformat" argument="-test_section:sect_list_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_optional_multformat" argument="-test_section:sect_list_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_default_mandatory_noformat" argument="-test_section:sect_list_default_mandatory_noformat" type="data" format="txt" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_default_optional_noformat" argument="-test_section:sect_list_default_optional_noformat" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_default_mandatory_oneformat" argument="-test_section:sect_list_default_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_default_optional_oneformat" argument="-test_section:sect_list_default_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_default_mandatory_multformat" argument="-test_section:sect_list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_default_optional_multformat" argument="-test_section:sect_list_default_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_mandatory_noformat_adv" argument="-test_section:sect_mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+      <param name="sect_optional_noformat_adv" argument="-test_section:sect_optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+      <param name="sect_mandatory_oneformat_adv" argument="-test_section:sect_mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+      <param name="sect_optional_oneformat_adv" argument="-test_section:sect_optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+      <param name="sect_mandatory_multformat_adv" argument="-test_section:sect_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_optional_multformat_adv" argument="-test_section:sect_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_default_mandatory_noformat_adv" argument="-test_section:sect_default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
+      <param name="sect_default_optional_noformat_adv" argument="-test_section:sect_default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
+      <param name="sect_default_mandatory_oneformat_adv" argument="-test_section:sect_default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
+      <param name="sect_default_optional_oneformat_adv" argument="-test_section:sect_default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
+      <param name="sect_default_mandatory_multformat_adv" argument="-test_section:sect_default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_default_optional_multformat_adv" argument="-test_section:sect_default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_list_mandatory_noformat_adv" argument="-test_section:sect_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_optional_noformat_adv" argument="-test_section:sect_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_mandatory_oneformat_adv" argument="-test_section:sect_list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_optional_oneformat_adv" argument="-test_section:sect_list_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_mandatory_multformat_adv" argument="-test_section:sect_list_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_optional_multformat_adv" argument="-test_section:sect_list_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_default_mandatory_noformat_adv" argument="-test_section:sect_list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_default_optional_noformat_adv" argument="-test_section:sect_list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_list_default_mandatory_oneformat_adv" argument="-test_section:sect_list_default_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_default_optional_oneformat_adv" argument="-test_section:sect_list_default_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_list_default_mandatory_multformat_adv" argument="-test_section:sect_list_default_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_list_default_optional_multformat_adv" argument="-test_section:sect_list_default_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
+    </section>
     <expand macro="adv_opts_macro">
-      <param name="mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-      <param name="optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" value="" label="input file" help=" select a txt data set"/>
-      <param name="mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-      <param name="optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="tsv" optional="true" value="" label="input file" help=" select a tsv data set"/>
-      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+      <param name="mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
+      <param name="optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
+      <param name="mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
+      <param name="optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
       <param name="default_optional_noformat_adv" argument="-default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-      <param name="default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
+      <param name="default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
       <param name="default_optional_oneformat_adv" argument="-default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
       <param name="default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="list_mandatory_noformat_adv" argument="-list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
-      <param name="list_optional_noformat_adv" argument="-list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="" label="input file" help=" select txt data sets(s)"/>
-      <param name="list_mandatory_oneformat_adv" argument="-list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
-      <param name="list_optional_oneformat_adv" argument="-list_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="" label="input file" help=" select tsv data sets(s)"/>
-      <param name="list_mandatory_multformat_adv" argument="-list_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
-      <param name="list_optional_multformat_adv" argument="-list_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="" label="input file" help=" select tabular,tsv data sets(s)"/>
-      <param name="list_default_mandatory_noformat_adv" argument="-list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="list_mandatory_noformat_adv" argument="-list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="list_optional_noformat_adv" argument="-list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="list_mandatory_oneformat_adv" argument="-list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="list_optional_oneformat_adv" argument="-list_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="list_mandatory_multformat_adv" argument="-list_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="list_optional_multformat_adv" argument="-list_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="list_default_mandatory_noformat_adv" argument="-list_default_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
       <param name="list_default_optional_noformat_adv" argument="-list_default_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
-      <param name="list_default_mandatory_oneformat_adv" argument="-list_default_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="list_default_mandatory_oneformat_adv" argument="-list_default_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
       <param name="list_default_optional_oneformat_adv" argument="-list_default_optional_oneformat_adv" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
-      <param name="list_default_mandatory_multformat_adv" argument="-list_default_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="list_default_mandatory_multformat_adv" argument="-list_default_mandatory_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="list_default_optional_multformat_adv" argument="-list_default_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     </expand>
   </inputs>
@@ -470,7 +810,33 @@ python '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
   </outputs>
   <tests>
     <test expect_num_outputs="1">
+      <param name="mandatory_noformat" ftype="txt" value="0test.ext"/>
+      <param name="mandatory_oneformat" ftype="tsv" value="1test.ext"/>
+      <param name="mandatory_multformat" ftype="tabular" value="2test.ext"/>
+      <param name="list_mandatory_noformat" ftype="txt" value="3test.ext,3test2.ext"/>
+      <param name="list_mandatory_oneformat" ftype="tsv" value="4test.ext,4test2.ext"/>
+      <param name="list_mandatory_multformat" ftype="tabular" value="5test.ext,5test2.ext"/>
+      <section name="test_section">
+        <param name="sect_mandatory_noformat" ftype="txt" value="6test.ext"/>
+        <param name="sect_mandatory_oneformat" ftype="tsv" value="7test.ext"/>
+        <param name="sect_mandatory_multformat" ftype="tabular" value="8test.ext"/>
+        <param name="sect_list_mandatory_noformat" ftype="txt" value="9test.ext,9test2.ext"/>
+        <param name="sect_list_mandatory_oneformat" ftype="tsv" value="10test.ext,10test2.ext"/>
+        <param name="sect_list_mandatory_multformat" ftype="tabular" value="11test.ext,11test2.ext"/>
+        <param name="sect_mandatory_noformat_adv" ftype="txt" value="12test.ext"/>
+        <param name="sect_mandatory_oneformat_adv" ftype="tsv" value="13test.ext"/>
+        <param name="sect_mandatory_multformat_adv" ftype="tabular" value="14test.ext"/>
+        <param name="sect_list_mandatory_noformat_adv" ftype="txt" value="15test.ext,15test2.ext"/>
+        <param name="sect_list_mandatory_oneformat_adv" ftype="tsv" value="16test.ext,16test2.ext"/>
+        <param name="sect_list_mandatory_multformat_adv" ftype="tabular" value="17test.ext,17test2.ext"/>
+      </section>
       <conditional name="adv_opts_cond">
+        <param name="mandatory_noformat_adv" ftype="txt" value="18test.ext"/>
+        <param name="mandatory_oneformat_adv" ftype="tsv" value="19test.ext"/>
+        <param name="mandatory_multformat_adv" ftype="tabular" value="20test.ext"/>
+        <param name="list_mandatory_noformat_adv" ftype="txt" value="21test.ext,21test2.ext"/>
+        <param name="list_mandatory_oneformat_adv" ftype="tsv" value="22test.ext,22test2.ext"/>
+        <param name="list_mandatory_multformat_adv" ftype="tabular" value="23test.ext,23test2.ext"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
