@@ -37,15 +37,16 @@ ${ ' '.join(["ln -s '%s' 'inp_optional_mandatoryinput/%s.%s' &&" % (_, re.sub('[
 
 ## Main program call
 
-export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+set -o pipefail &&
+export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 -mandatory_mandatoryinput
-${' '.join(["'mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $mandatory_mandatoryinput if _])}
+${' '.join(["'mandatory_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $inp_mandatory_mandatoryinput if _])}
 #if $optional_mandatoryinput_FLAG:
   -optional_mandatoryinput
-  ${' '.join(["'optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $optional_mandatoryinput if _])}
+  ${' '.join(["'optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $inp_optional_mandatoryinput if _])}
 #end if
 -mandatory_optionalinput
 ${' '.join(["'mandatory_optionalinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $inp_mandatory_optionalinput if _])}
@@ -67,16 +68,16 @@ ${' '.join(["'inp_optional_mandatoryinput/%s.%s'"%(re.sub('[^\w\-_]', '_', _.ele
 #end if
 
 ## Postprocessing
-${' '.join(["&& mv -n 'mandatory_mandatoryinput/%(id)s.%(gext)s' 'mandatory_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $mandatory_mandatoryinput if _])}
+${' '.join(["&& mv -n 'inp_mandatory_mandatoryinput/%(id)s.%(gext)s' 'mandatory_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $mandatory_mandatoryinput if _])}
 #if $optional_mandatoryinput_FLAG:
-  ${' '.join(["&& mv -n 'optional_mandatoryinput/%(id)s.%(gext)s' 'optional_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $optional_mandatoryinput if _])}
+  ${' '.join(["&& mv -n 'inp_optional_mandatoryinput/%(id)s.%(gext)s' 'optional_mandatoryinput/%(id)s'"%{"id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $optional_mandatoryinput if _])}
 #end if]]></command>
   <configfiles>
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param type="boolean" name="optional_mandatoryinput_FLAG" optional="false" checked="false" label="Generate output optional_mandatoryinput (output file)"/>
-    <param type="boolean" name="optional_optionalinput_FLAG" optional="false" checked="false" label="Generate output optional_optionalinput (output file)"/>
+    <param type="boolean" name="optional_mandatoryinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_mandatoryinput (output file)"/>
+    <param type="boolean" name="optional_optionalinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_optionalinput (output file)"/>
     <param name="inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <param name="inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <param name="inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>

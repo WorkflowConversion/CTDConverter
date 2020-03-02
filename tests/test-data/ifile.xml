@@ -355,7 +355,8 @@ ${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_multformat/%s.%s' &&"
 
 ## Main program call
 
-export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+set -o pipefail &&
+export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
@@ -697,7 +698,7 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
     ${' '.join(["'test_section.sect_list_default_optional_multformat_adv/%s.%s'"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_list_default_optional_multformat_adv if _])}
   #end if
 #end if
-> $param_stdout
+| tee '$stdout'
 
 ## Postprocessing]]></command>
   <configfiles>
@@ -806,7 +807,7 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
     </expand>
   </inputs>
   <outputs>
-    <data name="param_stdout" format="txt" label="Output from stdout"/>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout"/>
   </outputs>
   <tests>
     <test expect_num_outputs="1">
@@ -839,7 +840,7 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
         <param name="list_mandatory_multformat_adv" ftype="tabular" value="23test.ext,23test2.ext"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+      <output name="stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Input File parameter tests.

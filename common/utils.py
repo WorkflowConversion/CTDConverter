@@ -112,7 +112,10 @@ def validate_argument_is_valid_path(args, argument_name):
             paths_to_check.append(str(member_value).strip())
 
         for path_to_check in paths_to_check:
-            validate_path_exists(path_to_check)
+            try:
+                validate_path_exists(path_to_check)
+            except ApplicationException:
+                raise ApplicationException("Argument %s: The provided output file name (%s) points to a directory." % (argument_name, path_to_check))
 
 
 # taken from

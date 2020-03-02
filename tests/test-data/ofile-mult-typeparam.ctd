@@ -31,16 +31,16 @@
 -->
       <!-- same parameters as above in a node -->
       <NODE name="test_section" description="Test Section">
-        <ITEM name="sect_mandatory_mandatoryinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="ewt,ext"/>
-        <ITEMLIST name="sect_mandatory_mandatoryinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ewt,*.ext"></ITEMLIST>
+        <ITEM name="sect_mandatory_mandatoryinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="eut,ewt,ext"/>
+        <ITEMLIST name="sect_mandatory_mandatoryinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.eut,*.ewt,*.ext"></ITEMLIST>
   
-        <ITEM name="sect_mandatory_optionalinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="ewt,ext,eyt"/>
-        <ITEMLIST name="sect_mandatory_optionalinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.ewt,*.ext,*.eyt"></ITEMLIST>
+        <ITEM name="sect_mandatory_optionalinput_type" value=""  type="string" description="string" required="true"  advanced="false" restrictions="evt,ewt,ext,eyt"/>
+	<ITEMLIST name="sect_mandatory_optionalinput"  value="" type="output-file" description="output file" required="true"  advanced="false" supported_formats="*.evt,*.ewt,*.ext,*.eyt"></ITEMLIST>
   
         <!-- corresponding inputs (same formats) that are NOT used because of the present type parameters-->
-        <ITEMLIST name="sect_inp_optional_mandatoryinput"   value="" type="input-file" description="input file" required="true" advanced="false" supported_formats="*.ewt,*.ext"></ITEMLIST>
+        <ITEMLIST name="sect_inp_optional_mandatoryinput"   value="" type="input-file" description="input file" required="true" advanced="false" supported_formats="*.eut,*.ewt,*.ext"></ITEMLIST>
   
-        <ITEMLIST name="sect_inp_mandatory_optionalinput"  value="" type="input-file" description="input file" required="false" advanced="false" supported_formats="*.ewt,*.ext,*.eyt"></ITEMLIST>
+        <ITEMLIST name="sect_inp_mandatory_optionalinput"  value="" type="input-file" description="input file" required="false" advanced="false" supported_formats="*.evt,*.ewt,*.ext,*.eyt"></ITEMLIST>
       </NODE>
 
     </NODE>

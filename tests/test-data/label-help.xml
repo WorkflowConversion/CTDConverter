@@ -17,11 +17,12 @@
 
 ## Main program call
 
-export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+set -o pipefail &&
+export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
-> $param_stdout
+| tee '$stdout'
 
 ## Postprocessing]]></command>
   <configfiles>
@@ -54,7 +55,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     </param>
   </inputs>
   <outputs>
-    <data name="param_stdout" format="txt" label="Output from stdout"/>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout"/>
   </outputs>
   <tests>
     <test expect_num_outputs="1">
@@ -66,7 +67,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <param name="pteg" value="1 2"/>
       <param name="coie" value="1 2"/>
       <param name="ptie" value="1 2"/>
-      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+      <output name="stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Label Help parameter tests.

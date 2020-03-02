@@ -17,11 +17,12 @@
 
 ## Main program call
 
-export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+set -o pipefail &&
+export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
-> $param_stdout
+| tee '$stdout'
 
 ## Postprocessing]]></command>
   <configfiles>
@@ -43,6 +44,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <expand macro="list_string_san"/>
     </param>
     <param name="wodefault_optional" argument="-wodefault_optional" display="radio" type="select" optional="true" label="string" help="">
+      <option value="">default (nothing chosen)</option>
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -73,6 +75,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <expand macro="list_string_san"/>
     </param>
     <param name="wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
+      <option value="">default (nothing chosen)</option>
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -89,6 +92,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <expand macro="list_string_san"/>
     </param>
     <param name="list_wodefault_optional" argument="-list_wodefault_optional" multiple="true" type="select" optional="true" label="string list" help="">
+      <option value="">default (nothing chosen)</option>
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -117,6 +121,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <expand macro="list_string_san"/>
     </param>
     <param name="list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+      <option value="">default (nothing chosen)</option>
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -164,6 +169,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_wodefault_optional" argument="-test_section:sect_wodefault_optional" display="radio" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -194,6 +200,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_wodefault_optional_many" argument="-test_section:sect_wodefault_optional_many" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -210,6 +217,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_list_wodefault_optional" argument="-test_section:sect_list_wodefault_optional" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -238,6 +246,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_list_wodefault_optional_many" argument="-test_section:sect_list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -284,6 +293,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_wodefault_optional_adv" argument="-test_section:sect_wodefault_optional_adv" display="radio" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -314,6 +324,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_wodefault_optional_many_adv" argument="-test_section:sect_wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -330,6 +341,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_list_wodefault_optional_adv" argument="-test_section:sect_list_wodefault_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -358,6 +370,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="sect_list_wodefault_optional_many_adv" argument="-test_section:sect_list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -406,6 +419,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="wodefault_optional_adv" argument="-wodefault_optional_adv" display="radio" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -436,6 +450,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -452,6 +467,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -480,6 +496,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <expand macro="list_string_san"/>
       </param>
       <param name="list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+        <option value="">default (nothing chosen)</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -514,7 +531,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     </expand>
   </inputs>
   <outputs>
-    <data name="param_stdout" format="txt" label="Output from stdout"/>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout"/>
   </outputs>
   <tests>
     <test expect_num_outputs="1">
@@ -539,7 +556,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <param name="list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+      <output name="stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Select parameter tests.

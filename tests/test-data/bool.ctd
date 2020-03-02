@@ -6,6 +6,11 @@
   <NODE name="BoolTest" description="Bool test.">
     <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
     <NODE name="1" description="Instance &apos;1&apos; section for &apos;BoolTest&apos;">
+      <!-- in ctd 1.7 there are now bool items -->
+      <ITEM name="flag" value="false" type="bool" description="flag" required="false" />
+      <ITEM name="flag_adv" value="false" type="bool" description="flag" required="false" />
+
+      <!-- in ctd < 1.7 bools are strings with restriction true/false -->
       <!-- note bool parameters seem to be always required="false" -->
       <ITEM name="true"      value="true"  type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>
       <ITEM name="false"     value="false" type="string" description="bool" required="false" advanced="false" restrictions="true,false"/>

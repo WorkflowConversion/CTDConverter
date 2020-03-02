@@ -17,17 +17,20 @@
 
 ## Main program call
 
-export PYTHONPATH='$__tool_directory__/CTDopts' &&                         
+set -o pipefail &&
+export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
-> $param_stdout
+| tee '$stdout'
 
 ## Postprocessing]]></command>
   <configfiles>
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
+    <param name="flag" argument="-flag" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
+    <param name="flag_adv" argument="-flag_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
     <param name="true" argument="-true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
     <param name="false" argument="-false" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
     <param name="flag_true" argument="-flag_true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
@@ -50,10 +53,12 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     </expand>
   </inputs>
   <outputs>
-    <data name="param_stdout" format="txt" label="Output from stdout"/>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout"/>
   </outputs>
   <tests>
     <test expect_num_outputs="1">
+      <param name="flag" value="false"/>
+      <param name="flag_adv" value="false"/>
       <param name="true" value="true"/>
       <param name="false" value="false"/>
       <param name="flag_true" value="true"/>
@@ -75,7 +80,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <param name="flag_false_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="param_stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
+      <output name="stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Bool parameter tests.

@@ -39,19 +39,21 @@
 
   <!-- sanitizers and validators -->
   <xml name="list_string_val">
+    <validator type="regex" message="parameter must not start with $">^[^$]</validator>
+    
     <validator type="regex" message="a space separated list of string is needed (strings that contain spaces can be quoted with &quot;)">^ *((?:\"[^\"]*\" +)|(?:[^ \"]+ +))*((?:\"[^\"]*\")|(?:[^ \"]+)) *$</validator>
   </xml>
   <xml name="list_string_san">
     <sanitizer>
       <valid initial="string.printable">
-        <remove value="'"/>
-        <remove value="\"/><!-- otherwise the user could quote the final quote -->
-        <remove value="`"/>
-        <remove value="$"/>
-        <remove value="&lt;"/>
+<!--        <remove value="'"/>-->
+<!--        <remove value="\"/>--><!-- otherwise the user could quote the final quote -->
+<!--        <remove value="`"/>-->
+<!--        <remove value="$"/>-->
+<!--        <remove value="&lt;"/>-->
 	<!--<remove value="&amp;"/> removed for MascotAdapterOnline -Mascot_server:export_params which is a URL POST string which can contain & .. could be mapped to &amp; but there is still a & -->
         <!--<remove value=";"/>-->
-        <remove value="#"/>
+<!--        <remove value="#"/>-->
       </valid>
     </sanitizer>
   </xml>
@@ -93,11 +95,11 @@
         #if $p.startswith('"'):
             #set $q = True
         #end if
-        #if p.startswith('-'):
-            #set p = "\\" + p
-        #elif p.startswith('"-'):
-            #set p = "\\" + p[1:]
-        #end if
+##        #if p.startswith('-'):
+##            #set p = "\\" + p
+##        #elif p.startswith('"-'):
+##            #set p = "\\" + p[1:]
+##        #end if
         #if not $q:
             #set $s[i] = '"%s"' % p
         #end if
@@ -109,12 +111,12 @@
 #end def
   </token>
 
-<token name="@EXT_FOO@"><![CDATA[#def oms2gxyext(o)
-    #set m={'ewt': 'tsv', 'ext': 'tsv', 'eyt': 'tabular', 'ezt': 'tabular'}
+  <token name="@EXT_FOO@"><![CDATA[#def oms2gxyext(o)
+    #set m={'eut': 'txt', 'evt': 'csv', 'ewt': 'tsv', 'ext': 'tsv', 'eyt': 'tabular', 'ezt': 'tabular'}
     #return m[o]
 #end def
 #def gxy2omsext(g)
-    #set m={'tsv': 'ewt', 'tabular': 'eyt', 'txt': 'txt'}
+    #set m={'txt': 'eut', 'csv': 'evt', 'tsv': 'ewt', 'tabular': 'eyt'}
     #return m[g]
 #end def
 ]]></token></macros>

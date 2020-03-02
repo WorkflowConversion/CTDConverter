@@ -23,7 +23,6 @@ wd = os.path.dirname(__file__)
 bn = os.path.splitext(os.path.basename(__file__))[0]
 
 if sys.argv[1] == "-write_ctd":
-    print("CP %s %s" %(os.path.join(wd, bn + ".ctd"), os.path.join(sys.argv[2], bn + ".ctd")))
     shutil.copyfile(os.path.join(wd, bn + ".ctd"), os.path.join(sys.argv[2], bn + ".ctd"))
 elif sys.argv[1] == "-ini":
     fparam = {"input": set(), "output": set()}
@@ -34,7 +33,7 @@ elif sys.argv[1] == "-ini":
             fparam["input"].add(cli)
         elif p.type is _OutFile:
             fparam["output"].add(cli)
-                
+
     i = 3
     while i < len(sys.argv):
         if sys.argv[i].startswith("-"):

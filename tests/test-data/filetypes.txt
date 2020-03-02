@@ -1,5 +1,7 @@
-# CTD type    # Galaxy type     # Long Galaxy data type                    # Mimetype
-ewt           tsv               galaxy.datatypes.data:Text
-ext           tsv               galaxy.datatypes.data:Text
-eyt           tabular               galaxy.datatypes.tabular:Tabular
-ezt           tabular               galaxy.datatypes.tabular:Tabular
+# CTD type    # Galaxy type
+eut           txt
+evt           csv
+ewt           tsv
+ext           tsv
+eyt           tabular
+ezt           tabular
