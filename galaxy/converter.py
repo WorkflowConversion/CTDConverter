@@ -1771,14 +1771,15 @@ def create_test_only(model, **kwargs):
 
         # use name where dashes are replaced by underscores
         # see also create inputs
-        name = get_galaxy_parameter_name(param)
         if param.type is _OutFile:
+            name = get_galaxy_parameter_path(param, separator="_")
             if param.is_list:
                 nd = add_child_node(test, "output_collection", OrderedDict([("name", name), ("count", value)]))
             else:
                 nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta", "100")]))
 
         else:
+            name = get_galaxy_parameter_name(param)
             nd = add_child_node(parent, "param", OrderedDict([("name", name), ("value", value)]))
         # add format attribute for unsniffable extensions
         if param.type is _InFile:
