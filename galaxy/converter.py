@@ -597,7 +597,6 @@ def create_command(tool, model, **kwargs):
     final_cmd['command'].extend(["", "## Main program call"])
     final_cmd['command'].append("""
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
@@ -988,12 +987,14 @@ def create_inputs(tool, model, **kwargs):
             # mandatory outpiles: no input node needed
             # inputs: create the input param
             if not param.required:
+                title, help_text = generate_label_and_help(param.description)
                 add_child_node(parent_node, "param", OrderedDict([("type", "boolean"),
                                                                   ("name", param.name + "_FLAG"),
                                                                   ("checked", "false"),
                                                                   ("truevalue", "true"),
                                                                   ("falsevalue", "false"),
-                                                                  ("label", "Generate output %s (%s)" % (param.name, param.description))]))
+                                                                  ("label", "Generate output %s (%s)" % (param.name, title)),
+                                                                  ("help", help_text)]))
 #             else:
 #                 add_child_node(parent_node, "param", OrderedDict([("type", "hidden"), ("name", param.name)]))
             continue
@@ -1279,7 +1280,7 @@ def generate_label_and_help(desc):
     if not isinstance(desc, str):
         desc = str(desc)
 #     desc = desc.encode("utf8")
-    desc = desc.replace("#br#", " <br>")
+    desc = desc.replace("#br#", "")
     # Get rid of dots in the end
     if desc.endswith("."):
         desc = desc.rstrip(".")
@@ -1716,7 +1717,6 @@ def create_test_only(model, **kwargs):
                                                                   ("value", str(given).lower())]))
             if given:
                 formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
-                print("%s %s" % (param.name, formats))
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
                 corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
 
@@ -1737,13 +1737,18 @@ def create_test_only(model, **kwargs):
                     if check_ext in o2g:
                         ext = check_ext
                         break
+                if ext not in formats:
+                    if ext == "txt" and "csv" in formats:
+                        ext = "csv"
+                    elif ext == "txt" and "tsv" in formats:
+                        ext = "tsv"
 
                 if len(formats) > 1 and (corresponding_input is None or not fmt_from_corresponding) and not param.is_list:
                     if type_param is None:
                         fmt_select = add_child_node(parent, "param", OrderedDict([("name", param.name + "_type"), ("value", ext)]))
-                    else:
-                        if ext is not None:
-                            type_param.default = ext
+                if type_param is not None:
+                    if ext is not None:
+                        type_param.default = ext
 
         # don't output empty values for bool, and data parameters
         if type(param.default) is _Null and not param.required:
@@ -1789,9 +1794,10 @@ def create_test_only(model, **kwargs):
             if param.is_list:
                 nd = add_child_node(test, "output_collection", OrderedDict([("name", name), ("count", value)]))
             else:
-                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta", "100")]))
-            if ext:
-                nd.attrib["ftype"] = o2g[ext]
+                # TODO use delta_frac https://github.com/galaxyproject/galaxy/pull/9425
+                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta", "5700")]))
+                if ext:
+                    nd.attrib["ftype"] = o2g[ext]
         else:
             name = get_galaxy_parameter_name(param)
             nd = add_child_node(parent, "param", OrderedDict([("name", name), ("value", value)]))
