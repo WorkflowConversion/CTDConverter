@@ -18,7 +18,6 @@
 ## Main program call
 
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
@@ -29,27 +28,27 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param name="flag" argument="-flag" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
-    <param name="flag_adv" argument="-flag_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
-    <param name="true" argument="-true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-    <param name="false" argument="-false" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
-    <param name="flag_true" argument="-flag_true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-    <param name="flag_false" argument="-flag_false" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+    <param name="flag" argument="-flag" type="boolean" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
+    <param name="flag_adv" argument="-flag_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
+    <param name="true" argument="-true" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+    <param name="false" argument="-false" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+    <param name="flag_true" argument="-flag_true" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+    <param name="flag_false" argument="-flag_false" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
     <section name="test_section" title="Test Section" help="" expanded="false">
-      <param name="sect_true" argument="-test_section:sect_true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="sect_false" argument="-test_section:sect_false" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
-      <param name="sect_true_adv" argument="-test_section:sect_true_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="sect_false_adv" argument="-test_section:sect_false_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
-      <param name="sect_flag_true" argument="-test_section:sect_flag_true" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="sect_flag_false" argument="-test_section:sect_flag_false" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
-      <param name="sect_flag_true_adv" argument="-test_section:sect_flag_true_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="sect_flag_false_adv" argument="-test_section:sect_flag_false_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="sect_true" argument="-test_section:sect_true" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="sect_false" argument="-test_section:sect_false" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="sect_true_adv" argument="-test_section:sect_true_adv" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="sect_false_adv" argument="-test_section:sect_false_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="sect_flag_true" argument="-test_section:sect_flag_true" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="sect_flag_false" argument="-test_section:sect_flag_false" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="sect_flag_true_adv" argument="-test_section:sect_flag_true_adv" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="sect_flag_false_adv" argument="-test_section:sect_flag_false_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
     </section>
     <expand macro="adv_opts_macro">
-      <param name="true_adv" argument="-true_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="false_adv" argument="-false_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
-      <param name="flag_true_adv" argument="-flag_true_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
-      <param name="flag_false_adv" argument="-flag_false_adv" type="boolean" optional="true" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="true_adv" argument="-true_adv" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="false_adv" argument="-false_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
+      <param name="flag_true_adv" argument="-flag_true_adv" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
+      <param name="flag_false_adv" argument="-flag_false_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
     </expand>
   </inputs>
   <outputs>

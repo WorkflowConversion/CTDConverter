@@ -1397,6 +1397,9 @@ def create_boolean_parameter(param_node, param):
         param_node.attrib["falsevalue"] = "false"
         param_node.attrib["checked"] = str(param.default).lower()
 
+    if param_node.attrib.has_key("optional"):
+        del param_node.attrib["optional"]
+
 
 def all_outputs_optional(model, parameter_hardcoder):
     """

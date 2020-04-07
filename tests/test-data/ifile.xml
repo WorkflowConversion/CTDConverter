@@ -356,7 +356,6 @@ ${ ' '.join(["ln -s '%s' 'test_section.sect_list_mandatory_multformat/%s.%s' &&"
 ## Main program call
 
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
@@ -705,18 +704,18 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param name="mandatory_noformat" argument="-mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
-    <param name="optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-    <param name="mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
-    <param name="optional_oneformat" argument="-optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
-    <param name="default_optional_noformat" argument="-default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-    <param name="default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
-    <param name="default_optional_oneformat" argument="-default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
-    <param name="default_optional_multformat" argument="-default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+    <param name="mandatory_noformat" argument="-mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select txt data sets(s)"/>
+    <param name="optional_noformat" argument="-optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select txt data sets(s)"/>
+    <param name="mandatory_oneformat" argument="-mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param name="optional_oneformat" argument="-optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select tsv data sets(s)"/>
+    <param name="mandatory_multformat" argument="-mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="optional_multformat" argument="-optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="default_mandatory_noformat" argument="-default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+    <param name="default_optional_noformat" argument="-default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+    <param name="default_mandatory_oneformat" argument="-default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+    <param name="default_optional_oneformat" argument="-default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+    <param name="default_mandatory_multformat" argument="-default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+    <param name="default_optional_multformat" argument="-default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     <param name="list_mandatory_noformat" argument="-list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
     <param name="list_optional_noformat" argument="-list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
     <param name="list_mandatory_oneformat" argument="-list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
@@ -730,18 +729,18 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
     <param name="list_default_mandatory_multformat" argument="-list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
     <param name="list_default_optional_multformat" argument="-list_default_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     <section name="test_section" title="Test Section" help="" expanded="false">
-      <param name="sect_mandatory_noformat" argument="-test_section:sect_mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
-      <param name="sect_optional_noformat" argument="-test_section:sect_optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-      <param name="sect_mandatory_oneformat" argument="-test_section:sect_mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
-      <param name="sect_optional_oneformat" argument="-test_section:sect_optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-      <param name="sect_mandatory_multformat" argument="-test_section:sect_mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_optional_multformat" argument="-test_section:sect_optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_default_mandatory_noformat" argument="-test_section:sect_default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
-      <param name="sect_default_optional_noformat" argument="-test_section:sect_default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-      <param name="sect_default_mandatory_oneformat" argument="-test_section:sect_default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
-      <param name="sect_default_optional_oneformat" argument="-test_section:sect_default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-      <param name="sect_default_mandatory_multformat" argument="-test_section:sect_default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_default_optional_multformat" argument="-test_section:sect_default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_mandatory_noformat" argument="-test_section:sect_mandatory_noformat" type="data" format="txt" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_optional_noformat" argument="-test_section:sect_optional_noformat" type="data" format="txt" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_mandatory_oneformat" argument="-test_section:sect_mandatory_oneformat" type="data" format="tsv" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_optional_oneformat" argument="-test_section:sect_optional_oneformat" type="data" format="tsv" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_mandatory_multformat" argument="-test_section:sect_mandatory_multformat" type="data" format="tabular,tsv" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_optional_multformat" argument="-test_section:sect_optional_multformat" type="data" format="tabular,tsv" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_default_mandatory_noformat" argument="-test_section:sect_default_mandatory_noformat" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_default_optional_noformat" argument="-test_section:sect_default_optional_noformat" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_default_mandatory_oneformat" argument="-test_section:sect_default_mandatory_oneformat" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_default_optional_oneformat" argument="-test_section:sect_default_optional_oneformat" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_default_mandatory_multformat" argument="-test_section:sect_default_mandatory_multformat" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_default_optional_multformat" argument="-test_section:sect_default_optional_multformat" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="sect_list_mandatory_noformat" argument="-test_section:sect_list_mandatory_noformat" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
       <param name="sect_list_optional_noformat" argument="-test_section:sect_list_optional_noformat" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
       <param name="sect_list_mandatory_oneformat" argument="-test_section:sect_list_mandatory_oneformat" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
@@ -754,18 +753,18 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
       <param name="sect_list_default_optional_oneformat" argument="-test_section:sect_list_default_optional_oneformat" type="data" format="tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
       <param name="sect_list_default_mandatory_multformat" argument="-test_section:sect_list_default_mandatory_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="sect_list_default_optional_multformat" argument="-test_section:sect_list_default_optional_multformat" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
-      <param name="sect_mandatory_noformat_adv" argument="-test_section:sect_mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
-      <param name="sect_optional_noformat_adv" argument="-test_section:sect_optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-      <param name="sect_mandatory_oneformat_adv" argument="-test_section:sect_mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
-      <param name="sect_optional_oneformat_adv" argument="-test_section:sect_optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-      <param name="sect_mandatory_multformat_adv" argument="-test_section:sect_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_optional_multformat_adv" argument="-test_section:sect_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_default_mandatory_noformat_adv" argument="-test_section:sect_default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
-      <param name="sect_default_optional_noformat_adv" argument="-test_section:sect_default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-      <param name="sect_default_mandatory_oneformat_adv" argument="-test_section:sect_default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
-      <param name="sect_default_optional_oneformat_adv" argument="-test_section:sect_default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-      <param name="sect_default_mandatory_multformat_adv" argument="-test_section:sect_default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="sect_default_optional_multformat_adv" argument="-test_section:sect_default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="sect_mandatory_noformat_adv" argument="-test_section:sect_mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_optional_noformat_adv" argument="-test_section:sect_optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_mandatory_oneformat_adv" argument="-test_section:sect_mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_optional_oneformat_adv" argument="-test_section:sect_optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_mandatory_multformat_adv" argument="-test_section:sect_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_optional_multformat_adv" argument="-test_section:sect_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_default_mandatory_noformat_adv" argument="-test_section:sect_default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_default_optional_noformat_adv" argument="-test_section:sect_default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+      <param name="sect_default_mandatory_oneformat_adv" argument="-test_section:sect_default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_default_optional_oneformat_adv" argument="-test_section:sect_default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+      <param name="sect_default_mandatory_multformat_adv" argument="-test_section:sect_default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="sect_default_optional_multformat_adv" argument="-test_section:sect_default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="sect_list_mandatory_noformat_adv" argument="-test_section:sect_list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
       <param name="sect_list_optional_noformat_adv" argument="-test_section:sect_list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
       <param name="sect_list_mandatory_oneformat_adv" argument="-test_section:sect_list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
@@ -780,18 +779,18 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s.%s'"%(re.sub('[^\w\
       <param name="sect_list_default_optional_multformat_adv" argument="-test_section:sect_list_default_optional_multformat_adv" type="data" format="tabular,tsv" multiple="true" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
     </section>
     <expand macro="adv_opts_macro">
-      <param name="mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select a txt data set"/>
-      <param name="optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select a txt data set"/>
-      <param name="mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select a tsv data set"/>
-      <param name="optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select a tsv data set"/>
-      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a txt data set"/>
-      <param name="default_optional_noformat_adv" argument="-default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select a txt data set"/>
-      <param name="default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tsv data set"/>
-      <param name="default_optional_oneformat_adv" argument="-default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select a tsv data set"/>
-      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select a tabular,tsv data set"/>
-      <param name="default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select a tabular,tsv data set"/>
+      <param name="mandatory_noformat_adv" argument="-mandatory_noformat_adv" type="data" format="txt" optional="false" label="input file" help=" select txt data sets(s)"/>
+      <param name="optional_noformat_adv" argument="-optional_noformat_adv" type="data" format="txt" optional="true" label="input file" help=" select txt data sets(s)"/>
+      <param name="mandatory_oneformat_adv" argument="-mandatory_oneformat_adv" type="data" format="tsv" optional="false" label="input file" help=" select tsv data sets(s)"/>
+      <param name="optional_oneformat_adv" argument="-optional_oneformat_adv" type="data" format="tsv" optional="true" label="input file" help=" select tsv data sets(s)"/>
+      <param name="mandatory_multformat_adv" argument="-mandatory_multformat_adv" type="data" format="tabular,tsv" optional="false" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="optional_multformat_adv" argument="-optional_multformat_adv" type="data" format="tabular,tsv" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="default_mandatory_noformat_adv" argument="-default_mandatory_noformat_adv" type="data" format="txt" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select txt data sets(s)"/>
+      <param name="default_optional_noformat_adv" argument="-default_optional_noformat_adv" type="data" format="txt" optional="true" value="test.ext" label="input file" help=" select txt data sets(s)"/>
+      <param name="default_mandatory_oneformat_adv" argument="-default_mandatory_oneformat_adv" type="data" format="tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tsv data sets(s)"/>
+      <param name="default_optional_oneformat_adv" argument="-default_optional_oneformat_adv" type="data" format="tsv" optional="true" value="test.ext" label="input file" help=" select tsv data sets(s)"/>
+      <param name="default_mandatory_multformat_adv" argument="-default_mandatory_multformat_adv" type="data" format="tabular,tsv" optional="true" value="&lt;class 'CTDopts.CTDopts._Null'&gt;" label="input file" help=" select tabular,tsv data sets(s)"/>
+      <param name="default_optional_multformat_adv" argument="-default_optional_multformat_adv" type="data" format="tabular,tsv" optional="true" value="test.ext" label="input file" help=" select tabular,tsv data sets(s)"/>
       <param name="list_mandatory_noformat_adv" argument="-list_mandatory_noformat_adv" type="data" format="txt" multiple="true" optional="false" label="input file" help=" select txt data sets(s)"/>
       <param name="list_optional_noformat_adv" argument="-list_optional_noformat_adv" type="data" format="txt" multiple="true" optional="true" label="input file" help=" select txt data sets(s)"/>
       <param name="list_mandatory_oneformat_adv" argument="-list_mandatory_oneformat_adv" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>

@@ -68,7 +68,6 @@ mkdir test_section_sect_mandatory_multformat &&
 ## Main program call
 
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
@@ -202,8 +201,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param type="boolean" name="optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat (output file)"/>
-    <param type="boolean" name="optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat (output file)"/>
+    <param type="boolean" name="optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat (output file)" help=""/>
+    <param type="boolean" name="optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat (output file)" help=""/>
     <param name="mandatory_multformat_type" type="select" optional="false" label="File type of output mandatory_multformat (output file)">
       <option value="ext">tsv (ext)</option>
       <option value="eyt">tabular (eyt)</option>
@@ -214,10 +213,10 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <option value="eyt">tabular (eyt)</option>
       <option value="ezt">tabular (ezt)</option>
     </param>
-    <param type="boolean" name="optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat (output file)"/>
+    <param type="boolean" name="optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat (output file)" help=""/>
     <section name="test_section" title="Test Section" help="" expanded="false">
-      <param type="boolean" name="sect_optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat (output file)"/>
-      <param type="boolean" name="sect_optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat (output file)"/>
+      <param type="boolean" name="sect_optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat (output file)" help=""/>
+      <param type="boolean" name="sect_optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat (output file)" help=""/>
       <param name="sect_mandatory_multformat_type" type="select" optional="false" label="File type of output sect_mandatory_multformat (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -228,9 +227,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="sect_optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat (output file)"/>
-      <param type="boolean" name="sect_optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat_adv (output file)"/>
-      <param type="boolean" name="sect_optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat_adv (output file)"/>
+      <param type="boolean" name="sect_optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat (output file)" help=""/>
+      <param type="boolean" name="sect_optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat_adv (output file)" help=""/>
+      <param type="boolean" name="sect_optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat_adv (output file)" help=""/>
       <param name="sect_mandatory_multformat_adv_type" type="select" optional="false" label="File type of output sect_mandatory_multformat_adv (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -241,11 +240,11 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="sect_optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat_adv (output file)"/>
+      <param type="boolean" name="sect_optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat_adv (output file)" help=""/>
     </section>
     <expand macro="adv_opts_macro">
-      <param type="boolean" name="optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat_adv (output file)"/>
-      <param type="boolean" name="optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat_adv (output file)"/>
+      <param type="boolean" name="optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat_adv (output file)" help=""/>
+      <param type="boolean" name="optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat_adv (output file)" help=""/>
       <param name="mandatory_multformat_adv_type" type="select" optional="false" label="File type of output mandatory_multformat_adv (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -256,7 +255,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat_adv (output file)"/>
+      <param type="boolean" name="optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat_adv (output file)" help=""/>
     </expand>
   </inputs>
   <outputs>
@@ -268,8 +267,19 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <data name="optional_oneformat" label="${tool.name} on ${on_string}: optional_oneformat" format="tsv">
       <filter>optional_oneformat_FLAG</filter>
     </data>
-    <data name="mandatory_multformat" label="${tool.name} on ${on_string}: mandatory_multformat" auto_format="true"/>
-    <data name="optional_multformat" label="${tool.name} on ${on_string}: optional_multformat" auto_format="true">
+    <data name="mandatory_multformat" label="${tool.name} on ${on_string}: mandatory_multformat">
+      <change_format>
+        <when input="mandatory_multformat_type" value="ext" format="tsv"/>
+        <when input="mandatory_multformat_type" value="eyt" format="tabular"/>
+        <when input="mandatory_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
+    </data>
+    <data name="optional_multformat" label="${tool.name} on ${on_string}: optional_multformat">
+      <change_format>
+        <when input="optional_multformat_type" value="ext" format="tsv"/>
+        <when input="optional_multformat_type" value="eyt" format="tabular"/>
+        <when input="optional_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>optional_multformat_FLAG</filter>
     </data>
     <data name="mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="txt"/>
@@ -280,8 +290,19 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <data name="optional_oneformat_adv" label="${tool.name} on ${on_string}: optional_oneformat_adv" format="tsv">
       <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['optional_oneformat_adv_FLAG']</filter>
     </data>
-    <data name="mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv" auto_format="true"/>
-    <data name="optional_multformat_adv" label="${tool.name} on ${on_string}: optional_multformat_adv" auto_format="true">
+    <data name="mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv">
+      <change_format>
+        <when input="adv_opts_cond.mandatory_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="adv_opts_cond.mandatory_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="adv_opts_cond.mandatory_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
+    </data>
+    <data name="optional_multformat_adv" label="${tool.name} on ${on_string}: optional_multformat_adv">
+      <change_format>
+        <when input="adv_opts_cond.optional_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="adv_opts_cond.optional_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="adv_opts_cond.optional_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['optional_multformat_adv_FLAG']</filter>
     </data>
     <data name="test_section_sect_mandatory_noformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_noformat" format="txt"/>
@@ -292,8 +313,19 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <data name="test_section_sect_optional_oneformat" label="${tool.name} on ${on_string}: test_section:sect_optional_oneformat" format="tsv">
       <filter>test_section["sect_optional_oneformat_FLAG"]</filter>
     </data>
-    <data name="test_section_sect_mandatory_multformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat" auto_format="true"/>
-    <data name="test_section_sect_optional_multformat" label="${tool.name} on ${on_string}: test_section:sect_optional_multformat" auto_format="true">
+    <data name="test_section_sect_mandatory_multformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat">
+      <change_format>
+        <when input="test_section.sect_mandatory_multformat_type" value="ext" format="tsv"/>
+        <when input="test_section.sect_mandatory_multformat_type" value="eyt" format="tabular"/>
+        <when input="test_section.sect_mandatory_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
+    </data>
+    <data name="test_section_sect_optional_multformat" label="${tool.name} on ${on_string}: test_section:sect_optional_multformat">
+      <change_format>
+        <when input="test_section.sect_optional_multformat_type" value="ext" format="tsv"/>
+        <when input="test_section.sect_optional_multformat_type" value="eyt" format="tabular"/>
+        <when input="test_section.sect_optional_multformat_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>test_section["sect_optional_multformat_FLAG"]</filter>
     </data>
     <data name="test_section_sect_mandatory_noformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_noformat_adv" format="txt"/>
@@ -304,8 +336,19 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
     <data name="test_section_sect_optional_oneformat_adv" label="${tool.name} on ${on_string}: test_section:sect_optional_oneformat_adv" format="tsv">
       <filter>test_section["sect_optional_oneformat_adv_FLAG"]</filter>
     </data>
-    <data name="test_section_sect_mandatory_multformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat_adv" auto_format="true"/>
-    <data name="test_section_sect_optional_multformat_adv" label="${tool.name} on ${on_string}: test_section:sect_optional_multformat_adv" auto_format="true">
+    <data name="test_section_sect_mandatory_multformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat_adv">
+      <change_format>
+        <when input="test_section.sect_mandatory_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="test_section.sect_mandatory_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="test_section.sect_mandatory_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
+    </data>
+    <data name="test_section_sect_optional_multformat_adv" label="${tool.name} on ${on_string}: test_section:sect_optional_multformat_adv">
+      <change_format>
+        <when input="test_section.sect_optional_multformat_adv_type" value="ext" format="tsv"/>
+        <when input="test_section.sect_optional_multformat_adv_type" value="eyt" format="tabular"/>
+        <when input="test_section.sect_optional_multformat_adv_type" value="ezt" format="tabular"/>
+      </change_format>
       <filter>test_section["sect_optional_multformat_adv_FLAG"]</filter>
     </data>
   </outputs>

@@ -38,7 +38,6 @@ ${ ' '.join(["ln -s '%s' 'inp_optional_mandatoryinput/%s.%s' &&" % (_, re.sub('[
 ## Main program call
 
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
@@ -76,8 +75,8 @@ ${' '.join(["&& mv -n 'inp_mandatory_mandatoryinput/%(id)s.%(gext)s' 'mandatory_
     <inputs name="args_json" data_style="paths"/>
   </configfiles>
   <inputs>
-    <param type="boolean" name="optional_mandatoryinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_mandatoryinput (output file)"/>
-    <param type="boolean" name="optional_optionalinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_optionalinput (output file)"/>
+    <param type="boolean" name="optional_mandatoryinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_mandatoryinput (output file)" help=""/>
+    <param type="boolean" name="optional_optionalinput_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_optionalinput (output file)" help=""/>
     <param name="inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <param name="inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <param name="inp_mandatory_optionalinput" argument="-inp_mandatory_optionalinput" type="data" format="tabular,tsv" multiple="true" optional="true" label="input file" help=" select tabular,tsv data sets(s)"/>
