@@ -769,7 +769,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
             stdout = ["#if %s:" % " and ".join(["not($%s)" % get_galaxy_parameter_path(_, suffix="FLAG") for _ in optout])] + utils.indent(stdout) + ["#end if"]
         final_cmd['command'].extend(stdout)
 
-    ctd_out = ["#if $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '$args_json' '$ctd_out'"]) + ["#end if"]
+    ctd_out = ["#if $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
     final_cmd['postprocessing'].extend( ctd_out )
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
