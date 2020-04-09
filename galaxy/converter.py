@@ -769,6 +769,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
             stdout = ["#if %s:" % " and ".join(["not($%s)" % get_galaxy_parameter_path(_, suffix="FLAG") for _ in optout])] + utils.indent(stdout) + ["#end if"]
         final_cmd['command'].extend(stdout)
 
+    ctd_out = ["#if $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '$args_json' '$ctd_out'"]) + ["#end if"]
+    final_cmd['postprocessing'].extend( ctd_out )
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
 
@@ -937,7 +939,7 @@ def create_inputs(tool, model, **kwargs):
     section_params = dict()
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
-    advanced_node = None
+    advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME + "macro")]))
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
     g2o, o2g = get_fileformat_maps(supported_file_formats)
@@ -959,8 +961,6 @@ def create_inputs(tool, model, **kwargs):
         if utils.extract_param_name(param.parent) in section_nodes:
             parent_node = section_nodes[utils.extract_param_name(param.parent)]
         elif param.advanced:
-            if advanced_node is None:
-                advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME + "macro")]))
             parent_node = advanced_node
         else:
             parent_node = inputs_node
@@ -1025,9 +1025,8 @@ def create_inputs(tool, model, **kwargs):
         else:
             inputs_node.append(section_nodes[sn])
     # if there is an advanced section then append it at the end of the inputs
-    if advanced_node is not None:
-        inputs_node.append(advanced_node)
-
+    inputs_node.append(advanced_node)
+    param_node = add_child_node(advanced_node, "param", OrderedDict([("name","ctd_out_FLAG"), ("type", "boolean"), ("truevalue", "true"), ("falsevalue", "false"), ("checked", "false"), ("label", "Output used ctd (ini) configuration file")]))
     return inputs_node
 
 
@@ -1476,6 +1475,9 @@ def create_outputs(parent, model, **kwargs):
             filter_node = add_child_node(stdout, "filter")
             filter_node.text = " and ".join(stdout_filter)
 
+    # manually add output for the ctd file
+    ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name","ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
+    ctd_filter = add_child_node(ctd_out, "filter", text='adv_opts_cond["adv_opts_selector"]=="advanced" and adv_opts_cond["ctd_out_FLAG"]')
     return outputs_node
 
 
@@ -1687,7 +1689,8 @@ def create_test_only(model, **kwargs):
     section_params = dict()
 
     test = Element("test")
-    advanced = None
+    advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
+    adv_sel = add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
 
     for param in utils.extract_and_flatten_parameters(model, True):
         ext = None
@@ -1701,9 +1704,6 @@ def create_test_only(model, **kwargs):
         if utils.extract_param_name(param.parent) in section_nodes:
             parent = section_nodes[utils.extract_param_name(param.parent)]
         elif type(param) is not ParameterGroup and param.advanced:
-            if advanced is None:
-                advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
-                adv_sel = add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
             parent = advanced
         else:
             parent = test
@@ -1809,6 +1809,11 @@ def create_test_only(model, **kwargs):
             ext = os.path.splitext(value)[1][1:]
             if ext in unsniffable and ext in o2g:
                 nd.attrib["ftype"] = o2g[ext]
+   
+    ctd_out_flag = add_child_node(advanced, "param", OrderedDict([("name", "ctd_out_FLAG"), ("value", "true")]))
+    ctd_out = add_child_node(test, "output", OrderedDict([("name", "ctd_out"), ("ftype", "xml")]))
+    ctd_assert = add_child_node(ctd_out, "assert_contents")
+    add_child_node(ctd_assert, "is_valid_xml")
 
 #     if all_optional_outputs(model, parameter_hardcoder):
 #         nd = add_child_node(test, "output", OrderedDict([("name", "stdout")]))
