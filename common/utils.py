@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # encoding: utf-8
+from functools import reduce  # forward compatibility for Python 3
 import json
 import ntpath
+import operator
 import os
 
 from lxml import etree
@@ -415,3 +417,11 @@ def indent(s, indentation="  "):
     @return indented text
     """
     return [indentation + _ for _ in s]
+
+
+def getFromDict(dataDict, mapList):
+    return reduce(operator.getitem, mapList, dataDict)
+
+def setInDict(dataDict, mapList, value):
+    getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
+

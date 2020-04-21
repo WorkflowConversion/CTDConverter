@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # encoding: utf-8
+import json
 import os
 import os.path
 import re
@@ -104,8 +105,9 @@ def modify_param_for_galaxy(param):
         # need to be taken care by hardcoded values and the other cases
         # are chosen automatically if not specified on the command line)
         if param.required and not (param.default is None or type(param.default) is _Null):
+            logger.warning("Data parameter %s with default (%s)" %(param.name, param.default), 1)
             param.required = False
-            param.default = _Null
+            param.default = _Null()
     return param
 
 
@@ -453,7 +455,7 @@ def _convert_internal(parsed_ctds, **kwargs):
         expand_macros(tool, kwargs["macros_to_expand"])
 #         command, inputs, outputs = create_cio(tool, model, **kwargs)
         create_command(tool, model, **kwargs)
-        create_configfile(tool, model)
+        create_configfiles(tool, model, **kwargs)
         inputs = create_inputs(tool, model, **kwargs)
         outputs = create_outputs(tool, model, **kwargs)
         if kwargs["test_test"]:
@@ -558,20 +560,36 @@ def create_description(tool, model):
         description.text = model.opt_attribs["description"]
 
 
-def create_configfile(tool, model):
+def create_configfiles(tool, model, **kwargs):
     """
-    create <configfile><inputs> section.
-    this will create a json file containing the tool parameter values that can
-    be accessed in cheetah with $args_json.
+    create
+    - <configfiles><inputs>
+    - <configfiles><configfile>
 
-    note that data_style="paths" (i.e. input data sets are included in the json)
-    is set even if input files are given on the CLI. reason is that in this way
+    The former will create a json file containing the tool parameter values
+    that can be accessed in cheetah with $args_json. Note that
+    data_style="paths" (i.e. input data sets are included in the json) is set
+    even if input files are given on the CLI. Reason is that in this way
     default values in the CTD can be restored for optional input files.
+
+    The latter will contain hardcoded parameters.
     """
+
     configfiles_node = add_child_node(tool, "configfiles")
     inputs_node = add_child_node(configfiles_node, "inputs",
                                  OrderedDict([("name", "args_json"), ("data_style", "paths")]))
 
+    parameter_hardcoder = kwargs.get("parameter_hardcoder")
+    hc_dict = dict()
+    for param in utils.extract_and_flatten_parameters(model):
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
+        if hardcoded_value is None:
+            continue
+        path = utils.extract_param_path(param)
+        utils.setInDict(hc_dict, path, hardcoded_value)
+    hc_node = add_child_node(configfiles_node, "configfile",
+                                 OrderedDict([("name", "hardcoded_json")]))
+    hc_node.text = CDATA(json.dumps(hc_dict).replace('$', '\$'))
 
 def create_command(tool, model, **kwargs):
     """
@@ -598,7 +616,7 @@ def create_command(tool, model, **kwargs):
     final_cmd['command'].append("""
 set -o pipefail &&
 @EXECUTABLE@ -write_ctd ./ &&
-python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])
@@ -955,6 +973,8 @@ def create_inputs(tool, model, **kwargs):
         param = modify_param_for_galaxy(param)
         # no need to show hardcoded parameters
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
+        if hardcoded_value is not None:
+            continue
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name):
             continue
 
@@ -1002,16 +1022,6 @@ def create_inputs(tool, model, **kwargs):
         # create the actual param node and fill the attributes
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, model, kwargs["supported_file_formats"])
-
-        # set hardcoded values as hidden parameters
-        if hardcoded_value is not None:
-            param_node.attrib["value"] = hardcoded_value
-            param_node.attrib["type"] = "hidden"
-            for a in param_node.attrib.keys():
-                if a not in ["argument", "name", "value", "type"]:
-                    del param_node.attrib[a]
-            san_node = add_child_node(param_node, "sanitizer")
-            add_child_node(san_node, "valid", OrderedDict([("initial", "string.printable")]))
 
         hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name)
         if hardcoded_attributes is not None:
