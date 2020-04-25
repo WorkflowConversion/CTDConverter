@@ -21,6 +21,10 @@ from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _Numeri
 # mapping to CTD types to Galaxy types
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'txt',
                        _OutFile: 'txt', _Choices: 'select'}
+GALAXY_TYPE_TO_TYPE = dict()
+for k in TYPE_TO_GALAXY_TYPE:
+    GALAXY_TYPE_TO_TYPE[TYPE_TO_GALAXY_TYPE[k]] = k
+
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_NAME = "adv_opts_"
@@ -423,16 +427,21 @@ def _convert_internal(parsed_ctds, **kwargs):
 
         # overwrite attributes of the parsed ctd parameters as specified in hardcoded parameterd json
         for param in utils.extract_and_flatten_parameters(model):
-            hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name)
+            hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name, 'CTD')
             if hardcoded_attributes is not None:
                 for a in hardcoded_attributes:
                     if not hasattr(param, a):
                         continue
-                    # logger.error("%s %s"%(param.name, type(getattr(param, a))) )
-                    if type(getattr(param, a)) is _FileFormat or (param.type in [_InFile, _OutFile] and a == "restrictions"):
+                    if a == "type":
+                        try:
+                            t = GALAXY_TYPE_TO_TYPE[hardcoded_attributes[a]]
+                        except:
+                            logger.error("Could not set hardcoded attribute %s=%s for %s"%(a, hardcoded_attributes[a], param.name))
+                            sys.exit()
+                        setattr(param, a, t)
+                    elif type(getattr(param, a)) is _FileFormat or (param.type in [_InFile, _OutFile] and a == "restrictions"):
                         setattr(param, a, _FileFormat(str(hardcoded_attributes[a])))
                     elif type(getattr(param, a)) is _Choices:
-                        # logger.error("SET CTD %s %s %s" %(param.name, a, hardcoded_attributes[a]))
                         setattr(param, a, _Choices(str(hardcoded_attributes[a])))
                     elif type(getattr(param, a)) is _NumericRange:
                         raise Exception("Overwriting of Numeric Range not implemented")
@@ -787,7 +796,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
             stdout = ["#if %s:" % " and ".join(["not($%s)" % get_galaxy_parameter_path(_, suffix="FLAG") for _ in optout])] + utils.indent(stdout) + ["#end if"]
         final_cmd['command'].extend(stdout)
 
-    ctd_out = ["#if $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
+    ctd_out = ["#if $adv_opts_cond.adv_opts_selector=='advanced' and $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
     final_cmd['postprocessing'].extend( ctd_out )
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
@@ -1023,11 +1032,11 @@ def create_inputs(tool, model, **kwargs):
         param_node = add_child_node(parent_node, "param")
         create_param_attribute_list(param_node, param, model, kwargs["supported_file_formats"])
 
-        hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name)
+        hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name, 'XML')
         if hardcoded_attributes is not None:
             for a in hardcoded_attributes:
-                if a in param_node.attrib:
-                    param_node.attrib[a] = str(hardcoded_attributes[a])
+                param_node.attrib[a] = str(hardcoded_attributes[a])
+
 
     for sn in section_nodes:
         if utils.extract_param_name(section_params[sn].parent) in section_nodes:

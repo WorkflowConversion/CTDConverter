@@ -41,7 +41,7 @@ class ParameterHardcoder:
         self.parameter_map = {}
 
         # ctd/xml attributes to overwrite
-        self.attribute_map = {}
+        self.attribute_map = {'CTD': {}, 'XML': {}}
 
         # blacklisted parameters
         self.blacklist = set()
@@ -61,18 +61,22 @@ class ParameterHardcoder:
             return False
 
     def register_attribute(self, parameter_name, attribute, value, tool_name):
+        tpe, attribute = attribute.split(':')
+        if tpe not in ['CTD', 'XML']:
+            raise Exception('Attribute hardcoder not in CTD/XML')
+
         k = self.build_key(parameter_name, tool_name)
-        if k not in self.attribute_map:
-            self.attribute_map[k] = {}
-        self.attribute_map[k][attribute] = value
+        if k not in self.attribute_map[tpe]:
+            self.attribute_map[tpe][k] = {}
+        self.attribute_map[tpe][k][attribute] = value
 
     # the most specific value will be returned in case of overlap
-    def get_hardcoded_attributes(self, parameter_name, tool_name):
+    def get_hardcoded_attributes(self, parameter_name, tool_name, tpe):
         # look for the value that would apply for all tools
         try:
-            return self.attribute_map[self.build_key(parameter_name, tool_name)]
+            return self.attribute_map[tpe][self.build_key(parameter_name, tool_name)]
         except KeyError:
-            return self.attribute_map.get(parameter_name, None)
+            return self.attribute_map[tpe].get(parameter_name, None)
 
     # the most specific value will be returned in case of overlap
     def get_hardcoded_value(self, parameter_name, tool_name):
@@ -224,6 +228,10 @@ def parse_hardcoded_parameters(hardcoded_parameters_file):
             for tool_name in tool_names:
                 if tool_name is not None:
                     tool_name = tool_name.strip()
+
+                # hardcoded / blacklisted:
+                # - blacklisted: if value is @
+                # - hardcoded: otherwise
                 if hardcoded_value is not None:
                     if hardcoded_value == '@':
                         parameter_hardcoder.register_blacklist(parameter_name, tool_name)
