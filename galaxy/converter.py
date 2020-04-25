@@ -96,6 +96,8 @@ def add_specific_args(parser):
 
     parser.add_argument("--tool-version", dest="tool_version", required=False, default=None,
                         help="Tool version to use (if not given its extracted from the CTD)")
+    parser.add_argument("--tool-profile", dest="tool_profile", required=False, default=None,
+                        help="Tool profile version to use (if not given its not set)")
 
 
 def modify_param_for_galaxy(param):
@@ -157,7 +159,8 @@ def convert_models(args, parsed_ctds):
                       test_unsniffable=args.test_unsniffable,
                       test_macros_file_names=args.test_macros_files,
                       test_macros_prefix=args.test_macros_prefix,
-                      tool_version=args.tool_version)
+                      tool_version=args.tool_version,
+                      tool_profile=args.tool_profile)
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
     # TODO remove tool conf .. deprecated
 #     if args.tool_conf_destination is not None:
@@ -457,7 +460,7 @@ def _convert_internal(parsed_ctds, **kwargs):
             continue
 
         logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
-        tool = create_tool(model)
+        tool = create_tool(model, kwargs.get("tool_profile", None))
         write_header(tool, model)
         create_description(tool, model)
         import_macros(tool, model, **kwargs)
@@ -549,13 +552,17 @@ def generate_data_type_conf(supported_file_formats, data_types_destination):
     logger.info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
 
 
-def create_tool(model):
+def create_tool(model, profile):
     """
     initialize the tool
     @param model the ctd model
     """
-
-    return Element("tool", OrderedDict([("id", model.name.replace(" ", "_")), ("name", model.name), ("version", "@TOOL_VERSION@+galaxy@GALAXY_VERSION@")]))
+    attrib = OrderedDict([("id", model.name.replace(" ", "_")),
+                          ("name", model.name), 
+                          ("version", "@TOOL_VERSION@+galaxy@GALAXY_VERSION@")])
+    if profile is not None:
+        attrib["profile"] = profile
+    return Element("tool", attrib)
 
 
 def create_description(tool, model):
