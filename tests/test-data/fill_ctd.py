@@ -12,7 +12,6 @@ from CTDopts.CTDopts import (
     _Choices,
     _Null,
     _InFile,
-    _OutFile,
     _NumericRange
 )
 
@@ -134,18 +133,23 @@ model = CTDModel(from_file=input_ctd)
 #   value is given -> overwritte with the default
 for p in model.get_parameters():
 
-    # few tools use dashes in parameters which are automatically replaced
-    # by underscores by Galaxy. in these cases the dictionary needs to be
-    # updated
-    # TODO might be removed later https://github.com/OpenMS/OpenMS/pull/4529
+    # check if the parameter is in the arguments from the galaxy tool
+    # (from the json file(s)), since advanced parameters are absent
+    # if the conditional is set to basic parameters
     try:
         getFromDict(args, p.get_lineage(name_only=True))
     except KeyError:
+        # few tools use dashes in parameters which are automatically replaced
+        # by underscores by Galaxy. in these cases the dictionary needs to be
+        # updated
+        # TODO might be removed later https://github.com/OpenMS/OpenMS/pull/4529
         try:
             jl = [_.replace("-", "_") for _ in p.get_lineage(name_only=True)]
-            setInDict(args, p.get_lineage(name_only=True), getFromDict(args, jl))
+            getFromDict(args, jl)
         except KeyError:
-            pass
+            continue
+        else:
+            setInDict(args, p.get_lineage(name_only=True), jl)
 
     if p.type is str and type(p.restrictions) is _Choices and set(p.restrictions.choices) == set(["true", "false"]):
         v = getFromDict(args, p.get_lineage(name_only=True))
