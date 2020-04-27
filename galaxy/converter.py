@@ -1755,7 +1755,8 @@ def create_test_only(model, **kwargs):
                     f = param.default[0]
                 else:
                     raise Exception("Outfile with non str or list default %s[%s]" % (param, type(param.default)))
-                # get the file type from the longest possible extension that matches the known extensions
+                # get the file type from the longest possible extension that
+                # matches the known extensions
                 # longest: because e.g. pep.xml should be prefered over xml
                 if f.endswith(".tmp"):
                     f = f[:-4]
@@ -1775,7 +1776,7 @@ def create_test_only(model, **kwargs):
                 if len(formats) > 1 and (corresponding_input is None or not fmt_from_corresponding) and not param.is_list:
                     if type_param is None:
                         fmt_select = add_child_node(parent, "param", OrderedDict([("name", param.name + "_type"), ("value", ext)]))
-                if type_param is not None:
+                if type_param is not None and type(type_param.default) is _Null:
                     if ext is not None:
                         type_param.default = ext
 
