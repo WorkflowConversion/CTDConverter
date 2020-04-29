@@ -602,10 +602,16 @@ def create_configfiles(tool, model, **kwargs):
         if hardcoded_value is None:
             continue
         path = utils.extract_param_path(param)
+        for i, v in enumerate(path[:-1]):
+            try:
+                utils.getFromDict(hc_dict, path[:i+1])
+            except KeyError:
+                utils.setInDict(hc_dict, path[:i+1], {})
         utils.setInDict(hc_dict, path, hardcoded_value)
     hc_node = add_child_node(configfiles_node, "configfile",
                                  OrderedDict([("name", "hardcoded_json")]))
     hc_node.text = CDATA(json.dumps(hc_dict).replace('$', '\$'))
+    print(json.dumps(hc_dict))
 
 def create_command(tool, model, **kwargs):
     """
