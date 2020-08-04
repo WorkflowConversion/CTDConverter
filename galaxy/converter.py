@@ -804,15 +804,17 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     # special case for optional itemlists: for those if no option is selected only the parameter must be specified
                     if is_selection_parameter(param) and param.is_list and param.required is False:
                         param_cmd[stage] = [param_cmd[stage][0]] + ["#if $" + _actual_parameter + ":"] + utils.indent(param_cmd[stage][1:]) + ["#end if"]
-                    elif is_selection_parameter(param) or param.type is _OutFile or param.type is _InFile:
+                    elif is_selection_parameter(param) or param.type is _InFile:
                         param_cmd[stage] = ["#if $" + _actual_parameter + ":"] + utils.indent(param_cmd[stage]) + ["#end if"]
+                    elif param.type is _OutFile or param.type is _OutPrefix:
+                        param_cmd[stage] = ["#if \"" + param.name + "_FLAG\" in str($OPTIONAL_OUTPUTS).split(',')"] + utils.indent(param_cmd[stage]) + ["#end if"]
                     else:
                         param_cmd[stage] = ["#if str($" + _actual_parameter + "):"] + utils.indent(param_cmd[stage]) + ["#end if"]
 
         for stage in param_cmd:
             if len(param_cmd[stage]) == 0:
                 continue
-            if param.advanced and hardcoded_value is None:
+            if param.advanced and hardcoded_value is None and not (param.type is _OutFile or param.type is _OutPrefix):
                 advanced_cmd[stage].extend(param_cmd[stage])
             else:
                 final_cmd[stage].extend(param_cmd[stage])
@@ -823,14 +825,14 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         advanced_cmd[stage] = [advanced_command_start] + utils.indent(advanced_cmd[stage]) + [advanced_command_end]
         final_cmd[stage].extend(advanced_cmd[stage])
 
-    optout, noout = all_outputs_optional(model, parameter_hardcoder)
-    if len(optout) > 0 or noout:
+    out, optout = all_outputs(model, parameter_hardcoder)
+    if len(optout) > 0 or len(out) + len(optout) == 0:
         stdout = ["| tee '$stdout'"]
         if len(optout) > 0:
-            stdout = ["#if %s:" % " and ".join(["not($%s)" % get_galaxy_parameter_path(_, suffix="FLAG") for _ in optout])] + utils.indent(stdout) + ["#end if"]
+            stdout = ["#if len(str($OPTIONAL_OUTPUTS).split(',')) == 0"] + utils.indent(stdout) + ["#end if"]
         final_cmd['command'].extend(stdout)
 
-    ctd_out = ["#if $adv_opts_cond.adv_opts_selector=='advanced' and $adv_opts_cond.ctd_out_FLAG"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
+    ctd_out = ["#if \"ctd_out_FLAG\" in $OPTIONAL_OUTPUTS"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
     final_cmd['postprocessing'].extend( ctd_out )
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
@@ -924,21 +926,31 @@ def get_out_type_param(out_param, model, parameter_hardcoder):
     return None
 
 
+def is_in_type_param(param, model):
+    return is_type_param(param, model, [_InFile])
+
 def is_out_type_param(param, model):
     """
     check if the parameter is output_type parameter
     - the name ends with _type and there is an output parameter without this suffix
     and return True iff this is the case
     """
+    return is_type_param(param, model, [_OutFile, _OutPrefix])
+
+def is_type_param(param, model, tpe):
+    """
+    check if the parameter is _type parameter of an in/output
+    - the name ends with _type and there is an output parameter without this suffix
+    and return True iff this is the case
+    """
     if not param.name.endswith("_type"):
         return False
     for out_param in utils.extract_and_flatten_parameters(model):
-        if out_param.type is not _OutFile:
+        if out_param.type not in tpe:
             continue
         if param.name == out_param.name + "_type":
             return True
     return False
-
 
 def get_corresponding_input(out_param, model):
     """
@@ -1020,6 +1032,12 @@ def create_inputs(tool, model, **kwargs):
             continue
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name):
             continue
+        # do not output file type parameters for inputs since file types are
+        # known by Galaxy and set automatically by extension (which comes from
+        # the Galaxy data type which is translated to OpenMS datatype as defined
+        # in filetypes.txt )
+        if is_in_type_param(param, model):
+            continue
 
         if utils.extract_param_name(param.parent) in section_nodes:
             parent_node = section_nodes[utils.extract_param_name(param.parent)]
@@ -1047,20 +1065,6 @@ def create_inputs(tool, model, **kwargs):
                     option_node.text = o2g[str(choice)]
                     if choice.lower() != o2g[str(choice)]:
                         option_node.text += " (%s)" % choice
-            # create an additional bool input which is used to filter for the output
-            # mandatory outpiles: no input node needed
-            # inputs: create the input param
-            if not param.required:
-                title, help_text = generate_label_and_help(param.description)
-                add_child_node(parent_node, "param", OrderedDict([("type", "boolean"),
-                                                                  ("name", param.name + "_FLAG"),
-                                                                  ("checked", "false"),
-                                                                  ("truevalue", "true"),
-                                                                  ("falsevalue", "false"),
-                                                                  ("label", "Generate output %s (%s)" % (param.name, title)),
-                                                                  ("help", help_text)]))
-#             else:
-#                 add_child_node(parent_node, "param", OrderedDict([("type", "hidden"), ("name", param.name)]))
             continue
 
         # create the actual param node and fill the attributes
@@ -1080,7 +1084,27 @@ def create_inputs(tool, model, **kwargs):
             inputs_node.append(section_nodes[sn])
     # if there is an advanced section then append it at the end of the inputs
     inputs_node.append(advanced_node)
-    param_node = add_child_node(advanced_node, "param", OrderedDict([("name","ctd_out_FLAG"), ("type", "boolean"), ("truevalue", "true"), ("falsevalue", "false"), ("checked", "false"), ("label", "Output used ctd (ini) configuration file")]))
+
+    # Add select for optional outputs
+    out, optout = all_outputs(model, parameter_hardcoder)
+    attrib = OrderedDict([("name","OPTIONAL_OUTPUTS"),
+                          ("type", "select"),
+                          ("multiple", "true"),
+                          ("label", "Optional outputs")])
+    if len(out) == 0:
+        attrib["optional"] = "false"
+    else:
+        attrib["optional"] = "true"
+    param_node = add_child_node(inputs_node, "param", attrib)
+    for o in optout:
+        title, help_text = generate_label_and_help(param.description)
+        option_node = add_child_node(param_node, "option",
+                                     OrderedDict([("value", o.name+"_FLAG")]),
+                                     text = "%s (%s)" % (o.name, title))
+    option_node = add_child_node(param_node, "option",
+                                 OrderedDict([("value", "ctd_out_FLAG")]),
+                                 text = "Output used ctd (ini) configuration file")
+
     return inputs_node
 
 
@@ -1454,11 +1478,11 @@ def create_boolean_parameter(param_node, param):
         del param_node.attrib["optional"]
 
 
-def all_outputs_optional(model, parameter_hardcoder):
+def all_outputs(model, parameter_hardcoder):
     """
-    return optional output parameters if there are only optional outputs
-    and if there are no outputs
+    return lists of reqired and optional output parameters 
     """
+    out = []
     optout = []
     nout = 0
     for param in utils.extract_and_flatten_parameters(model):
@@ -1466,16 +1490,15 @@ def all_outputs_optional(model, parameter_hardcoder):
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name) or hardcoded_value:
             # let's not use an extra level of indentation and use NOP
             continue
-        if param.type is not _OutFile:
+        if not (param.type is _OutFile or param.type is _OutPrefix):
             continue
 
         if not param.required:
             optout.append(param)
         else:
-            return [], False
-        nout += 1
+            out.append(param)
 
-    return optout, nout == 0
+    return out, optout
 
 
 def output_filter_text(param):
@@ -1483,12 +1506,7 @@ def output_filter_text(param):
     get the text or the filter for optional outputs
 
     """
-    filter_path = utils.extract_param_path(param)
-    filter_path[-1] += "_FLAG"
-    filter_node_text = filter_path[0] + "".join(['["' + _ + '"]' for _ in filter_path[1:]])
-    if len(filter_path) == 1 and param.advanced:
-        filter_node_text = "{aon}cond['{aon}selector'] == 'advanced' and {aon}cond['".format(aon=ADVANCED_OPTIONS_NAME) + filter_node_text + "']"
-    return filter_node_text
+    return '"%s_FLAG" in OPTIONAL_OUTPUTS' % param.name
 
 
 def create_outputs(parent, model, **kwargs):
@@ -1516,22 +1534,18 @@ def create_outputs(parent, model, **kwargs):
 
     # If there are no outputs defined in the ctd the node will have no children
     # and the stdout will be used as output
-    optout, noout = all_outputs_optional(model, parameter_hardcoder)
-    if len(optout) > 0 or noout:
+    out, optout = all_outputs(model, parameter_hardcoder)
+    if len(optout) > 0 or len(out) + len(optout) == 0:
         stdout = add_child_node(outputs_node, "data",
                                 OrderedDict([("name", "stdout"), ("format", "txt"),
                                              ("label", "${tool.name} on ${on_string}: stdout"),
                                              ("format", "txt")]))
-        stdout_filter = []
-        for param in optout:
-            stdout_filter.append("not (%s)" % output_filter_text(param))
-        if len(stdout_filter) > 0:
-            filter_node = add_child_node(stdout, "filter")
-            filter_node.text = " and ".join(stdout_filter)
+        filter_node = add_child_node(stdout, "filter",
+                                     text="len(OPTIONAL_OUTPUTS) == 0")
 
     # manually add output for the ctd file
     ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name","ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
-    ctd_filter = add_child_node(ctd_out, "filter", text='adv_opts_cond["adv_opts_selector"]=="advanced" and adv_opts_cond["ctd_out_FLAG"]')
+    ctd_filter = add_child_node(ctd_out, "filter", text='"ctd_out_FLAG" in OPTIONAL_OUTPUTS')
     return outputs_node
 
 
@@ -1750,6 +1764,9 @@ def create_test_only(model, **kwargs):
     advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
     adv_sel = add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
 
+    optout = ["ctd_out_FLAG"]
+    outcnt = 1
+
     for param in utils.extract_and_flatten_parameters(model, True):
         ext = None
         # no need to show hardcoded parameters
@@ -1773,9 +1790,8 @@ def create_test_only(model, **kwargs):
 
         if param.type is _OutFile:
             given = type(param.default) is _OutFile or (type(param.default) is list) and len(param.default) > 0
-            if not param.required:
-                nd = add_child_node(parent, "param", OrderedDict([("name", param.name + "_FLAG"),
-                                                                  ("value", str(given).lower())]))
+            if not param.required and given:
+                optout.append("%s_FLAG" % param.name)
             if given:
                 formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
@@ -1817,6 +1833,8 @@ def create_test_only(model, **kwargs):
                 if type_param is not None and type(type_param.default) is _Null:
                     if ext is not None:
                         type_param.default = ext
+
+                outcnt += 1
 
         # don't output empty values for bool, and data parameters
         if type(param.default) is _Null and not param.required:
@@ -1879,13 +1897,19 @@ def create_test_only(model, **kwargs):
             if ext in unsniffable and ext in o2g:
                 nd.attrib["ftype"] = o2g[ext]
    
-    ctd_out_flag = add_child_node(advanced, "param", OrderedDict([("name", "ctd_out_FLAG"), ("value", "true")]))
+    add_child_node(test, "param", OrderedDict([("name", "OPTIONAL_OUTPUTS"), 
+                                               ("value", ",".join(optout))]))
     ctd_out = add_child_node(test, "output", OrderedDict([("name", "ctd_out"), ("ftype", "xml")]))
     ctd_assert = add_child_node(ctd_out, "assert_contents")
     add_child_node(ctd_assert, "is_valid_xml")
 
+    if outcnt == 0:
+        outcnt += 1     
+        nd = add_child_node(test, "output", OrderedDict([("name", "stdout"),
+                                                         ("value", "stdout.txt"),
+                                                         ("compare", "sim_size")]))
+    test.attrib["expect_num_outputs"] = str(outcnt)
 #     if all_optional_outputs(model, parameter_hardcoder):
-#         nd = add_child_node(test, "output", OrderedDict([("name", "stdout")]))
     return test
 
 
