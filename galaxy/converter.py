@@ -1535,13 +1535,13 @@ def create_outputs(parent, model, **kwargs):
     # If there are no outputs defined in the ctd the node will have no children
     # and the stdout will be used as output
     out, optout = all_outputs(model, parameter_hardcoder)
-    if len(optout) > 0 or len(out) + len(optout) == 0:
+    if len(out) == 0:
         stdout = add_child_node(outputs_node, "data",
                                 OrderedDict([("name", "stdout"), ("format", "txt"),
                                              ("label", "${tool.name} on ${on_string}: stdout"),
                                              ("format", "txt")]))
         filter_node = add_child_node(stdout, "filter",
-                                     text="len(OPTIONAL_OUTPUTS) == 0")
+                                     text="OPTIONAL_OUTPUTS is None")
 
     # manually add output for the ctd file
     ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name","ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
@@ -1630,7 +1630,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     # add filter for optional parameters
     if not param.required:
         filter_node = add_child_node(data_node, "filter")
-        filter_node.text = output_filter_text(param)
+        filter_node.text = "OPTIONAL_OUTPUTS is not None and " + output_filter_text(param)
     return data_node
 
 
