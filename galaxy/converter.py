@@ -346,6 +346,7 @@ def parse_file_formats(formats_file):
                     logger.warning(
                         "Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" %
                         (line_number, line), 0)
+    
     return supported_formats
 
 
@@ -439,9 +440,6 @@ def _convert_internal(parsed_ctds, **kwargs):
             hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(utils.extract_param_name(param), model.name, 'CTD')
             if hardcoded_attributes is not None:
                 for a in hardcoded_attributes:
-                    print("hardcoding %s %s" %
-                          (utils.extract_param_name(param), a))
-
                     if not hasattr(param, a):
                         continue
                     if a == "type":
@@ -620,7 +618,7 @@ def create_configfiles(tool, model, **kwargs):
     hc_node = add_child_node(configfiles_node, "configfile",
                                  OrderedDict([("name", "hardcoded_json")]))
     hc_node.text = CDATA(json.dumps(hc_dict).replace('$', '\$'))
-    print(json.dumps(hc_dict))
+    # print(json.dumps(hc_dict))
 
 def create_command(tool, model, **kwargs):
     """
@@ -707,7 +705,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 # determine the format in the output tag
                 # in all other cases (corresponding input / there is only one allowed format)
                 # the format will be set in the output tag
-                formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[param.type])
+                formats = get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[param.type])
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
                 corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
                 # print("ci %s ffc %s" % (corresponding_input.name, fmt_from_corresponding))
@@ -1051,7 +1049,7 @@ def create_inputs(tool, model, **kwargs):
         if param.type is _OutFile or param.type is _OutPrefix:
             # if there are multiple possible output formats, but no parameter to choose the type or a
             # corresponding input then add a selection parameter
-            formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
+            formats = get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
             type_param = get_out_type_param(param, model, parameter_hardcoder)
             corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
             if len(formats) > 1 and type_param is None and (corresponding_input is None or not
@@ -1091,7 +1089,7 @@ def create_inputs(tool, model, **kwargs):
                           ("type", "select"),
                           ("multiple", "true"),
                           ("label", "Optional outputs")])
-    if len(out) == 0:
+    if len(out) == 0 and len(out) + len(optout) > 0:
         attrib["optional"] = "false"
     else:
         attrib["optional"] = "true"
@@ -1115,37 +1113,41 @@ def is_default(value, param):
     return param.default == value or (type(param.default) is list and value in param.default)
 
 
-def get_formats(param, o2g):
+def get_formats(param, model, o2g):
     """
     determine format attribute from the CTD restictions (i.e. the OpenMS extensions)
     - also check if all listed possible formats are supported in Galaxy and warn if necessary
     """
+
+    if param.restrictions is None:
+        return []
+    elif type(param.restrictions) is _FileFormat:
+        choices = param.restrictions.formats
+    elif is_out_type_param(param, model):
+        choices = param.restrictions.choices
+    else:
+        raise InvalidModelException("Unrecognized restriction type [%(type)s] "
+                                    "for [%(name)s]" % {"type": type(param.restrictions),
+                                                        "name": param.name})
+
+    # check if there are formats that have not been registered yet...
     formats = set()
-    if param.restrictions is not None:
-        if type(param.restrictions) is _FileFormat:
-            # check if there are formats that have not been registered yet...
-            for format_name in param.restrictions.formats:
-                if format_name not in o2g:
-                    logger.warning("Ignoring unknown format %s for parameter %s" % (format_name, param.name), 1)
-                else:
-                    formats.add(format_name)
+    for format_name in choices:
+        if format_name not in o2g:
+            logger.warning("Ignoring unknown format %s for parameter %s" % (format_name, param.name), 1)
         else:
-            raise InvalidModelException("Unrecognized restriction type [%(type)s] "
-                                        "for [%(name)s]" % {"type": type(param.restrictions),
-                                                            "name": param.name})
-
-    formats = sorted(formats)
-    return formats
+            formats.add(format_name)
+    return sorted(formats)
 
 
-def get_galaxy_formats(param, o2g, default=None):
+def get_galaxy_formats(param, model, o2g, default=None):
     """
     determine galaxy formats for a parm (i.e. list of allowed Galaxy extensions)
     from the CTD restictions (i.e. the OpenMS extensions)
     - if there is a single one, then take this
     - if there is none than use given default
     """
-    formats = get_formats(param, o2g)
+    formats = get_formats(param, model, o2g)
     gxy_formats = set([o2g[_] for _ in formats if _ in o2g])
     if len(gxy_formats) == 0:
         if default is not None:
@@ -1197,7 +1199,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     if param.type is _InFile:
         # assume it's just text unless restrictions are provided
         param_node.attrib["type"] = "data"
-        param_node.attrib["format"] = ",".join(get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_InFile]))
+        param_node.attrib["format"] = ",".join(get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_InFile]))
         # in the case of multiple input set multiple flag
         if param.is_list:
             param_node.attrib["multiple"] = "true"
@@ -1229,20 +1231,25 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
 #                     option_node = add_child_node(param_node, "option", OrderedDict([("value", "")]), text="select a value")
 
             # create as many <option> elements as restriction values
-            for choice in param.restrictions.choices:
-                option_node = add_child_node(param_node, "option", OrderedDict([("value", str(choice))]))
-                if is_out_type_param(param, model):
-                    option_node.text = o2g[str(choice)]
-                    if choice.lower() != o2g[str(choice)]:
-                        option_node.text += " (%s)" % choice
-                else:
-                    option_node.text = str(choice)
+            if is_out_type_param(param, model):
+                logger.warning("%s %s" % (param.name, param.type))
+                formats = get_formats(param, model, o2g)
+                for fmt in formats:
+                    option_node = add_child_node(param_node, "option",
+                                                 OrderedDict([("value", str(fmt))]))
+                    option_node.text = o2g[str(fmt)]
+                    if fmt.lower() != o2g[str(fmt)]:
+                        option_node.text += " (%s)" % fmt
+                    if is_default(fmt, param):
+                        option_node.attrib["selected"] = "true"
+            else:
+                for choice in param.restrictions.choices:
+                    option_node = add_child_node(param_node, "option", 
+                                                 OrderedDict([("value", str(choice))]),
+                                                 text = str(choice))
+                    if is_default(choice, param):
+                        option_node.attrib["selected"] = "true"
 
-                # preselect the default value
-                if is_default(choice, param):
-                    option_node.attrib["selected"] = "true"
-#                 else:
-#                     option_node.attrib["selected"] = "false"
             # add validator to check that "nothing selected" is not seletcedto mandatory options w/o default
             if param_node.attrib["optional"] == "False" and (param.default is None or type(param.default) is _Null):
                 validator_node = add_child_node(param_node, "validator", OrderedDict([("type", "expression"), ("message", "A value needs to be selected")]))
@@ -1345,7 +1352,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     if param.is_list and not is_selection_parameter(param) and param.type is not _InFile:
         help_text += " (space separated list, in order to allow for spaces in list items surround them by single quotes)"
     if param.type is _InFile:
-        help_text += " select %s data sets(s)" % (",".join(get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_InFile])))
+        help_text += " select %s data sets(s)" % (",".join(get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_InFile])))
 
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text
@@ -1545,7 +1552,7 @@ def create_outputs(parent, model, **kwargs):
 
     # manually add output for the ctd file
     ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name","ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
-    ctd_filter = add_child_node(ctd_out, "filter", text='"ctd_out_FLAG" in OPTIONAL_OUTPUTS')
+    ctd_filter = add_child_node(ctd_out, "filter", text='OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS')
     return outputs_node
 
 
@@ -1567,16 +1574,16 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     data_node.attrib["name"] = get_galaxy_parameter_path(param, separator="_")
     data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % utils.extract_param_name(param)
 
-    formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
+    formats = get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
     type_param = get_out_type_param(param, model, parameter_hardcoder)
     corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
     if type_param is not None:
         type_param_name = get_galaxy_parameter_path(type_param)
-        type_param_choices = [_ for _ in type_param.restrictions.choices]
+        type_param_choices = get_formats(param, model, o2g)# [_ for _ in type_param.restrictions.choices]
     elif len(formats) > 1 and (corresponding_input is None or not
                                fmt_from_corresponding): # and not param.is_list:
         type_param_name = get_galaxy_parameter_path(param, suffix="type")
-        type_param_choices = get_formats(param, o2g)
+        type_param_choices = get_formats(param, model, o2g)
     else:
         type_param_name = None
 
@@ -1793,7 +1800,7 @@ def create_test_only(model, **kwargs):
             if not param.required and given:
                 optout.append("%s_FLAG" % param.name)
             if given:
-                formats = get_galaxy_formats(param, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
+                formats = get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
                 corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
 
@@ -1813,19 +1820,23 @@ def create_test_only(model, **kwargs):
                 for i in range(len(splitted)):
                     check_ext = ".".join(splitted[i:])
                     if check_ext in o2g:
-                        ext = check_ext
+                        ext = o2g[check_ext]
                         break
                 if ext not in formats:
                     if ext == "txt" and "csv" in formats:
                         ext = "csv"
                     elif ext == "txt" and "tsv" in formats:
                         ext = "tsv"
+                    elif len(formats) == 1:
+                        ext = formats[0]
 
                 if len(formats) > 1 and (corresponding_input is None or not
                                          fmt_from_corresponding): #  and not param.is_list:
                     if type_param is None:
                         try:
-                            fmt_select = add_child_node(parent, "param", OrderedDict([("name", param.name + "_type"), ("value", ext)]))
+                            print("%s -> %s" % (ext, g2o[ext]))
+                            attrib = OrderedDict([("name", param.name + "_type"), ("value", g2o[ext])])
+                            fmt_select = add_child_node(parent, "param", attrib)
                         except:
                             raise Exception("parent %s name %s ext %s" %
                                             (parent, param.name,
@@ -1834,6 +1845,7 @@ def create_test_only(model, **kwargs):
                     if ext is not None:
                         type_param.default = ext
 
+            if param.required or given:
                 outcnt += 1
 
         # don't output empty values for bool, and data parameters
@@ -1883,7 +1895,7 @@ def create_test_only(model, **kwargs):
                 # TODO use delta_frac https://github.com/galaxyproject/galaxy/pull/9425
                 nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta", "5700")]))
                 if ext:
-                    nd.attrib["ftype"] = o2g[ext]
+                    nd.attrib["ftype"] = ext
         elif param.type is _OutPrefix:
             # #for outprefix elements / count need to be added manually
             name = get_galaxy_parameter_path(param, separator="_")
