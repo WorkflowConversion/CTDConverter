@@ -640,11 +640,9 @@ def create_command(tool, model, **kwargs):
     #   note: input and output file parameters are still given on the command line
     #   - output file parameters are not included in the JSON file
     #   - input and output files are accessed through links / files that have the correct extension
-    # TODO remove the PYTHONPATH export CTDopts should come from conda https://github.com/WorkflowConversion/CTDopts/pulls; also python3 -> python?
     final_cmd['command'].extend(["", "## Main program call"])
     final_cmd['command'].append("""
 set -o pipefail &&
-export PYTHONPATH='$__tool_directory__/CTDopts/' &&
 @EXECUTABLE@ -write_ctd ./ &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
@@ -720,7 +718,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     type_param_name = get_galaxy_parameter_path(type_param)
                 elif len(formats) > 1 and (corresponding_input is None or not
                                            fmt_from_corresponding): #  and not param.is_list:
-                    print("???")
                     type_param_name = get_galaxy_parameter_path(param, suffix="type")
                 else:
                     type_param_name = None
@@ -1075,7 +1072,10 @@ def create_inputs(tool, model, **kwargs):
                 param_node.attrib[a] = str(hardcoded_attributes[a])
 
 
+    section_parents = [ utils.extract_param_name(section_params[sn].parent) for sn in section_nodes ]
     for sn in section_nodes:
+        if len(section_nodes[sn]) == 0 and sn not in section_parents:
+            continue
         if utils.extract_param_name(section_params[sn].parent) in section_nodes:
             section_nodes[utils.extract_param_name(section_params[sn].parent)].append(section_nodes[sn])
         else:
