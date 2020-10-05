@@ -1087,6 +1087,7 @@ def create_inputs(tool, model, **kwargs):
     out, optout = all_outputs(model, parameter_hardcoder)
     attrib = OrderedDict([("name","OPTIONAL_OUTPUTS"),
                           ("type", "select"),
+                          ("optional", "true"),
                           ("multiple", "true"),
                           ("label", "Optional outputs")])
     if len(out) == 0 and len(out) + len(optout) > 0:
