@@ -1090,10 +1090,10 @@ def create_inputs(tool, model, **kwargs):
                           ("optional", "true"),
                           ("multiple", "true"),
                           ("label", "Optional outputs")])
-    if len(out) == 0 and len(out) + len(optout) > 0:
-        attrib["optional"] = "false"
-    else:
-        attrib["optional"] = "true"
+#     if len(out) == 0 and len(out) + len(optout) > 0:
+#         attrib["optional"] = "false"
+#     else:
+#         attrib["optional"] = "true"
     param_node = add_child_node(inputs_node, "param", attrib)
     for o in optout:
         title, help_text = generate_label_and_help(param.description)
