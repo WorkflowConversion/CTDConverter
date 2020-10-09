@@ -1096,7 +1096,7 @@ def create_inputs(tool, model, **kwargs):
 #         attrib["optional"] = "true"
     param_node = add_child_node(inputs_node, "param", attrib)
     for o in optout:
-        title, help_text = generate_label_and_help(param.description)
+        title, help_text = generate_label_and_help(o.description)
         option_node = add_child_node(param_node, "option",
                                      OrderedDict([("value", o.name+"_FLAG")]),
                                      text = "%s (%s)" % (o.name, title))
