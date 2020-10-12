@@ -605,7 +605,7 @@ def create_configfiles(tool, model, **kwargs):
     parameter_hardcoder = kwargs.get("parameter_hardcoder")
     hc_dict = dict()
     for param in utils.extract_and_flatten_parameters(model):
-        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param.name, model.name)
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
         if hardcoded_value is None:
             continue
         path = utils.extract_param_path(param)
@@ -666,7 +666,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         # TODO use utils.extract_param_name(param).replace(":", "_")? Then hardcoding ctd variables (with :) and tool variables (with _) can be distinguished
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name):
             continue
-        hardcoded_value = parameter_hardcoder.get_hardcoded_value(param_name, model.name)
+        hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
         if hardcoded_value is not None:
             pass  # TODO hardcoded values should go to <inputs>
             # param_cmd['command'].append("%s %s" % (command_line_prefix, hardcoded_value))
