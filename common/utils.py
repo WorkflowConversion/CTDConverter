@@ -267,8 +267,6 @@ def extract_tool_help_text(ctd_model):
         if doc_url != "":
             help_text += "\nFor more information, visit %s" % doc_url
 
-    if "category" in ctd_model.opt_attribs.keys():
-        help_text += "\n\ntool catecory: %s" % ctd_model.opt_attribs['category']
     return help_text
 
 
