@@ -179,6 +179,19 @@ The following invocation of the converter will use `/opt/suite/bin` as a prefix 
 
     $ python convert.py [FORMAT] -x /opt/suite/bin ...
 
+### Bump wrapper versions
+
+There are two ways to bump tool versions.  
+
+- Definition of a `@GALAXY_VERSION@` token in the macros file. This can be used to bump all tools at once. Tool versions will be `@TOOL_VERSION@+galaxy@GALAXY_VERSION@`.
+- Use the `--bump-file` parameter to specify the wrapper version of a subset of the tools in a json file that maps tool names/ids to a wrapper version. Tool version will be set to `@TOOL_VERSION@+galaxyX`, where `X` is the version found in the json file or `0` if not found.
+
+In case of an update of the tool version, i.e. `@TOOL_VERSION@`, in the first case `@GALAXY_VERSION@` should be reset to 0 and the dictionary in the bump file should be emptied otherwise.
+
+Rationale: the auto-generation of the tool xml files would overwrite the
+wrapper version when regenerated. Hence it needs to be specified externally,
+e.g. in the macros.xml or in the bump file.
+
 ### Tests
 
 Tests for Galaxy tools are generated with:

@@ -100,6 +100,10 @@ def add_specific_args(parser):
                         help="Tool version to use (if not given its extracted from the CTD)")
     parser.add_argument("--tool-profile", dest="tool_profile", required=False, default=None,
                         help="Tool profile version to use (if not given its not set)")
+    parser.add_argument("--bump-file", dest="bump_file", required=False,
+                        default=None, help="json file defining tool versions."
+                        "tools not listed in the file default to 0."
+                        "if not given @GALAXY_VERSION@ is used")
 
 
 def modify_param_for_galaxy(param):
@@ -142,6 +146,8 @@ def convert_models(args, parsed_ctds):
                                                        "list_string_val", "list_string_san",
                                                        "list_float_valsan", "list_integer_valsan"])
 
+    bump = parse_bump_file(args.bump_file)
+
     check_test_macros(args.test_macros_files, args.test_macros_prefix, parsed_ctds)
 
     # parse the skip/required tools files
@@ -162,7 +168,8 @@ def convert_models(args, parsed_ctds):
                       test_macros_file_names=args.test_macros_files,
                       test_macros_prefix=args.test_macros_prefix,
                       tool_version=args.tool_version,
-                      tool_profile=args.tool_profile)
+                      tool_profile=args.tool_profile,
+                      bump=bump)
     # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
     # TODO remove tool conf .. deprecated
 #     if args.tool_conf_destination is not None:
@@ -173,6 +180,14 @@ def convert_models(args, parsed_ctds):
     # generate datatypes_conf.xml
 #     if args.data_types_destination is not None:
 #         generate_data_type_conf(supported_file_formats, args.data_types_destination)
+
+
+def parse_bump_file(bump_file):
+    if bump_file is None:
+        return None
+    with open(bump_file) as fp:
+        return json.load(fp)
+
 
 
 def parse_tools_list_file(tools_list_file):
@@ -223,14 +238,12 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
     if tool_ver_tk is None:
         tool_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@TOOL_VERSION@")]))
         tool_ver_tk.text = tool_version
-    if galaxy_ver_tk is None:
-        galaxy_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@GALAXY_VERSION@")]))
-        galaxy_ver_tk.text = "0"
-    if tool_version == tool_ver_tk.text:
-        galaxy_ver_tk.text = str(int(galaxy_ver_tk.text))
-    else:
-        tool_ver_tk.text = tool_version
-        galaxy_ver_tk.text = "0"
+    if galaxy_ver_tk is not None:
+        if tool_version == tool_ver_tk.text:
+            galaxy_ver_tk.text = str(int(galaxy_ver_tk.text))
+        else:
+            tool_ver_tk.text = tool_version
+            galaxy_ver_tk.text = "0"
 
     ext_foo = root.find("token[@name='@EXT_FOO@']")
     if ext_foo is None:
@@ -467,7 +480,9 @@ def _convert_internal(parsed_ctds, **kwargs):
             continue
 
         logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
-        tool = create_tool(model, kwargs.get("tool_profile", None))
+        tool = create_tool(model,
+                           kwargs.get("tool_profile", None),
+                           kwargs.get("bump", None))
         write_header(tool, model)
         create_description(tool, model)
         import_macros(tool, model, **kwargs)
@@ -559,14 +574,26 @@ def generate_data_type_conf(supported_file_formats, data_types_destination):
     logger.info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
 
 
-def create_tool(model, profile):
+def create_tool(model, profile, bump):
     """
     initialize the tool
     @param model the ctd model
     """
-    attrib = OrderedDict([("id", model.name.replace(" ", "_")),
-                          ("name", model.name), 
-                          ("version", "@TOOL_VERSION@+galaxy@GALAXY_VERSION@")])
+
+    tool_id = model.name.replace(" ", "_")
+
+    if bump is None:
+        gxy_version = "@GALAXY_VERSION@"
+    elif model.name in bump:
+        gxy_version = str(bump[model.name])
+    elif tool_id in bump:
+        gxy_version = str(bump[tool_id])
+    else:
+        gxy_version = "0"
+
+    attrib = OrderedDict([("id", tool_id),
+                          ("name", model.name),
+                          ("version", "@TOOL_VERSION@+galaxy"+gxy_version)])
     if profile is not None:
         attrib["profile"] = profile
     return Element("tool", attrib)
