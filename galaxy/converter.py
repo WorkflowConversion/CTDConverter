@@ -589,7 +589,7 @@ def create_tool(model, profile, bump):
     elif tool_id in bump:
         gxy_version = str(bump[tool_id])
     else:
-        gxy_version = "0"
+        gxy_version = "@GALAXY_VERSION@"
 
     attrib = OrderedDict([("id", tool_id),
                           ("name", model.name),
@@ -658,7 +658,7 @@ def create_command(tool, model, **kwargs):
     final_cmd = OrderedDict([('preprocessing', []), ('command', []), ('postprocessing', [])])
     advanced_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
 
-    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "", "## Preprocessing"])
+    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "#import os.path", "", "## Preprocessing"])
 
     # - call the executable with -write_ctd to write the ctd file (with defaults)
     # - use fill_ctd.py to overwrite the defaults in the ctd file with the
@@ -714,8 +714,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
             if param.type is _InFile:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 if param.is_list:
-                    param_cmd['preprocessing'].append("${ ' '.join([\"ln -s '%s' '" + actual_parameter + "/%s.%s' &&\" % (_, re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _]) }")
-                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _])}")
+                    param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + _actual_parameter + " if _])} && ")
+                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (_, os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _])}")
+                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _])}")
                 else:
                     param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
                     param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
@@ -759,8 +760,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     fmt = formats.pop()
                     if param.is_list:
                         logger.info("1 fmt + list %s -> %s" % (param.name, actual_input_parameter), 1)
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\"" + fmt + "\")) for _ in $" + actual_input_parameter + " if _])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_input_parameter + "/%(id)s.%(gext)s' '" + actual_parameter + "/%(id)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for _ in $" + _actual_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\"" + fmt + "\")) for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s' '" + _actual_parameter + "/%(bn)s/%(id)s'\"%{\"bn\": os.path.basename(str(_))[:-4], \"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for _ in $" + actual_input_parameter + " if _])}")
                     else:
                         logger.info("1 fmt + dataset %s" % param.name, 1)
                         param_cmd['command'].append("'" + actual_parameter + "/output.${gxy2omsext(\"" + fmt + "\")}'")
@@ -772,8 +774,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 elif type_param_name is not None:
                     if param.is_list:
                         logger.info("type + list %s" % param.name, 1)
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), $" + type_param_name + ") for _ in $" + actual_input_parameter + " if _])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(id)s.%(omsext)s' '" + actual_parameter + "/%(id)s.%(gext)s'\"%{\"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $" + type_param_name + ") for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(omsext)s' '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s'\"%{\"bn\": os.path.basename(str(_))[:-4], \"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for _ in $" + actual_input_parameter + " if _])}")
                     else:
                         logger.info("type + dataset %s" % param.name, 1)
                         # 1st create file with openms extension (often required by openms)
@@ -784,7 +787,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 elif actual_input_parameter is not None:
                     if param.is_list:
                         logger.info("actual + list %s" % param.name, 1)
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s.%s'\"%(re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _])}")
                     else:
                         logger.info("actual + dataset %s %s %s" % (param.name, actual_input_parameter, corresponding_input.is_list), 1)
                         if corresponding_input.is_list:
@@ -1597,7 +1601,8 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
         data_node = add_child_node(parent, "collection")
         data_node.attrib["type"] = "list"
         discover_node = add_child_node(data_node, "discover_datasets",
-                                       OrderedDict([("directory", get_galaxy_parameter_path(param))]))
+                                       OrderedDict([("directory", get_galaxy_parameter_path(param, separator="_")),
+                                                    ("recurse", "true")]))
 
     data_node.attrib["name"] = get_galaxy_parameter_path(param, separator="_")
     data_node.attrib["label"] = "${tool.name} on ${on_string}: %s" % utils.extract_param_name(param)
