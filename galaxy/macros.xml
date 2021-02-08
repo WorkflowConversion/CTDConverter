@@ -3,12 +3,12 @@
      You can edit this file to add your own macros, if you so desire, or you can
      add additional macro files using the m/macros parameter -->
 <macros>
-  <token name="@TOOL_VERSION@">3.7</token>
+  <token name="@TOOL_VERSION@">3.8</token>
   <token name="@GALAXY_VERSION@">0</token>
   <xml name="requirements">
     <requirements>
       <requirement type="package" version="@TOOL_VERSION@">python</requirement>
-	  <!--<requirement type="package" version="1.2">ctdopts</requirement>-->
+	    <requirement type="package" version="1.4">ctdopts</requirement>
       <yield/>
     </requirements>
   </xml>

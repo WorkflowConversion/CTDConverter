@@ -68,7 +68,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="0">
+    <test expect_num_outputs="1">
       <param name="flag" value="false"/>
       <param name="flag_adv" value="false"/>
       <param name="true" value="true"/>

@@ -98,7 +98,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="0">
+    <test expect_num_outputs="1">
       <param name="wodefault_mandatory_unrestricted" value="1 2"/>
       <param name="default_mandatory_unrestricted" value="default"/>
       <section name="test_section">

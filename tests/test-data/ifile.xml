@@ -870,7 +870,7 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat/%s/%s.%s'"%(os.path.ba
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="0">
+    <test expect_num_outputs="1">
       <param name="mandatory_noformat" ftype="txt" value="0test.ext"/>
       <param name="mandatory_oneformat" ftype="tsv" value="1test.ext"/>
       <param name="mandatory_multformat" ftype="tabular" value="2test.ext"/>

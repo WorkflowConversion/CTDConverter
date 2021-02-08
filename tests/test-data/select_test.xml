@@ -546,7 +546,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="0">
+    <test expect_num_outputs="1">
       <param name="wodefault_mandatory" value="A"/>
       <param name="wodefault_mandatory_many" value="A"/>
       <param name="list_wodefault_mandatory" value="A,B,C,D"/>

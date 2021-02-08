@@ -28,7 +28,7 @@ class GalaxyCliTestCase(unittest.TestCase):
         # out_file = to_test_data('{}.xml'.format(fileprefix))
         my_env = os.environ.copy()
         my_env["PATH"] = fileprefix + ":" + my_env["PATH"]
-        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth, "--tool-version", "5.0.011"]
+        cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth, "--tool-version", "3.8"]
 #         print("cmd %s" % cmd)
 
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=my_env)

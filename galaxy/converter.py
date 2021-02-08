@@ -1785,6 +1785,9 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
 
         for node in outputs:
             test_node.append(node)
+        # if no optional output is selected the stdout is added as output
+        if outputs_cnt == 0:
+            outputs_cnt = 1
         test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
     elif not (test_macros_prefix is None or name is None):
         expand_macros(tests_node, [p + name for p in test_macros_prefix])

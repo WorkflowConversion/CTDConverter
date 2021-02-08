@@ -47,7 +47,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="0">
+    <test expect_num_outputs="1">
       <conditional name="adv_opts_cond">
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
