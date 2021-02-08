@@ -1635,13 +1635,17 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     elif type_param_name is not None:
         logger.info("OUTPUT %s type" % param.name, 1)
         if not param.is_list:
-            change_node = add_child_node(data_node, "change_format")
-            for r in type_param_choices:
+            if len(type_param_choices) > 1:
+                change_node = add_child_node(data_node, "change_format")
+            for i, r in enumerate(type_param_choices):
                 f = o2g.get(r, None)
                 # TODO this should not happen for fully specified fileformats file
                 if f is None:
                     f = r
-                add_child_node(change_node, "when", OrderedDict([("input", type_param_name), ("value", r), ("format", f)]))
+                if i == 0:
+                    data_node.attrib["format"] = f
+                else:
+                    add_child_node(change_node, "when", OrderedDict([("input", type_param_name), ("value", r), ("format", f)]))
         else:
             discover_node.attrib["pattern"] = "__name_and_ext__"
     elif corresponding_input is not None:
