@@ -39,16 +39,13 @@ install:
 
 #   - virtualenv .venv
 #   - . .venv/bin/activate
-  - pip install git+https://github.com/bernt-matthias/CTDopts@topic/no-1-2x
+  - pip install git+https://github.com/WorkflowConversion/CTDopts
   - pip install lxml ruamel.yaml planemo 
   - cd $TRAVIS_BUILD_DIR
   - python setup.py install
 script:
   - python setup.py test
-# TODO fail expected due to 
-# https://github.com/galaxyproject/galaxy/pull/9081 which will be in 20.01 and 
-# empty.xml (no inputs) could be removed and  
-# - planemo l tests/test-data/
+  - planemo l tests/test-data/
 
   # planemo test content of tests/test-data (this is OK, because the previous
   # tests ensure equality of the xmls that are generated and those in the package)
