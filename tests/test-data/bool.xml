@@ -12,6 +12,7 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
+#import os.path
 
 ## Preprocessing
 
@@ -19,13 +20,17 @@
 
 set -o pipefail &&
 @EXECUTABLE@ -write_ctd ./ &&
-python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 | tee '$stdout'
 
-## Postprocessing]]></command>
+## Postprocessing
+#if "ctd_out_FLAG" in $OPTIONAL_OUTPUTS
+  && mv '@EXECUTABLE@.ctd' '$ctd_out'
+#end if]]></command>
   <configfiles>
     <inputs name="args_json" data_style="paths"/>
+    <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
   </configfiles>
   <inputs>
     <param name="flag" argument="-flag" type="boolean" truevalue="true" falsevalue="false" checked="false" label="flag" help=""/>
@@ -50,12 +55,20 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <param name="flag_true_adv" argument="-flag_true_adv" type="boolean" truevalue="true" falsevalue="false" checked="true" label="bool" help=""/>
       <param name="flag_false_adv" argument="-flag_false_adv" type="boolean" truevalue="true" falsevalue="false" checked="false" label="bool" help=""/>
     </expand>
+    <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">
+      <option value="ctd_out_FLAG">Output used ctd (ini) configuration file</option>
+    </param>
   </inputs>
   <outputs>
-    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout"/>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout">
+      <filter>OPTIONAL_OUTPUTS is None</filter>
+    </data>
+    <data name="ctd_out" format="xml" label="${tool.name} on ${on_string}: ctd">
+      <filter>OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS</filter>
+    </data>
   </outputs>
   <tests>
-    <test expect_num_outputs="1">
+    <test expect_num_outputs="0">
       <param name="flag" value="false"/>
       <param name="flag_adv" value="false"/>
       <param name="true" value="true"/>
@@ -79,7 +92,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <param name="flag_false_adv" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output name="stdout" ftype="txt" value="outfile.txt" lines_diff="2"/>
     </test>
   </tests>
   <help><![CDATA[Bool parameter tests.

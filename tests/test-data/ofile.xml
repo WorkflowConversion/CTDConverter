@@ -12,197 +12,197 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
+#import os.path
 
 ## Preprocessing
 mkdir mandatory_noformat &&
-#if $optional_noformat_FLAG:
+#if "optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir optional_noformat &&
 #end if
 mkdir mandatory_oneformat &&
-#if $optional_oneformat_FLAG:
+#if "optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir optional_oneformat &&
 #end if
 mkdir mandatory_multformat &&
-#if $optional_multformat_FLAG:
+#if "optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir optional_multformat &&
 #end if
+mkdir mandatory_noformat_adv &&
+#if "optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir optional_noformat_adv &&
+#end if
+mkdir mandatory_oneformat_adv &&
+#if "optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir optional_oneformat_adv &&
+#end if
+mkdir mandatory_multformat_adv &&
+#if "optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir optional_multformat_adv &&
+#end if
 mkdir test_section_sect_mandatory_noformat &&
-#if $test_section.sect_optional_noformat_FLAG:
+#if "sect_optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir test_section_sect_optional_noformat &&
 #end if
 mkdir test_section_sect_mandatory_oneformat &&
-#if $test_section.sect_optional_oneformat_FLAG:
+#if "sect_optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir test_section_sect_optional_oneformat &&
 #end if
 mkdir test_section_sect_mandatory_multformat &&
-#if $test_section.sect_optional_multformat_FLAG:
+#if "sect_optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   mkdir test_section_sect_optional_multformat &&
 #end if
-#if $adv_opts_cond.adv_opts_selector=='advanced':
-  mkdir mandatory_noformat_adv &&
-  #if $adv_opts_cond.optional_noformat_adv_FLAG:
-    mkdir optional_noformat_adv &&
-  #end if
-  mkdir mandatory_oneformat_adv &&
-  #if $adv_opts_cond.optional_oneformat_adv_FLAG:
-    mkdir optional_oneformat_adv &&
-  #end if
-  mkdir mandatory_multformat_adv &&
-  #if $adv_opts_cond.optional_multformat_adv_FLAG:
-    mkdir optional_multformat_adv &&
-  #end if
-  mkdir test_section_sect_mandatory_noformat_adv &&
-  #if $test_section.sect_optional_noformat_adv_FLAG:
-    mkdir test_section_sect_optional_noformat_adv &&
-  #end if
-  mkdir test_section_sect_mandatory_oneformat_adv &&
-  #if $test_section.sect_optional_oneformat_adv_FLAG:
-    mkdir test_section_sect_optional_oneformat_adv &&
-  #end if
-  mkdir test_section_sect_mandatory_multformat_adv &&
-  #if $test_section.sect_optional_multformat_adv_FLAG:
-    mkdir test_section_sect_optional_multformat_adv &&
-  #end if
+mkdir test_section_sect_mandatory_noformat_adv &&
+#if "sect_optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir test_section_sect_optional_noformat_adv &&
+#end if
+mkdir test_section_sect_mandatory_oneformat_adv &&
+#if "sect_optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir test_section_sect_optional_oneformat_adv &&
+#end if
+mkdir test_section_sect_mandatory_multformat_adv &&
+#if "sect_optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  mkdir test_section_sect_optional_multformat_adv &&
 #end if
 
 ## Main program call
 
 set -o pipefail &&
 @EXECUTABLE@ -write_ctd ./ &&
-python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 -mandatory_noformat
 'mandatory_noformat/output.${gxy2omsext("txt")}'
-#if $optional_noformat_FLAG:
+#if "optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -optional_noformat
   'optional_noformat/output.${gxy2omsext("txt")}'
 #end if
 -mandatory_oneformat
 'mandatory_oneformat/output.${gxy2omsext("tsv")}'
-#if $optional_oneformat_FLAG:
+#if "optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -optional_oneformat
   'optional_oneformat/output.${gxy2omsext("tsv")}'
 #end if
 -mandatory_multformat
 'mandatory_multformat/output.${mandatory_multformat_type}'
-#if $optional_multformat_FLAG:
+#if "optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -optional_multformat
   'optional_multformat/output.${optional_multformat_type}'
 #end if
+-mandatory_noformat_adv
+'mandatory_noformat_adv/output.${gxy2omsext("txt")}'
+#if "optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -optional_noformat_adv
+  'optional_noformat_adv/output.${gxy2omsext("txt")}'
+#end if
+-mandatory_oneformat_adv
+'mandatory_oneformat_adv/output.${gxy2omsext("tsv")}'
+#if "optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -optional_oneformat_adv
+  'optional_oneformat_adv/output.${gxy2omsext("tsv")}'
+#end if
+-mandatory_multformat_adv
+'mandatory_multformat_adv/output.${adv_opts_cond.mandatory_multformat_adv_type}'
+#if "optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -optional_multformat_adv
+  'optional_multformat_adv/output.${adv_opts_cond.optional_multformat_adv_type}'
+#end if
 -test_section:sect_mandatory_noformat
 'test_section_sect_mandatory_noformat/output.${gxy2omsext("txt")}'
-#if $test_section.sect_optional_noformat_FLAG:
+#if "sect_optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -test_section:sect_optional_noformat
   'test_section_sect_optional_noformat/output.${gxy2omsext("txt")}'
 #end if
 -test_section:sect_mandatory_oneformat
 'test_section_sect_mandatory_oneformat/output.${gxy2omsext("tsv")}'
-#if $test_section.sect_optional_oneformat_FLAG:
+#if "sect_optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -test_section:sect_optional_oneformat
   'test_section_sect_optional_oneformat/output.${gxy2omsext("tsv")}'
 #end if
 -test_section:sect_mandatory_multformat
 'test_section_sect_mandatory_multformat/output.${test_section.sect_mandatory_multformat_type}'
-#if $test_section.sect_optional_multformat_FLAG:
+#if "sect_optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   -test_section:sect_optional_multformat
   'test_section_sect_optional_multformat/output.${test_section.sect_optional_multformat_type}'
 #end if
-#if $adv_opts_cond.adv_opts_selector=='advanced':
-  -mandatory_noformat_adv
-  'mandatory_noformat_adv/output.${gxy2omsext("txt")}'
-  #if $adv_opts_cond.optional_noformat_adv_FLAG:
-    -optional_noformat_adv
-    'optional_noformat_adv/output.${gxy2omsext("txt")}'
-  #end if
-  -mandatory_oneformat_adv
-  'mandatory_oneformat_adv/output.${gxy2omsext("tsv")}'
-  #if $adv_opts_cond.optional_oneformat_adv_FLAG:
-    -optional_oneformat_adv
-    'optional_oneformat_adv/output.${gxy2omsext("tsv")}'
-  #end if
-  -mandatory_multformat_adv
-  'mandatory_multformat_adv/output.${adv_opts_cond.mandatory_multformat_adv_type}'
-  #if $adv_opts_cond.optional_multformat_adv_FLAG:
-    -optional_multformat_adv
-    'optional_multformat_adv/output.${adv_opts_cond.optional_multformat_adv_type}'
-  #end if
-  -test_section:sect_mandatory_noformat_adv
-  'test_section_sect_mandatory_noformat_adv/output.${gxy2omsext("txt")}'
-  #if $test_section.sect_optional_noformat_adv_FLAG:
-    -test_section:sect_optional_noformat_adv
-    'test_section_sect_optional_noformat_adv/output.${gxy2omsext("txt")}'
-  #end if
-  -test_section:sect_mandatory_oneformat_adv
-  'test_section_sect_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}'
-  #if $test_section.sect_optional_oneformat_adv_FLAG:
-    -test_section:sect_optional_oneformat_adv
-    'test_section_sect_optional_oneformat_adv/output.${gxy2omsext("tsv")}'
-  #end if
-  -test_section:sect_mandatory_multformat_adv
-  'test_section_sect_mandatory_multformat_adv/output.${test_section.sect_mandatory_multformat_adv_type}'
-  #if $test_section.sect_optional_multformat_adv_FLAG:
-    -test_section:sect_optional_multformat_adv
-    'test_section_sect_optional_multformat_adv/output.${test_section.sect_optional_multformat_adv_type}'
-  #end if
+-test_section:sect_mandatory_noformat_adv
+'test_section_sect_mandatory_noformat_adv/output.${gxy2omsext("txt")}'
+#if "sect_optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -test_section:sect_optional_noformat_adv
+  'test_section_sect_optional_noformat_adv/output.${gxy2omsext("txt")}'
+#end if
+-test_section:sect_mandatory_oneformat_adv
+'test_section_sect_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}'
+#if "sect_optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -test_section:sect_optional_oneformat_adv
+  'test_section_sect_optional_oneformat_adv/output.${gxy2omsext("tsv")}'
+#end if
+-test_section:sect_mandatory_multformat_adv
+'test_section_sect_mandatory_multformat_adv/output.${test_section.sect_mandatory_multformat_adv_type}'
+#if "sect_optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  -test_section:sect_optional_multformat_adv
+  'test_section_sect_optional_multformat_adv/output.${test_section.sect_optional_multformat_adv_type}'
+#end if
+#if len(str($OPTIONAL_OUTPUTS).split(',')) == 0
+  | tee '$stdout'
 #end if
 
 ## Postprocessing
 && mv 'mandatory_noformat/output.${gxy2omsext("txt")}' '$mandatory_noformat'
-#if $optional_noformat_FLAG:
+#if "optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'optional_noformat/output.${gxy2omsext("txt")}' '$optional_noformat'
 #end if
 && mv 'mandatory_oneformat/output.${gxy2omsext("tsv")}' '$mandatory_oneformat'
-#if $optional_oneformat_FLAG:
+#if "optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'optional_oneformat/output.${gxy2omsext("tsv")}' '$optional_oneformat'
 #end if
 && mv 'mandatory_multformat/output.${mandatory_multformat_type}' '$mandatory_multformat'
-#if $optional_multformat_FLAG:
+#if "optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'optional_multformat/output.${optional_multformat_type}' '$optional_multformat'
 #end if
+&& mv 'mandatory_noformat_adv/output.${gxy2omsext("txt")}' '$mandatory_noformat_adv'
+#if "optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'optional_noformat_adv/output.${gxy2omsext("txt")}' '$optional_noformat_adv'
+#end if
+&& mv 'mandatory_oneformat_adv/output.${gxy2omsext("tsv")}' '$mandatory_oneformat_adv'
+#if "optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'optional_oneformat_adv/output.${gxy2omsext("tsv")}' '$optional_oneformat_adv'
+#end if
+&& mv 'mandatory_multformat_adv/output.${adv_opts_cond.mandatory_multformat_adv_type}' '$mandatory_multformat_adv'
+#if "optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'optional_multformat_adv/output.${adv_opts_cond.optional_multformat_adv_type}' '$optional_multformat_adv'
+#end if
 && mv 'test_section_sect_mandatory_noformat/output.${gxy2omsext("txt")}' '$test_section_sect_mandatory_noformat'
-#if $test_section.sect_optional_noformat_FLAG:
+#if "sect_optional_noformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'test_section_sect_optional_noformat/output.${gxy2omsext("txt")}' '$test_section_sect_optional_noformat'
 #end if
 && mv 'test_section_sect_mandatory_oneformat/output.${gxy2omsext("tsv")}' '$test_section_sect_mandatory_oneformat'
-#if $test_section.sect_optional_oneformat_FLAG:
+#if "sect_optional_oneformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'test_section_sect_optional_oneformat/output.${gxy2omsext("tsv")}' '$test_section_sect_optional_oneformat'
 #end if
 && mv 'test_section_sect_mandatory_multformat/output.${test_section.sect_mandatory_multformat_type}' '$test_section_sect_mandatory_multformat'
-#if $test_section.sect_optional_multformat_FLAG:
+#if "sect_optional_multformat_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
   && mv 'test_section_sect_optional_multformat/output.${test_section.sect_optional_multformat_type}' '$test_section_sect_optional_multformat'
 #end if
-#if $adv_opts_cond.adv_opts_selector=='advanced':
-  && mv 'mandatory_noformat_adv/output.${gxy2omsext("txt")}' '$mandatory_noformat_adv'
-  #if $adv_opts_cond.optional_noformat_adv_FLAG:
-    && mv 'optional_noformat_adv/output.${gxy2omsext("txt")}' '$optional_noformat_adv'
-  #end if
-  && mv 'mandatory_oneformat_adv/output.${gxy2omsext("tsv")}' '$mandatory_oneformat_adv'
-  #if $adv_opts_cond.optional_oneformat_adv_FLAG:
-    && mv 'optional_oneformat_adv/output.${gxy2omsext("tsv")}' '$optional_oneformat_adv'
-  #end if
-  && mv 'mandatory_multformat_adv/output.${adv_opts_cond.mandatory_multformat_adv_type}' '$mandatory_multformat_adv'
-  #if $adv_opts_cond.optional_multformat_adv_FLAG:
-    && mv 'optional_multformat_adv/output.${adv_opts_cond.optional_multformat_adv_type}' '$optional_multformat_adv'
-  #end if
-  && mv 'test_section_sect_mandatory_noformat_adv/output.${gxy2omsext("txt")}' '$test_section_sect_mandatory_noformat_adv'
-  #if $test_section.sect_optional_noformat_adv_FLAG:
-    && mv 'test_section_sect_optional_noformat_adv/output.${gxy2omsext("txt")}' '$test_section_sect_optional_noformat_adv'
-  #end if
-  && mv 'test_section_sect_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}' '$test_section_sect_mandatory_oneformat_adv'
-  #if $test_section.sect_optional_oneformat_adv_FLAG:
-    && mv 'test_section_sect_optional_oneformat_adv/output.${gxy2omsext("tsv")}' '$test_section_sect_optional_oneformat_adv'
-  #end if
-  && mv 'test_section_sect_mandatory_multformat_adv/output.${test_section.sect_mandatory_multformat_adv_type}' '$test_section_sect_mandatory_multformat_adv'
-  #if $test_section.sect_optional_multformat_adv_FLAG:
-    && mv 'test_section_sect_optional_multformat_adv/output.${test_section.sect_optional_multformat_adv_type}' '$test_section_sect_optional_multformat_adv'
-  #end if
+&& mv 'test_section_sect_mandatory_noformat_adv/output.${gxy2omsext("txt")}' '$test_section_sect_mandatory_noformat_adv'
+#if "sect_optional_noformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'test_section_sect_optional_noformat_adv/output.${gxy2omsext("txt")}' '$test_section_sect_optional_noformat_adv'
+#end if
+&& mv 'test_section_sect_mandatory_oneformat_adv/output.${gxy2omsext("tsv")}' '$test_section_sect_mandatory_oneformat_adv'
+#if "sect_optional_oneformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'test_section_sect_optional_oneformat_adv/output.${gxy2omsext("tsv")}' '$test_section_sect_optional_oneformat_adv'
+#end if
+&& mv 'test_section_sect_mandatory_multformat_adv/output.${test_section.sect_mandatory_multformat_adv_type}' '$test_section_sect_mandatory_multformat_adv'
+#if "sect_optional_multformat_adv_FLAG" in str($OPTIONAL_OUTPUTS).split(',')
+  && mv 'test_section_sect_optional_multformat_adv/output.${test_section.sect_optional_multformat_adv_type}' '$test_section_sect_optional_multformat_adv'
+#end if
+#if "ctd_out_FLAG" in $OPTIONAL_OUTPUTS
+  && mv '@EXECUTABLE@.ctd' '$ctd_out'
 #end if]]></command>
   <configfiles>
     <inputs name="args_json" data_style="paths"/>
+    <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
   </configfiles>
   <inputs>
-    <param type="boolean" name="optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat (output file)" help=""/>
-    <param type="boolean" name="optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat (output file)" help=""/>
     <param name="mandatory_multformat_type" type="select" optional="false" label="File type of output mandatory_multformat (output file)">
       <option value="ext">tsv (ext)</option>
       <option value="eyt">tabular (eyt)</option>
@@ -213,10 +213,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
       <option value="eyt">tabular (eyt)</option>
       <option value="ezt">tabular (ezt)</option>
     </param>
-    <param type="boolean" name="optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat (output file)" help=""/>
     <section name="test_section" title="Test Section" help="" expanded="false">
-      <param type="boolean" name="sect_optional_noformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat (output file)" help=""/>
-      <param type="boolean" name="sect_optional_oneformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat (output file)" help=""/>
       <param name="sect_mandatory_multformat_type" type="select" optional="false" label="File type of output sect_mandatory_multformat (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -227,9 +224,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="sect_optional_multformat_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat (output file)" help=""/>
-      <param type="boolean" name="sect_optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_noformat_adv (output file)" help=""/>
-      <param type="boolean" name="sect_optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_oneformat_adv (output file)" help=""/>
       <param name="sect_mandatory_multformat_adv_type" type="select" optional="false" label="File type of output sect_mandatory_multformat_adv (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -240,11 +234,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="sect_optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output sect_optional_multformat_adv (output file)" help=""/>
     </section>
     <expand macro="adv_opts_macro">
-      <param type="boolean" name="optional_noformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_noformat_adv (output file)" help=""/>
-      <param type="boolean" name="optional_oneformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_oneformat_adv (output file)" help=""/>
       <param name="mandatory_multformat_adv_type" type="select" optional="false" label="File type of output mandatory_multformat_adv (output file)">
         <option value="ext">tsv (ext)</option>
         <option value="eyt">tabular (eyt)</option>
@@ -255,17 +246,31 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <option value="eyt">tabular (eyt)</option>
         <option value="ezt">tabular (ezt)</option>
       </param>
-      <param type="boolean" name="optional_multformat_adv_FLAG" checked="false" truevalue="true" falsevalue="false" label="Generate output optional_multformat_adv (output file)" help=""/>
     </expand>
+    <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">
+      <option value="optional_noformat_FLAG">optional_noformat (output file)</option>
+      <option value="optional_oneformat_FLAG">optional_oneformat (output file)</option>
+      <option value="optional_multformat_FLAG">optional_multformat (output file)</option>
+      <option value="optional_noformat_adv_FLAG">optional_noformat_adv (output file)</option>
+      <option value="optional_oneformat_adv_FLAG">optional_oneformat_adv (output file)</option>
+      <option value="optional_multformat_adv_FLAG">optional_multformat_adv (output file)</option>
+      <option value="sect_optional_noformat_FLAG">sect_optional_noformat (output file)</option>
+      <option value="sect_optional_oneformat_FLAG">sect_optional_oneformat (output file)</option>
+      <option value="sect_optional_multformat_FLAG">sect_optional_multformat (output file)</option>
+      <option value="sect_optional_noformat_adv_FLAG">sect_optional_noformat_adv (output file)</option>
+      <option value="sect_optional_oneformat_adv_FLAG">sect_optional_oneformat_adv (output file)</option>
+      <option value="sect_optional_multformat_adv_FLAG">sect_optional_multformat_adv (output file)</option>
+      <option value="ctd_out_FLAG">Output used ctd (ini) configuration file</option>
+    </param>
   </inputs>
   <outputs>
     <data name="mandatory_noformat" label="${tool.name} on ${on_string}: mandatory_noformat" format="txt"/>
     <data name="optional_noformat" label="${tool.name} on ${on_string}: optional_noformat" format="txt">
-      <filter>optional_noformat_FLAG</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_noformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="mandatory_oneformat" label="${tool.name} on ${on_string}: mandatory_oneformat" format="tsv"/>
     <data name="optional_oneformat" label="${tool.name} on ${on_string}: optional_oneformat" format="tsv">
-      <filter>optional_oneformat_FLAG</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_oneformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="mandatory_multformat" label="${tool.name} on ${on_string}: mandatory_multformat">
       <change_format>
@@ -280,15 +285,15 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <when input="optional_multformat_type" value="eyt" format="tabular"/>
         <when input="optional_multformat_type" value="ezt" format="tabular"/>
       </change_format>
-      <filter>optional_multformat_FLAG</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_multformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="mandatory_noformat_adv" label="${tool.name} on ${on_string}: mandatory_noformat_adv" format="txt"/>
     <data name="optional_noformat_adv" label="${tool.name} on ${on_string}: optional_noformat_adv" format="txt">
-      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['optional_noformat_adv_FLAG']</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_noformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="mandatory_oneformat_adv" label="${tool.name} on ${on_string}: mandatory_oneformat_adv" format="tsv"/>
     <data name="optional_oneformat_adv" label="${tool.name} on ${on_string}: optional_oneformat_adv" format="tsv">
-      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['optional_oneformat_adv_FLAG']</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_oneformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="mandatory_multformat_adv" label="${tool.name} on ${on_string}: mandatory_multformat_adv">
       <change_format>
@@ -303,15 +308,15 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <when input="adv_opts_cond.optional_multformat_adv_type" value="eyt" format="tabular"/>
         <when input="adv_opts_cond.optional_multformat_adv_type" value="ezt" format="tabular"/>
       </change_format>
-      <filter>adv_opts_cond['adv_opts_selector'] == 'advanced' and adv_opts_cond['optional_multformat_adv_FLAG']</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "optional_multformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_noformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_noformat" format="txt"/>
     <data name="test_section_sect_optional_noformat" label="${tool.name} on ${on_string}: test_section:sect_optional_noformat" format="txt">
-      <filter>test_section["sect_optional_noformat_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_noformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_oneformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_oneformat" format="tsv"/>
     <data name="test_section_sect_optional_oneformat" label="${tool.name} on ${on_string}: test_section:sect_optional_oneformat" format="tsv">
-      <filter>test_section["sect_optional_oneformat_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_oneformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_multformat" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat">
       <change_format>
@@ -326,15 +331,15 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <when input="test_section.sect_optional_multformat_type" value="eyt" format="tabular"/>
         <when input="test_section.sect_optional_multformat_type" value="ezt" format="tabular"/>
       </change_format>
-      <filter>test_section["sect_optional_multformat_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_multformat_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_noformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_noformat_adv" format="txt"/>
     <data name="test_section_sect_optional_noformat_adv" label="${tool.name} on ${on_string}: test_section:sect_optional_noformat_adv" format="txt">
-      <filter>test_section["sect_optional_noformat_adv_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_noformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_oneformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_oneformat_adv" format="tsv"/>
     <data name="test_section_sect_optional_oneformat_adv" label="${tool.name} on ${on_string}: test_section:sect_optional_oneformat_adv" format="tsv">
-      <filter>test_section["sect_optional_oneformat_adv_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_oneformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
     <data name="test_section_sect_mandatory_multformat_adv" label="${tool.name} on ${on_string}: test_section:sect_mandatory_multformat_adv">
       <change_format>
@@ -349,34 +354,25 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' &&
         <when input="test_section.sect_optional_multformat_adv_type" value="eyt" format="tabular"/>
         <when input="test_section.sect_optional_multformat_adv_type" value="ezt" format="tabular"/>
       </change_format>
-      <filter>test_section["sect_optional_multformat_adv_FLAG"]</filter>
+      <filter>OPTIONAL_OUTPUTS is not None and "sect_optional_multformat_adv_FLAG" in OPTIONAL_OUTPUTS</filter>
+    </data>
+    <data name="ctd_out" format="xml" label="${tool.name} on ${on_string}: ctd">
+      <filter>OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS</filter>
     </data>
   </outputs>
   <tests>
     <test expect_num_outputs="12">
-      <param name="optional_noformat_FLAG" value="false"/>
-      <param name="optional_oneformat_FLAG" value="false"/>
       <param name="mandatory_multformat_type" value="ext"/>
       <param name="optional_multformat_type" value="ext"/>
-      <param name="optional_multformat_FLAG" value="false"/>
       <section name="test_section">
-        <param name="sect_optional_noformat_FLAG" value="false"/>
-        <param name="sect_optional_oneformat_FLAG" value="false"/>
         <param name="sect_mandatory_multformat_type" value="ext"/>
         <param name="sect_optional_multformat_type" value="ext"/>
-        <param name="sect_optional_multformat_FLAG" value="false"/>
-        <param name="sect_optional_noformat_adv_FLAG" value="false"/>
-        <param name="sect_optional_oneformat_adv_FLAG" value="false"/>
         <param name="sect_mandatory_multformat_adv_type" value="ext"/>
         <param name="sect_optional_multformat_adv_type" value="ext"/>
-        <param name="sect_optional_multformat_adv_FLAG" value="false"/>
       </section>
       <conditional name="adv_opts_cond">
-        <param name="optional_noformat_adv_FLAG" value="false"/>
-        <param name="optional_oneformat_adv_FLAG" value="false"/>
         <param name="mandatory_multformat_adv_type" value="ext"/>
         <param name="optional_multformat_adv_type" value="ext"/>
-        <param name="optional_multformat_adv_FLAG" value="false"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
       <output name="mandatory_noformat" ftype="txt" value="outfile.txt"/>
