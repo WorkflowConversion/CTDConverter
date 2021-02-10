@@ -1,8 +1,7 @@
-import unittest
 import os
-from shutil import copyfile
 import subprocess
 import tempfile
+import unittest
 
 
 def to_test_data(*args):

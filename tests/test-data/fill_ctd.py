@@ -1,18 +1,18 @@
 import collections
-from functools import reduce  # forward compatibility for Python 3
 import json
 import operator
 import os
 import re
 import subprocess
 import sys
+from functools import reduce  # forward compatibility for Python 3
 
 from CTDopts.CTDopts import (
-    CTDModel,
     _Choices,
-    _Null,
     _InFile,
-    _NumericRange
+    _Null,
+    _NumericRange,
+    CTDModel
 )
 
 
@@ -30,16 +30,18 @@ def mergeDicts(d, e):
     no values of d are overwritten
     """
     for k, v in e.items():
-        if (k in d and isinstance(d[k], dict) and isinstance(e[k], collections.Mapping)):
+        if (k in d and isinstance(d[k], dict) and isinstance(e[k], collections.abc.Mapping)):
             mergeDicts(d[k], e[k])
-        elif k not in d and not isinstance(e[k], collections.Mapping):
+        elif k not in d and not isinstance(e[k], collections.abc.Mapping):
             d[k] = e[k]
         else:
             sys.stderr.write("fill_ctd.py: could not merge key %s for %s in %s" % (k, d, e))
             sys.exit(1)
 
+
 def _json_object_hook_noenvlookup(d):
     return _json_object_hook(d, envlookup=False)
+
 
 def _json_object_hook(d, envlookup=True):
     """
@@ -105,6 +107,21 @@ def qstring2list(qs):
     return lst
 
 
+def fix_underscores(args):
+    if type(args) is dict:
+        for k in list(args.keys()):
+            v = args[k]
+            if type(v) is dict:
+                fix_underscores(args[k])
+            if k.startswith("_"):
+                args[k[1:]] = v
+                del args[k]
+    elif type(args) is list:
+        for i, v in enumerate(args):
+            if type(v) is dict:
+                fix_underscores(args[i])
+
+
 input_ctd = sys.argv[1]
 
 # load user specified parameters from json
@@ -118,15 +135,23 @@ with open(sys.argv[3]) as fh:
 # insert the hc_args into the args
 mergeDicts(args, hc_args)
 
-
 if "adv_opts_cond" in args:
     args.update(args["adv_opts_cond"])
     del args["adv_opts_cond"]
+
+# IDMapper has in and spectra:in params, in is used in out as format_source",
+# which does not work in Galaxy: https://github.com/galaxyproject/galaxy/pull/9493"
+# therefore hardcoded params change the name of spectra:in to spectra:_in
+# which is corrected here again
+# TODO remove once PR is in and adapt profile accordingly
+fix_underscores(args)
 
 model = CTDModel(from_file=input_ctd)
 
 # transform values from json that correspond to
 # - old style booleans (string + restrictions) -> transformed to a str
+# - new style booleans that get a string (happens for hidden parameters [-test])
+#   are transformed to a bool
 # - unrestricted ITEMLIST which are represented as strings
 #   ("=quoted and space separated) in Galaxy -> transform to lists
 # - optional data input parameters that have defaults and for which no
@@ -141,20 +166,24 @@ for p in model.get_parameters():
     except KeyError:
         # few tools use dashes in parameters which are automatically replaced
         # by underscores by Galaxy. in these cases the dictionary needs to be
-        # updated
+        # updated (better: then dash and the underscore variant are in the dict)
         # TODO might be removed later https://github.com/OpenMS/OpenMS/pull/4529
         try:
-            jl = [_.replace("-", "_") for _ in p.get_lineage(name_only=True)]
-            getFromDict(args, jl)
+            lineage = [_.replace("-", "_") for _ in p.get_lineage(name_only=True)]
+            val = getFromDict(args, lineage)
         except KeyError:
             continue
         else:
-            setInDict(args, p.get_lineage(name_only=True), jl)
+            setInDict(args, p.get_lineage(name_only=True), val)
 
     if p.type is str and type(p.restrictions) is _Choices and set(p.restrictions.choices) == set(["true", "false"]):
         v = getFromDict(args, p.get_lineage(name_only=True))
         setInDict(args, p.get_lineage(name_only=True), str(v).lower())
-
+    elif p.type is bool:
+        v = getFromDict(args, p.get_lineage(name_only=True))
+        if isinstance(v, str):
+            v = (v.lower() == "true")
+            setInDict(args, p.get_lineage(name_only=True), v)
     elif p.is_list and (p.restrictions is None or type(p.restrictions) is _NumericRange):
         v = getFromDict(args, p.get_lineage(name_only=True))
         if type(v) is str:

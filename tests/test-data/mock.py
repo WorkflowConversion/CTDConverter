@@ -4,7 +4,6 @@
 # i.e. to create them
 
 import os
-import re
 import shutil
 import sys
 

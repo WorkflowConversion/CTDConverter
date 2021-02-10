@@ -11,7 +11,7 @@
 
 import ruamel.yaml as yaml
 
-from CTDopts.CTDopts import _InFile, _OutFile, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
+from CTDopts.CTDopts import _InFile, _OutFile, _Choices, _Null
 from common import utils, logger
 
 # all cwl-related properties are defined here
@@ -72,7 +72,7 @@ def convert_models(args, parsed_ctds):
 
         logger.info("Writing to %s" % utils.get_filename(output_file), 1)
 
-        stream = file(output_file, 'w')
+        stream = open(output_file, 'w')
         stream.write(CWL_SHEBANG + '\n\n')
         stream.write("# This CWL file was automatically generated using CTDConverter.\n")
         stream.write("# Visit https://github.com/WorkflowConversion/CTDConverter for more information.\n\n")

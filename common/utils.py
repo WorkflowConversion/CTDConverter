@@ -441,6 +441,6 @@ def indent(s, indentation="  "):
 def getFromDict(dataDict, mapList):
     return reduce(operator.getitem, mapList, dataDict)
 
+
 def setInDict(dataDict, mapList, value):
     getFromDict(dataDict, mapList[:-1])[mapList[-1]] = value
-

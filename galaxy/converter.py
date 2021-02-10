@@ -4,19 +4,17 @@ import json
 import os
 import os.path
 import re
-import string
 import sys
 
 from collections import OrderedDict
 import copy
-from io import StringIO
 from lxml import etree
 from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse, strip_elements
 
 from common import utils, logger
 from common.exceptions import ApplicationException, InvalidModelException
 
-from CTDopts.CTDopts import _InFile, _OutFile, _OutPrefix, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null, CTDTYPE_TO_TYPE, ParameterGroup
+from CTDopts.CTDopts import _InFile, _OutFile, _OutPrefix, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
 
 
 # mapping to CTD types to Galaxy types
@@ -41,7 +39,7 @@ class ExitCode:
 
 
 class DataType:
-    def __init__(self, extension, galaxy_extension, composite = None):
+    def __init__(self, extension, galaxy_extension, composite=None):
         self.extension = extension
         self.galaxy_extension = galaxy_extension
         self.composite = composite
@@ -117,7 +115,7 @@ def modify_param_for_galaxy(param):
         # need to be taken care by hardcoded values and the other cases
         # are chosen automatically if not specified on the command line)
         if param.required and not (param.default is None or type(param.default) is _Null):
-            logger.warning("Data parameter %s with default (%s)" %(param.name, param.default), 1)
+            logger.warning("Data parameter %s with default (%s)" % (param.name, param.default), 1)
             param.required = False
             param.default = _Null()
     return param
@@ -170,16 +168,6 @@ def convert_models(args, parsed_ctds):
                       tool_version=args.tool_version,
                       tool_profile=args.tool_profile,
                       bump=bump)
-    # generation of galaxy stubs is ready... now, let's see if we need to generate a tool_conf.xml
-    # TODO remove tool conf .. deprecated
-#     if args.tool_conf_destination is not None:
-#         generate_tool_conf(parsed_ctds, args.tool_conf_destination,
-#                            args.galaxy_tool_path, args.default_category)
-
-    # TODO remove datatypes_conf generation
-    # generate datatypes_conf.xml
-#     if args.data_types_destination is not None:
-#         generate_data_type_conf(supported_file_formats, args.data_types_destination)
 
 
 def parse_bump_file(bump_file):
@@ -187,7 +175,6 @@ def parse_bump_file(bump_file):
         return None
     with open(bump_file) as fp:
         return json.load(fp)
-
 
 
 def parse_tools_list_file(tools_list_file):
@@ -224,12 +211,10 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
                 logger.info("Macro %s found" % name, 1)
                 macros_to_expand.append(name)
         except ParseError as e:
-            raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " +
-                                       str(e))
+            raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " + str(e))
 
         except IOError as e:
-            raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " +
-                                       str(e))
+            raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " + str(e))
         else:
             macros_file.close()
 
@@ -315,11 +300,9 @@ def check_test_macros(test_macros_files, test_macros_prefix, parsed_ctds):
                     macro_ids.add(name)
 
         except ParseError as e:
-            raise ApplicationException("The macros file " + mf + " could not be parsed. Cause: " +
-                                       str(e))
+            raise ApplicationException("The macros file " + mf + " could not be parsed. Cause: " + str(e))
         except IOError as e:
-            raise ApplicationException("The macros file " + mf + " could not be opened. Cause: " +
-                                       str(e))
+            raise ApplicationException("The macros file " + mf + " could not be opened. Cause: " + str(e))
         for t in tool_ids - macro_ids:
             logger.error("missing %s" % t)
             add_child_node(root, "xml", OrderedDict([("name", mp + t)]))
@@ -356,10 +339,7 @@ def parse_file_formats(formats_file):
                                                       parsed_formats[1],
                                                       composite))
                 else:
-                    logger.warning(
-                        "Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" %
-                        (line_number, line), 0)
-    
+                    logger.warning("Invalid line at line number %d of the given formats file. Line will be ignored:\n%s" % (line_number, line), 0)
     return supported_formats
 
 
@@ -458,8 +438,8 @@ def _convert_internal(parsed_ctds, **kwargs):
                     if a == "type":
                         try:
                             t = GALAXY_TYPE_TO_TYPE[hardcoded_attributes[a]]
-                        except:
-                            logger.error("Could not set hardcoded attribute %s=%s for %s"%(a, hardcoded_attributes[a], param.name))
+                        except KeyError:
+                            logger.error("Could not set hardcoded attribute %s=%s for %s" % (a, hardcoded_attributes[a], param.name))
                             sys.exit(1)
                         setattr(param, a, t)
                     elif type(getattr(param, a)) is _FileFormat or (param.type in [_InFile, _OutFile, _OutPrefix] and a == "restrictions"):
@@ -519,61 +499,6 @@ def write_header(tool, model):
     tool.addprevious(etree.Comment('Proposed Tool Section: [%s]' % model.opt_attribs.get("category", "")))
 
 
-def generate_tool_conf(parsed_ctds, tool_conf_destination, galaxy_tool_path, default_category):
-    # for each category, we keep a list of models corresponding to it
-    categories_to_tools = dict()
-    for parsed_ctd in parsed_ctds:
-        category = strip(parsed_ctd.ctd_model.opt_attribs.get("category", ""))
-        if not category.strip():
-            category = default_category
-        if category not in categories_to_tools:
-            categories_to_tools[category] = []
-        categories_to_tools[category].append(utils.get_filename(parsed_ctd.suggested_output_file))
-
-    # at this point, we should have a map for all categories->tools
-    toolbox_node = Element("toolbox")
-
-    if galaxy_tool_path is not None and not galaxy_tool_path.strip().endswith("/"):
-        galaxy_tool_path = galaxy_tool_path.strip() + "/"
-    if galaxy_tool_path is None:
-        galaxy_tool_path = ""
-
-    for category, file_names in categories_to_tools.iteritems():
-        section_node = add_child_node(toolbox_node, "section")
-        section_node.attrib["id"] = "section-id-" + "".join(category.split())
-        section_node.attrib["name"] = category
-
-        for filename in file_names:
-            tool_node = add_child_node(section_node, "tool")
-            tool_node.attrib["file"] = galaxy_tool_path + filename
-
-    toolconf_tree = ElementTree(toolbox_node)
-    toolconf_tree.write(open(tool_conf_destination, 'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    logger.info("Generated Galaxy tool_conf.xml in %s" % tool_conf_destination, 0)
-
-
-def generate_data_type_conf(supported_file_formats, data_types_destination):
-    data_types_node = Element("datatypes")
-    registration_node = add_child_node(data_types_node, "registration")
-    registration_node.attrib["converters_path"] = "lib/galaxy/datatypes/converters"
-    registration_node.attrib["display_path"] = "display_applications"
-
-    for format_name in supported_file_formats:
-        data_type = supported_file_formats[format_name]
-        # add only if it's a data type that does not exist in Galaxy
-        if data_type.galaxy_type is not None:
-            data_type_node = add_child_node(registration_node, "datatype")
-            # we know galaxy_extension is not None
-            data_type_node.attrib["extension"] = data_type.galaxy_extension
-            data_type_node.attrib["type"] = data_type.galaxy_type
-            if data_type.mimetype is not None:
-                data_type_node.attrib["mimetype"] = data_type.mimetype
-
-    data_types_tree = ElementTree(data_types_node)
-    data_types_tree.write(open(data_types_destination, 'w'), encoding="UTF-8", xml_declaration=True, pretty_print=True)
-    logger.info("Generated Galaxy datatypes_conf.xml in %s" % data_types_destination, 0)
-
-
 def create_tool(model, profile, bump):
     """
     initialize the tool
@@ -593,7 +518,7 @@ def create_tool(model, profile, bump):
 
     attrib = OrderedDict([("id", tool_id),
                           ("name", model.name),
-                          ("version", "@TOOL_VERSION@+galaxy"+gxy_version)])
+                          ("version", "@TOOL_VERSION@+galaxy" + gxy_version)])
     if profile is not None:
         attrib["profile"] = profile
     return Element("tool", attrib)
@@ -626,8 +551,8 @@ def create_configfiles(tool, model, **kwargs):
     """
 
     configfiles_node = add_child_node(tool, "configfiles")
-    inputs_node = add_child_node(configfiles_node, "inputs",
-                                 OrderedDict([("name", "args_json"), ("data_style", "paths")]))
+    add_child_node(configfiles_node, "inputs",
+                   OrderedDict([("name", "args_json"), ("data_style", "paths")]))
 
     parameter_hardcoder = kwargs.get("parameter_hardcoder")
     hc_dict = dict()
@@ -638,14 +563,15 @@ def create_configfiles(tool, model, **kwargs):
         path = utils.extract_param_path(param)
         for i, v in enumerate(path[:-1]):
             try:
-                utils.getFromDict(hc_dict, path[:i+1])
+                utils.getFromDict(hc_dict, path[:i + 1])
             except KeyError:
-                utils.setInDict(hc_dict, path[:i+1], {})
+                utils.setInDict(hc_dict, path[:i + 1], {})
         utils.setInDict(hc_dict, path, hardcoded_value)
     hc_node = add_child_node(configfiles_node, "configfile",
-                                 OrderedDict([("name", "hardcoded_json")]))
-    hc_node.text = CDATA(json.dumps(hc_dict).replace('$', '\$'))
+                             OrderedDict([("name", "hardcoded_json")]))
+    hc_node.text = CDATA(json.dumps(hc_dict).replace('$', r'\$'))
     # print(json.dumps(hc_dict))
+
 
 def create_command(tool, model, **kwargs):
     """
@@ -687,7 +613,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         param = modify_param_for_galaxy(param)
 
         param_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
-        param_name = utils.extract_param_name(param)
         command_line_prefix = utils.extract_command_line_prefix(param, model)
 
         # TODO use utils.extract_param_name(param).replace(":", "_")? Then hardcoding ctd variables (with :) and tool variables (with _) can be distinguished
@@ -745,7 +670,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 if type_param is not None:
                     type_param_name = get_galaxy_parameter_path(type_param)
                 elif len(formats) > 1 and (corresponding_input is None or not
-                                           fmt_from_corresponding): #  and not param.is_list:
+                                           fmt_from_corresponding):  # and not param.is_list:
                     type_param_name = get_galaxy_parameter_path(param, suffix="type")
                 else:
                     type_param_name = None
@@ -859,7 +784,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         final_cmd['command'].extend(stdout)
 
     ctd_out = ["#if \"ctd_out_FLAG\" in $OPTIONAL_OUTPUTS"] + utils.indent(["&& mv '@EXECUTABLE@.ctd' '$ctd_out'"]) + ["#end if"]
-    final_cmd['postprocessing'].extend( ctd_out )
+    final_cmd['postprocessing'].extend(ctd_out)
     command_node = add_child_node(tool, "command")
     command_node.attrib["detect_errors"] = "exit_code"
 
@@ -955,6 +880,7 @@ def get_out_type_param(out_param, model, parameter_hardcoder):
 def is_in_type_param(param, model):
     return is_type_param(param, model, [_InFile])
 
+
 def is_out_type_param(param, model):
     """
     check if the parameter is output_type parameter
@@ -962,6 +888,7 @@ def is_out_type_param(param, model):
     and return True iff this is the case
     """
     return is_type_param(param, model, [_OutFile, _OutPrefix])
+
 
 def is_type_param(param, model, tpe):
     """
@@ -977,6 +904,7 @@ def is_type_param(param, model, tpe):
         if param.name == out_param.name + "_type":
             return True
     return False
+
 
 def get_corresponding_input(out_param, model):
     """
@@ -1073,7 +1001,6 @@ def create_inputs(tool, model, **kwargs):
             parent_node = inputs_node
 
         # sometimes special inputs are needed for outfiles:
-        add_formats = False
         if param.type is _OutFile or param.type is _OutPrefix:
             # if there are multiple possible output formats, but no parameter to choose the type or a
             # corresponding input then add a selection parameter
@@ -1081,7 +1008,7 @@ def create_inputs(tool, model, **kwargs):
             type_param = get_out_type_param(param, model, parameter_hardcoder)
             corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
             if len(formats) > 1 and type_param is None and (corresponding_input is None or not
-                                                            fmt_from_corresponding):#  and not param.is_list:
+                                                            fmt_from_corresponding):  # and not param.is_list:
                 fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", param.name + "_type"), ("type", "select"), ("optional", "false"), ("label", "File type of output %s (%s)" % (param.name, param.description))]))
                 g2o, o2g = get_fileformat_maps(kwargs["supported_file_formats"])
 #                 for f in formats:
@@ -1102,8 +1029,7 @@ def create_inputs(tool, model, **kwargs):
             for a in hardcoded_attributes:
                 param_node.attrib[a] = str(hardcoded_attributes[a])
 
-
-    section_parents = [ utils.extract_param_name(section_params[sn].parent) for sn in section_nodes ]
+    section_parents = [utils.extract_param_name(section_params[sn].parent) for sn in section_nodes]
     for sn in section_nodes:
         if len(section_nodes[sn]) == 0 and sn not in section_parents:
             continue
@@ -1116,7 +1042,7 @@ def create_inputs(tool, model, **kwargs):
 
     # Add select for optional outputs
     out, optout = all_outputs(model, parameter_hardcoder)
-    attrib = OrderedDict([("name","OPTIONAL_OUTPUTS"),
+    attrib = OrderedDict([("name", "OPTIONAL_OUTPUTS"),
                           ("type", "select"),
                           ("optional", "true"),
                           ("multiple", "true"),
@@ -1129,11 +1055,11 @@ def create_inputs(tool, model, **kwargs):
     for o in optout:
         title, help_text = generate_label_and_help(o.description)
         option_node = add_child_node(param_node, "option",
-                                     OrderedDict([("value", o.name+"_FLAG")]),
-                                     text = "%s (%s)" % (o.name, title))
+                                     OrderedDict([("value", o.name + "_FLAG")]),
+                                     text="%s (%s)" % (o.name, title))
     option_node = add_child_node(param_node, "option",
                                  OrderedDict([("value", "ctd_out_FLAG")]),
-                                 text = "Output used ctd (ini) configuration file")
+                                 text="Output used ctd (ini) configuration file")
 
     return inputs_node
 
@@ -1189,6 +1115,7 @@ def get_galaxy_formats(param, model, o2g, default=None):
                                         "for [%(name)s]" % {"type": type(param.restrictions),
                                                             "name": param.name})
     return sorted(gxy_formats)
+
 
 def create_param_attribute_list(param_node, param, model, supported_file_formats):
     """
@@ -1276,9 +1203,9 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                         option_node.attrib["selected"] = "true"
             else:
                 for choice in param.restrictions.choices:
-                    option_node = add_child_node(param_node, "option", 
+                    option_node = add_child_node(param_node, "option",
                                                  OrderedDict([("value", str(choice))]),
-                                                 text = str(choice))
+                                                 text=str(choice))
                     if is_default(choice, param):
                         option_node.attrib["selected"] = "true"
 
@@ -1513,17 +1440,16 @@ def create_boolean_parameter(param_node, param):
         param_node.attrib["falsevalue"] = "false"
         param_node.attrib["checked"] = str(param.default).lower()
 
-    if param_node.attrib.has_key("optional"):
+    if "optional" in param_node.attrib:
         del param_node.attrib["optional"]
 
 
 def all_outputs(model, parameter_hardcoder):
     """
-    return lists of reqired and optional output parameters 
+    return lists of reqired and optional output parameters
     """
     out = []
     optout = []
-    nout = 0
     for param in utils.extract_and_flatten_parameters(model):
         hardcoded_value = parameter_hardcoder.get_hardcoded_value(utils.extract_param_name(param), model.name)
         if parameter_hardcoder.get_blacklist(utils.extract_param_name(param), model.name) or hardcoded_value:
@@ -1579,12 +1505,11 @@ def create_outputs(parent, model, **kwargs):
                                 OrderedDict([("name", "stdout"), ("format", "txt"),
                                              ("label", "${tool.name} on ${on_string}: stdout"),
                                              ("format", "txt")]))
-        filter_node = add_child_node(stdout, "filter",
-                                     text="OPTIONAL_OUTPUTS is None")
+        add_child_node(stdout, "filter", text="OPTIONAL_OUTPUTS is None")
 
     # manually add output for the ctd file
-    ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name","ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
-    ctd_filter = add_child_node(ctd_out, "filter", text='OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS')
+    ctd_out = add_child_node(outputs_node, "data", OrderedDict([("name", "ctd_out"), ("format", "xml"), ("label", "${tool.name} on ${on_string}: ctd")]))
+    add_child_node(ctd_out, "filter", text='OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS')
     return outputs_node
 
 
@@ -1594,7 +1519,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     # add a data node / collection + discover_datasets
     # in the former case we just set the discover_node equal to the data node
     # then we can just use this to set the common format attribute
-    if not param.is_list and not param.type is _OutPrefix:
+    if not param.is_list and param.type is not _OutPrefix:
         data_node = add_child_node(parent, "data")
         discover_node = data_node
     else:
@@ -1612,9 +1537,9 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
     if type_param is not None:
         type_param_name = get_galaxy_parameter_path(type_param)
-        type_param_choices = get_formats(param, model, o2g)# [_ for _ in type_param.restrictions.choices]
+        type_param_choices = get_formats(param, model, o2g)  # [_ for _ in type_param.restrictions.choices]
     elif len(formats) > 1 and (corresponding_input is None or not
-                               fmt_from_corresponding): # and not param.is_list:
+                               fmt_from_corresponding):  # and not param.is_list:
         type_param_name = get_galaxy_parameter_path(param, suffix="type")
         type_param_choices = get_formats(param, model, o2g)
     else:
@@ -1628,7 +1553,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
         if param.is_list:
             discover_node.attrib["pattern"] = "__name__"
         elif param.type is _OutPrefix:
-            discover_node.attrib["pattern"] = "_?(?P<designation>.*)\.[^.]*"
+            discover_node.attrib["pattern"] = r"_?(?P<designation>.*)\.[^.]*"
 
     # if there is another parameter where the user selects the format
     # then this format was added as file extension on the CLI, now we can discover this
@@ -1809,7 +1734,7 @@ def create_test_only(model, **kwargs):
 
     test = Element("test")
     advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
-    adv_sel = add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
+    add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
 
     optout = ["ctd_out_FLAG"]
     outcnt = 1
@@ -1871,16 +1796,14 @@ def create_test_only(model, **kwargs):
                         ext = formats[0]
 
                 if len(formats) > 1 and (corresponding_input is None or not
-                                         fmt_from_corresponding): #  and not param.is_list:
+                                         fmt_from_corresponding):  # and not param.is_list:
                     if type_param is None:
                         try:
                             print("%s -> %s" % (ext, g2o[ext]))
                             attrib = OrderedDict([("name", param.name + "_type"), ("value", g2o[ext])])
-                            fmt_select = add_child_node(parent, "param", attrib)
-                        except:
-                            raise Exception("parent %s name %s ext %s" %
-                                            (parent, param.name,
-                                            ext))
+                            add_child_node(parent, "param", attrib)
+                        except KeyError:
+                            raise Exception("parent %s name %s ext %s" % (parent, param.name, ext))
                 if type_param is not None and type(type_param.default) is _Null:
                     if ext is not None:
                         type_param.default = ext
@@ -1948,15 +1871,15 @@ def create_test_only(model, **kwargs):
             ext = os.path.splitext(value)[1][1:]
             if ext in unsniffable and ext in o2g:
                 nd.attrib["ftype"] = o2g[ext]
-   
-    add_child_node(test, "param", OrderedDict([("name", "OPTIONAL_OUTPUTS"), 
+
+    add_child_node(test, "param", OrderedDict([("name", "OPTIONAL_OUTPUTS"),
                                                ("value", ",".join(optout))]))
     ctd_out = add_child_node(test, "output", OrderedDict([("name", "ctd_out"), ("ftype", "xml")]))
     ctd_assert = add_child_node(ctd_out, "assert_contents")
     add_child_node(ctd_assert, "is_valid_xml")
 
     if outcnt == 0:
-        outcnt += 1     
+        outcnt += 1
         nd = add_child_node(test, "output", OrderedDict([("name", "stdout"),
                                                          ("value", "stdout.txt"),
                                                          ("compare", "sim_size")]))
