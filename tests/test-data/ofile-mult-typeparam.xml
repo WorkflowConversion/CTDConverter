@@ -12,19 +12,18 @@
   <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
 @EXT_FOO@
 #import re
-#import os
 
 ## Preprocessing
 mkdir mandatory_mandatoryinput &&
-mkdir ${' '.join(["'mandatory_mandatoryinput/%s'"%(os.path.basename(str(_))[:-4]) for _ in $inp_mandatory_mandatoryinput if _])} && 
+mkdir ${' '.join(["'mandatory_mandatoryinput/%s'" % (i) for i, f in enumerate($inp_mandatory_mandatoryinput) if f])} && 
 mkdir inp_mandatory_mandatoryinput &&
-mkdir ${' '.join(["'inp_mandatory_mandatoryinput/%s'"%(os.path.basename(str(_))[:-4]) for _ in $inp_mandatory_mandatoryinput if _])} && 
-${' '.join(["ln -s '%s' 'inp_mandatory_mandatoryinput/%s/%s.%s' && " % (_, os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $inp_mandatory_mandatoryinput if _])}
+mkdir ${' '.join(["'inp_mandatory_mandatoryinput/%s'" % (i) for i, f in enumerate($inp_mandatory_mandatoryinput) if f])} && 
+${' '.join(["ln -s '%s' 'inp_mandatory_mandatoryinput/%s/%s.%s' && " % (f, i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($inp_mandatory_mandatoryinput) if f])}
 mkdir test_section_sect_mandatory_mandatoryinput &&
-mkdir ${' '.join(["'test_section_sect_mandatory_mandatoryinput/%s'"%(os.path.basename(str(_))[:-4]) for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])} && 
+mkdir ${' '.join(["'test_section_sect_mandatory_mandatoryinput/%s'" % (i) for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])} && 
 mkdir test_section.sect_inp_mandatory_mandatoryinput &&
-mkdir ${' '.join(["'test_section.sect_inp_mandatory_mandatoryinput/%s'"%(os.path.basename(str(_))[:-4]) for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])} && 
-${' '.join(["ln -s '%s' 'test_section.sect_inp_mandatory_mandatoryinput/%s/%s.%s' && " % (_, os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])}
+mkdir ${' '.join(["'test_section.sect_inp_mandatory_mandatoryinput/%s'" % (i) for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])} && 
+${' '.join(["ln -s '%s' 'test_section.sect_inp_mandatory_mandatoryinput/%s/%s.%s' && " % (f, i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])}
 
 ## Main program call
 
@@ -33,17 +32,17 @@ set -o pipefail &&
 python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd
 -mandatory_mandatoryinput
-${' '.join(["'mandatory_mandatoryinput/%s/%s.%s'"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext("tsv")) for _ in $inp_mandatory_mandatoryinput if _])}
+${' '.join(["'mandatory_mandatoryinput/%s/%s.%s'"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext("tsv")) for i, f in enumerate($inp_mandatory_mandatoryinput) if f])}
 -inp_mandatory_mandatoryinput
-${' '.join(["'inp_mandatory_mandatoryinput/%s/%s.%s'"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $inp_mandatory_mandatoryinput if _])}
+${' '.join(["'inp_mandatory_mandatoryinput/%s/%s.%s'"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($inp_mandatory_mandatoryinput) if f])}
 -test_section:sect_mandatory_mandatoryinput
-${' '.join(["'test_section_sect_mandatory_mandatoryinput/%s/%s.%s'"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $test_section.sect_mandatory_mandatoryinput_type) for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])}
+${' '.join(["'test_section_sect_mandatory_mandatoryinput/%s/%s.%s'"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $test_section.sect_mandatory_mandatoryinput_type) for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])}
 -test_section:sect_inp_mandatory_mandatoryinput
-${' '.join(["'test_section.sect_inp_mandatory_mandatoryinput/%s/%s.%s'"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])}
+${' '.join(["'test_section.sect_inp_mandatory_mandatoryinput/%s/%s.%s'"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])}
 
 ## Postprocessing
-${' '.join(["&& mv -n 'mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s' 'mandatory_mandatoryinput/%(bn)s/%(id)s'"%{"bn": os.path.basename(str(_))[:-4], "id": re.sub('[^\w\-_]', '_', _.element_identifier), "gext": $gxy2omsext("tsv")} for _ in $inp_mandatory_mandatoryinput if _])}
-${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.%(omsext)s' 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s'"%{"bn": os.path.basename(str(_))[:-4], "id": re.sub('[^\w\-_]', '_', _.element_identifier), "omsext":$test_section.sect_mandatory_mandatoryinput_type, "gext": $oms2gxyext(str($test_section.sect_mandatory_mandatoryinput_type))} for _ in $test_section.sect_inp_mandatory_mandatoryinput if _])}
+${' '.join(["&& mv -n 'mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s' 'mandatory_mandatoryinput/%(bn)s/%(id)s'"%{"bn": i, "id": re.sub('[^\w\-_]', '_', f.element_identifier), "gext": $gxy2omsext("tsv")} for i, f in enumerate($inp_mandatory_mandatoryinput) if f])}
+${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.%(omsext)s' 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s'"%{"bn": i, "id": re.sub('[^\w\-_]', '_', f.element_identifier), "omsext":$test_section.sect_mandatory_mandatoryinput_type, "gext": $oms2gxyext(str($test_section.sect_mandatory_mandatoryinput_type))} for i, f in enumerate($test_section.sect_inp_mandatory_mandatoryinput) if f])}
 #if "ctd_out_FLAG" in $OPTIONAL_OUTPUTS
   && mv '@EXECUTABLE@.ctd' '$ctd_out'
 #end if]]></command>

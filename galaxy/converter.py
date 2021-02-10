@@ -584,7 +584,7 @@ def create_command(tool, model, **kwargs):
     final_cmd = OrderedDict([('preprocessing', []), ('command', []), ('postprocessing', [])])
     advanced_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
 
-    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "#import os", "", "## Preprocessing"])
+    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "", "## Preprocessing"])
 
     # - call the executable with -write_ctd to write the ctd file (with defaults)
     # - use fill_ctd.py to overwrite the defaults in the ctd file with the
@@ -639,9 +639,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
             if param.type is _InFile:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 if param.is_list:
-                    param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + _actual_parameter + " if _])} && ")
-                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (_, os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _])}")
-                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(_.ext)) for _ in $" + _actual_parameter + " if _])}")
+                    param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + _actual_parameter + ") if f])} && ")
+                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (f, i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
+                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
                 else:
                     param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
                     param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
@@ -685,9 +685,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     fmt = formats.pop()
                     if param.is_list:
                         logger.info("1 fmt + list %s -> %s" % (param.name, actual_input_parameter), 1)
-                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $gxy2omsext(\"" + fmt + "\")) for _ in $" + actual_input_parameter + " if _])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s' '" + _actual_parameter + "/%(bn)s/%(id)s'\"%{\"bn\": os.path.basename(str(_))[:-4], \"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(\"" + fmt + "\")) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s' '" + _actual_parameter + "/%(bn)s/%(id)s'\"%{\"bn\": i, \"id\": re.sub('[^\w\-_]', '_', f.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
                         logger.info("1 fmt + dataset %s" % param.name, 1)
                         param_cmd['command'].append("'" + actual_parameter + "/output.${gxy2omsext(\"" + fmt + "\")}'")
@@ -699,9 +699,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 elif type_param_name is not None:
                     if param.is_list:
                         logger.info("type + list %s" % param.name, 1)
-                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), $" + type_param_name + ") for _ in $" + actual_input_parameter + " if _])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(omsext)s' '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s'\"%{\"bn\": os.path.basename(str(_))[:-4], \"id\": re.sub('[^\w\-_]', '_', _.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $" + type_param_name + ") for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(omsext)s' '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s'\"%{\"bn\": i, \"id\": re.sub('[^\w\-_]', '_', f.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
                         logger.info("type + dataset %s" % param.name, 1)
                         # 1st create file with openms extension (often required by openms)
@@ -712,8 +712,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 elif actual_input_parameter is not None:
                     if param.is_list:
                         logger.info("actual + list %s" % param.name, 1)
-                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\"%(os.path.basename(str(_))[:-4]) for _ in $" + actual_input_parameter + " if _])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(os.path.basename(str(_))[:-4], re.sub('[^\w\-_]', '_', _.element_identifier), _.ext) for _ in $" + actual_input_parameter + " if _])}")
+                        param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), f.ext) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
                         logger.info("actual + dataset %s %s %s" % (param.name, actual_input_parameter, corresponding_input.is_list), 1)
                         if corresponding_input.is_list:
