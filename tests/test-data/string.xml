@@ -1,0 +1,121 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
+<!--Proposed Tool Section: [Test]-->
+<tool id="string" name="string" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+  <description>String parameter tests</description>
+  <macros>
+    <token name="@EXECUTABLE@">string</token>
+    <import>macros.xml</import>
+  </macros>
+  <expand macro="requirements"/>
+  <expand macro="stdio"/>
+  <command detect_errors="exit_code"><![CDATA[@QUOTE_FOO@
+@EXT_FOO@
+#import re
+
+## Preprocessing
+
+## Main program call
+
+set -o pipefail &&
+@EXECUTABLE@ -write_ctd ./ &&
+python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hardcoded_json' &&
+@EXECUTABLE@ -ini @EXECUTABLE@.ctd
+| tee '$stdout'
+
+## Postprocessing
+#if "ctd_out_FLAG" in $OPTIONAL_OUTPUTS
+  && mv '@EXECUTABLE@.ctd' '$ctd_out'
+#end if]]></command>
+  <configfiles>
+    <inputs name="args_json" data_style="paths"/>
+    <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
+  </configfiles>
+  <inputs>
+    <param name="wodefault_mandatory_unrestricted" argument="-wodefault_mandatory_unrestricted" type="text" optional="false" value="" label="string" help="">
+      <expand macro="list_string_san"/>
+    </param>
+    <param name="default_mandatory_unrestricted" argument="-default_mandatory_unrestricted" type="text" optional="false" value="default" label="string" help="">
+      <expand macro="list_string_san"/>
+    </param>
+    <param name="wodefault_optional_unrestricted" argument="-wodefault_optional_unrestricted" type="text" optional="true" value="" label="string" help="">
+      <expand macro="list_string_san"/>
+    </param>
+    <param name="default_optional_unrestricted" argument="-default_optional_unrestricted" type="text" optional="true" value="default" label="string" help="">
+      <expand macro="list_string_san"/>
+    </param>
+    <section name="test_section" title="Test Section" help="" expanded="false">
+      <param name="sect_wodefault_mandatory_unrestricted" argument="-test_section:sect_wodefault_mandatory_unrestricted" type="text" optional="false" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_default_mandatory_unrestricted" argument="-test_section:sect_default_mandatory_unrestricted" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_wodefault_optional_unrestricted" argument="-test_section:sect_wodefault_optional_unrestricted" type="text" optional="true" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_default_optional_unrestricted" argument="-test_section:sect_default_optional_unrestricted" type="text" optional="true" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_wodefault_mandatory_unrestricted_adv" argument="-test_section:sect_wodefault_mandatory_unrestricted_adv" type="text" optional="false" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_default_mandatory_unrestricted_adv" argument="-test_section:sect_default_mandatory_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_wodefault_optional_unrestricted_adv" argument="-test_section:sect_wodefault_optional_unrestricted_adv" type="text" optional="true" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="sect_default_optional_unrestricted_adv" argument="-test_section:sect_default_optional_unrestricted_adv" type="text" optional="true" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+    </section>
+    <expand macro="adv_opts_macro">
+      <param name="wodefault_mandatory_unrestricted_adv" argument="-wodefault_mandatory_unrestricted_adv" type="text" optional="false" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="default_mandatory_unrestricted_adv" argument="-default_mandatory_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="wodefault_optional_unrestricted_adv" argument="-wodefault_optional_unrestricted_adv" type="text" optional="true" value="" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+      <param name="default_optional_unrestricted_adv" argument="-default_optional_unrestricted_adv" type="text" optional="true" value="default" label="string" help="">
+        <expand macro="list_string_san"/>
+      </param>
+    </expand>
+    <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">
+      <option value="ctd_out_FLAG">Output used ctd (ini) configuration file</option>
+    </param>
+  </inputs>
+  <outputs>
+    <data name="stdout" format="txt" label="${tool.name} on ${on_string}: stdout">
+      <filter>OPTIONAL_OUTPUTS is None</filter>
+    </data>
+    <data name="ctd_out" format="xml" label="${tool.name} on ${on_string}: ctd">
+      <filter>OPTIONAL_OUTPUTS is not None and "ctd_out_FLAG" in OPTIONAL_OUTPUTS</filter>
+    </data>
+  </outputs>
+  <tests>
+    <test expect_num_outputs="1">
+      <param name="wodefault_mandatory_unrestricted" value="1 2"/>
+      <param name="default_mandatory_unrestricted" value="default"/>
+      <section name="test_section">
+        <param name="sect_wodefault_mandatory_unrestricted" value="1 2"/>
+        <param name="sect_default_mandatory_unrestricted" value="default"/>
+        <param name="sect_wodefault_mandatory_unrestricted_adv" value="1 2"/>
+        <param name="sect_default_mandatory_unrestricted_adv" value="default"/>
+      </section>
+      <conditional name="adv_opts_cond">
+        <param name="wodefault_mandatory_unrestricted_adv" value="1 2"/>
+        <param name="default_mandatory_unrestricted_adv" value="default"/>
+        <param name="adv_opts_selector" value="advanced"/>
+      </conditional>
+    </test>
+  </tests>
+  <help><![CDATA[String parameter tests.
+
+
+For more information, visit http://www.openms.de/unavailable.html]]></help>
+  <expand macro="references"/>
+</tool>

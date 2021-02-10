@@ -77,6 +77,16 @@ There are some macros that are required, namely `stdio`, `requirements` and `adv
 
 Please note that the used macros files **must** be copied to your Galaxy installation on the same location in which you place the generated *ToolConfig* files, otherwise Galaxy will not be able to parse the generated *ToolConfig* files!
 
+## Including additional Test Macros files
+* Purpose: Include macros containing tests
+* `--test-macros` and `--test-macros-prefix`
+* Required: no.
+* Taken values: List of paths and corresponding prefixes
+
+This allows to specify macro file(s) containing tests. The macros should be
+named `<xml name="PREFIX_TOOLNAME">` where `PREFIX` is the value specified 
+with `--test-macros-prefix`.
+
 ## Generating a `datatypes_conf.xml` File
 * Purpose: Specify the destination of a generated `datatypes_conf.xml` file.
 * Short/long version: `-d` / `--datatypes-destination`
@@ -112,27 +122,6 @@ The following is an example of a valid "file formats" file:
 Note that each line consists of either one, three or four columns. In the case of data types already registered in Galaxy (such as `fasta` and `txt` in the above example), only the first column is needed. In the case of data types that haven't been yet registered in Galaxy, the first three columns are needed (mimetype is optional).
 
 For information about Galaxy data types and subclasses, consult the following page: https://wiki.galaxyproject.org/Admin/Datatypes/Adding%20Datatypes
-
-## Remarks about some of the *OpenMS* Tools
-* Most of the tools can be generated automatically. However, some of the tools need some extra work (for now).
-* The following adapters need to be changed, such that you provide the path to the executable:
-    * FidoAdapter (add `-exe fido` in the command tag, delete the `$param_exe` in the command tag, delete the parameter from the input list).
-    * MSGFPlusAdapter (add `-executable msgfplus.jar` in the command tag, delete the `$param_executable` in the command tag, delete the parameter from the input list).
-    * MyriMatchAdapter (add `-myrimatch_executable myrimatch` in the command tag, delete the `$param_myrimatch_executable` in the command tag, delete the parameter from the input list).
-    * OMSSAAdapter (add `-omssa_executable omssa` in the command tag, delete the `$param_omssa_executable` in the command tag, delete the parameter from the input list).
-    * PepNovoAdapter (add `-pepnovo_executable pepnovo` in the command tag, delete the `$param_pepnovo_executable` in the command tag, delete the parameter from the input list).
-    * XTandemAdapter (add `-xtandem_executable xtandem` in the command tag, delete the $param_xtandem_executable in the command tag, delete the parameter from the input list).
-    * To avoid the deletion in the inputs you can also add these parameters to the blacklist
-    
-    $ python convert.py galaxy -b exe executable myrimatch_excutable omssa_executable pepnovo_executable xtandem_executable
-
-* The following tools have multiple outputs (number of inputs = number of outputs) which is not yet supported in Galaxy-stable:
-    * SeedListGenerator
-    * SpecLibSearcher
-    * MapAlignerIdentification
-    * MapAlignerPoseClustering
-    * MapAlignerSpectrum
-    * MapAlignerRTTransformer
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
 [macros.xml]: https://github.com/WorkflowConversion/CTDConverter/blob/master/galaxy/macros.xml

@@ -123,17 +123,71 @@ Several inputs are given. The output is the already existent folder, `/data/wrap
     
 Please note that the output file name is **not** taken from the name of the input file, rather from the name of the tool, that is, from the `name` attribute in the `<tool>` element in its corresponding CTD. By convention, the name of the CTD file and the name of the tool match.
 
-### Blacklisting Parameters
-* Purpose: Some parameters present in the CTD are not to be exposed on the output files. Think of parameters such as `--help`, `--debug` that might won't make much sense to be exposed to final users in a workflow management system.
-* Short/long version: `-b` / `--blacklist-parameters`
+### Exclusion, hardcoding, and modification of Parameters
+* Purpose: Some parameters present in the CTD are not to be exposed on the output files (e.g. parameters such as `--help`, `--debug` that might won't make much sense to be exposed to users in a workflow management system), other parameters should be hardcoded (i.e. parameters that should not be exposed to the user but still set to a fixed value on the generated command line), and for other parameters it might be necessary to modify attributes of the input CTD or the generated output.
+* Short/long version: `-p` / `--hardcoded-parameters`
 * Required: no.
-* Taken values: A list of parameters to be blacklisted.
+* Taken values: A json file defining: exclusion, hardcoded, and modifications of parameters
 
 Example:
 
-    $ pythonconvert.py [FORMAT] ... -b h help quiet
-    
-In this case, `CTDConverter` will not process any of the parameters named `h`, `help`, or `quiet`, that is, they will not appear in the generated output files.
+    $ pythonconvert.py [FORMAT] ... -p JSON_FILE
+
+The json defines a mapping from parameter names to a list of modifications:
+
+```
+{
+    "parameter1": [MODIFICATION1, ...], 
+    "parameter2": [MODIFICATION1, ...]
+    ...
+}
+```
+
+where each modification is a mapping as defined below.
+
+
+#### Hardcoding parameters
+
+If a parameter should always be set on the command line using a fixed value, 
+i.e. the user can to choose the value, this can be done as follows: 
+
+`"parameter": [{"value":"HARDCODED_VALUE"}]`
+
+#### Excluding parameters
+
+In order to exclude a parameter, it will not appear in the generated tool or
+the generated command line, the same syntax as for hardcoding is used but a
+special reserved value is used:
+
+`"parameter": [{"value": "@"}]`
+
+#### Modifying parameters
+
+It's possible to modify attributes of the input CTD definition of a parameter
+as well as attributes of the generated Galaxy XML tags. 
+
+```
+	"test": [{
+		"CTD:type": "text",
+		"XML:type": "hidden"
+	}],
+```
+
+### Restricting modifications to a subset of the tools
+
+Its possible to specify modifications to a parameter for only a subset of the tools
+by specifying a list of tools as follows:
+
+```
+    "output_files": [{
+		"CTD:required": true,
+		"tools": ["OpenSwathDIAPreScoring"]
+	}, {
+		"CTD:restrictions": "txt,tsv,pep.xml,pepXML,html",
+		"tools": ["SpectraSTSearchAdapter"]
+	
+	}]
+```
 
 ### Schema Validation
 * Purpose: Provide validation of input CTDs against a schema file (i.e, a XSD file).
@@ -147,26 +201,6 @@ If a schema is provided, all input CTDs will be validated against it.
 
 **NOTE:** Please make sure to read the [section on issues with schema validation](#issues-with-libxml2-and-schema-validation) if you require validation of CTDs against a schema.
 
-### Hardcoding Parameters
-* Purpose: Fixing the value of a parameter and hide it from the end user.
-* Short/long version: `-p` / `--hardcoded-parameters`
-* Required: no.
-* Taken values: The path of a file containing the mapping between parameter names and hardcoded values to use.
-
-It is sometimes required that parameters are hidden from the end user in workflow systems and that they take a predetermined, fixed value. Allowing end users to control parameters similar to `--verbosity`, `--threads`, etc., might create more problems than solving them. For this purpose, the parameter `-p`/`--hardcoded-parameters` takes the path of a file that contains up to three columns separated by whitespace that map parameter names to the hardcoded value. The first column contains the name of the parameter and the second one the hardcoded value. Only the first two columns are mandatory.
-
-If the parameter is to be hardcoded only for certain tools, a third column containing a comma separated list of tool names for which the hardcoding will apply can be added.
-
-Lines starting with `#` will be ignored. The following is an example of a valid file:
-
-    # Parameter name            # Value                         # Tool(s)
-    threads                     8
-    mode                        quiet
-    xtandem_executable          xtandem                     	XTandemAdapter
-    verbosity                   high                        	Foo, Bar
-    
-The parameters `threads` and `mode` will be set to `8` and `quiet`, respectively, for all parsed CTDs. However, the `xtandem_executable` parameter will be set to `xtandem` only for the `XTandemAdapter` tool. Similarly, the parameter `verbosity` will be set to `high` for the `Foo` and `Bar` tools only.
-
 ### Providing a default executable Path
 * Purpose: Help workflow engines locate tools by providing a path.
 * Short/long version: `-x` / `--default-executable-path`
@@ -178,7 +212,33 @@ CTDs can contain an `<executablePath>` element that will be used when executing 
 The following invocation of the converter will use `/opt/suite/bin` as a prefix when providing the executable path in the output files for any input CTD that lacks the `<executablePath>` section:
 
     $ python convert.py [FORMAT] -x /opt/suite/bin ...
-    
+
+### Bump wrapper versions
+
+There are two ways to bump tool versions.  
+
+- Definition of a `@GALAXY_VERSION@` token in the macros file. This can be used to bump all tools at once. Tool versions will be `@TOOL_VERSION@+galaxy@GALAXY_VERSION@`.
+- Use the `--bump-file` parameter to specify the wrapper version of a subset of the tools in a json file that maps tool names/ids to a wrapper version. Tool version will be set to `@TOOL_VERSION@+galaxyX`, where `X` is the version found in the json file or `0` if not found.
+
+In case of an update of the tool version, i.e. `@TOOL_VERSION@`, in the first case `@GALAXY_VERSION@` should be reset to 0 and the dictionary in the bump file should be emptied otherwise.
+
+Rationale: the auto-generation of the tool xml files would overwrite the
+wrapper version when regenerated. Hence it needs to be specified externally,
+e.g. in the macros.xml or in the bump file.
+
+### Tests
+
+Tests for Galaxy tools are generated with:
+
+```
+PATH=$(pwd)/tests/test-data/:$PATH
+for i in tests/test-data/*ctd
+do
+b=$(basename $i .ctd)
+python convert.py galaxy -i tests/test-data/$b.ctd -o tests/test-data/$b.xml -m tests/test-data/macros.xml -f tests/test-data/filetypes.txt --test-test -p tests/test-data/hardcoded_params.json  --tool-version 5.0.011
+done
+```
+
 
 [CTDopts]: https://github.com/genericworkflownodes/CTDopts
 [CTDSchema]: https://github.com/WorkflowConversion/CTDSchema

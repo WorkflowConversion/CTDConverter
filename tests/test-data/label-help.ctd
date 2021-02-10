@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tool ctdVersion="1.7" version="2.3.0" name="label-help" docurl="http://www.openms.de/unavailable.html" category="Test" >
+<description><![CDATA[Lebel Help parameter tests]]></description>
+<manual><![CDATA[Label Help parameter tests.]]></manual>
+<PARAMETERS version="1.6.2" xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/OpenMS/OpenMS/develop/share/OpenMS/SCHEMAS/Param_1_6_2.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <NODE name="LabelHelpTest" description="String test.">
+    <ITEM name="version" value="2.3.0" type="string" description="Version of the tool that generated this parameters file." required="false" advanced="true" />
+    <NODE name="1" description="Instance &apos;1&apos; section for &apos;StringTest&apos;">
+      <ITEM name="do" value="" type="string" description="label label label label label label label label. help." required="true"  advanced="false" />
+      <ITEM name="qm" value="" type="string" description="label label label label label label label label? help." required="true"  advanced="false" />
+	  <ITEM name="ex" value="" type="string" description="label label label label label label label label! help." required="true"  advanced="false" />
+	  <!-- dont split at semicolon -->
+      <ITEM name="sc" value="" type="string" description="label label label label label label label label &amp; label. help" required="true"  advanced="false" />
+      <ITEM name="coeg" value="" type="string" description="label label label label label label label label, e.g. help." required="true"  advanced="false" />
+      <ITEM name="pteg" value="" type="string" description="label label label label label label label label (e.g. help)" required="true"  advanced="false" />
+      <ITEM name="coie" value="" type="string" description="label label label label label label label label, i.e. help." required="true"  advanced="false" />
+      <ITEM name="ptie" value="" type="string" description="label label label label label label label label (i.e. help)" required="true"  advanced="false" />
+    </NODE>
+  </NODE>
+</PARAMETERS>
+</tool>

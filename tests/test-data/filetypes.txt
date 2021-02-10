@@ -1,0 +1,7 @@
+# CTD type    # Galaxy type
+eut           txt
+evt           csv
+ewt           tsv
+ext           tsv
+eyt           tabular
+ezt           tabular
