@@ -658,7 +658,7 @@ def create_command(tool, model, **kwargs):
     final_cmd = OrderedDict([('preprocessing', []), ('command', []), ('postprocessing', [])])
     advanced_cmd = {'preprocessing': [], 'command': [], 'postprocessing': []}
 
-    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "#import os.path", "", "## Preprocessing"])
+    final_cmd['preprocessing'].extend(["@QUOTE_FOO@", "@EXT_FOO@", "#import re", "#import os", "", "## Preprocessing"])
 
     # - call the executable with -write_ctd to write the ctd file (with defaults)
     # - use fill_ctd.py to overwrite the defaults in the ctd file with the
