@@ -7,6 +7,9 @@ Given one or more CTD files, `CTDConverter` generates the needed wrappers to inc
 - [CTDopts] 
 - `lxml`
 - `ruamel.yaml`
+- Python 3.6+
+
+Python 2.x is no longer supported as of release 3.0.0
 
 ### Installing Dependencies
 We recommend the use of `conda` to manage all dependencies. If you're not sure what `conda` is, make sure to read about the [conda project](https://conda.io/docs/index.html).

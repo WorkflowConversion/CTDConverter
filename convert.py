@@ -8,9 +8,9 @@ from argparse import RawDescriptionHelpFormatter
 from common.exceptions import ApplicationException, ModelError
 
 __all__ = []
-__version__ = '2.0'
-__date__ = '2014-09-17'
-__updated__ = '2017-08-09'
+__version__ = '3.0'
+__date__ = '2021-02-15'
+__updated__ = '2021-02-15'
 
 program_version = "v%s" % __version__
 program_build_date = str(__updated__)
