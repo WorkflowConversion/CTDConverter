@@ -17,13 +17,13 @@ def file2list(pth):
 class GalaxyCliTestCase(unittest.TestCase):
 
     def _compare_cli_output(self, fileprefix):
-        in_pth = to_test_data('{}.ctd'.format(fileprefix))
+        in_pth = to_test_data(f'{fileprefix}.ctd')
         macro_pth = to_test_data('macros.xml')
         ftypes_pth = to_test_data('filetypes.txt')
         hcparam_pth = to_test_data('hardcoded_params.json')
         tmp = tempfile.mkdtemp()
 
-        out_file = os.path.join(tmp, '{}.xml'.format(fileprefix))
+        out_file = os.path.join(tmp, f'{fileprefix}.xml')
         # out_file = to_test_data('{}.xml'.format(fileprefix))
         my_env = os.environ.copy()
         my_env["PATH"] = fileprefix + ":" + my_env["PATH"]
@@ -35,7 +35,7 @@ class GalaxyCliTestCase(unittest.TestCase):
 #         print("out %s" % output)
 #         print("err %s" % err)
 
-        old_file_pth = to_test_data('{}.xml'.format(fileprefix))
+        old_file_pth = to_test_data(f'{fileprefix}.xml')
 
 #         print("out_file %s" % out_file)
 #         print("old_file_path %s" % old_file_pth)

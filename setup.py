@@ -20,7 +20,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 
 def read(*parts):
-    with open(path.join(here, *parts), 'r') as fp:
+    with open(path.join(here, *parts)) as fp:
         return fp.read()
 
 

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 from functools import reduce  # forward compatibility for Python 3
 import json
 import ntpath
@@ -92,7 +91,7 @@ class ParameterHardcoder:
     def build_key(self, parameter_name, tool_name):
         if tool_name is None:
             return parameter_name
-        return "%s%s%s" % (parameter_name, self.separator, tool_name)
+        return f"{parameter_name}{self.separator}{tool_name}"
 
 
 def validate_path_exists(path):
@@ -121,7 +120,7 @@ def validate_argument_is_valid_path(args, argument_name):
             try:
                 validate_path_exists(path_to_check)
             except ApplicationException:
-                raise ApplicationException("Argument %s: The provided output file name (%s) points to a directory." % (argument_name, path_to_check))
+                raise ApplicationException(f"Argument {argument_name}: The provided output file name ({path_to_check}) points to a directory.")
 
 
 # taken from
@@ -145,7 +144,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
             logger.info("Loading validation schema from %s" % xsd_location, 0)
             schema = etree.XMLSchema(etree.parse(xsd_location))
         except Exception as e:
-            logger.error("Could not load validation schema %s. Reason: %s" % (xsd_location, str(e)), 0)
+            logger.error("Could not load validation schema {}. Reason: {}".format(xsd_location, str(e)), 0)
     else:
         logger.warning("Validation against a schema has not been enabled.", 0)
 
@@ -184,7 +183,7 @@ def validate_against_schema(ctd_file, schema):
         parser = etree.XMLParser(schema=schema)
         etree.parse(ctd_file, parser=parser)
     except etree.XMLSyntaxError as e:
-        raise ApplicationException("Invalid CTD file %s. Reason: %s" % (ctd_file, str(e)))
+        raise ApplicationException("Invalid CTD file {}. Reason: {}".format(ctd_file, str(e)))
 
 
 def add_common_parameters(parser, version, last_updated):
@@ -208,7 +207,7 @@ def add_common_parameters(parser, version, last_updated):
     # TODO: add verbosity, maybe?
     program_version = "v%s" % version
     program_build_date = str(last_updated)
-    program_version_message = "%%(prog)s %s (%s)" % (program_version, program_build_date)
+    program_version_message = f"%(prog)s {program_version} ({program_build_date})"
     parser.add_argument("-v", "--version", action="version", version=program_version_message)
 
 
@@ -316,8 +315,7 @@ def _extract_and_flatten_parameters(parameter_group, nodes=False):
         else:
             if nodes:
                 yield parameter
-            for p in _extract_and_flatten_parameters(parameter.parameters, nodes):
-                yield p
+            yield from _extract_and_flatten_parameters(parameter.parameters, nodes)
 
 
 def extract_and_flatten_parameters(ctd_model, nodes=False):

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 import json
 import os
 import os.path
@@ -115,7 +114,7 @@ def modify_param_for_galaxy(param):
         # need to be taken care by hardcoded values and the other cases
         # are chosen automatically if not specified on the command line)
         if param.required and not (param.default is None or type(param.default) is _Null):
-            logger.warning("Data parameter %s with default (%s)" % (param.name, param.default), 1)
+            logger.warning(f"Data parameter {param.name} with default ({param.default})", 1)
             param.required = False
             param.default = _Null()
     return param
@@ -213,7 +212,7 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
         except ParseError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be parsed. Cause: " + str(e))
 
-        except IOError as e:
+        except OSError as e:
             raise ApplicationException("The macros file " + macros_file_name + " could not be opened. Cause: " + str(e))
         else:
             macros_file.close()
@@ -241,14 +240,14 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
         g2o['txt'] = 'txt'
 
     ext_foo.text = CDATA("""#def oms2gxyext(o)
-    #set m=%s
+    #set m={}
     #return m[o]
 #end def
 #def gxy2omsext(g)
-    #set m=%s
+    #set m={}
     #return m[g]
 #end def
-""" % (str(o2g), str(g2o)))
+""".format(str(o2g), str(g2o)))
 
     tree = ElementTree(root)
     tree.write(macros_file_name, encoding="UTF-8", xml_declaration=True, pretty_print=True)
@@ -301,14 +300,14 @@ def check_test_macros(test_macros_files, test_macros_prefix, parsed_ctds):
 
         except ParseError as e:
             raise ApplicationException("The macros file " + mf + " could not be parsed. Cause: " + str(e))
-        except IOError as e:
+        except OSError as e:
             raise ApplicationException("The macros file " + mf + " could not be opened. Cause: " + str(e))
         for t in tool_ids - macro_ids:
             logger.error("missing %s" % t)
             add_child_node(root, "xml", OrderedDict([("name", mp + t)]))
 
         if len(macro_ids - tool_ids):
-            logger.warning("Unnecessary macros in %s: %s" % (mf, macro_ids - tool_ids))
+            logger.warning("Unnecessary macros in {}: {}".format(mf, macro_ids - tool_ids))
         tree = ElementTree(root)
         tree.write(mf, encoding="UTF-8", xml_declaration=True, pretty_print=True)
 
@@ -439,7 +438,7 @@ def _convert_internal(parsed_ctds, **kwargs):
                         try:
                             t = GALAXY_TYPE_TO_TYPE[hardcoded_attributes[a]]
                         except KeyError:
-                            logger.error("Could not set hardcoded attribute %s=%s for %s" % (a, hardcoded_attributes[a], param.name))
+                            logger.error("Could not set hardcoded attribute {}={} for {}".format(a, hardcoded_attributes[a], param.name))
                             sys.exit(1)
                         setattr(param, a, t)
                     elif type(getattr(param, a)) is _FileFormat or (param.type in [_InFile, _OutFile, _OutPrefix] and a == "restrictions"):
@@ -459,7 +458,7 @@ def _convert_internal(parsed_ctds, **kwargs):
             tree.write(output_file, encoding="UTF-8", xml_declaration=False, pretty_print=True)
             continue
 
-        logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)), 0)
+        logger.info("Converting {} (source {})".format(model.name, utils.get_filename(origin_file)), 0)
         tool = create_tool(model,
                            kwargs.get("tool_profile", None),
                            kwargs.get("bump", None))
@@ -640,11 +639,11 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 if param.is_list:
                     param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + _actual_parameter + ") if f])} && ")
-                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (f, i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
-                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
+                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
+                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
                 else:
-                    param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
-                    param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\w\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
+                    param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
+                    param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
             elif param.type is _OutPrefix:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 param_cmd['command'].append(actual_parameter + "/")
@@ -684,10 +683,10 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                 if len(formats) == 1:
                     fmt = formats.pop()
                     if param.is_list:
-                        logger.info("1 fmt + list %s -> %s" % (param.name, actual_input_parameter), 1)
+                        logger.info(f"1 fmt + list {param.name} -> {actual_input_parameter}", 1)
                         param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $gxy2omsext(\"" + fmt + "\")) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s' '" + _actual_parameter + "/%(bn)s/%(id)s'\"%{\"bn\": i, \"id\": re.sub('[^\w\-_]', '_', f.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(\"" + fmt + "\")) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s' '" + _actual_parameter + "/%(bn)s/%(id)s'\"%{\"bn\": i, \"id\": re.sub('[^\\w\\-_]', '_', f.element_identifier), \"gext\": $gxy2omsext(\"" + fmt + "\")} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
                         logger.info("1 fmt + dataset %s" % param.name, 1)
                         param_cmd['command'].append("'" + actual_parameter + "/output.${gxy2omsext(\"" + fmt + "\")}'")
@@ -700,8 +699,8 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     if param.is_list:
                         logger.info("type + list %s" % param.name, 1)
                         param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), $" + type_param_name + ") for i, f in enumerate($" + actual_input_parameter + ") if f])}")
-                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(omsext)s' '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s'\"%{\"bn\": i, \"id\": re.sub('[^\w\-_]', '_', f.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $" + type_param_name + ") for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['postprocessing'].append("${' '.join([\"&& mv -n '" + actual_parameter + "/%(bn)s/%(id)s.%(omsext)s' '" + actual_parameter + "/%(bn)s/%(id)s.%(gext)s'\"%{\"bn\": i, \"id\": re.sub('[^\\w\\-_]', '_', f.element_identifier), \"omsext\":$" + type_param_name + ", \"gext\": $oms2gxyext(str($" + type_param_name + "))} for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
                         logger.info("type + dataset %s" % param.name, 1)
                         # 1st create file with openms extension (often required by openms)
@@ -713,9 +712,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     if param.is_list:
                         logger.info("actual + list %s" % param.name, 1)
                         param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + actual_input_parameter + ") if f])} && ")
-                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\w\-_]', '_', f.element_identifier), f.ext) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
+                        param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), f.ext) for i, f in enumerate($" + actual_input_parameter + ") if f])}")
                     else:
-                        logger.info("actual + dataset %s %s %s" % (param.name, actual_input_parameter, corresponding_input.is_list), 1)
+                        logger.info(f"actual + dataset {param.name} {actual_input_parameter} {corresponding_input.is_list}", 1)
                         if corresponding_input.is_list:
                             param_cmd['command'].append("'" + actual_parameter + "/output.${" + actual_input_parameter + "[0].ext}'")
                             param_cmd['postprocessing'].append("&& mv '" + actual_parameter + "/output.${" + actual_input_parameter + "[0].ext}' '$" + _actual_parameter + "'")
@@ -858,7 +857,7 @@ def get_galaxy_parameter_name(param, suffix=None, fix_underscore=False):
     if fix_underscore and p.startswith("_"):
         p = p[1:]
     if param.type is _OutFile and suffix is not None:
-        return "%s_%s" % (p, suffix)
+        return f"{p}_{suffix}"
     else:
         return "%s" % p
 
@@ -1009,7 +1008,7 @@ def create_inputs(tool, model, **kwargs):
             corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
             if len(formats) > 1 and type_param is None and (corresponding_input is None or not
                                                             fmt_from_corresponding):  # and not param.is_list:
-                fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", param.name + "_type"), ("type", "select"), ("optional", "false"), ("label", "File type of output %s (%s)" % (param.name, param.description))]))
+                fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", param.name + "_type"), ("type", "select"), ("optional", "false"), ("label", f"File type of output {param.name} ({param.description})")]))
                 g2o, o2g = get_fileformat_maps(kwargs["supported_file_formats"])
 #                 for f in formats:
 #                     option_node = add_child_node(fmt_select, "option", OrderedDict([("value", g2o[f])]), f)
@@ -1056,7 +1055,7 @@ def create_inputs(tool, model, **kwargs):
         title, help_text = generate_label_and_help(o.description)
         option_node = add_child_node(param_node, "option",
                                      OrderedDict([("value", o.name + "_FLAG")]),
-                                     text="%s (%s)" % (o.name, title))
+                                     text=f"{o.name} ({title})")
     option_node = add_child_node(param_node, "option",
                                  OrderedDict([("value", "ctd_out_FLAG")]),
                                  text="Output used ctd (ini) configuration file")
@@ -1092,7 +1091,7 @@ def get_formats(param, model, o2g):
     formats = set()
     for format_name in choices:
         if format_name not in o2g:
-            logger.warning("Ignoring unknown format %s for parameter %s" % (format_name, param.name), 1)
+            logger.warning(f"Ignoring unknown format {format_name} for parameter {param.name}", 1)
         else:
             formats.add(format_name)
     return sorted(formats)
@@ -1106,7 +1105,7 @@ def get_galaxy_formats(param, model, o2g, default=None):
     - if there is none than use given default
     """
     formats = get_formats(param, model, o2g)
-    gxy_formats = set([o2g[_] for _ in formats if _ in o2g])
+    gxy_formats = {o2g[_] for _ in formats if _ in o2g}
     if len(gxy_formats) == 0:
         if default is not None:
             gxy_formats.add(default)
@@ -1191,7 +1190,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
 
             # create as many <option> elements as restriction values
             if is_out_type_param(param, model):
-                logger.warning("%s %s" % (param.name, param.type))
+                logger.warning(f"{param.name} {param.type}")
                 formats = get_formats(param, model, o2g)
                 for fmt in formats:
                     option_node = add_child_node(param_node, "option",
@@ -1249,13 +1248,13 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
                 message = "a space separated list of %s values " % TYPE_TO_GALAXY_TYPE[param.type]
 
                 if param.restrictions.n_min is not None and param.restrictions.n_max is not None:
-                    expression += " %s <= %s(_) <= %s" % (param.restrictions.n_min, param.type.__name__, param.restrictions.n_max)
-                    message += "in the range %s:%s " % (param.restrictions.n_min, param.restrictions.n_max)
+                    expression += f" {param.restrictions.n_min} <= {param.type.__name__}(_) <= {param.restrictions.n_max}"
+                    message += f"in the range {param.restrictions.n_min}:{param.restrictions.n_max} "
                 elif param.restrictions.n_min is not None:
-                    expression += " %s <= %s(_)" % (param.restrictions.n_min, param.type.__name__)
+                    expression += f" {param.restrictions.n_min} <= {param.type.__name__}(_)"
                     message += "in the range %s: " % (param.restrictions.n_min)
                 elif param.restrictions.n_max is not None:
-                    expression += " %s(_) <= %s" % (param.type.__name__, param.restrictions.n_max)
+                    expression += f" {param.type.__name__}(_) <= {param.restrictions.n_max}"
                     message += "in the range :%s " % (param.restrictions.n_min)
                 expression += "])\n"
                 message += "is required"
@@ -1384,7 +1383,7 @@ def is_boolean_parameter(param):
     """
     # detect boolean selects of OpenMS
     if type(param.restrictions) is _Choices:
-        return set(param.restrictions.choices) == set(["true", "false"])
+        return set(param.restrictions.choices) == {"true", "false"}
     else:
         return param.type is bool
 
@@ -1396,7 +1395,7 @@ def is_selection_parameter(param):
     @return True iff a selection parameter
     """
     if type(param.restrictions) is _Choices:
-        return set(param.restrictions.choices) != set(["true", "false"])
+        return set(param.restrictions.choices) != {"true", "false"}
     else:
         return False
 
@@ -1421,7 +1420,7 @@ def create_boolean_parameter(param_node, param):
     # A special case are restrictions false,true which are not treated as flags
     if param.type == str:
         choices = get_lowercase_list(param.restrictions.choices)
-        if set(choices) == set(["true", "false"]):
+        if set(choices) == {"true", "false"}:
             param_node.attrib["truevalue"] = "true"
             param_node.attrib["falsevalue"] = "false"
         else:
@@ -1548,7 +1547,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
     # if there is only a single possible output format we set this
 #     logger.error("%s %s %s %s %s" %(param.name, formats, type_param, fmt_from_corresponding, corresponding_input))
     if len(formats) == 1:
-        logger.info("OUTPUT %s 1 fmt %s" % (param.name, formats), 1)
+        logger.info(f"OUTPUT {param.name} 1 fmt {formats}", 1)
         discover_node.attrib["format"] = formats.pop()
         if param.is_list:
             discover_node.attrib["pattern"] = "__name__"
@@ -1574,7 +1573,7 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
         else:
             discover_node.attrib["pattern"] = "__name_and_ext__"
     elif corresponding_input is not None:
-        logger.info("OUTPUT %s input %s" % (param.name, corresponding_input.name), 1)
+        logger.info(f"OUTPUT {param.name} input {corresponding_input.name}", 1)
         if param.is_list:
             discover_node.attrib["pattern"] = "__name_and_ext__"
 #             data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
@@ -1644,7 +1643,7 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
             if "type" not in node.attrib:
                 continue
 
-            if (node.attrib["type"] == "select" and "true" in set([_.attrib.get("selected", "false") for _ in node])) or\
+            if (node.attrib["type"] == "select" and "true" in {_.attrib.get("selected", "false") for _ in node}) or\
                (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
                 node.tag = "delete_node"
                 continue
@@ -1675,10 +1674,10 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 if node.attrib.get("multiple", "false") == "true":
                     node.attrib["value"] = "{fidx}test.ext,{fidx}test2.ext".format(fidx=fidx)
                 else:
-                    node.attrib["value"] = "{fidx}test.ext".format(fidx=fidx)
+                    node.attrib["value"] = f"{fidx}test.ext"
                 fidx += 1
         for node in inputs.iter():
-            for a in set(node.attrib) - set(["name", "value", "ftype"]):
+            for a in set(node.attrib) - {"name", "value", "ftype"}:
                 del node.attrib[a]
         strip_elements(inputs, "delete_node", "option", "expand")
         for node in inputs:
@@ -1708,7 +1707,7 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 node.tag = "output_collection"
             if node.attrib.get("name", None) == "stdout":
                 node.attrib["lines_diff"] = "2"
-            for a in set(node.attrib) - set(["name", "value", "ftype", "lines_diff"]):
+            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff"}:
                 del node.attrib[a]
         strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
 
@@ -1774,7 +1773,7 @@ def create_test_only(model, **kwargs):
                 elif type(param.default) is list:
                     f = param.default[0]
                 else:
-                    raise Exception("Outfile with non str or list default %s[%s]" % (param, type(param.default)))
+                    raise Exception("Outfile with non str or list default {}[{}]".format(param, type(param.default)))
                 # get the file type from the longest possible extension that
                 # matches the known extensions
                 # longest: because e.g. pep.xml should be prefered over xml
@@ -1799,11 +1798,11 @@ def create_test_only(model, **kwargs):
                                          fmt_from_corresponding):  # and not param.is_list:
                     if type_param is None:
                         try:
-                            print("%s -> %s" % (ext, g2o[ext]))
+                            print("{} -> {}".format(ext, g2o[ext]))
                             attrib = OrderedDict([("name", param.name + "_type"), ("value", g2o[ext])])
                             add_child_node(parent, "param", attrib)
                         except KeyError:
-                            raise Exception("parent %s name %s ext %s" % (parent, param.name, ext))
+                            raise Exception(f"parent {parent} name {param.name} ext {ext}")
                 if type_param is not None and type(type_param.default) is _Null:
                     if ext is not None:
                         type_param.default = ext
