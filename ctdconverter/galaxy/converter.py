@@ -1168,8 +1168,8 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
 
     if is_selection_parameter(param):
         param_type = "select"
-        if len(param.restrictions.choices) < 5 and not param.is_list and param.required:
-            param_node.attrib["display"] = "radio"
+        if len(param.restrictions.choices) < 5:
+            param_node.attrib["display"] = "checkboxes"
         if param.is_list:
             param_node.attrib["multiple"] = "true"
 

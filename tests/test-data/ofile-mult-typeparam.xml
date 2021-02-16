@@ -51,14 +51,14 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
     <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
   </configfiles>
   <inputs>
-    <param name="mandatory_mandatoryinput_type" argument="-mandatory_mandatoryinput_type" display="radio" type="select" optional="false" label="string" help="">
+    <param name="mandatory_mandatoryinput_type" argument="-mandatory_mandatoryinput_type" display="checkboxes" type="select" optional="false" label="string" help="">
       <option value="ewt">tsv (ewt)</option>
       <option value="ext">tsv (ext)</option>
       <expand macro="list_string_san"/>
     </param>
     <param name="inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <section name="test_section" title="Test Section" help="" expanded="false">
-      <param name="sect_mandatory_mandatoryinput_type" argument="-test_section:sect_mandatory_mandatoryinput_type" display="radio" type="select" optional="false" label="string" help="">
+      <param name="sect_mandatory_mandatoryinput_type" argument="-test_section:sect_mandatory_mandatoryinput_type" display="checkboxes" type="select" optional="false" label="string" help="">
         <option value="eut">txt (eut)</option>
         <option value="ewt">tsv (ewt)</option>
         <option value="ext">tsv (ext)</option>
