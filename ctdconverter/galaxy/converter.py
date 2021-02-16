@@ -1168,7 +1168,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
 
     if is_selection_parameter(param):
         param_type = "select"
-        if len(param.restrictions.choices) < 5 and not param.is_list:
+        if len(param.restrictions.choices) < 5 and not param.is_list and param.required:
             param_node.attrib["display"] = "radio"
         if param.is_list:
             param_node.attrib["multiple"] = "true"
@@ -1186,10 +1186,7 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     else:
         param_node.attrib["type"] = param_type
 
-    if param_type == "select" and param.default in param.restrictions.choices:
-        param_node.attrib["optional"] = "false"
-    else:
-        param_node.attrib["optional"] = str(not param.required).lower()
+    param_node.attrib["optional"] = str(not param.required).lower()
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None or param_type == "boolean":
@@ -1202,13 +1199,6 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
             # options need to be replaced with the Galaxy data types
             # if is_out_type_param(param, model):
             #     param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
-
-            # add a nothing selected option to mandatory options w/o default
-            if param.default is None or type(param.default) is _Null:
-                if param_node.attrib["optional"] == "true":
-                    option_node = add_child_node(param_node, "option", OrderedDict([("value", "")]), text="default (nothing chosen)")
-#                 else:
-#                     option_node = add_child_node(param_node, "option", OrderedDict([("value", "")]), text="select a value")
 
             # create as many <option> elements as restriction values
             if is_out_type_param(param, model):
@@ -1839,6 +1829,8 @@ def create_test_only(model, **kwargs):
             elif param.type is _OutFile:
                 continue
             elif param.type is _InFile:
+                continue
+            elif type(param.restrictions) is _Choices and (param.default is None or type(param.default) is _Null):
                 continue
 
         # lists need to be joined appropriately
