@@ -33,28 +33,28 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
   </configfiles>
   <inputs>
     <param name="do" argument="-do" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="do"/>
     </param>
     <param name="qm" argument="-qm" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="qm"/>
     </param>
     <param name="ex" argument="-ex" type="text" optional="false" value="" label="label label label label label label label label" help="help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="ex"/>
     </param>
     <param name="sc" argument="-sc" type="text" optional="false" value="" label="label label label label label label label label &amp; label" help="help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="sc"/>
     </param>
     <param name="coeg" argument="-coeg" type="text" optional="false" value="" label="label label label label label label label label" help="e.g. help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="coeg"/>
     </param>
     <param name="pteg" argument="-pteg" type="text" optional="false" value="" label="label label label label label label label label" help="(e.g. help)">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="pteg"/>
     </param>
     <param name="coie" argument="-coie" type="text" optional="false" value="" label="label label label label label label label label" help="i.e. help">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="coie"/>
     </param>
     <param name="ptie" argument="-ptie" type="text" optional="false" value="" label="label label label label label label label label" help="(i.e. help)">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="ptie"/>
     </param>
     <expand macro="adv_opts_macro"/>
     <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">

@@ -832,9 +832,16 @@ def import_macros(tool, model, **kwargs):
         import_node.text = os.path.basename(macro_file.name)
 
 
-def expand_macro(node, macro):
+def expand_macro(node, macro, attribs=None):
+    """
+    add <expand macro="..." ... /> to node
+    """
     expand_node = add_child_node(node, "expand")
     expand_node.attrib["macro"] = macro
+    if attribs:
+        for a in attribs:
+            expand_node.attrib[a] = attribs[a]
+
     return expand_node
 
 
@@ -1186,7 +1193,23 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     else:
         param_node.attrib["type"] = param_type
 
-    param_node.attrib["optional"] = str(not param.required).lower()
+    # set the optional attribute of parameters
+    #
+    # OpenMS uses sets text, int, select, bool parameters that have a default
+    # as optional (required=False), the default value is set implicitly if no
+    # value is given. 
+    # This is reasonable for the CLI because one certainly does not want the
+    # user to specify the default manually for all parameters.
+    # For Galaxy tools setting these parameters as required leads to the
+    # equivalent behavior. Assuming required is better because it makes
+    # the implicit setting of parameters more transparent to the user
+    # (in Galaxy the default would be prefilled in the form and at least 
+    # one option needs to be selected). 
+    if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
+        logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
+        param_node.attrib["optional"] = "false"
+    else:
+        param_node.attrib["optional"] = str(not param.required).lower()
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None or param_type == "boolean":
@@ -1253,7 +1276,9 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
         # integer/floats special validation is necessary (try to convert them and check if
         # in the min max range if a range is given)
         if TYPE_TO_GALAXY_TYPE[param.type] in ["integer", "float"]:
-            valsan = expand_macro(param_node, "list_%s_valsan" % TYPE_TO_GALAXY_TYPE[param.type])
+            valsan = expand_macro(param_node,
+                                  "list_%s_valsan" % TYPE_TO_GALAXY_TYPE[param.type],
+                                  dict([("name", get_galaxy_parameter_name(param))]))
 
             if type(param.restrictions) is _NumericRange and not (param.restrictions.n_min is None and param.restrictions.n_max is None):
                 expression = "len(value.split(' ')) == len([_ for _ in value.split(' ') if "
@@ -1287,8 +1312,10 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     # this is needed for special character like "[" which are used for example by FeatureFinderMultiplex
     if ((param_type == "text" and not TYPE_TO_GALAXY_TYPE[param.type] in ["integer", "float"]) or is_selection_parameter(param)) and param.type is not _InFile:
         if param.is_list and not is_selection_parameter(param):
-            valsan = expand_macro(param_node, "list_string_val")
-        valsan = expand_macro(param_node, "list_string_san")
+            valsan = expand_macro(param_node, "list_string_val",
+                                  dict([("name", get_galaxy_parameter_name(param))]))
+        valsan = expand_macro(param_node, "list_string_san",
+                              dict([("name", get_galaxy_parameter_name(param))]))
 
     # check for default value
     if not (param.default is None or type(param.default) is _Null):

@@ -54,7 +54,7 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
     <param name="mandatory_mandatoryinput_type" argument="-mandatory_mandatoryinput_type" display="checkboxes" type="select" optional="false" label="string" help="">
       <option value="ewt">tsv (ewt)</option>
       <option value="ext">tsv (ext)</option>
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="mandatory_mandatoryinput_type"/>
     </param>
     <param name="inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <section name="test_section" title="Test Section" help="" expanded="false">
@@ -62,7 +62,7 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
         <option value="eut">txt (eut)</option>
         <option value="ewt">tsv (ewt)</option>
         <option value="ext">tsv (ext)</option>
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_mandatory_mandatoryinput_type"/>
       </param>
       <param name="sect_inp_mandatory_mandatoryinput" argument="-test_section:sect_inp_mandatory_mandatoryinput" type="data" format="tsv,txt" multiple="true" optional="false" label="input file" help=" select tsv,txt data sets(s)"/>
     </section>
