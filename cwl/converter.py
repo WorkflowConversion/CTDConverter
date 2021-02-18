@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 
 # instead of using cwlgen, we decided to use PyYAML directly
 # we promptly found a problem with cwlgen, namely, it is not possible to construct something like:
@@ -67,7 +66,7 @@ def convert_models(args, parsed_ctds):
         origin_file = parsed_ctd.input_file
         output_file = parsed_ctd.suggested_output_file
 
-        logger.info("Converting %s (source %s)" % (model.name, utils.get_filename(origin_file)))
+        logger.info("Converting {} (source {})".format(model.name, utils.get_filename(origin_file)))
         cwl_tool = convert_to_cwl(model, args)
 
         logger.info("Writing to %s" % utils.get_filename(output_file), 1)

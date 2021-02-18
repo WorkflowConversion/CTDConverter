@@ -20,7 +20,7 @@ with open(path.join(here, 'README.md'), encoding='utf-8') as f:
 
 
 def read(*parts):
-    with open(path.join(here, *parts), 'r') as fp:
+    with open(path.join(here, *parts)) as fp:
         return fp.read()
 
 
@@ -93,22 +93,15 @@ setup(
         #   4 - Beta
         #   5 - Production/Stable
         'Development Status :: 3 - Alpha',
-
-        # Indicate who your project is intended for
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Build Tools',
-
         'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'License :: OSI Approved :: Apache Software License',
-
-        # Specify the Python versions you support here. In particular, ensure
-        # that you indicate whether you support Python 2, Python 3 or both.
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.4',
-        'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
     ],
 
     # This field adds keywords for your project which will appear on the
@@ -151,9 +144,6 @@ setup(
 
     # If there are data files included in your packages that need to be
     # installed, specify them here.
-    #
-    # If using Python 2.6 or earlier, then these have to be included in
-    # MANIFEST.in as well.
     package_data={  # Optional
         'ctdconverter': ['galaxy/macros.xml'],
     },
@@ -170,4 +160,5 @@ setup(
             'CTDConverter=convert:main',
         ],
     },
+    python_requires="~=3.6",  # greater than or equal to 3.6, but not yet 4.x
 )

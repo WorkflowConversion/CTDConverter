@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 
 """
 @author:     delagarza
@@ -23,7 +22,7 @@ class CLIError(Exception):
 
 class InvalidModelException(ModelError):
     def __init__(self, message):
-        super(InvalidModelException, self).__init__()
+        super().__init__()
         self.message = message
 
     def __str__(self):

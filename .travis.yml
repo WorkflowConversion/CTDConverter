@@ -1,44 +1,22 @@
 language: python
+
 python:
   - "3.6"
+  - "3.7"
+  - "3.8"
+    # - "3.9"  # not yet, due to Galaxy
+
+cache: pip
+
+addons:
+  apt:
+    update: true
+
+before_install:
+  - sudo apt -y install libhdf5-dev
 
 install:
-  - sudo apt-get update
-#   - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
-#       wget https://repo.continuum.io/miniconda/Miniconda2-latest-Linux-x86_64.sh -O miniconda.sh;
-#     else
-#       wget https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh;
-#     fi
-#   - bash miniconda.sh -b -p $HOME/miniconda
-#   - export PATH="$HOME/miniconda/bin:$PATH"
-#   - hash -r
-#   - conda config --set always_yes yes --set changeps1 no --set auto_activate_base False
-#   - conda update -q conda
-#   - conda init
-#   - source activate 
-#   - conda info -a
-#   
-# #   - conda create -q -n test-environment python=$TRAVIS_PYTHON_VERSION
-# #   - source activate test-environment
-#   - conda config --add channels conda-forge
-#   - conda config --add channels bioconda
-#   - conda config --add channels anaconda
-#   - conda config --add channels workflowconversion
-# 
-#   - conda install python=$TRAVIS_PYTHON_VERSION
-#   # TODO could be replaced by conda package once it is merged and released
-#   - git clone -b topic/no-1-2x https://github.com/bernt-matthias/CTDopts $HOME/CTDopts
-#   - cd $HOME/CTDopts
-#   - python setup.py install 
-#   - conda install -c conda-forge lxml
-#   - conda install -c conda-forge ruamel.yaml 
-#   - conda install libxml2
-#   - cd $TRAVIS_BUILD_DIR
-#   - python setup.py install
-#   - conda install coverage green codecov
-
-#   - virtualenv .venv
-#   - . .venv/bin/activate
+  - pip install numpy
   - pip install git+https://github.com/WorkflowConversion/CTDopts
   - pip install lxml ruamel.yaml planemo 
   - cd $TRAVIS_BUILD_DIR

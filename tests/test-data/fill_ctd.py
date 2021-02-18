@@ -35,7 +35,7 @@ def mergeDicts(d, e):
         elif k not in d and not isinstance(e[k], collections.abc.Mapping):
             d[k] = e[k]
         else:
-            sys.stderr.write("fill_ctd.py: could not merge key %s for %s in %s" % (k, d, e))
+            sys.stderr.write(f"fill_ctd.py: could not merge key {k} for {d} in {e}")
             sys.exit(1)
 
 
@@ -176,7 +176,7 @@ for p in model.get_parameters():
         else:
             setInDict(args, p.get_lineage(name_only=True), val)
 
-    if p.type is str and type(p.restrictions) is _Choices and set(p.restrictions.choices) == set(["true", "false"]):
+    if p.type is str and type(p.restrictions) is _Choices and set(p.restrictions.choices) == {"true", "false"}:
         v = getFromDict(args, p.get_lineage(name_only=True))
         setInDict(args, p.get_lineage(name_only=True), str(v).lower())
     elif p.type is bool:

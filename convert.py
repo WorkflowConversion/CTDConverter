@@ -8,13 +8,13 @@ from argparse import RawDescriptionHelpFormatter
 from common.exceptions import ApplicationException, ModelError
 
 __all__ = []
-__version__ = '2.0'
-__date__ = '2014-09-17'
-__updated__ = '2017-08-09'
+__version__ = '3.0a1'
+__date__ = '2021-02-15'
+__updated__ = '2021-02-15'
 
 program_version = "v%s" % __version__
 program_build_date = str(__updated__)
-program_version_message = '%%(prog)s %s (%s)' % (program_version, program_build_date)
+program_version_message = f'%(prog)s {program_version} ({program_build_date})'
 program_short_description = "CTDConverter - A project from the WorkflowConversion family " \
                             "(https://github.com/WorkflowConversion/CTDConverter)"
 program_usage = '''
@@ -41,7 +41,7 @@ II - Parsing several CTD files, output converted wrappers in a given folder:
 For more detailed help see README.md in the root folder as well as `galaxy/README.md` or `cwl/README.md`.
 '''
 
-program_license = '''%(short_description)s
+program_license = '''{short_description}
 
 Copyright 2017, WorklfowConversion
 
@@ -57,8 +57,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-%(usage)s
-''' % {'short_description': program_short_description, 'usage': program_usage}
+{usage}
+'''.format(short_description=program_short_description, usage=program_usage)
 
 
 def main(argv=None):
