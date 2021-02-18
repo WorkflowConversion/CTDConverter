@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-from functools import reduce  # forward compatibility for Python 3
 import json
 import ntpath
 import operator
@@ -7,8 +6,8 @@ import os
 
 from lxml import etree
 
-from common import logger
-from common.exceptions import ApplicationException
+from ctdconverter.common import logger
+from ctdconverter.common.exceptions import ApplicationException
 from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup, Parameters, Parameter, ModelTypeError
 
 

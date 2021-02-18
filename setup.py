@@ -52,7 +52,7 @@ setup(
     # For a discussion on single-sourcing the version across setup.py and the
     # project code, see
     # https://packaging.python.org/en/latest/single_source_version.html
-    version=find_version("convert.py"),  # Required
+    version=find_version("ctdconverter/__init__.py"),  # Required
 
     # This is a one-line description or tagline of what your project does. This
     # corresponds to the "Summary" metadata field:
@@ -110,15 +110,6 @@ setup(
     # Note that this is a string of words separated by whitespace, not a list.
     keywords='CTD CWL CommonWL Galaxy Workflows WorkflowConversion',  # Optional
 
-    # You can just specify package directories manually here if your project is
-    # simple. Or you can use find_packages().
-    #
-    # Alternatively, if you just want to distribute a single Python file, use
-    # the `py_modules` argument instead as follows, which will expect a file
-    # called `my_module.py` to exist:
-    #
-    py_modules=["convert"],
-    #
     packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
 
     # This field lists other packages that your project depends on to run.
@@ -145,7 +136,7 @@ setup(
     # If there are data files included in your packages that need to be
     # installed, specify them here.
     package_data={  # Optional
-        'ctdconverter': ['galaxy/macros.xml'],
+        'ctdconverter': ['ctdconverter/galaxy/macros.xml'],
     },
 
     # To provide executable scripts, use entry points in preference to the
@@ -157,7 +148,7 @@ setup(
     # executes the function `main` from this package when invoked:
     entry_points={  # Optional
         'console_scripts': [
-            'CTDConverter=convert:main',
+            'CTDConverter=ctdconverter.convert:main',
         ],
     },
     python_requires="~=3.6",  # greater than or equal to 3.6, but not yet 4.x

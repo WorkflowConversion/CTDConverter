@@ -7,11 +7,6 @@ from argparse import ArgumentParser
 from argparse import RawDescriptionHelpFormatter
 from common.exceptions import ApplicationException, ModelError
 
-__all__ = []
-__version__ = '3.0a1'
-__date__ = '2021-02-15'
-__updated__ = '2021-02-15'
-
 program_version = "v%s" % __version__
 program_build_date = str(__updated__)
 program_version_message = f'%(prog)s {program_version} ({program_build_date})'
