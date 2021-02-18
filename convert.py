@@ -8,7 +8,7 @@ from argparse import RawDescriptionHelpFormatter
 from common.exceptions import ApplicationException, ModelError
 
 __all__ = []
-__version__ = '3.0'
+__version__ = '3.0a1'
 __date__ = '2021-02-15'
 __updated__ = '2021-02-15'
 
