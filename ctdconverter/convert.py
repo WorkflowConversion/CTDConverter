@@ -1,11 +1,20 @@
+from argparse import (
+    ArgumentParser,
+    RawDescriptionHelpFormatter
+)
 import os
 import sys
 import traceback
-import common.utils as utils
 
-from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
-from common.exceptions import ApplicationException, ModelError
+from . import (
+    __version__,
+    __updated__
+)
+from .common import utils
+from .common.exceptions import (
+    ApplicationException,
+    ModelError
+)
 
 program_version = "v%s" % __version__
 program_build_date = str(__updated__)
@@ -78,9 +87,9 @@ def main(argv=None):
     # are supported
     target = str.lower(argv[1])
     if target == 'cwl':
-        from cwl import converter
+        from .cwl import converter
     elif target == 'galaxy':
-        from galaxy import converter
+        from .galaxy import converter
 #     elif target == '-h' or target == '--help' or target == '--h' or target == 'help':
 #         print(program_license)
 #         return 0
