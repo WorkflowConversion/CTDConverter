@@ -1,20 +1,42 @@
 #!/usr/bin/env python
+import copy
 import json
 import os
 import os.path
 import re
 import sys
-
 from collections import OrderedDict
-import copy
+
+from CTDopts.CTDopts import (
+    _Choices,
+    _FileFormat,
+    _InFile,
+    _Null,
+    _NumericRange,
+    _OutFile,
+    _OutPrefix,
+    ModelError,
+    ParameterGroup
+)
 from lxml import etree
-from lxml.etree import CDATA, SubElement, Element, ElementTree, ParseError, parse, strip_elements
+from lxml.etree import (
+    CDATA,
+    Element,
+    ElementTree,
+    parse,
+    ParseError,
+    strip_elements,
+    SubElement
+)
 
-from ..common import utils, logger
-from ..common.exceptions import ApplicationException, InvalidModelException
-
-from CTDopts.CTDopts import _InFile, _OutFile, _OutPrefix, ParameterGroup, _Choices, _NumericRange, _FileFormat, ModelError, _Null
-
+from ..common import (
+    logger,
+    utils
+)
+from ..common.exceptions import (
+    ApplicationException,
+    InvalidModelException
+)
 
 # mapping to CTD types to Galaxy types
 TYPE_TO_GALAXY_TYPE = {int: 'integer', float: 'float', str: 'text', bool: 'boolean', _InFile: 'txt',

@@ -1,14 +1,14 @@
+import os
+import sys
+import traceback
 from argparse import (
     ArgumentParser,
     RawDescriptionHelpFormatter
 )
-import os
-import sys
-import traceback
 
 from . import (
-    __version__,
-    __updated__
+    __updated__,
+    __version__
 )
 from .common import utils
 from .common.exceptions import (

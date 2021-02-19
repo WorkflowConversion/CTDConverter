@@ -3,9 +3,18 @@ import json
 import ntpath
 import operator
 import os
+from functools import reduce
 
+from CTDopts.CTDopts import (
+    _InFile,
+    _OutFile,
+    CTDModel,
+    ModelTypeError,
+    Parameter,
+    ParameterGroup,
+    Parameters
+)
 from lxml import etree
-from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup, Parameters, Parameter, ModelTypeError
 
 from ..common import logger
 from ..common.exceptions import ApplicationException

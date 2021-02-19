@@ -9,10 +9,18 @@
 
 
 import ruamel.yaml as yaml
+from CTDopts.CTDopts import (
+    _Choices,
+    _InFile,
+    _Null,
+    _OutFile
+)
 
-from CTDopts.CTDopts import _InFile, _OutFile, _Choices, _Null
-from ..common import utils, logger
 from .. import __version__ as version
+from ..common import (
+    logger,
+    utils
+)
 
 # all cwl-related properties are defined here
 

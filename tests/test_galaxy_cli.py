@@ -32,7 +32,7 @@ class GalaxyCliTestCase(unittest.TestCase):
 
         popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=my_env)
         stdout, stderr = popen.communicate()
-        assert popen.returncode == 0, f"could not convert {fileprefix} with: "+" ".join(cmd)+f"\n{stdout}\n{stderr}"
+        assert popen.returncode == 0, f"could not convert {fileprefix} with: " + " ".join(cmd) + f"\n{stdout}\n{stderr}"
 #         print("out %s" % output)
 #         print("err %s" % err)
 

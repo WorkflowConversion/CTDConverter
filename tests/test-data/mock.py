@@ -7,7 +7,11 @@ import os
 import shutil
 import sys
 
-from CTDopts.CTDopts import CTDModel, _InFile, _OutFile
+from CTDopts.CTDopts import (
+    _InFile,
+    _OutFile,
+    CTDModel
+)
 
 # from argparse import ArgumentParser
 # parser = ArgumentParser(prog="mock.py", description="MOCK", add_help=True)
