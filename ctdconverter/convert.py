@@ -76,7 +76,7 @@ def main(argv=None):
     # converter will register its own parameters after we've registered the basic ones... we have to do it old school
     if len(argv) < 2:
         utils.logger.error("Not enough arguments provided")
-        print("\nUsage: $ python convert.py [TARGET] [ARGUMENTS]\n\n"
+        print("\nUsage: $ CTDConverter [TARGET] [ARGUMENTS]\n\n"
               "Where:\n"
               "  target: one of 'cwl' or 'galaxy'\n\n"
               "Run again using the -h/--help option to print more detailed help.\n")
