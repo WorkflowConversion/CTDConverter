@@ -69,7 +69,7 @@ def get_preferred_file_extension():
 
 
 def convert_models(args, parsed_ctds):
-    # go through each ctd model and perform the conversion, easy as pie!
+    """Go through each CTD model and perform the conversion."""
     for parsed_ctd in parsed_ctds:
         model = parsed_ctd.ctd_model
         origin_file = parsed_ctd.input_file
