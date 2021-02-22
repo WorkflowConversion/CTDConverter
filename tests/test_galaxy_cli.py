@@ -30,8 +30,9 @@ class GalaxyCliTestCase(unittest.TestCase):
         cmd = ['CTDConverter', 'galaxy', '-i', in_pth, '-o', out_file, '-f', ftypes_pth, '-m', macro_pth, '--test-test', '-p', hcparam_pth, "--tool-version", "3.8"]
 #         print("cmd %s" % cmd)
 
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, env=my_env)
-        output, err = popen.communicate()
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=my_env)
+        stdout, stderr = popen.communicate()
+        assert popen.returncode == 0, f"could not convert {fileprefix} with: " + " ".join(cmd) + f"\n{stdout}\n{stderr}"
 #         print("out %s" % output)
 #         print("err %s" % err)
 
@@ -44,7 +45,7 @@ class GalaxyCliTestCase(unittest.TestCase):
         old_l = file2list(old_file_pth)
 
         for i in range(0, len(new_l)):
-            self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip())
+            self.assertEqual(new_l[i].rstrip(), old_l[i].rstrip()), f"xml files differed for {fileprefix}"
 
     def test_galaxy_cli_bool_ctd(self):
         self._compare_cli_output('bool')

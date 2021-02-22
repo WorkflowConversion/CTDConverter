@@ -1,15 +1,23 @@
 #!/usr/bin/env python
-from functools import reduce  # forward compatibility for Python 3
 import json
 import ntpath
 import operator
 import os
+from functools import reduce
 
+from CTDopts.CTDopts import (
+    _InFile,
+    _OutFile,
+    CTDModel,
+    ModelTypeError,
+    Parameter,
+    ParameterGroup,
+    Parameters
+)
 from lxml import etree
 
-from common import logger
-from common.exceptions import ApplicationException
-from CTDopts.CTDopts import _InFile, _OutFile, CTDModel, ParameterGroup, Parameters, Parameter, ModelTypeError
+from ..common import logger
+from ..common.exceptions import ApplicationException
 
 
 MESSAGE_INDENTATION_INCREMENT = 2
@@ -95,13 +103,14 @@ class ParameterHardcoder:
 
 
 def validate_path_exists(path):
-    if not os.path.isfile(path) or not os.path.exists(path):
+    if not os.path.exists(path) or not os.path.isfile(os.path.realpath(path)):
         raise ApplicationException("The provided path (%s) does not exist or is not a valid file path." % path)
 
 
 def validate_argument_is_directory(args, argument_name):
     file_name = getattr(args, argument_name)
-    if file_name is not None and os.path.isdir(file_name):
+    logger.info("REALPATH %s" % os.path.realpath(file_name))
+    if file_name is not None and os.path.isdir(os.path.realpath(file_name)):
         raise ApplicationException("The provided output file name (%s) points to a directory." % file_name)
 
 

@@ -1,16 +1,20 @@
 import os
 import sys
 import traceback
-import common.utils as utils
+from argparse import (
+    ArgumentParser,
+    RawDescriptionHelpFormatter
+)
 
-from argparse import ArgumentParser
-from argparse import RawDescriptionHelpFormatter
-from common.exceptions import ApplicationException, ModelError
-
-__all__ = []
-__version__ = '3.0a1'
-__date__ = '2021-02-15'
-__updated__ = '2021-02-15'
+from . import (
+    __updated__,
+    __version__
+)
+from .common import utils
+from .common.exceptions import (
+    ApplicationException,
+    ModelError
+)
 
 program_version = "v%s" % __version__
 program_build_date = str(__updated__)
@@ -72,7 +76,7 @@ def main(argv=None):
     # converter will register its own parameters after we've registered the basic ones... we have to do it old school
     if len(argv) < 2:
         utils.logger.error("Not enough arguments provided")
-        print("\nUsage: $ python convert.py [TARGET] [ARGUMENTS]\n\n"
+        print("\nUsage: $ CTDConverter [TARGET] [ARGUMENTS]\n\n"
               "Where:\n"
               "  target: one of 'cwl' or 'galaxy'\n\n"
               "Run again using the -h/--help option to print more detailed help.\n")
@@ -83,9 +87,9 @@ def main(argv=None):
     # are supported
     target = str.lower(argv[1])
     if target == 'cwl':
-        from cwl import converter
+        from .cwl import converter
     elif target == 'galaxy':
-        from galaxy import converter
+        from .galaxy import converter
 #     elif target == '-h' or target == '--help' or target == '--h' or target == 'help':
 #         print(program_license)
 #         return 0
