@@ -833,9 +833,7 @@ def import_macros(tool, model, **kwargs):
 
 
 def expand_macro(node, macro, attribs=None):
-    """
-    add <expand macro="..." ... /> to node
-    """
+    """Add <expand macro="..." ... /> to node."""
     expand_node = add_child_node(node, "expand")
     expand_node.attrib["macro"] = macro
     if attribs:
