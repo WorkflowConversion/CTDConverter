@@ -1,5 +1,9 @@
 language: python
 
+branches:
+  only:
+    - master
+
 python:
   - "3.6"
   - "3.7"
@@ -16,15 +20,15 @@ before_install:
   - sudo apt -y install libhdf5-dev
 
 install:
-  - pip install numpy
   - pip install git+https://github.com/WorkflowConversion/CTDopts
   - pip install lxml ruamel.yaml planemo
   - pip install flake8 flake8-import-order
   - cd $TRAVIS_BUILD_DIR
-  - python setup.py install
+  - make install install-dep
 script:
   - flake8
-  - python setup.py test
+  - make diff_pydocstyle_report
+  - make test
   - planemo l tests/test-data/
 
   # planemo test content of tests/test-data (this is OK, because the previous
