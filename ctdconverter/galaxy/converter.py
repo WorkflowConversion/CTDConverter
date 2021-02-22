@@ -1197,14 +1197,14 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     #
     # OpenMS uses sets text, int, select, bool parameters that have a default
     # as optional (required=False), the default value is set implicitly if no
-    # value is given. 
+    # value is given.
     # This is reasonable for the CLI because one certainly does not want the
     # user to specify the default manually for all parameters.
     # For Galaxy tools setting these parameters as required leads to the
     # equivalent behavior. Assuming required is better because it makes
     # the implicit setting of parameters more transparent to the user
-    # (in Galaxy the default would be prefilled in the form and at least 
-    # one option needs to be selected). 
+    # (in Galaxy the default would be prefilled in the form and at least
+    # one option needs to be selected).
     if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
         logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
         param_node.attrib["optional"] = "false"
