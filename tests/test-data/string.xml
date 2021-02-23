@@ -33,55 +33,55 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
   </configfiles>
   <inputs>
     <param name="wodefault_mandatory_unrestricted" argument="-wodefault_mandatory_unrestricted" type="text" optional="false" value="" label="string" help="">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="wodefault_mandatory_unrestricted"/>
     </param>
     <param name="default_mandatory_unrestricted" argument="-default_mandatory_unrestricted" type="text" optional="false" value="default" label="string" help="">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="default_mandatory_unrestricted"/>
     </param>
     <param name="wodefault_optional_unrestricted" argument="-wodefault_optional_unrestricted" type="text" optional="true" value="" label="string" help="">
-      <expand macro="list_string_san"/>
+      <expand macro="list_string_san" name="wodefault_optional_unrestricted"/>
     </param>
-    <param name="default_optional_unrestricted" argument="-default_optional_unrestricted" type="text" optional="true" value="default" label="string" help="">
-      <expand macro="list_string_san"/>
+    <param name="default_optional_unrestricted" argument="-default_optional_unrestricted" type="text" optional="false" value="default" label="string" help="">
+      <expand macro="list_string_san" name="default_optional_unrestricted"/>
     </param>
     <section name="test_section" title="Test Section" help="" expanded="false">
       <param name="sect_wodefault_mandatory_unrestricted" argument="-test_section:sect_wodefault_mandatory_unrestricted" type="text" optional="false" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_wodefault_mandatory_unrestricted"/>
       </param>
       <param name="sect_default_mandatory_unrestricted" argument="-test_section:sect_default_mandatory_unrestricted" type="text" optional="false" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_default_mandatory_unrestricted"/>
       </param>
       <param name="sect_wodefault_optional_unrestricted" argument="-test_section:sect_wodefault_optional_unrestricted" type="text" optional="true" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_wodefault_optional_unrestricted"/>
       </param>
-      <param name="sect_default_optional_unrestricted" argument="-test_section:sect_default_optional_unrestricted" type="text" optional="true" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+      <param name="sect_default_optional_unrestricted" argument="-test_section:sect_default_optional_unrestricted" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san" name="sect_default_optional_unrestricted"/>
       </param>
       <param name="sect_wodefault_mandatory_unrestricted_adv" argument="-test_section:sect_wodefault_mandatory_unrestricted_adv" type="text" optional="false" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_wodefault_mandatory_unrestricted_adv"/>
       </param>
       <param name="sect_default_mandatory_unrestricted_adv" argument="-test_section:sect_default_mandatory_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_default_mandatory_unrestricted_adv"/>
       </param>
       <param name="sect_wodefault_optional_unrestricted_adv" argument="-test_section:sect_wodefault_optional_unrestricted_adv" type="text" optional="true" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="sect_wodefault_optional_unrestricted_adv"/>
       </param>
-      <param name="sect_default_optional_unrestricted_adv" argument="-test_section:sect_default_optional_unrestricted_adv" type="text" optional="true" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+      <param name="sect_default_optional_unrestricted_adv" argument="-test_section:sect_default_optional_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san" name="sect_default_optional_unrestricted_adv"/>
       </param>
     </section>
     <expand macro="adv_opts_macro">
       <param name="wodefault_mandatory_unrestricted_adv" argument="-wodefault_mandatory_unrestricted_adv" type="text" optional="false" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="wodefault_mandatory_unrestricted_adv"/>
       </param>
       <param name="default_mandatory_unrestricted_adv" argument="-default_mandatory_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="default_mandatory_unrestricted_adv"/>
       </param>
       <param name="wodefault_optional_unrestricted_adv" argument="-wodefault_optional_unrestricted_adv" type="text" optional="true" value="" label="string" help="">
-        <expand macro="list_string_san"/>
+        <expand macro="list_string_san" name="wodefault_optional_unrestricted_adv"/>
       </param>
-      <param name="default_optional_unrestricted_adv" argument="-default_optional_unrestricted_adv" type="text" optional="true" value="default" label="string" help="">
-        <expand macro="list_string_san"/>
+      <param name="default_optional_unrestricted_adv" argument="-default_optional_unrestricted_adv" type="text" optional="false" value="default" label="string" help="">
+        <expand macro="list_string_san" name="default_optional_unrestricted_adv"/>
       </param>
     </expand>
     <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">
@@ -100,15 +100,19 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     <test expect_num_outputs="1">
       <param name="wodefault_mandatory_unrestricted" value="1 2"/>
       <param name="default_mandatory_unrestricted" value="default"/>
+      <param name="default_optional_unrestricted" value="default"/>
       <section name="test_section">
         <param name="sect_wodefault_mandatory_unrestricted" value="1 2"/>
         <param name="sect_default_mandatory_unrestricted" value="default"/>
+        <param name="sect_default_optional_unrestricted" value="default"/>
         <param name="sect_wodefault_mandatory_unrestricted_adv" value="1 2"/>
         <param name="sect_default_mandatory_unrestricted_adv" value="default"/>
+        <param name="sect_default_optional_unrestricted_adv" value="default"/>
       </section>
       <conditional name="adv_opts_cond">
         <param name="wodefault_mandatory_unrestricted_adv" value="1 2"/>
         <param name="default_mandatory_unrestricted_adv" value="default"/>
+        <param name="default_optional_unrestricted_adv" value="default"/>
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
     </test>
