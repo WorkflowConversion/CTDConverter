@@ -60,7 +60,7 @@ The following sections in this file describe the parameters that all converter s
 Please refer to the detailed documentation for each of the converters for more information:
 
 - [Generation of Galaxy ToolConfig files](galaxy/README.md)
-- [Generation of CWL task files](cwl/README.md)
+- [Generation of CWL CommandLineTool descriptions](ctdconverter/cwl/README.md)
 
 ## Fail Policy while processing several Files
 `CTDConverter` can parse several CTDs and convert them. However, the process will be interrupted and an error code will be returned at the first encountered error (e.g., a CTD is not valid, there are missing support files, etc.).
