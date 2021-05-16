@@ -1165,22 +1165,18 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     if argument.lstrip("-").replace("-", "_") != name:
         param_node.attrib["name"] = get_galaxy_parameter_name(param)
     param_node.attrib["argument"] = argument
+
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
                          % {"type": param.type, "name": param.name})
+
     # ITEMLIST is rendered as text field (even if its integers or floats), an
-    # exception is files which are treated a bit below
+    # exception is files which are treated just below
     if param.is_list:
         param_type = "text"
-
     if is_selection_parameter(param):
         param_type = "select"
-        if len(param.restrictions.choices) < 5:
-            param_node.attrib["display"] = "checkboxes"
-        if param.is_list:
-            param_node.attrib["multiple"] = "true"
-
     if is_boolean_parameter(param):
         param_type = "boolean"
 
@@ -1207,10 +1203,20 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     # (in Galaxy the default would be prefilled in the form and at least
     # one option needs to be selected).
     if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
-        logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
-        param_node.attrib["optional"] = "false"
+        # logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
+        optional = False
     else:
-        param_node.attrib["optional"] = str(not param.required).lower()
+        optional = not param.required
+    param_node.attrib["optional"] = str(optional).lower()
+
+    if is_selection_parameter(param):
+        if param.is_list:
+            param_node.attrib["multiple"] = "true"
+        if len(param.restrictions.choices) < 5:
+            if param.is_list and optional:
+                param_node.attrib["display"] = "checkboxes"
+            elif not param.is_list and not optional:
+                param_node.attrib["display"] = "radio"
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None or param_type == "boolean":
@@ -1485,7 +1491,7 @@ def create_boolean_parameter(param_node, param):
 
 def all_outputs(model, parameter_hardcoder):
     """
-    return lists of reqired and optional output parameters
+    return lists of required and optional output parameters
     """
     out = []
     optout = []
