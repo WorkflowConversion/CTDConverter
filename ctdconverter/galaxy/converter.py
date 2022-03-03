@@ -660,12 +660,21 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
             if param.type is _InFile:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 if param.is_list:
-                    param_cmd['preprocessing'].append("mkdir ${' '.join([\"'" + actual_parameter + "/%s'\" % (i) for i, f in enumerate($" + _actual_parameter + ") if f])} && ")
-                    param_cmd['preprocessing'].append("${' '.join([\"ln -s '%s' '" + actual_parameter + "/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
-                    param_cmd['command'].append("${' '.join([\"'" + actual_parameter + "/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate($" + _actual_parameter + ") if f])}")
+                    param_cmd['preprocessing'].append(f'#if ${_actual_parameter}_cond.{_actual_parameter}_select == "no"')
+                    param_cmd['preprocessing'].append(f"mkdir ${{' '.join([\"'{actual_parameter}/%s'\" % (i) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}} && ")
+                    param_cmd['preprocessing'].append(f"${{' '.join([\"ln -s '%s' '{actual_parameter}/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}}")
+                    param_cmd['preprocessing'].append(f'#else')
+                    param_cmd['preprocessing'].append(f"ln -s '${_actual_parameter}_cond.{_actual_parameter}' '{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}_cond.{_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}_cond.{_actual_parameter}.ext)' &&")
+                    param_cmd['preprocessing'].append(f'#end if')
+                    param_cmd['command'].append(f'#if ${actual_parameter}_cond.{actual_parameter}_select == "no"')
+                    param_cmd['command'].append(f"${{' '.join([\"'{actual_parameter}/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}}")
+                    param_cmd['command'].append(f'#else')
+                    param_cmd['command'].append(f"'{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}_cond.{_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}_cond.{_actual_parameter}.ext)'")
+                    param_cmd['command'].append(f'#end if')
                 else:
                     param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
                     param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
+
             elif param.type is _OutPrefix:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 param_cmd['command'].append(actual_parameter + "/")
@@ -1047,13 +1056,8 @@ def create_inputs(tool, model, **kwargs):
             continue
 
         # create the actual param node and fill the attributes
-        param_node = add_child_node(parent_node, "param")
-        create_param_attribute_list(param_node, param, model, kwargs["supported_file_formats"])
-
-        hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name, 'XML')
-        if hardcoded_attributes is not None:
-            for a in hardcoded_attributes:
-                param_node.attrib[a] = str(hardcoded_attributes[a])
+        param_node = create_param_attribute_list(param, model, kwargs["supported_file_formats"], parameter_hardcoder)
+        parent_node.append(param_node)
 
     section_parents = [utils.extract_param_name(section_params[sn].parent) for sn in section_nodes]
     for sn in section_nodes:
@@ -1143,16 +1147,17 @@ def get_galaxy_formats(param, model, o2g, default=None):
     return sorted(gxy_formats)
 
 
-def create_param_attribute_list(param_node, param, model, supported_file_formats):
+def create_param_attribute_list(param, model, supported_file_formats, parameter_hardcoder):
     """
     get the attributes of input parameters
-    @param param_node the galaxy tool param node
+
     @param param the ctd parameter
     @param supported_file_formats
     """
 
     g2o, o2g = get_fileformat_maps(supported_file_formats)
 
+    param_node = Element("param")
     # set the name, argument and a first guess for the type (which will be over written
     # in some cases .. see below)
     # even if the conversion relies on the fact that the param names are identical
@@ -1361,6 +1366,34 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     param_node.attrib["label"] = label
     param_node.attrib["help"] = help_text
 
+    hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(param.name, model.name, 'XML')
+    if hardcoded_attributes is not None:
+        for a in hardcoded_attributes:
+            param_node.attrib[a] = str(hardcoded_attributes[a])
+
+    if param_node.attrib["type"] == "data" and param_node.attrib.get("multiple") == "true":
+        conditional_attrib = OrderedDict([
+            ("name", get_galaxy_parameter_name(param)+"_cond")
+        ])
+        conditional = Element("conditional", conditional_attrib)
+
+        select_attrib = OrderedDict([
+            ("name", get_galaxy_parameter_name(param)+"_select"),
+            ("type", "select"),
+            ("label", f"Run tool in batch mode for -{get_galaxy_parameter_name(param)}")
+        ])
+        select = add_child_node(conditional, "param", select_attrib)
+        add_child_node(select, "option", attributes={"value": "no"}, text="No: process all datasets jointly")
+        add_child_node(select, "option", attributes={"value": "yes"}, text="Yes: process each dataset in an independent job")
+        
+        when_no = add_child_node(conditional, "when", attributes={"value": "no"})
+        when_no.append(copy.deepcopy(param_node))
+        when_yes = add_child_node(conditional, "when", attributes={"value": "yes"})
+        param_node.attrib["multiple"] = "false"
+        when_yes.append(param_node)
+        return conditional
+
+    return param_node
 
 def generate_label_and_help(desc):
     help_text = ""
