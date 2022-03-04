@@ -660,16 +660,16 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
             if param.type is _InFile:
                 param_cmd['preprocessing'].append("mkdir %s &&" % actual_parameter)
                 if param.is_list:
-                    param_cmd['preprocessing'].append(f'#if ${_actual_parameter}_cond.{_actual_parameter}_select == "no"')
-                    param_cmd['preprocessing'].append(f"mkdir ${{' '.join([\"'{actual_parameter}/%s'\" % (i) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}} && ")
-                    param_cmd['preprocessing'].append(f"${{' '.join([\"ln -s '%s' '{actual_parameter}/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}}")
+                    param_cmd['preprocessing'].append(f'#if ${_actual_parameter}_select == "no"')
+                    param_cmd['preprocessing'].append(f"mkdir ${{' '.join([\"'{actual_parameter}/%s'\" % (i) for i, f in enumerate(${_actual_parameter}) if f])}} && ")
+                    param_cmd['preprocessing'].append(f"${{' '.join([\"ln -s '%s' '{actual_parameter}/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}) if f])}}")
                     param_cmd['preprocessing'].append(f'#else')
-                    param_cmd['preprocessing'].append(f"ln -s '${_actual_parameter}_cond.{_actual_parameter}' '{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}_cond.{_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}_cond.{_actual_parameter}.ext)' &&")
+                    param_cmd['preprocessing'].append(f"ln -s '${_actual_parameter}' '{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}.ext)' &&")
                     param_cmd['preprocessing'].append(f'#end if')
-                    param_cmd['command'].append(f'#if ${actual_parameter}_cond.{actual_parameter}_select == "no"')
-                    param_cmd['command'].append(f"${{' '.join([\"'{actual_parameter}/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}_cond.{_actual_parameter}) if f])}}")
+                    param_cmd['command'].append(f'#if ${actual_parameter}_select == "no"')
+                    param_cmd['command'].append(f"${{' '.join([\"'{actual_parameter}/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}) if f])}}")
                     param_cmd['command'].append(f'#else')
-                    param_cmd['command'].append(f"'{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}_cond.{_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}_cond.{_actual_parameter}.ext)'")
+                    param_cmd['command'].append(f"'{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}.ext)'")
                     param_cmd['command'].append(f'#end if')
                 else:
                     param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
@@ -868,6 +868,10 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     """
     p = get_galaxy_parameter_name(param, suffix, fix_underscore)
     path = utils.extract_param_path(param, fix_underscore)
+    # data input params with multiple="true" are in a (batch mode) conditional
+    # which needs to be added to the param path list
+    if param.type is _InFile and param.is_list:
+        path.insert(len(path)-1, f"{p}_cond")
     if len(path) > 1:
         return (separator.join(path[:-1]) + separator + p).replace("-", "_")
     elif param.advanced and (param.type is not _OutFile or suffix):
@@ -1044,15 +1048,19 @@ def create_inputs(tool, model, **kwargs):
             corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
             if len(formats) > 1 and type_param is None and (corresponding_input is None or not
                                                             fmt_from_corresponding):  # and not param.is_list:
-                fmt_select = add_child_node(parent_node, "param", OrderedDict([("name", param.name + "_type"), ("type", "select"), ("optional", "false"), ("label", f"File type of output {param.name} ({param.description})")]))
+                fmt_select_attrib = OrderedDict([
+                    ("name", param.name + "_type"),
+                    ("type", "select"),
+                    ("optional", "false"),
+                    ("label", f"File type of output {param.name} ({param.description})")
+                ])
+                fmt_select = add_child_node(parent_node, "param", fmt_select_attrib)
                 g2o, o2g = get_fileformat_maps(kwargs["supported_file_formats"])
-#                 for f in formats:
-#                     option_node = add_child_node(fmt_select, "option", OrderedDict([("value", g2o[f])]), f)
                 for choice in param.restrictions.formats:
                     option_node = add_child_node(fmt_select, "option", OrderedDict([("value", str(choice))]))
                     option_node.text = o2g[str(choice)]
                     if choice.lower() != o2g[str(choice)]:
-                        option_node.text += " (%s)" % choice
+                        option_node.text += f" ({choice})"
             continue
 
         # create the actual param node and fill the attributes
@@ -1114,9 +1122,7 @@ def get_formats(param, model, o2g):
     elif is_out_type_param(param, model):
         choices = param.restrictions.choices
     else:
-        raise InvalidModelException("Unrecognized restriction type [%(type)s] "
-                                    "for [%(name)s]" % {"type": type(param.restrictions),
-                                                        "name": param.name})
+        raise InvalidModelException(f"Unrecognized restriction type [{type(param.restrictions)}] for [{name}]")
 
     # check if there are formats that have not been registered yet...
     formats = set()
@@ -1229,12 +1235,6 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
         if param_type == "boolean":
             create_boolean_parameter(param_node, param)
         elif type(param.restrictions) is _Choices:
-
-            # TODO if the parameter is used to select the output file type the
-            # options need to be replaced with the Galaxy data types
-            # if is_out_type_param(param, model):
-            #     param.restrictions.choices = get_supported_file_types(param.restrictions.choices, supported_file_formats)
-
             # create as many <option> elements as restriction values
             if is_out_type_param(param, model):
                 logger.warning(f"{param.name} {param.type}")
