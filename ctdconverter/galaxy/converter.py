@@ -864,20 +864,21 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     """
     Get the complete path for a parameter as a string where the path
     components are joined by the given separator. A given suffix can
-    be appended.
+    be appended
     """
     p = get_galaxy_parameter_name(param, suffix, fix_underscore)
     path = utils.extract_param_path(param, fix_underscore)
+    if len(path) > 1:
+        path = path[:-1] + [p]
+    elif param.advanced and (param.type is not _OutFile or suffix):
+        path = [ADVANCED_OPTIONS_NAME + "cond", p]
+    else:
+        path = [p]
     # data input params with multiple="true" are in a (batch mode) conditional
     # which needs to be added to the param path list
     if param.type is _InFile and param.is_list:
         path.insert(len(path)-1, f"{p}_cond")
-    if len(path) > 1:
-        return (separator.join(path[:-1]) + separator + p).replace("-", "_")
-    elif param.advanced and (param.type is not _OutFile or suffix):
-        return ADVANCED_OPTIONS_NAME + "cond." + p
-    else:
-        return p
+    return separator.join(path).replace("-", "_")
 
 
 def get_galaxy_parameter_name(param, suffix=None, fix_underscore=False):
@@ -1151,6 +1152,19 @@ def get_galaxy_formats(param, model, o2g, default=None):
                                         "for [%(name)s]" % {"type": type(param.restrictions),
                                                             "name": param.name})
     return sorted(gxy_formats)
+
+
+def get_oms_format(formats, gxy_format, o2g):
+    """
+    determine the format from a list of openms formats
+    (restriction of a ctd input-file param) that corresponds
+    to a galaxy format
+    """
+    print(f"ggf {formats=} {gxy_format=} {o2g=}")
+    for f in formats:
+        print(f"\t{f=} {o2g.get(f)=} {gxy_format=}")
+        if o2g.get(f) == gxy_format:
+            return f
 
 
 def create_param_attribute_list(param, model, supported_file_formats, parameter_hardcoder):
@@ -1658,8 +1672,9 @@ def create_output_node(parent, param, model, supported_file_formats, parameter_h
 #             data_node.attrib["structured_like"] = get_galaxy_parameter_name(corresponding_input)
             # data_node.attrib["inherit_format"] = "true"
         else:
-            data_node.attrib["format_source"] = get_galaxy_parameter_path(corresponding_input)
-            data_node.attrib["metadata_source"] = get_galaxy_parameter_path(corresponding_input)
+            # TODO once https://github.com/galaxyproject/galaxy/pull/9493 we should use get_galaxy_parameter_path
+            data_node.attrib["format_source"] = get_galaxy_parameter_name(corresponding_input)
+            data_node.attrib["metadata_source"] = get_galaxy_parameter_name(corresponding_input)
     else:
         logger.info("OUTPUT %s else" % (param.name), 1)
         if not param.is_list:
@@ -1853,10 +1868,10 @@ def create_test_only(model, **kwargs):
             if not param.required and given:
                 optout.append("%s_FLAG" % param.name)
             if given:
+                oms_formats = get_formats(param, model, o2g)
                 formats = get_galaxy_formats(param, model, o2g, TYPE_TO_GALAXY_TYPE[_OutFile])
                 type_param = get_out_type_param(param, model, parameter_hardcoder)
                 corresponding_input, fmt_from_corresponding = get_corresponding_input(param, model)
-
                 if type(param.default) is _OutFile:
                     f = param.default
                 elif type(param.default) is list:
@@ -1872,8 +1887,11 @@ def create_test_only(model, **kwargs):
                 ext = None
                 for i in range(len(splitted)):
                     check_ext = ".".join(splitted[i:])
-                    if check_ext in o2g:
-                        ext = o2g[check_ext]
+                    for oms_ext in sorted(sorted(o2g), key=lambda x: len(x), reverse=True):
+                        if check_ext.endswith(f".{oms_ext}") or check_ext.endswith(f"_{oms_ext}"):
+                            ext = o2g[oms_ext]
+                            break
+                    if ext is not None:
                         break
                 if ext not in formats:
                     if ext == "txt" and "csv" in formats:
@@ -1887,14 +1905,16 @@ def create_test_only(model, **kwargs):
                                          fmt_from_corresponding):  # and not param.is_list:
                     if type_param is None:
                         try:
-                            print("{} -> {}".format(ext, g2o[ext]))
-                            attrib = OrderedDict([("name", param.name + "_type"), ("value", g2o[ext])])
+                            attrib = OrderedDict([
+                                ("name", f"{param.name}_type"),
+                                ("value", get_oms_format(oms_formats, ext, o2g))
+                            ])
                             add_child_node(parent, "param", attrib)
                         except KeyError:
                             raise Exception(f"parent {parent} name {param.name} ext {ext}")
                 if type_param is not None and type(type_param.default) is _Null:
                     if ext is not None:
-                        type_param.default = ext
+                        type_param.default = get_oms_format(oms_formats, ext, o2g)
 
             if param.required or given:
                 outcnt += 1
