@@ -1227,6 +1227,7 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
     # the implicit setting of parameters more transparent to the user
     # (in Galaxy the default would be prefilled in the form and at least
     # one option needs to be selected).
+    print(f"{param.name=} {param.default=} {param_node.attrib['type']}")
     if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
         # logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
         optional = False
@@ -1958,6 +1959,13 @@ def create_test_only(model, **kwargs):
             else:
                 value = str(param.default)
 
+        # for input-files with multiple=true we need to add the batch mode conditional
+        if param.type is _InFile and param.is_list:
+            batch_cond_attrib = OrderedDict([
+                ("name", get_galaxy_parameter_name(param)+"_cond")
+            ])
+            parent = add_child_node(parent, "conditional", batch_cond_attrib)
+
         # use name where dashes are replaced by underscores
         # see also create inputs
         if param.type is _OutFile:
@@ -1965,8 +1973,7 @@ def create_test_only(model, **kwargs):
             if param.is_list:
                 nd = add_child_node(test, "output_collection", OrderedDict([("name", name), ("count", value)]))
             else:
-                # TODO use delta_frac https://github.com/galaxyproject/galaxy/pull/9425
-                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta", "5700")]))
+                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta_frac", "0.05")]))
                 if ext:
                     nd.attrib["ftype"] = ext
         elif param.type is _OutPrefix:
