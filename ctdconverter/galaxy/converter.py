@@ -1227,7 +1227,6 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
     # the implicit setting of parameters more transparent to the user
     # (in Galaxy the default would be prefilled in the form and at least
     # one option needs to be selected).
-    print(f"{param.name=} {param.default=} {param_node.attrib['type']}")
     if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
         # logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
         optional = False
@@ -1928,8 +1927,6 @@ def create_test_only(model, **kwargs):
                 continue
             elif param.type is _InFile:
                 continue
-            elif type(param.restrictions) is _Choices and (param.default is None or type(param.default) is _Null):
-                continue
 
         # lists need to be joined appropriately
         # - special care for outfile lists (ie collections): since we do not know (easily) the names of the collection elements we just use the count
@@ -1941,7 +1938,9 @@ def create_test_only(model, **kwargs):
             except KeyError:
                 param.default = _Null()
 
-        if param.is_list and type(param.default) is not _Null:
+        if is_selection_parameter(param) and type(param.default) is _Null:
+            value = None
+        elif param.is_list and type(param.default) is not _Null:
             if param.type is _InFile:
                 value = ','.join(map(str, param.default))
             elif param.type is _OutFile:
@@ -1982,7 +1981,9 @@ def create_test_only(model, **kwargs):
             nd = add_child_node(test, "output_collection", OrderedDict([("name", name), ("count", "")]))
         else:
             name = get_galaxy_parameter_name(param)
-            nd = add_child_node(parent, "param", OrderedDict([("name", name), ("value", value)]))
+            nd = add_child_node(parent, "param", OrderedDict([("name", name)]))
+            if value is not None:
+                nd.attrib["value"] = value
         # add format attribute for unsniffable extensions
         if param.type is _InFile:
             ext = os.path.splitext(value)[1][1:]
