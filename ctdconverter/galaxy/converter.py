@@ -114,6 +114,8 @@ def add_specific_args(parser):
                         help="File extensions that can't be sniffed in Galaxy."
                         "Needs to be the OpenMS extensions (1st column in --formats-file)."
                         "For testdata with such extensions ftype will be set in the tes according to the file extension")
+    parser.add_argument("--test-condition", dest="test_condition", nargs="+", default=["compare=sim_size", "delta_frac=0.05"], required=False,
+                        help="Condition for dile tests")
 
     parser.add_argument("--tool-version", dest="tool_version", required=False, default=None,
                         help="Tool version to use (if not given its extracted from the CTD)")
@@ -183,6 +185,7 @@ def convert_models(args, parsed_ctds):
                       parameter_hardcoder=args.parameter_hardcoder,
                       test_test=args.test_test,
                       test_only=args.test_only,
+                      test_condition=args.test_condition,
                       test_unsniffable=args.test_unsniffable,
                       test_macros_file_names=args.test_macros_files,
                       test_macros_prefix=args.test_macros_prefix,
@@ -1831,6 +1834,7 @@ def create_test_only(model, **kwargs):
     unsniffable = kwargs["test_unsniffable"]
     supported_file_formats = kwargs["supported_file_formats"]
     g2o, o2g = get_fileformat_maps(supported_file_formats)
+    test_condition = [_.split("=") for _ in kwargs["test_condition"]]
 
     section_nodes = dict()
     section_params = dict()
@@ -1972,7 +1976,9 @@ def create_test_only(model, **kwargs):
             if param.is_list:
                 nd = add_child_node(test, "output_collection", OrderedDict([("name", name), ("count", value)]))
             else:
-                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value), ("compare", "sim_size"), ("delta_frac", "0.05")]))
+                nd = add_child_node(test, "output", OrderedDict([("name", name), ("file", value)]))
+                for tc in test_condition:
+                    nd.attrib[tc[0]] = tc[1]
                 if ext:
                     nd.attrib["ftype"] = ext
         elif param.type is _OutPrefix:
