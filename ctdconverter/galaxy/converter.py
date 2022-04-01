@@ -47,9 +47,9 @@ for k in TYPE_TO_GALAXY_TYPE:
 
 STDIO_MACRO_NAME = "stdio"
 REQUIREMENTS_MACRO_NAME = "requirements"
-ADVANCED_OPTIONS_NAME = "adv_opts_"
+ADVANCED_OPTIONS_NAME = "adv_opts"
 
-REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_NAME + "macro"]
+REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_NAME + "_macro"]
 
 
 class ExitCode:
@@ -163,7 +163,7 @@ def convert_models(args, parsed_ctds):
                                           tool_version=args.tool_version,
                                           supported_file_types=supported_file_formats,
                                           required_macros=REQUIRED_MACROS,
-                                          dont_expand=[ADVANCED_OPTIONS_NAME + "macro", "references",
+                                          dont_expand=[ADVANCED_OPTIONS_NAME + "_macro", "references",
                                                        "list_string_val", "list_string_san",
                                                        "list_float_valsan", "list_integer_valsan"])
 
@@ -437,7 +437,6 @@ def _convert_internal(parsed_ctds, **kwargs):
         expand_macros, create_command, create_inputs, create_outputs
     @return a tuple containing the model, output destination, origin file
     """
-
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     for parsed_ctd in parsed_ctds:
         model = parsed_ctd.ctd_model
@@ -452,7 +451,7 @@ def _convert_internal(parsed_ctds, **kwargs):
         origin_file = parsed_ctd.input_file
         output_file = parsed_ctd.suggested_output_file
 
-        # overwrite attributes of the parsed ctd parameters as specified in hardcoded parameterd json
+        # overwrite attributes of the parsed ctd parameters as specified in hardcoded parameters json
         for param in utils.extract_and_flatten_parameters(model):
             hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(utils.extract_param_name(param), model.name, 'CTD')
             if hardcoded_attributes is not None:
@@ -466,12 +465,18 @@ def _convert_internal(parsed_ctds, **kwargs):
                             logger.error("Could not set hardcoded attribute {}={} for {}".format(a, hardcoded_attributes[a], param.name))
                             sys.exit(1)
                         setattr(param, a, t)
-                    elif type(getattr(param, a)) is _FileFormat or (param.type in [_InFile, _OutFile, _OutPrefix] and a == "restrictions"):
-                        setattr(param, a, _FileFormat(str(hardcoded_attributes[a])))
-                    elif type(getattr(param, a)) is _Choices:
-                        setattr(param, a, _Choices(str(hardcoded_attributes[a])))
-                    elif type(getattr(param, a)) is _NumericRange:
-                        raise Exception("Overwriting of Numeric Range not implemented")
+                    elif a == "restrictions":
+                        if type(getattr(param, a)) is _FileFormat or param.type in [_InFile, _OutFile, _OutPrefix]:
+                            setattr(param, a, _FileFormat(str(hardcoded_attributes[a])))
+                        elif type(getattr(param, a)) is _Choices:
+                            setattr(param, a, _Choices(str(hardcoded_attributes[a])))
+                        elif type(getattr(param, a)) is _NumericRange:
+                            raise Exception("Overwriting of Numeric Range not implemented")
+                        elif getattr(param, a) is None:
+                            # if the parameter has no restrictions yet the we just use Choices .. might need to be extended
+                            setattr(param, a, _Choices(str(hardcoded_attributes[a])))
+                        else:
+                            setattr(param, a, hardcoded_attributes[a])
                     else:
                         setattr(param, a, hardcoded_attributes[a])
 
@@ -504,6 +509,7 @@ def _convert_internal(parsed_ctds, **kwargs):
         create_help(tool, model)
         # citations are required to be at the end
         expand_macro(tool, "references")
+        add_macros(tool, model, kwargs.get("test_macros_prefix"), kwargs.get("test_macros_file_names"))
 
         # wrap our tool element into a tree to be able to serialize it
         tree = ElementTree(tool)
@@ -625,9 +631,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])
-
-    advanced_command_start = "#if ${aon}cond.{aon}selector=='advanced':".format(aon=ADVANCED_OPTIONS_NAME)
-    advanced_command_end = "#end if"
 
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
@@ -806,7 +809,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     for stage in advanced_cmd:
         if len(advanced_cmd[stage]) == 0:
             continue
-        advanced_cmd[stage] = [advanced_command_start] + utils.indent(advanced_cmd[stage]) + [advanced_command_end]
+        advanced_cmd[stage] = [] + utils.indent(advanced_cmd[stage]) + []
         final_cmd[stage].extend(advanced_cmd[stage])
 
     out, optout = all_outputs(model, parameter_hardcoder)
@@ -824,6 +827,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     command_node.text = CDATA("\n".join(sum(final_cmd.values(), [])))
 
 
+
 def import_macros(tool, model, **kwargs):
     """
     creates the xml elements needed to import the needed macros files
@@ -837,11 +841,27 @@ def import_macros(tool, model, **kwargs):
     token_node.text = utils.extract_tool_executable_path(model, kwargs["default_executable_path"])
 
     # add <import> nodes
-    for macro_file_name in kwargs["macros_file_names"] + kwargs["test_macros_file_names"]:
+    for macro_file_name in kwargs["macros_file_names"]:
         macro_file = open(macro_file_name)
         import_node = add_child_node(macros_node, "import")
         # do not add the path of the file, rather, just its basename
         import_node.text = os.path.basename(macro_file.name)
+
+
+def add_macros(tool, model, test_macros_prefix = None, test_macros_file_names = None):
+    """
+    paste all test macros for a tool into the tests node of the tool
+    """
+    if test_macros_file_names == None:
+        return
+    tool_id = model.name.replace(" ", "_")
+    tests_node = tool.find(".//tests")
+    
+    for macros_file, macros_prefix in zip(test_macros_file_names, test_macros_prefix):
+        macros_root = parse(macros_file)
+        tool_tests = macros_root.find(f".//xml[@name='{macros_prefix}{tool_id}']")
+        for test in tool_tests:
+            tests_node.append(test)
 
 
 def expand_macro(node, macro, attribs=None):
@@ -874,7 +894,7 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     if len(path) > 1:
         path = path[:-1] + [p]
     elif param.advanced and (param.type is not _OutFile or suffix):
-        path = [ADVANCED_OPTIONS_NAME + "cond", p]
+        path = [ADVANCED_OPTIONS_NAME, p]
     else:
         path = [p]
     # data input params with multiple="true" are in a (batch mode) conditional
@@ -1009,7 +1029,7 @@ def create_inputs(tool, model, **kwargs):
     section_params = dict()
 
     # some suites (such as OpenMS) need some advanced options when handling inputs
-    advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME + "macro")]))
+    advanced_node = Element("expand", OrderedDict([("macro", ADVANCED_OPTIONS_NAME + "_macro")]))
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
     g2o, o2g = get_fileformat_maps(supported_file_formats)
@@ -1163,9 +1183,7 @@ def get_oms_format(formats, gxy_format, o2g):
     (restriction of a ctd input-file param) that corresponds
     to a galaxy format
     """
-    print(f"ggf {formats=} {gxy_format=} {o2g=}")
     for f in formats:
-        print(f"\t{f=} {o2g.get(f)=} {gxy_format=}")
         if o2g.get(f) == gxy_format:
             return f
 
@@ -1742,10 +1760,9 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                     del node.attrib[a]
                     node.attrib[a] = attrib[a]
 
-            if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "macro":
-                node.tag = "conditional"
-                node.attrib["name"] = ADVANCED_OPTIONS_NAME + "cond"
-                add_child_node(node, "param", OrderedDict([("name", ADVANCED_OPTIONS_NAME + "selector"), ("value", "advanced")]))
+            if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
+                node.tag = "section"
+                node.attrib["name"] = ADVANCED_OPTIONS_NAME
             if "type" not in node.attrib:
                 continue
 
@@ -1824,8 +1841,6 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
         if outputs_cnt == 0:
             outputs_cnt = 1
         test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
-    elif not (test_macros_prefix is None or name is None):
-        expand_macros(tests_node, [p + name for p in test_macros_prefix])
 
 
 def create_test_only(model, **kwargs):
@@ -1840,8 +1855,7 @@ def create_test_only(model, **kwargs):
     section_params = dict()
 
     test = Element("test")
-    advanced = add_child_node(test, "conditional", OrderedDict([("name", "adv_opts_cond")]))
-    add_child_node(advanced, "param", OrderedDict([("name", "adv_opts_selector"), ("value", "advanced")]))
+    advanced = add_child_node(test, "section", OrderedDict([("name", "adv_opts")]))
 
     optout = ["ctd_out_FLAG"]
     outcnt = 1
