@@ -101,10 +101,10 @@ def add_specific_args(parser):
                         "valid macros file. All defined macros will be imported.")
     parser.add_argument("--test-macros", dest="test_macros_files", default=[], nargs="*",
                         action="append", required=None,
-                        help="Import tests from the files given file(s) as macros. "
+                        help="Insert tests from the files given file(s) in the test section. "
                         "The macro names must end with the id of the tools")
     parser.add_argument("--test-macros-prefix", dest="test_macros_prefix", default=[], nargs="*",
-                        action="append", required=None, help="The prefix of the macro name in the corresponding trest macros file")
+                        action="append", required=None, help="The prefix of the macro name in the corresponding test macros file")
     parser.add_argument("--test-test", dest="test_test", action='store_true', default=False, required=False,
                         help="Generate a simple test for the internal unit tests.")
 
@@ -124,7 +124,7 @@ def add_specific_args(parser):
     parser.add_argument("--bump-file", dest="bump_file", required=False,
                         default=None, help="json file defining tool versions."
                         "tools not listed in the file default to 0."
-                        "if not given @GALAXY_VERSION@ is used")
+                        "if not given @VERSION_SUFFIX@ is used")
 
 
 def modify_param_for_galaxy(param):
@@ -243,7 +243,7 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
             macros_file.close()
 
     tool_ver_tk = root.find("token[@name='@TOOL_VERSION@']")
-    galaxy_ver_tk = root.find("token[@name='@GALAXY_VERSION@']")
+    galaxy_ver_tk = root.find("token[@name='@VERSION_SUFFIX@']")
     if tool_ver_tk is None:
         tool_ver_tk = add_child_node(root, "token", OrderedDict([("name", "@TOOL_VERSION@")]))
         tool_ver_tk.text = tool_version
@@ -501,10 +501,9 @@ def _convert_internal(parsed_ctds, **kwargs):
         create_configfiles(tool, model, **kwargs)
         inputs = create_inputs(tool, model, **kwargs)
         outputs = create_outputs(tool, model, **kwargs)
+        tests_node = add_child_node(tool, "tests")
         if kwargs["test_test"]:
             create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
-        if kwargs["test_macros_prefix"]:
-            create_tests(tool, test_macros_prefix=kwargs['test_macros_prefix'], name=model.name)
 
         create_help(tool, model)
         # citations are required to be at the end
@@ -538,13 +537,13 @@ def create_tool(model, profile, bump):
     tool_id = model.name.replace(" ", "_")
 
     if bump is None:
-        gxy_version = "@GALAXY_VERSION@"
+        gxy_version = "@VERSION_SUFFIX@"
     elif model.name in bump:
         gxy_version = str(bump[model.name])
     elif tool_id in bump:
         gxy_version = str(bump[tool_id])
     else:
-        gxy_version = "@GALAXY_VERSION@"
+        gxy_version = "@VERSION_SUFFIX@"
 
     attrib = OrderedDict([("id", tool_id),
                           ("name", model.name),
@@ -1738,109 +1737,109 @@ def create_change_format_node(parent, data_formats, input_ref):
                        OrderedDict([("input", input_ref), ("value", data_format), ("format", data_format)]))
 
 
-def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, name=None):
+def create_tests(parent, inputs=None, outputs=None):
     """
     create tests section of the Galaxy tool
     @param tool the Galaxy tool
     @param inputs a copy of the inputs
     """
-    tests_node = add_child_node(parent, "tests")
 
-    if not (inputs is None or outputs is None):
-        fidx = 0
-        test_node = add_child_node(tests_node, "test")
-        strip_elements(inputs, "validator", "sanitizer")
-        for node in inputs.iter():
-            # params do not have a name if redundant with argument
-            # -> readd and restore attrib order
-            if node.tag == "param" and not node.attrib.get("name") and node.attrib.get("argument"):
-                attrib = copy.deepcopy(node.attrib)
-                node.attrib["name"] = node.attrib["argument"].lstrip("-").replace("-", "_")
-                for a in attrib:
-                    del node.attrib[a]
-                    node.attrib[a] = attrib[a]
+    if inputs is None or outputs is None:
+        return
 
-            if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
-                node.tag = "section"
-                node.attrib["name"] = ADVANCED_OPTIONS_NAME
-            if "type" not in node.attrib:
-                continue
-
-            if (node.attrib["type"] == "select" and "true" in {_.attrib.get("selected", "false") for _ in node}) or\
-               (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
-                node.tag = "delete_node"
-                continue
-
-            # TODO make this optional (ie add aparameter)
-            if node.attrib.get("optional", None) == "true" and node.attrib["type"] != "boolean":
-                node.tag = "delete_node"
-                continue
-
-            if node.attrib["type"] == "boolean":
-                if node.attrib["checked"] == "true":
-                    node.attrib["value"] = "true"  # node.attrib["truevalue"]
-                else:
-                    node.attrib["value"] = "false"  # node.attrib["falsevalue"]
-            elif node.attrib["type"] == "text" and node.attrib["value"] == "":
-                node.attrib["value"] = "1 2"  # use a space separated list here to cover the repeat (int/float) case
-            elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
-                node.attrib["value"] = "1"
-            elif node.attrib["type"] == "float" and node.attrib["value"] == "":
-                node.attrib["value"] = "1.0"
-            elif node.attrib["type"] == "select":
-                if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
-                    node.attrib["value"] = node[0].attrib["value"]
-                elif node.attrib.get("multiple", None) == "true":
-                    node.attrib["value"] = ",".join([_.attrib["value"] for _ in node if "value" in _.attrib])
-            elif node.attrib["type"] == "data":
-                node.attrib["ftype"] = node.attrib["format"].split(',')[0]
-                if node.attrib.get("multiple", "false") == "true":
-                    node.attrib["value"] = "{fidx}test.ext,{fidx}test2.ext".format(fidx=fidx)
-                else:
-                    node.attrib["value"] = f"{fidx}test.ext"
-                fidx += 1
-        for node in inputs.iter():
-            for a in set(node.attrib) - {"name", "value", "ftype"}:
+    fidx = 0
+    test_node = add_child_node(tests_node, "test")
+    strip_elements(inputs, "validator", "sanitizer")
+    for node in inputs.iter():
+        # params do not have a name if redundant with argument
+        # -> readd and restore attrib order
+        if node.tag == "param" and not node.attrib.get("name") and node.attrib.get("argument"):
+            attrib = copy.deepcopy(node.attrib)
+            node.attrib["name"] = node.attrib["argument"].lstrip("-").replace("-", "_")
+            for a in attrib:
                 del node.attrib[a]
-        strip_elements(inputs, "delete_node", "option", "expand")
-        for node in inputs:
-            test_node.append(node)
+                node.attrib[a] = attrib[a]
+        if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
+            node.tag = "section"
+            node.attrib["name"] = ADVANCED_OPTIONS_NAME
+        if "type" not in node.attrib:
+            continue
 
-        outputs_cnt = 0
-        for node in outputs.iter():
-            if node.tag == "data" or node.tag == "collection":
-                # assuming that all filters avaluate to false
-                has_filter = False
-                for c in node:
-                    if c.tag == "filter":
-                        has_filter = True
-                        break
-                if not has_filter:
-                    outputs_cnt += 1
-                else:
-                    node.tag = "delete_node"
-            if node.tag == "data":
-                node.tag = "output"
-                try:
-                    node.attrib["ftype"] = node.attrib["format"]
-                except KeyError:
-                    pass
-                node.attrib["value"] = "outfile.txt"
-            if node.tag == "collection":
-                node.tag = "output_collection"
-                node.attrib["count"] = "0"  # add a mock count element
-            if node.attrib.get("name", None) == "stdout":
-                node.attrib["lines_diff"] = "2"
-            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff", "count"}:
-                del node.attrib[a]
-        strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
+        if (node.attrib["type"] == "select" and "true" in {_.attrib.get("selected", "false") for _ in node}) or\
+           (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
+            node.tag = "delete_node"
+            continue
 
-        for node in outputs:
-            test_node.append(node)
-        # if no optional output is selected the stdout is added as output
-        if outputs_cnt == 0:
-            outputs_cnt = 1
-        test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
+        # TODO make this optional (ie add aparameter)
+        if node.attrib.get("optional", None) == "true" and node.attrib["type"] != "boolean":
+            node.tag = "delete_node"
+            continue
+
+        if node.attrib["type"] == "boolean":
+            if node.attrib["checked"] == "true":
+                node.attrib["value"] = "true"  # node.attrib["truevalue"]
+            else:
+                node.attrib["value"] = "false"  # node.attrib["falsevalue"]
+        elif node.attrib["type"] == "text" and node.attrib["value"] == "":
+            node.attrib["value"] = "1 2"  # use a space separated list here to cover the repeat (int/float) case
+        elif node.attrib["type"] == "integer" and node.attrib["value"] == "":
+            node.attrib["value"] = "1"
+        elif node.attrib["type"] == "float" and node.attrib["value"] == "":
+            node.attrib["value"] = "1.0"
+        elif node.attrib["type"] == "select":
+            if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
+                node.attrib["value"] = node[0].attrib["value"]
+            elif node.attrib.get("multiple", None) == "true":
+                node.attrib["value"] = ",".join([_.attrib["value"] for _ in node if "value" in _.attrib])
+        elif node.attrib["type"] == "data":
+            node.attrib["ftype"] = node.attrib["format"].split(',')[0]
+            if node.attrib.get("multiple", "false") == "true":
+                node.attrib["value"] = "{fidx}test.ext,{fidx}test2.ext".format(fidx=fidx)
+            else:
+                node.attrib["value"] = f"{fidx}test.ext"
+            fidx += 1
+    for node in inputs.iter():
+        for a in set(node.attrib) - {"name", "value", "ftype"}:
+            del node.attrib[a]
+    strip_elements(inputs, "delete_node", "option", "expand")
+    for node in inputs:
+        test_node.append(node)
+
+    outputs_cnt = 0
+    for node in outputs.iter():
+        if node.tag == "data" or node.tag == "collection":
+            # assuming that all filters avaluate to false
+            has_filter = False
+            for c in node:
+                if c.tag == "filter":
+                    has_filter = True
+                    break
+            if not has_filter:
+                outputs_cnt += 1
+            else:
+                node.tag = "delete_node"
+        if node.tag == "data":
+            node.tag = "output"
+            try:
+                node.attrib["ftype"] = node.attrib["format"]
+            except KeyError:
+                pass
+            node.attrib["value"] = "outfile.txt"
+        if node.tag == "collection":
+            node.tag = "output_collection"
+            node.attrib["count"] = "0"  # add a mock count element
+        if node.attrib.get("name", None) == "stdout":
+            node.attrib["lines_diff"] = "2"
+        for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff", "count"}:
+            del node.attrib[a]
+    strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
+
+    for node in outputs:
+        test_node.append(node)
+    # if no optional output is selected the stdout is added as output
+    if outputs_cnt == 0:
+        outputs_cnt = 1
+    test_node.attrib["expect_num_outputs"] = str(outputs_cnt)
 
 
 def create_test_only(model, **kwargs):

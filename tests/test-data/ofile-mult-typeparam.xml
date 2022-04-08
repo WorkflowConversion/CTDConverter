@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <!--This is a configuration file for the integration of a tools into Galaxy (https://galaxyproject.org/). This file was automatically generated using CTDConverter.-->
 <!--Proposed Tool Section: [Test]-->
-<tool id="ofile-mult-typeparam" name="ofile-mult-typeparam" version="@TOOL_VERSION@+galaxy@GALAXY_VERSION@">
+<tool id="ofile-mult-typeparam" name="ofile-mult-typeparam" version="@TOOL_VERSION@+galaxy@VERSION_SUFFIX@">
   <description>multiple Output File parameter tests</description>
   <macros>
     <token name="@EXECUTABLE@">ofile-mult-typeparam</token>
