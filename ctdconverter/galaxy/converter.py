@@ -454,13 +454,10 @@ def _convert_internal(parsed_ctds, **kwargs):
         # overwrite attributes of the parsed ctd parameters as specified in hardcoded parameters json
         for param in utils.extract_and_flatten_parameters(model):
             hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(utils.extract_param_name(param), model.name, 'CTD')
-            logger.error(f"hardcoded_attributes {hardcoded_attributes}")
             if hardcoded_attributes is not None:
                 for a in hardcoded_attributes:
                     if not hasattr(param, a):
-                        logger.error(f"no attr {a} {dir(param)}")
                         continue
-                    logger.error(f"HERE")
                     if a == "type":
                         try:
                             t = GALAXY_TYPE_TO_TYPE[hardcoded_attributes[a]]
@@ -481,7 +478,6 @@ def _convert_internal(parsed_ctds, **kwargs):
                         else:
                             setattr(param, a, hardcoded_attributes[a])
                     else:
-                        logger.error(f"set a {a}")
                         setattr(param, a, hardcoded_attributes[a])
 
         if "test_only" in kwargs and kwargs["test_only"]:
@@ -900,7 +896,7 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     if len(path) > 1:
         path = path[:-1] + [p]
     elif param.advanced and (param.type is not _OutFile or suffix):
-        return ADVANCED_OPTIONS_NAME + p
+        path = [ADVANCED_OPTIONS_NAME, p]
     else:
         path = [p]
     # data input params with multiple="true" are in a (batch mode) conditional
@@ -1288,7 +1284,13 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
                     if is_default(fmt, param):
                         option_node.attrib["selected"] = "true"
             else:
+                unique_choices = set()
                 for choice in param.restrictions.choices:
+                    if str(choice) in unique_choices:
+                        logger.warning(f"Option {choice} of {utils.extract_param_name(param)} is not unique.")
+                        continue
+                    else:
+                        unique_choices.add(str(choice))
                     option_node = add_child_node(param_node, "option",
                                                  OrderedDict([("value", str(choice))]),
                                                  text=str(choice))
