@@ -108,7 +108,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <param name="sect_default_mandatory_unrestricted_adv_minmax" value="0"/>
         <param name="sect_default_optional_unrestricted_adv_minmax" value="0"/>
       </section>
-      <conditional name="adv_opts_cond">
+      <section name="adv_opts">
         <param name="default_mandatory_unrestricted_adv" value="0"/>
         <param name="default_optional_unrestricted_adv" value="0"/>
         <param name="default_mandatory_unrestricted_adv_min" value="0"/>
@@ -117,8 +117,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <param name="default_optional_unrestricted_adv_max" value="0"/>
         <param name="default_mandatory_unrestricted_adv_minmax" value="0"/>
         <param name="default_optional_unrestricted_adv_minmax" value="0"/>
-        <param name="adv_opts_selector" value="advanced"/>
-      </conditional>
+      </section>
     </test>
   </tests>
   <help><![CDATA[Integer parameter tests.

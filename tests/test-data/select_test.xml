@@ -544,13 +544,12 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <param name="sect_list_wodefault_mandatory_adv" value="A,B,C,D"/>
         <param name="sect_list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
       </section>
-      <conditional name="adv_opts_cond">
+      <section name="adv_opts">
         <param name="wodefault_mandatory_adv" value="A"/>
         <param name="wodefault_mandatory_many_adv" value="A"/>
         <param name="list_wodefault_mandatory_adv" value="A,B,C,D"/>
         <param name="list_wodefault_mandatory_many_adv" value="A,B,C,D,E"/>
-        <param name="adv_opts_selector" value="advanced"/>
-      </conditional>
+      </section>
     </test>
   </tests>
   <help><![CDATA[Select parameter tests.

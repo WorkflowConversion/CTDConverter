@@ -90,8 +90,7 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
         <param name="sect_mandatory_mandatoryinput_type" value="eut"/>
         <param name="sect_inp_mandatory_mandatoryinput" ftype="tsv" value="1test.ext,1test2.ext"/>
       </section>
-      <conditional name="adv_opts_cond">
-        <param name="adv_opts_selector" value="advanced"/>
+      <conditional name="adv_opts">
       </conditional>
       <output_collection name="mandatory_mandatoryinput" count="0"/>
       <output_collection name="test_section_sect_mandatory_mandatoryinput" count="0"/>

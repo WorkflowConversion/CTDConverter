@@ -454,10 +454,13 @@ def _convert_internal(parsed_ctds, **kwargs):
         # overwrite attributes of the parsed ctd parameters as specified in hardcoded parameters json
         for param in utils.extract_and_flatten_parameters(model):
             hardcoded_attributes = parameter_hardcoder.get_hardcoded_attributes(utils.extract_param_name(param), model.name, 'CTD')
+            logger.error(f"hardcoded_attributes {hardcoded_attributes}")
             if hardcoded_attributes is not None:
                 for a in hardcoded_attributes:
                     if not hasattr(param, a):
+                        logger.error(f"no attr {a} {dir(param)}")
                         continue
+                    logger.error(f"HERE")
                     if a == "type":
                         try:
                             t = GALAXY_TYPE_TO_TYPE[hardcoded_attributes[a]]
@@ -478,6 +481,7 @@ def _convert_internal(parsed_ctds, **kwargs):
                         else:
                             setattr(param, a, hardcoded_attributes[a])
                     else:
+                        logger.error(f"set a {a}")
                         setattr(param, a, hardcoded_attributes[a])
 
         if "test_only" in kwargs and kwargs["test_only"]:
@@ -630,6 +634,9 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
 @EXECUTABLE@ -ini @EXECUTABLE@.ctd""")
     final_cmd['command'].extend(kwargs["add_to_command_line"])
     final_cmd['postprocessing'].extend(["", "## Postprocessing"])
+
+    advanced_command_start = "## advanced options"
+    advanced_command_end = ""
 
     parameter_hardcoder = kwargs["parameter_hardcoder"]
     supported_file_formats = kwargs["supported_file_formats"]
@@ -893,7 +900,7 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     if len(path) > 1:
         path = path[:-1] + [p]
     elif param.advanced and (param.type is not _OutFile or suffix):
-        path = [ADVANCED_OPTIONS_NAME, p]
+        return ADVANCED_OPTIONS_NAME + p
     else:
         path = [p]
     # data input params with multiple="true" are in a (batch mode) conditional
@@ -1271,7 +1278,6 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
         elif type(param.restrictions) is _Choices:
             # create as many <option> elements as restriction values
             if is_out_type_param(param, model):
-                logger.warning(f"{param.name} {param.type}")
                 formats = get_formats(param, model, o2g)
                 for fmt in formats:
                     option_node = add_child_node(param_node, "option",
@@ -1744,8 +1750,16 @@ def create_tests(parent, inputs=None, outputs=None):
     @param inputs a copy of the inputs
     """
 
-    if inputs is None or outputs is None:
-        return
+    if not (inputs is None or outputs is None):
+        fidx = 0
+        test_node = add_child_node(tests_node, "test")
+        strip_elements(inputs, "validator", "sanitizer")
+        for node in inputs.iter():
+            if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
+                node.tag = "section"
+                node.attrib["name"] = ADVANCED_OPTIONS_NAME
+            if "type" not in node.attrib:
+                continue
 
     fidx = 0
     test_node = add_child_node(tests_node, "test")

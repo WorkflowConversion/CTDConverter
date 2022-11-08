@@ -449,7 +449,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <param name="sect_double_resticted_default_optional_adv" value="-0.3 0.5"/>
         <param name="sect_double_resticted_default_mandatory_adv" value="-0.3 0.5"/>
       </section>
-      <conditional name="adv_opts_cond">
+      <section name="adv_opts">
         <param name="string_wodefault_mandatory_adv" value="1 2"/>
         <param name="string_default_optional_adv" value="&quot;A A&quot; -B"/>
         <param name="string_default_mandatory_adv" value="&quot;A A&quot; -B"/>
@@ -465,8 +465,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <param name="double_resticted_wodefault_mandatory_adv" value="1 2"/>
         <param name="double_resticted_default_optional_adv" value="-0.3 0.5"/>
         <param name="double_resticted_default_mandatory_adv" value="-0.3 0.5"/>
-        <param name="adv_opts_selector" value="advanced"/>
-      </conditional>
+      </section>
     </test>
   </tests>
   <help><![CDATA[Repeat parameter tests.
