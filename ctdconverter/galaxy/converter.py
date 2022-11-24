@@ -1884,6 +1884,10 @@ def create_test_only(model, **kwargs):
             if param.name != "test":
                 continue
 
+        # analogous to input generation
+        if is_in_type_param(param, model):
+            continue
+
         if utils.extract_param_name(param.parent) in section_nodes:
             parent = section_nodes[utils.extract_param_name(param.parent)]
         elif type(param) is not ParameterGroup and param.advanced:
