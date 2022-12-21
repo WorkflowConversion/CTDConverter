@@ -561,7 +561,11 @@ def create_description(tool, model):
     """
     if "description" in model.opt_attribs.keys() and model.opt_attribs["description"] is not None:
         description = SubElement(tool, "description")
-        description.text = model.opt_attribs["description"]
+        text = model.opt_attribs["description"]
+        text = text.split("\n")[0].strip()
+        if text[-1] == ".":
+            text = text[:-1]
+        description.text = text
 
 
 def create_configfiles(tool, model, **kwargs):
