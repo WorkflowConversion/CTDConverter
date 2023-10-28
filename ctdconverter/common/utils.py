@@ -184,7 +184,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
 
 
 def flatten_list_of_lists(args, list_name):
-    setattr(args, list_name, [item for sub_list in getattr(args, list_name) for item in sub_list])
+    setattr(args, list_name, [item for sub_list in getattr(args, list_name) for item in sub_list if isinstance(sub_list, list)])
 
 
 def validate_against_schema(ctd_file, schema):
@@ -197,7 +197,7 @@ def validate_against_schema(ctd_file, schema):
 
 def add_common_parameters(parser, version, last_updated):
     parser.add_argument("FORMAT", default=None, help="Output format (mandatory). Can be one of: cwl, galaxy.")
-    parser.add_argument("-i", "--input", dest="input_files", default=[], required=True, nargs="+", action="append",
+    parser.add_argument("-i", "--input", dest="input_files", required=True, nargs="+", action="append",
                         help="List of CTD files to convert.")
     parser.add_argument("-o", "--output-destination", dest="output_destination", required=True,
                         help="If multiple input files are given, then a folder in which all converted "
