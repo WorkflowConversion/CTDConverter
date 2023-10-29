@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import json
+import logging
 import ntpath
 import operator
 import os
@@ -16,7 +17,6 @@ from CTDopts.CTDopts import (
 )
 from lxml import etree
 
-from ..common import logger
 from ..common.exceptions import ApplicationException
 
 
@@ -109,7 +109,7 @@ def validate_path_exists(path):
 
 def validate_argument_is_directory(args, argument_name):
     file_name = getattr(args, argument_name)
-    logger.info("REALPATH %s" % os.path.realpath(file_name))
+    logging.info("REALPATH %s" % os.path.realpath(file_name))
     if file_name is not None and os.path.isdir(os.path.realpath(file_name)):
         raise ApplicationException("The provided output file name (%s) points to a directory." % file_name)
 
@@ -150,12 +150,12 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
     schema = None
     if xsd_location is not None:
         try:
-            logger.info("Loading validation schema from %s" % xsd_location, 0)
+            logging.info("Loading validation schema from %s" % xsd_location)
             schema = etree.XMLSchema(etree.parse(xsd_location))
         except Exception as e:
-            logger.error("Could not load validation schema {}. Reason: {}".format(xsd_location, str(e)), 0)
+            logging.error("Could not load validation schema {}. Reason: {}".format(xsd_location, str(e)))
     else:
-        logger.warning("Validation against a schema has not been enabled.", 0)
+        logging.warning("Validation against a schema has not been enabled.")
 
     for input_ctd in input_ctds:
         if schema is not None:
@@ -165,7 +165,7 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
         # if multiple inputs are being converted, we need to generate a different output_file for each input
         if is_converting_multiple_ctds:
             output_file = os.path.join(output_file, get_filename_without_suffix(input_ctd) + "." + output_file_extension)
-        logger.info("Parsing %s" % input_ctd)
+        logging.info("Parsing %s" % input_ctd)
 
         model = None
         try:
@@ -386,8 +386,8 @@ def resolve_param_mapping(param, ctd_model, fix_underscore=False):
         for mapping_element in cli_element.mappings:
             if mapping_element.reference_name == param.name:
                 if param_mapping is not None:
-                    logger.warning("The parameter %s has more than one mapping in the <cli> section. "
-                                   "The first found mapping, %s, will be used." % (param.name, param_mapping), 1)
+                    logging.warning("The parameter %s has more than one mapping in the <cli> section. "
+                                   "The first found mapping, %s, will be used." % (param.name, param_mapping))
                 else:
                     param_mapping = cli_element.option_identifier
     if param_mapping is not None:
@@ -404,7 +404,7 @@ def _extract_param_cli_name(param, ctd_model, fix_underscore=False):
     # we generate parameters with colons for subgroups, but not for the two topmost parents (OpenMS legacy)
     if type(param.parent) == ParameterGroup:
         if hasattr(ctd_model, "cli") and ctd_model.cli:
-            logger.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>", 1)
+            logging.warning("Using nested parameter sections (NODE elements) is not compatible with <cli>")
         return ":".join(extract_param_path(param, fix_underscore)[:-1]) + ":" + resolve_param_mapping(param, ctd_model, fix_underscore)
     else:
         return resolve_param_mapping(param, ctd_model, fix_underscore)
