@@ -1,0 +1,66 @@
+name: Test Pull Request
+
+on: [pull_request]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache .cache/pip
+      uses: actions/cache@v3
+      id: cache-pip
+      with:
+        path: ~/.cache/pip
+        key: pip_cache_py_${{ matrix.python-version }}
+    - name: Install package
+      run: pip install -r requirements.txt black==23.3 flake8==6.0
+    - name: Flake8
+      run: flake8 --ignore=C901,W503
+    - name: Black
+      uses: psf/black@23.3.0
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8']
+    steps:
+    - uses: actions/checkout@v1
+    - uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Cache .cache/pip
+      uses: actions/cache@v3
+      id: cache-pip
+      with:
+        path: ~/.cache/pip
+        key: pip_cache_py_${{ matrix.python-version }}
+    - name: install package
+      run: python -m pip install .
+    - name: install packages for testing
+      run: pip install nose xmldiff
+
+    - name: Run smoke test on example
+      run: |
+        python examples/example.py > tmp.xml
+        xmldiff --check tmp.xml examples/tool.xml
+        python examples/example_macros.py > tmp.xml
+        xmldiff --check tmp.xml examples/example_macros.xml
+
+    - name: diff_pydocstyle_report
+      run: make diff_pydocstyle_report
+    - name: Test
+      run: make test
+    - name: Planemo lint tools
+      run: planemo l tests/test-data/
+    # planemo test content of tests/test-data (this is OK, because the previous
+    # tests ensure equality of the xmls that are generated and those in the package)
+    - name: planemo test tools
+      run: export PATH=$(pwd)/tests/test-data:$PATH && planemo t tests/test-data/
