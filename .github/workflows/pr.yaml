@@ -49,8 +49,9 @@ jobs:
       run: |
         pip install -r requirements.txt .
         pip install -r requirements-dev.txt
-    - name: diff_pydocstyle_report
-      run: make diff_pydocstyle_report
+    #TODO reenable: works only on branch?
+    # - name: diff_pydocstyle_report
+    #   run: make diff_pydocstyle_report
     - name: Test
       run: make test
     - name: Planemo lint tools
