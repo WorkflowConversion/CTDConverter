@@ -76,18 +76,6 @@ def add_specific_args(parser):
                              "brief example on the layout of this file.", default=None, required=False)
     parser.add_argument("-a", "--add-to-command-line", dest="add_to_command_line",
                         help="Adds content to the command line", default="", required=False)
-    parser.add_argument("-d", "--datatypes-destination", dest="data_types_destination",
-                        help="Specify the location of a datatypes_conf.xml to modify and add the registered "
-                        "data types. If the provided destination does not exist, a new file will be created.",
-                        default=None, required=False)
-    parser.add_argument("-c", "--default-category", dest="default_category", default="DEFAULT", required=False,
-                        help="Default category to use for tools lacking a category when generating tool_conf.xml")
-    parser.add_argument("-t", "--tool-conf-destination", dest="tool_conf_destination", default=None, required=False,
-                        help="Specify the location of an existing tool_conf.xml that will be modified to include "
-                        "the converted tools. If the provided destination does not exist, a new file will"
-                        "be created.")
-    parser.add_argument("-g", "--galaxy-tool-path", dest="galaxy_tool_path", default=None, required=False,
-                        help="The path that will be prepended to the file names when generating tool_conf.xml")
     parser.add_argument("-r", "--required-tools", dest="required_tools_file", default=None, required=False,
                         help="Each line of the file will be interpreted as a tool name that needs translation. "
                         "Run with '-h' or '--help' to see a brief example on the format of this file.")
@@ -403,13 +391,6 @@ def validate_and_prepare_args(args, model):
     input_variables_to_check = ["skip_tools_file", "required_tools_file", "macros_files", "formats_file"]
     for variable_name in input_variables_to_check:
         utils.validate_argument_is_valid_path(args, variable_name)
-
-    # check that the provided output files, if provided, contain a valid file path (i.e., not a folder)
-    output_variables_to_check = ["data_types_destination", "tool_conf_destination"]
-    for variable_name in output_variables_to_check:
-        file_name = getattr(args, variable_name)
-        if file_name is not None and os.path.isdir(file_name):
-            raise ApplicationException("The provided output file name (%s) points to a directory." % file_name)
 
     if not args.macros_files:
         # list is empty, provide the default value
