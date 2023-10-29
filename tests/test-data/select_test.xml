@@ -32,35 +32,35 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
   </configfiles>
   <inputs>
-    <param name="wodefault_mandatory" argument="-wodefault_mandatory" display="checkboxes" type="select" optional="false" label="string" help="">
+    <param argument="-wodefault_mandatory" display="checkboxes" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="wodefault_mandatory"/>
     </param>
-    <param name="default_mandatory" argument="-default_mandatory" display="checkboxes" type="select" optional="false" label="string" help="">
+    <param argument="-default_mandatory" display="checkboxes" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="default_mandatory"/>
     </param>
-    <param name="wodefault_optional" argument="-wodefault_optional" display="checkboxes" type="select" optional="true" label="string" help="">
+    <param argument="-wodefault_optional" display="checkboxes" type="select" optional="true" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="wodefault_optional"/>
     </param>
-    <param name="default_optional" argument="-default_optional" display="checkboxes" type="select" optional="false" label="string" help="">
+    <param argument="-default_optional" display="checkboxes" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="default_optional"/>
     </param>
-    <param name="wodefault_mandatory_many" argument="-wodefault_mandatory_many" type="select" optional="false" label="string" help="">
+    <param argument="-wodefault_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -68,7 +68,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="wodefault_mandatory_many"/>
     </param>
-    <param name="default_mandatory_many" argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
+    <param argument="-default_mandatory_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -76,7 +76,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="default_mandatory_many"/>
     </param>
-    <param name="wodefault_optional_many" argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
+    <param argument="-wodefault_optional_many" type="select" optional="true" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -84,7 +84,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="wodefault_optional_many"/>
     </param>
-    <param name="default_optional_many" argument="-default_optional_many" type="select" optional="false" label="string" help="">
+    <param argument="-default_optional_many" type="select" optional="false" label="string" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -92,35 +92,35 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="default_optional_many"/>
     </param>
-    <param name="list_wodefault_optional" argument="-list_wodefault_optional" display="checkboxes" multiple="true" type="select" optional="true" label="string list" help="">
+    <param argument="-list_wodefault_optional" display="checkboxes" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="list_wodefault_optional"/>
     </param>
-    <param name="list_wodefault_mandatory" argument="-list_wodefault_mandatory" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_wodefault_mandatory" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
       <option value="D">D</option>
       <expand macro="list_string_san" name="list_wodefault_mandatory"/>
     </param>
-    <param name="list_default_optional" argument="-list_default_optional" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_default_optional" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <expand macro="list_string_san" name="list_default_optional"/>
     </param>
-    <param name="list_default_mandatory" argument="-list_default_mandatory" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_default_mandatory" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
       <option value="D" selected="true">D</option>
       <expand macro="list_string_san" name="list_default_mandatory"/>
     </param>
-    <param name="list_wodefault_optional_many" argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
+    <param argument="-list_wodefault_optional_many" multiple="true" type="select" optional="true" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -128,7 +128,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="list_wodefault_optional_many"/>
     </param>
-    <param name="list_wodefault_mandatory_many" argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_wodefault_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C">C</option>
@@ -136,7 +136,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="list_wodefault_mandatory_many"/>
     </param>
-    <param name="list_default_optional_many" argument="-list_default_optional_many" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_default_optional_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -144,7 +144,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       <option value="E">E</option>
       <expand macro="list_string_san" name="list_default_optional_many"/>
     </param>
-    <param name="list_default_mandatory_many" argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
+    <param argument="-list_default_mandatory_many" multiple="true" type="select" optional="false" label="string list" help="">
       <option value="A">A</option>
       <option value="B">B</option>
       <option value="C" selected="true">C</option>
@@ -395,35 +395,35 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
       </param>
     </section>
     <expand macro="adv_opts_macro">
-      <param name="wodefault_mandatory_adv" argument="-wodefault_mandatory_adv" display="checkboxes" type="select" optional="false" label="string" help="">
+      <param argument="-wodefault_mandatory_adv" display="checkboxes" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="wodefault_mandatory_adv"/>
       </param>
-      <param name="default_mandatory_adv" argument="-default_mandatory_adv" display="checkboxes" type="select" optional="false" label="string" help="">
+      <param argument="-default_mandatory_adv" display="checkboxes" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="default_mandatory_adv"/>
       </param>
-      <param name="wodefault_optional_adv" argument="-wodefault_optional_adv" display="checkboxes" type="select" optional="true" label="string" help="">
+      <param argument="-wodefault_optional_adv" display="checkboxes" type="select" optional="true" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="wodefault_optional_adv"/>
       </param>
-      <param name="default_optional_adv" argument="-default_optional_adv" display="checkboxes" type="select" optional="false" label="string" help="">
+      <param argument="-default_optional_adv" display="checkboxes" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="default_optional_adv"/>
       </param>
-      <param name="wodefault_mandatory_many_adv" argument="-wodefault_mandatory_many_adv" type="select" optional="false" label="string" help="">
+      <param argument="-wodefault_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -431,7 +431,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="wodefault_mandatory_many_adv"/>
       </param>
-      <param name="default_mandatory_many_adv" argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
+      <param argument="-default_mandatory_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -439,7 +439,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="default_mandatory_many_adv"/>
       </param>
-      <param name="wodefault_optional_many_adv" argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
+      <param argument="-wodefault_optional_many_adv" type="select" optional="true" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -447,7 +447,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="wodefault_optional_many_adv"/>
       </param>
-      <param name="default_optional_many_adv" argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
+      <param argument="-default_optional_many_adv" type="select" optional="false" label="string" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -455,35 +455,35 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="default_optional_many_adv"/>
       </param>
-      <param name="list_wodefault_optional_adv" argument="-list_wodefault_optional_adv" display="checkboxes" multiple="true" type="select" optional="true" label="string list" help="">
+      <param argument="-list_wodefault_optional_adv" display="checkboxes" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="list_wodefault_optional_adv"/>
       </param>
-      <param name="list_wodefault_mandatory_adv" argument="-list_wodefault_mandatory_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_wodefault_mandatory_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
         <option value="D">D</option>
         <expand macro="list_string_san" name="list_wodefault_mandatory_adv"/>
       </param>
-      <param name="list_default_optional_adv" argument="-list_default_optional_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_default_optional_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <expand macro="list_string_san" name="list_default_optional_adv"/>
       </param>
-      <param name="list_default_mandatory_adv" argument="-list_default_mandatory_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_default_mandatory_adv" display="checkboxes" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
         <option value="D" selected="true">D</option>
         <expand macro="list_string_san" name="list_default_mandatory_adv"/>
       </param>
-      <param name="list_wodefault_optional_many_adv" argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
+      <param argument="-list_wodefault_optional_many_adv" multiple="true" type="select" optional="true" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -491,7 +491,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="list_wodefault_optional_many_adv"/>
       </param>
-      <param name="list_wodefault_mandatory_many_adv" argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_wodefault_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
@@ -499,7 +499,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="list_wodefault_mandatory_many_adv"/>
       </param>
-      <param name="list_default_optional_many_adv" argument="-list_default_optional_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_default_optional_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>
@@ -507,7 +507,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
         <option value="E">E</option>
         <expand macro="list_string_san" name="list_default_optional_many_adv"/>
       </param>
-      <param name="list_default_mandatory_many_adv" argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
+      <param argument="-list_default_mandatory_many_adv" multiple="true" type="select" optional="false" label="string list" help="">
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C" selected="true">C</option>

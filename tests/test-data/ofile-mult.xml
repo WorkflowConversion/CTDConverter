@@ -60,8 +60,8 @@ ${' '.join(["&& mv -n 'mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s' 'mandato
     <configfile name="hardcoded_json"><![CDATA[{}]]></configfile>
   </configfiles>
   <inputs>
-    <param name="inp_mandatory_mandatoryinput" argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
-    <param name="inp_optional_mandatoryinput" argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param argument="-inp_mandatory_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
+    <param argument="-inp_optional_mandatoryinput" type="data" format="tsv" multiple="true" optional="false" label="input file" help=" select tsv data sets(s)"/>
     <expand macro="adv_opts_macro"/>
     <param name="OPTIONAL_OUTPUTS" type="select" optional="true" multiple="true" label="Optional outputs">
       <option value="optional_mandatoryinput_FLAG">optional_mandatoryinput (output file)</option>
