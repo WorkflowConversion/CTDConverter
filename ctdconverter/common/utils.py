@@ -184,7 +184,14 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
 
 
 def flatten_list_of_lists(args, list_name):
-    setattr(args, list_name, [item for sub_list in getattr(args, list_name) for item in sub_list if isinstance(sub_list, list)])
+    lst = getattr(args, list_name)
+    ret = []
+    for l in lst:
+        if isinstance(l, list):
+            ret.extend(l)
+        else:
+            ret.append(l)
+    setattr(args, list_name, ret)
 
 
 def validate_against_schema(ctd_file, schema):
