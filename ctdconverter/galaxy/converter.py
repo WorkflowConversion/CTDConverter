@@ -1160,24 +1160,23 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     # parameters need to be treated in cheetah. variable names are currently fixed back
     # to dashes in fill_ctd.py. currently there seems to be only a single tool
     # requiring this https://github.com/OpenMS/OpenMS/pull/4529
-    param_node.attrib["name"] = get_galaxy_parameter_name(param)
-    param_node.attrib["argument"] = "-%s" % utils.extract_param_name(param)
+    argument = "-%s" % utils.extract_param_name(param)
+    name = get_galaxy_parameter_name(param)
+    if argument.lstrip("-").replace("-", "_") != name:
+        param_node.attrib["name"] = get_galaxy_parameter_name(param)
+    param_node.attrib["argument"] = argument
+
     param_type = TYPE_TO_GALAXY_TYPE[param.type]
     if param_type is None:
         raise ModelError("Unrecognized parameter type %(type)s for parameter %(name)s"
                          % {"type": param.type, "name": param.name})
+
     # ITEMLIST is rendered as text field (even if its integers or floats), an
-    # exception is files which are treated a bit below
+    # exception is files which are treated just below
     if param.is_list:
         param_type = "text"
-
     if is_selection_parameter(param):
         param_type = "select"
-        if len(param.restrictions.choices) < 5:
-            param_node.attrib["display"] = "checkboxes"
-        if param.is_list:
-            param_node.attrib["multiple"] = "true"
-
     if is_boolean_parameter(param):
         param_type = "boolean"
 
@@ -1204,10 +1203,20 @@ def create_param_attribute_list(param_node, param, model, supported_file_formats
     # (in Galaxy the default would be prefilled in the form and at least
     # one option needs to be selected).
     if not (param.default is None or type(param.default) is _Null) and param_node.attrib["type"] in ["integer", "float", "text", "boolean", "select"]:
-        logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
-        param_node.attrib["optional"] = "false"
+        # logger.error("%s %s %s %s %s" % (param.name, param.default is None, type(param.default) is _Null, param_type, param.type))
+        optional = False
     else:
-        param_node.attrib["optional"] = str(not param.required).lower()
+        optional = not param.required
+    param_node.attrib["optional"] = str(optional).lower()
+
+    if is_selection_parameter(param):
+        if param.is_list:
+            param_node.attrib["multiple"] = "true"
+        if len(param.restrictions.choices) < 5:
+            if param.is_list and optional:
+                param_node.attrib["display"] = "checkboxes"
+            elif not param.is_list and not optional:
+                param_node.attrib["display"] = "radio"
 
     # check for parameters with restricted values (which will correspond to a "select" in galaxy)
     if param.restrictions is not None or param_type == "boolean":
@@ -1482,7 +1491,7 @@ def create_boolean_parameter(param_node, param):
 
 def all_outputs(model, parameter_hardcoder):
     """
-    return lists of reqired and optional output parameters
+    return lists of required and optional output parameters
     """
     out = []
     optout = []
@@ -1673,6 +1682,15 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
         test_node = add_child_node(tests_node, "test")
         strip_elements(inputs, "validator", "sanitizer")
         for node in inputs.iter():
+            # params do not have a name if redundant with argument
+            # -> readd and restore attrib order
+            if node.tag == "param" and not node.attrib.get("name") and node.attrib.get("argument"):
+                attrib = copy.deepcopy(node.attrib)
+                node.attrib["name"] = node.attrib["argument"].lstrip("-").replace("-", "_")
+                for a in attrib:
+                    del node.attrib[a]
+                    node.attrib[a] = attrib[a]
+
             if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "macro":
                 node.tag = "conditional"
                 node.attrib["name"] = ADVANCED_OPTIONS_NAME + "cond"
@@ -1742,9 +1760,10 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 node.attrib["value"] = "outfile.txt"
             if node.tag == "collection":
                 node.tag = "output_collection"
+                node.attrib["count"] = "0"  # add a mock count element
             if node.attrib.get("name", None) == "stdout":
                 node.attrib["lines_diff"] = "2"
-            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff"}:
+            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff", "count"}:
                 del node.attrib[a]
         strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
 
