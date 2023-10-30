@@ -93,8 +93,8 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
       <conditional name="adv_opts_cond">
         <param name="adv_opts_selector" value="advanced"/>
       </conditional>
-      <output_collection name="mandatory_mandatoryinput"/>
-      <output_collection name="test_section_sect_mandatory_mandatoryinput"/>
+      <output_collection name="mandatory_mandatoryinput" count="0"/>
+      <output_collection name="test_section_sect_mandatory_mandatoryinput" count="0"/>
     </test>
   </tests>
   <help><![CDATA[Multiple Output File parameter tests.

@@ -1760,9 +1760,10 @@ def create_tests(parent, inputs=None, outputs=None, test_macros_prefix=None, nam
                 node.attrib["value"] = "outfile.txt"
             if node.tag == "collection":
                 node.tag = "output_collection"
+                node.attrib["count"] = "0"  # add a mock count element
             if node.attrib.get("name", None) == "stdout":
                 node.attrib["lines_diff"] = "2"
-            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff"}:
+            for a in set(node.attrib) - {"name", "value", "ftype", "lines_diff", "count"}:
                 del node.attrib[a]
         strip_elements(outputs, "delete_node", "discover_datasets", "filter", "change_format")
 
