@@ -186,11 +186,11 @@ def parse_input_ctds(xsd_location, input_ctds, output_destination, output_file_e
 def flatten_list_of_lists(args, list_name):
     lst = getattr(args, list_name)
     ret = []
-    for l in lst:
-        if isinstance(l, list):
-            ret.extend(l)
+    for e in lst:
+        if isinstance(e, list):
+            ret.extend(e)
         else:
-            ret.append(l)
+            ret.append(e)
     setattr(args, list_name, ret)
 
 
@@ -387,7 +387,7 @@ def resolve_param_mapping(param, ctd_model, fix_underscore=False):
             if mapping_element.reference_name == param.name:
                 if param_mapping is not None:
                     logging.warning("The parameter %s has more than one mapping in the <cli> section. "
-                                   "The first found mapping, %s, will be used." % (param.name, param_mapping))
+                                    "The first found mapping, %s, will be used." % (param.name, param_mapping))
                 else:
                     param_mapping = cli_element.option_identifier
     if param_mapping is not None:

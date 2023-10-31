@@ -217,8 +217,7 @@ def parse_macros_files(macros_file_names, tool_version, supported_file_types, re
             for xml_element in root.findall("xml"):
                 name = xml_element.attrib["name"]
                 if name in macros_to_expand:
-                    logging.warning("Macro %s has already been found. Duplicate found in file %s." %
-                                   (name, macros_file_name))
+                    logging.warning("Macro %s has already been found. Duplicate found in file %s." % (name, macros_file_name))
                     continue
                 logging.info("Macro %s found" % name)
                 macros_to_expand.append(name)
@@ -482,7 +481,6 @@ def _convert_internal(parsed_ctds, **kwargs):
         create_configfiles(tool, model, **kwargs)
         inputs = create_inputs(tool, model, **kwargs)
         outputs = create_outputs(tool, model, **kwargs)
-        tests_node = add_child_node(tool, "tests")
         if kwargs["test_test"]:
             create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
 
@@ -656,14 +654,14 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
                     param_cmd['preprocessing'].append(f'#if ${_actual_parameter}_select == "no"')
                     param_cmd['preprocessing'].append(f"mkdir ${{' '.join([\"'{actual_parameter}/%s'\" % (i) for i, f in enumerate(${_actual_parameter}) if f])}} && ")
                     param_cmd['preprocessing'].append(f"${{' '.join([\"ln -s '%s' '{actual_parameter}/%s/%s.%s' && \" % (f, i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}) if f])}}")
-                    param_cmd['preprocessing'].append(f'#else')
+                    param_cmd['preprocessing'].append('#else')
                     param_cmd['preprocessing'].append(f"ln -s '${_actual_parameter}' '{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}.ext)' &&")
-                    param_cmd['preprocessing'].append(f'#end if')
+                    param_cmd['preprocessing'].append('#end if')
                     param_cmd['command'].append(f'#if ${actual_parameter}_select == "no"')
                     param_cmd['command'].append(f"${{' '.join([\"'{actual_parameter}/%s/%s.%s'\"%(i, re.sub('[^\\w\\-_]', '_', f.element_identifier), $gxy2omsext(f.ext)) for i, f in enumerate(${_actual_parameter}) if f])}}")
-                    param_cmd['command'].append(f'#else')
+                    param_cmd['command'].append('#else')
                     param_cmd['command'].append(f"'{actual_parameter}/${{re.sub(\"[^\\w\\-_]\", \"_\", ${_actual_parameter}.element_identifier)}}.$gxy2omsext(${_actual_parameter}.ext)'")
-                    param_cmd['command'].append(f'#end if')
+                    param_cmd['command'].append('#end if')
                 else:
                     param_cmd['preprocessing'].append("ln -s '$" + _actual_parameter + "' '" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)' &&")
                     param_cmd['command'].append("'" + actual_parameter + "/${re.sub(\"[^\\w\\-_]\", \"_\", $" + _actual_parameter + ".element_identifier)}.$gxy2omsext($" + _actual_parameter + ".ext)'")
@@ -796,7 +794,7 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     for stage in advanced_cmd:
         if len(advanced_cmd[stage]) == 0:
             continue
-        advanced_cmd[stage] = [] + utils.indent(advanced_cmd[stage]) + []
+        advanced_cmd[stage] = [advanced_command_start] + utils.indent(advanced_cmd[stage]) + [advanced_command_end]
         final_cmd[stage].extend(advanced_cmd[stage])
 
     out, optout = all_outputs(model, parameter_hardcoder)
@@ -812,7 +810,6 @@ python3 '$__tool_directory__/fill_ctd.py' '@EXECUTABLE@.ctd' '$args_json' '$hard
     command_node.attrib["detect_errors"] = "exit_code"
 
     command_node.text = CDATA("\n".join(sum(final_cmd.values(), [])))
-
 
 
 def import_macros(tool, model, **kwargs):
@@ -835,15 +832,15 @@ def import_macros(tool, model, **kwargs):
         import_node.text = os.path.basename(macro_file.name)
 
 
-def add_macros(tool, model, test_macros_prefix = None, test_macros_file_names = None):
+def add_macros(tool, model, test_macros_prefix=None, test_macros_file_names=None):
     """
     paste all test macros for a tool into the tests node of the tool
     """
-    if test_macros_file_names == None:
+    if test_macros_file_names is None:
         return
     tool_id = model.name.replace(" ", "_")
     tests_node = tool.find(".//tests")
-    
+
     for macros_file, macros_prefix in zip(test_macros_file_names, test_macros_prefix):
         macros_root = parse(macros_file)
         tool_tests = macros_root.find(f".//xml[@name='{macros_prefix}{tool_id}']")
@@ -887,7 +884,7 @@ def get_galaxy_parameter_path(param, separator=".", suffix=None, fix_underscore=
     # data input params with multiple="true" are in a (batch mode) conditional
     # which needs to be added to the param path list
     if param.type is _InFile and param.is_list:
-        path.insert(len(path)-1, f"{p}_cond")
+        path.insert(len(path) - 1, f"{p}_cond")
     return separator.join(path).replace("-", "_")
 
 
@@ -1133,7 +1130,7 @@ def get_formats(param, model, o2g):
     elif is_out_type_param(param, model):
         choices = param.restrictions.choices
     else:
-        raise InvalidModelException(f"Unrecognized restriction type [{type(param.restrictions)}] for [{name}]")
+        raise InvalidModelException(f"Unrecognized restriction type [{type(param.restrictions)}] for [{param.name}]")
 
     # check if there are formats that have not been registered yet...
     formats = set()
@@ -1400,19 +1397,19 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
 
     if param_node.attrib["type"] == "data" and param_node.attrib.get("multiple") == "true":
         conditional_attrib = OrderedDict([
-            ("name", get_galaxy_parameter_name(param)+"_cond")
+            ("name", get_galaxy_parameter_name(param) + "_cond")
         ])
         conditional = Element("conditional", conditional_attrib)
 
         select_attrib = OrderedDict([
-            ("name", get_galaxy_parameter_name(param)+"_select"),
+            ("name", get_galaxy_parameter_name(param) + "_select"),
             ("type", "select"),
             ("label", f"Run tool in batch mode for -{get_galaxy_parameter_name(param)}")
         ])
         select = add_child_node(conditional, "param", select_attrib)
         add_child_node(select, "option", attributes={"value": "no"}, text="No: process all datasets jointly")
         add_child_node(select, "option", attributes={"value": "yes"}, text="Yes: process each dataset in an independent job")
-        
+
         when_no = add_child_node(conditional, "when", attributes={"value": "no"})
         when_no.append(copy.deepcopy(param_node))
         when_yes = add_child_node(conditional, "when", attributes={"value": "yes"})
@@ -1421,6 +1418,7 @@ def create_param_attribute_list(param, model, supported_file_formats, parameter_
         return conditional
 
     return param_node
+
 
 def generate_label_and_help(desc):
     help_text = ""
@@ -1737,16 +1735,7 @@ def create_tests(parent, inputs=None, outputs=None):
     @param inputs a copy of the inputs
     """
 
-    if not (inputs is None or outputs is None):
-        fidx = 0
-        test_node = add_child_node(tests_node, "test")
-        strip_elements(inputs, "validator", "sanitizer")
-        for node in inputs.iter():
-            if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
-                node.tag = "section"
-                node.attrib["name"] = ADVANCED_OPTIONS_NAME
-            if "type" not in node.attrib:
-                continue
+    tests_node = add_child_node(parent, "tests")
 
     fidx = 0
     test_node = add_child_node(tests_node, "test")
@@ -1983,7 +1972,7 @@ def create_test_only(model, **kwargs):
         # for input-files with multiple=true we need to add the batch mode conditional
         if param.type is _InFile and param.is_list:
             batch_cond_attrib = OrderedDict([
-                ("name", get_galaxy_parameter_name(param)+"_cond")
+                ("name", get_galaxy_parameter_name(param) + "_cond")
             ])
             parent = add_child_node(parent, "conditional", batch_cond_attrib)
 
