@@ -1787,75 +1787,42 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat_cond.sect_list_mandato
       <param name="mandatory_multformat" ftype="tabular" value="2test.ext"/>
       <conditional name="list_mandatory_noformat_cond">
         <param name="list_mandatory_noformat_select" value="no"/>
-        <when value="no">
-          <param name="list_mandatory_noformat" ftype="txt" value="3test.ext,3test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="list_mandatory_noformat" ftype="txt" value="4test.ext"/>
-        </when>
+        <param name="list_mandatory_noformat" ftype="txt" value="4test.ext,4test2.ext"/>
       </conditional>
       <conditional name="list_optional_noformat_cond">
         <param name="list_optional_noformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_mandatory_oneformat_cond">
-        <param name="list_mandatory_oneformat_select" value="no"/>
-        <when value="no">
-          <param name="list_mandatory_oneformat" ftype="tsv" value="5test.ext,5test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="list_mandatory_oneformat" ftype="tsv" value="6test.ext"/>
-        </when>
+        <param name="list_mandatory_oneformat_select" value="yes"/>
+        <param name="list_mandatory_oneformat" ftype="tsv" value="6test.ext"/>
       </conditional>
       <conditional name="list_optional_oneformat_cond">
         <param name="list_optional_oneformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_mandatory_multformat_cond">
         <param name="list_mandatory_multformat_select" value="no"/>
-        <when value="no">
-          <param name="list_mandatory_multformat" ftype="tabular" value="7test.ext,7test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="list_mandatory_multformat" ftype="tabular" value="8test.ext"/>
-        </when>
+        <param name="list_mandatory_multformat" ftype="tabular" value="8test.ext,8test2.ext"/>
       </conditional>
       <conditional name="list_optional_multformat_cond">
         <param name="list_optional_multformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_default_mandatory_noformat_cond">
         <param name="list_default_mandatory_noformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_default_optional_noformat_cond">
         <param name="list_default_optional_noformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_default_mandatory_oneformat_cond">
-        <param name="list_default_mandatory_oneformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
+        <param name="list_default_mandatory_oneformat_select" value="yes"/>
       </conditional>
       <conditional name="list_default_optional_oneformat_cond">
         <param name="list_default_optional_oneformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_default_mandatory_multformat_cond">
         <param name="list_default_mandatory_multformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <conditional name="list_default_optional_multformat_cond">
         <param name="list_default_optional_multformat_select" value="no"/>
-        <when value="no"/>
-        <when value="yes"/>
       </conditional>
       <section name="test_section">
         <param name="sect_mandatory_noformat" ftype="txt" value="9test.ext"/>
@@ -1863,150 +1830,84 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat_cond.sect_list_mandato
         <param name="sect_mandatory_multformat" ftype="tabular" value="11test.ext"/>
         <conditional name="sect_list_mandatory_noformat_cond">
           <param name="sect_list_mandatory_noformat_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_noformat" ftype="txt" value="12test.ext,12test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_noformat" ftype="txt" value="13test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_noformat" ftype="txt" value="13test.ext,13test2.ext"/>
         </conditional>
         <conditional name="sect_list_optional_noformat_cond">
           <param name="sect_list_optional_noformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_mandatory_oneformat_cond">
           <param name="sect_list_mandatory_oneformat_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_oneformat" ftype="tsv" value="14test.ext,14test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_oneformat" ftype="tsv" value="15test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_oneformat" ftype="tsv" value="15test.ext,15test2.ext"/>
         </conditional>
         <conditional name="sect_list_optional_oneformat_cond">
           <param name="sect_list_optional_oneformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_mandatory_multformat_cond">
-          <param name="sect_list_mandatory_multformat_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_multformat" ftype="tabular" value="16test.ext,16test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_multformat" ftype="tabular" value="17test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_multformat_select" value="yes"/>
+          <param name="sect_list_mandatory_multformat" ftype="tabular" value="17test.ext"/>
         </conditional>
         <conditional name="sect_list_optional_multformat_cond">
           <param name="sect_list_optional_multformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_noformat_cond">
-          <param name="sect_list_default_mandatory_noformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_mandatory_noformat_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_noformat_cond">
-          <param name="sect_list_default_optional_noformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_optional_noformat_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_oneformat_cond">
           <param name="sect_list_default_mandatory_oneformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_oneformat_cond">
           <param name="sect_list_default_optional_oneformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_multformat_cond">
-          <param name="sect_list_default_mandatory_multformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_mandatory_multformat_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_multformat_cond">
-          <param name="sect_list_default_optional_multformat_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_optional_multformat_select" value="yes"/>
         </conditional>
         <param name="sect_mandatory_noformat_adv" ftype="txt" value="18test.ext"/>
         <param name="sect_mandatory_oneformat_adv" ftype="tsv" value="19test.ext"/>
         <param name="sect_mandatory_multformat_adv" ftype="tabular" value="20test.ext"/>
         <conditional name="sect_list_mandatory_noformat_adv_cond">
-          <param name="sect_list_mandatory_noformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_noformat_adv" ftype="txt" value="21test.ext,21test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_noformat_adv" ftype="txt" value="22test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_noformat_adv_select" value="yes"/>
+          <param name="sect_list_mandatory_noformat_adv" ftype="txt" value="22test.ext"/>
         </conditional>
         <conditional name="sect_list_optional_noformat_adv_cond">
           <param name="sect_list_optional_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_mandatory_oneformat_adv_cond">
           <param name="sect_list_mandatory_oneformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_oneformat_adv" ftype="tsv" value="23test.ext,23test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_oneformat_adv" ftype="tsv" value="24test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_oneformat_adv" ftype="tsv" value="24test.ext,24test2.ext"/>
         </conditional>
         <conditional name="sect_list_optional_oneformat_adv_cond">
-          <param name="sect_list_optional_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_optional_oneformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_mandatory_multformat_adv_cond">
           <param name="sect_list_mandatory_multformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="sect_list_mandatory_multformat_adv" ftype="tabular" value="25test.ext,25test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_list_mandatory_multformat_adv" ftype="tabular" value="26test.ext"/>
-          </when>
+          <param name="sect_list_mandatory_multformat_adv" ftype="tabular" value="26test.ext,26test2.ext"/>
         </conditional>
         <conditional name="sect_list_optional_multformat_adv_cond">
           <param name="sect_list_optional_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_noformat_adv_cond">
-          <param name="sect_list_default_mandatory_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_mandatory_noformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_noformat_adv_cond">
           <param name="sect_list_default_optional_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_oneformat_adv_cond">
-          <param name="sect_list_default_mandatory_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_mandatory_oneformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_oneformat_adv_cond">
-          <param name="sect_list_default_optional_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_optional_oneformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_mandatory_multformat_adv_cond">
-          <param name="sect_list_default_mandatory_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="sect_list_default_mandatory_multformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="sect_list_default_optional_multformat_adv_cond">
           <param name="sect_list_default_optional_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
       </section>
       <section name="adv_opts">
@@ -2014,76 +1915,43 @@ ${' '.join(["'test_section.sect_list_mandatory_multformat_cond.sect_list_mandato
         <param name="mandatory_oneformat_adv" ftype="tsv" value="28test.ext"/>
         <param name="mandatory_multformat_adv" ftype="tabular" value="29test.ext"/>
         <conditional name="list_mandatory_noformat_adv_cond">
-          <param name="list_mandatory_noformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="list_mandatory_noformat_adv" ftype="txt" value="30test.ext,30test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="list_mandatory_noformat_adv" ftype="txt" value="31test.ext"/>
-          </when>
+          <param name="list_mandatory_noformat_adv_select" value="yes"/>
+          <param name="list_mandatory_noformat_adv" ftype="txt" value="31test.ext"/>
         </conditional>
         <conditional name="list_optional_noformat_adv_cond">
           <param name="list_optional_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_mandatory_oneformat_adv_cond">
-          <param name="list_mandatory_oneformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="list_mandatory_oneformat_adv" ftype="tsv" value="32test.ext,32test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="list_mandatory_oneformat_adv" ftype="tsv" value="33test.ext"/>
-          </when>
+          <param name="list_mandatory_oneformat_adv_select" value="yes"/>
+          <param name="list_mandatory_oneformat_adv" ftype="tsv" value="33test.ext"/>
         </conditional>
         <conditional name="list_optional_oneformat_adv_cond">
           <param name="list_optional_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_mandatory_multformat_adv_cond">
-          <param name="list_mandatory_multformat_adv_select" value="no"/>
-          <when value="no">
-            <param name="list_mandatory_multformat_adv" ftype="tabular" value="34test.ext,34test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="list_mandatory_multformat_adv" ftype="tabular" value="35test.ext"/>
-          </when>
+          <param name="list_mandatory_multformat_adv_select" value="yes"/>
+          <param name="list_mandatory_multformat_adv" ftype="tabular" value="35test.ext"/>
         </conditional>
         <conditional name="list_optional_multformat_adv_cond">
-          <param name="list_optional_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="list_optional_multformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="list_default_mandatory_noformat_adv_cond">
           <param name="list_default_mandatory_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_default_optional_noformat_adv_cond">
           <param name="list_default_optional_noformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_default_mandatory_oneformat_adv_cond">
           <param name="list_default_mandatory_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_default_optional_oneformat_adv_cond">
           <param name="list_default_optional_oneformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
         <conditional name="list_default_mandatory_multformat_adv_cond">
-          <param name="list_default_mandatory_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
+          <param name="list_default_mandatory_multformat_adv_select" value="yes"/>
         </conditional>
         <conditional name="list_default_optional_multformat_adv_cond">
           <param name="list_default_optional_multformat_adv_select" value="no"/>
-          <when value="no"/>
-          <when value="yes"/>
         </conditional>
       </section>
     </test>

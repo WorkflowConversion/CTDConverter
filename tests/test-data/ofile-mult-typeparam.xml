@@ -125,23 +125,13 @@ ${' '.join(["&& mv -n 'test_section_sect_mandatory_mandatoryinput/%(bn)s/%(id)s.
       <param name="mandatory_mandatoryinput_type" value="ewt"/>
       <conditional name="inp_mandatory_mandatoryinput_cond">
         <param name="inp_mandatory_mandatoryinput_select" value="no"/>
-        <when value="no">
-          <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="0test.ext,0test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="1test.ext"/>
-        </when>
+        <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="1test.ext,1test2.ext"/>
       </conditional>
       <section name="test_section">
         <param name="sect_mandatory_mandatoryinput_type" value="eut"/>
         <conditional name="sect_inp_mandatory_mandatoryinput_cond">
           <param name="sect_inp_mandatory_mandatoryinput_select" value="no"/>
-          <when value="no">
-            <param name="sect_inp_mandatory_mandatoryinput" ftype="tsv" value="2test.ext,2test2.ext"/>
-          </when>
-          <when value="yes">
-            <param name="sect_inp_mandatory_mandatoryinput" ftype="tsv" value="3test.ext"/>
-          </when>
+          <param name="sect_inp_mandatory_mandatoryinput" ftype="tsv" value="3test.ext,3test2.ext"/>
         </conditional>
       </section>
       <section name="adv_opts"/>

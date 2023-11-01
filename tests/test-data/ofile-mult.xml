@@ -122,21 +122,11 @@ ${' '.join(["&& mv -n 'mandatory_mandatoryinput/%(bn)s/%(id)s.%(gext)s' 'mandato
     <test expect_num_outputs="1">
       <conditional name="inp_mandatory_mandatoryinput_cond">
         <param name="inp_mandatory_mandatoryinput_select" value="no"/>
-        <when value="no">
-          <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="0test.ext,0test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="1test.ext"/>
-        </when>
+        <param name="inp_mandatory_mandatoryinput" ftype="tsv" value="1test.ext,1test2.ext"/>
       </conditional>
       <conditional name="inp_optional_mandatoryinput_cond">
         <param name="inp_optional_mandatoryinput_select" value="no"/>
-        <when value="no">
-          <param name="inp_optional_mandatoryinput" ftype="tsv" value="2test.ext,2test2.ext"/>
-        </when>
-        <when value="yes">
-          <param name="inp_optional_mandatoryinput" ftype="tsv" value="3test.ext"/>
-        </when>
+        <param name="inp_optional_mandatoryinput" ftype="tsv" value="3test.ext,3test2.ext"/>
       </conditional>
       <section name="adv_opts"/>
       <output_collection name="mandatory_mandatoryinput" count="0"/>

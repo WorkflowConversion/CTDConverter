@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import os.path
+import random
 import re
 import sys
 from collections import OrderedDict
@@ -50,6 +51,8 @@ REQUIREMENTS_MACRO_NAME = "requirements"
 ADVANCED_OPTIONS_NAME = "adv_opts"
 
 REQUIRED_MACROS = [REQUIREMENTS_MACRO_NAME, STDIO_MACRO_NAME, ADVANCED_OPTIONS_NAME + "_macro"]
+
+random.seed(42)
 
 
 class ExitCode:
@@ -1749,14 +1752,27 @@ def create_tests(parent, inputs=None, outputs=None):
             for a in attrib:
                 del node.attrib[a]
                 node.attrib[a] = attrib[a]
+        # this should be batch mode conditionals
+        # select yes/no at random
+        if node.tag == "conditional":
+            select = node.find("./param")
+            options = [x.attrib["value"] for x in select.findall("./option")]
+            option = random.choice(options)
+            select.attrib["value"] = option
+            for when in node.findall(".//when"):
+                when.tag = "delete_node"
+                if when.attrib["value"] != option:
+                    continue
+                for p in when:
+                    node.append(p)
+
         if node.tag == "expand" and node.attrib["macro"] == ADVANCED_OPTIONS_NAME + "_macro":
             node.tag = "section"
             node.attrib["name"] = ADVANCED_OPTIONS_NAME
         if "type" not in node.attrib:
             continue
 
-        if (node.attrib["type"] == "select" and "true" in {_.attrib.get("selected", "false") for _ in node}) or\
-           (node.attrib["type"] == "select" and node.attrib.get("value", "") != ""):
+        if node.attrib["type"] == "select" and node.getparent().tag != "conditional" and (("true" in {_.attrib.get("selected", "false") for _ in node}) or (node.attrib.get("value", "") != "")):
             node.tag = "delete_node"
             continue
 
@@ -1777,7 +1793,9 @@ def create_tests(parent, inputs=None, outputs=None):
         elif node.attrib["type"] == "float" and node.attrib["value"] == "":
             node.attrib["value"] = "1.0"
         elif node.attrib["type"] == "select":
-            if node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
+            if node.getparent().tag == "conditional":  # set batch mode conditional select, this is done elsewhere
+                pass
+            elif node.attrib.get("display", None) == "radio" or node.attrib.get("multiple", "false") == "false":
                 node.attrib["value"] = node[0].attrib["value"]
             elif node.attrib.get("multiple", None) == "true":
                 node.attrib["value"] = ",".join([_.attrib["value"] for _ in node if "value" in _.attrib])
