@@ -486,6 +486,8 @@ def _convert_internal(parsed_ctds, **kwargs):
         outputs = create_outputs(tool, model, **kwargs)
         if kwargs["test_test"]:
             create_tests(tool, inputs=copy.deepcopy(inputs), outputs=copy.deepcopy(outputs))
+        else:
+            add_child_node(tool, "tests")
 
         create_help(tool, model)
         # citations are required to be at the end
@@ -495,8 +497,8 @@ def _convert_internal(parsed_ctds, **kwargs):
         # wrap our tool element into a tree to be able to serialize it
         tree = ElementTree(tool)
         logging.info("Writing to %s" % utils.get_filename(output_file))
-        tree.write(output_file, encoding="UTF-8", xml_declaration=True, pretty_print=True)
-
+        etree.indent(tree)
+        tree.write(output_file, encoding="UTF-8", pretty_print=True)
 
 def write_header(tool, model):
     """
@@ -843,13 +845,11 @@ def add_macros(tool, model, test_macros_prefix=None, test_macros_file_names=None
         return
     tool_id = model.name.replace(" ", "_")
     tests_node = tool.find(".//tests")
-
     for macros_file, macros_prefix in zip(test_macros_file_names, test_macros_prefix):
         macros_root = parse(macros_file)
         tool_tests = macros_root.find(f".//xml[@name='{macros_prefix}{tool_id}']")
         for test in tool_tests:
             tests_node.append(test)
-
 
 def expand_macro(node, macro, attribs=None):
     """Add <expand macro="..." ... /> to node."""
@@ -1148,7 +1148,7 @@ def get_formats(param, model, o2g):
 def get_galaxy_formats(param, model, o2g, default=None):
     """
     determine galaxy formats for a parm (i.e. list of allowed Galaxy extensions)
-    from the CTD restictions (i.e. the OpenMS extensions)
+    from the CTD restrictions (i.e. the OpenMS extensions)
     - if there is a single one, then take this
     - if there is none than use given default
     """
